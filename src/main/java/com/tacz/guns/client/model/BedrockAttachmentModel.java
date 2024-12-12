@@ -192,9 +192,9 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
             RenderSystem.stencilMask(0xFF);
             RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
             // 绘制目镜
-            for (int i = 0; i < ocularNodePaths.size(); i++) {
+            for (int i = ocularNodePaths.size() - 1; i >= 0; i--) {
                 if (isScope == isScopeOcular.get(i)) {
-                    RenderSystem.stencilFunc(GL11.GL_ALWAYS, i + 1, 0xFF);
+                    RenderSystem.stencilFunc(GL11.GL_GREATER, i + 1, 0xFF);
                     renderTempPart(matrixStack, transformType, renderType, light, overlay, ocularNodePaths.get(i));
                 }
             }

@@ -85,7 +85,7 @@ public class AttachmentRender implements IFunctionalRenderer {
                 poseStack2.last().normal().mul(normal);
                 poseStack2.last().pose().mul(pose);
                 // 渲染配件
-                renderAttachment(bedrockGunModel.getCurrentGunItem(), attachmentItem, poseStack2, transformType, light, overlay);
+                renderAttachment(attachmentItem, bedrockGunModel.getCurrentGunItem(), poseStack2, transformType, light, overlay);
             });
         }
     }
