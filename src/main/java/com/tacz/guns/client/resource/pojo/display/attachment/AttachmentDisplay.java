@@ -3,6 +3,7 @@ package com.tacz.guns.client.resource.pojo.display.attachment;
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.client.resource.pojo.display.IDisplay;
+import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -28,6 +29,9 @@ public class AttachmentDisplay implements IDisplay {
 
     @SerializedName("show_muzzle")
     private boolean showMuzzle = false;
+
+    @SerializedName("text_show")
+    private Map<String, TextShow> textShows = Maps.newHashMap();
 
     @SerializedName("zoom")
     @Nullable
@@ -77,6 +81,10 @@ public class AttachmentDisplay implements IDisplay {
 
     public boolean isShowMuzzle() {
         return showMuzzle;
+    }
+
+    public Map<String, TextShow> getTextShows() {
+        return textShows;
     }
 
     @Nullable

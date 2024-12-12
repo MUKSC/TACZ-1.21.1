@@ -279,19 +279,22 @@ public class BedrockGunModel extends BedrockAnimatedModel {
             for (BedrockPart bedrockPart : scopePosPath) {
                 bedrockPart.translateAndRotateAndScale(matrixStack);
             }
-            AttachmentRender.renderAttachment(attachmentItem, matrixStack, transformType, light, overlay);
+            AttachmentRender.renderAttachment(attachmentItem, currentGunItem, matrixStack, transformType, light, overlay);
             matrixStack.popPose();
             // 开启模板测试，因为镜内不渲染枪体
             if (iAttachment != null) {
                 Optional<ClientAttachmentIndex> attachmentIndex = TimelessAPI.getClientAttachmentIndex(iAttachment.getAttachmentId(attachmentItem));
                 attachmentIndex.ifPresent(index -> {
-                    if (index.isScope()) {
+                    if (index.isScope() && index.isSight()) { // 组合镜
                         RenderHelper.enableItemEntityStencilTest();
+                        RenderSystem.stencilFunc(GL11.GL_GREATER, 127, 0xFF);
+                    } else if (index.isScope()) { // 长筒镜
+                        RenderHelper.enableItemEntityStencilTest();
+                        RenderSystem.stencilFunc(GL11.GL_EQUAL, 0, 0xFF);
                     }
                 });
             }
         }
-        RenderSystem.stencilFunc(GL11.GL_EQUAL, 0, 0xFF);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
         super.render(matrixStack, transformType, renderType, light, overlay);
         RenderHelper.disableItemEntityStencilTest();

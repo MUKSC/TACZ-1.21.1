@@ -33,7 +33,7 @@ public class AttachmentRender implements IFunctionalRenderer {
         this.type = type;
     }
 
-    public static void renderAttachment(ItemStack attachmentItem, PoseStack poseStack, ItemDisplayContext transformType, int light, int overlay) {
+    public static void renderAttachment(ItemStack attachmentItem, ItemStack gunItem, PoseStack poseStack, ItemDisplayContext transformType, int light, int overlay) {
         poseStack.translate(0, -1.5, 0);
         if (attachmentItem.getItem() instanceof IAttachment iAttachment) {
             ResourceLocation attachmentId = iAttachment.getAttachmentId(attachmentItem);
@@ -45,7 +45,7 @@ public class AttachmentRender implements IFunctionalRenderer {
                     BedrockAttachmentModel model = skinIndex.getModel();
                     ResourceLocation texture = skinIndex.getTexture();
                     RenderType renderType = RenderType.entityCutout(texture);
-                    model.render(poseStack, transformType, renderType, light, overlay);
+                    model.render(gunItem, poseStack, transformType, renderType, light, overlay);
                 } else {
                     // 没有皮肤，渲染默认模型
                     BedrockAttachmentModel model = attachmentIndex.getAttachmentModel();
@@ -60,7 +60,7 @@ public class AttachmentRender implements IFunctionalRenderer {
                             texture = lodModel.getRight();
                         }
                         RenderType renderType = RenderType.entityCutout(texture);
-                        model.render(poseStack, transformType, renderType, light, overlay);
+                        model.render(gunItem, poseStack, transformType, renderType, light, overlay);
                     }
                 }
             }, () -> {
@@ -85,7 +85,7 @@ public class AttachmentRender implements IFunctionalRenderer {
                 poseStack2.last().normal().mul(normal);
                 poseStack2.last().pose().mul(pose);
                 // 渲染配件
-                renderAttachment(attachmentItem, poseStack2, transformType, light, overlay);
+                renderAttachment(bedrockGunModel.getCurrentGunItem(), attachmentItem, poseStack2, transformType, light, overlay);
             });
         }
     }

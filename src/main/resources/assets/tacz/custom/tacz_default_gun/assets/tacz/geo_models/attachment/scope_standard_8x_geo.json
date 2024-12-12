@@ -5107,6 +5107,10 @@
 					"parent": "views",
 					"pivot": [0, 4.7, 12.75],
 					"rotation": [0, 0, -15]
+				},
+				{
+					"name": "ammo_count_text",
+					"pivot": [0, 3.525, 1.1]
 				}
 			]
 		}

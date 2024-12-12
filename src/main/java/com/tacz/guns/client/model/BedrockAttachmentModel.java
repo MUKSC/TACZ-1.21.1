@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.*;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.model.bedrock.ModelRendererWrapper;
+import com.tacz.guns.client.model.functional.TextShowRender;
+import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
 import com.tacz.guns.compat.oculus.OculusCompat;
@@ -15,6 +17,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
@@ -42,6 +45,8 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     protected List<List<BedrockPart>> ocularNodePaths;
     protected List<Boolean> isScopeOcular;
     protected List<List<BedrockPart>> divisionNodePaths;
+
+    private @Nullable ItemStack currentGunItem;
 
     private boolean isScope = false;
     private boolean isSight = false;
@@ -123,8 +128,16 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         this.scopeViewRadiusModifier = scopeViewRadiusModifier;
     }
 
-    @Override
-    public void render(PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+    /**
+     * 添加枪械自定义的文本显示
+     */
+    public void setTextShowList(Map<String, TextShow> textShowList) {
+        textShowList.forEach((name, textShow) -> this.setFunctionalRenderer(name,
+                bedrockPart -> new TextShowRender(this, textShow, currentGunItem)));
+    }
+
+    public void render(ItemStack currentGunItem, PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+        this.currentGunItem = currentGunItem;
         if (transformType.firstPerson()) {
             if (isScope && isSight) {
                 renderBoth(matrixStack, transformType, renderType, light, overlay);

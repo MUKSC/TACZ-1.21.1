@@ -6,11 +6,13 @@ import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentDisplay;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentLod;
+import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
 import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.pojo.AttachmentIndexPOJO;
 import com.tacz.guns.resource.pojo.data.attachment.AttachmentData;
+import com.tacz.guns.util.ColorHex;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +52,7 @@ public class ClientAttachmentIndex {
         checkName(indexPOJO, index);
         checkSlotTexture(display, index);
         checkTextureAndModel(display, index);
+        checkTextShow(display, index.attachmentModel);
         checkLod(display, index);
 //        checkSkins(registryName, index);
         checkSounds(display, index);
@@ -99,6 +102,20 @@ public class ClientAttachmentIndex {
         index.adapterNodeName = display.getAdapterNodeName();
         index.showMuzzle = display.isShowMuzzle();
         return display;
+    }
+
+    private static void checkTextShow(AttachmentDisplay display, BedrockAttachmentModel model) {
+        if (model != null) {
+            Map<String, TextShow> textShowMap = Maps.newHashMap();
+            display.getTextShows().forEach((key, textShow) -> {
+                if (StringUtils.isNoneBlank(key)) {
+                    int color = ColorHex.colorTextToRbgInt(textShow.getColorText());
+                    textShow.setColorInt(color);
+                    textShowMap.put(key, textShow);
+                }
+            });
+            model.setTextShowList(textShowMap);
+        }
     }
 
     private static void checkData(AttachmentIndexPOJO indexPOJO, ClientAttachmentIndex index) {
