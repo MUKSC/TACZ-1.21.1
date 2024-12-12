@@ -8,10 +8,24 @@
   },
   "zoom": [
     5.0,
-    10.0
+    10.0,
+    1.2
   ],
+  "views": [
+    1,
+    1,
+    2
+  ],
+  views_fov: [
+    20.0,
+    20.0,
+    50.0
+  ],
+  // 组合镜需要将两个选项都设为 true
   "scope": true,
-  "fov": 20.0,
+  "sight": true,
+  // 组合镜不需要这个
+  //"fov": 20.0,
   "sounds": {
     "install": "tacz:attachments/scope_general_a",
     "uninstall": "tacz:attachments/scope_general_a"

@@ -11,6 +11,7 @@ import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.item.nbt.AttachmentItemDataAccessor;
 import com.tacz.guns.client.animation.screen.RefitTransform;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.model.BedrockGunModel;
@@ -33,6 +34,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -65,6 +67,7 @@ import static net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAN
 public class FirstPersonRenderGunEvent {
     // 用于生成瞄准动作的运动曲线，使动作看起来更平滑
     private static final SecondOrderDynamics AIMING_DYNAMICS = new SecondOrderDynamics(1.2f, 1.2f, 0.5f, 0);
+    private static SecondOrderDynamics SWITCH_VIEW_DYNAMICS;
     // 用于打开改装界面时枪械运动的平滑
     private static final SecondOrderDynamics REFIT_OPENING_DYNAMICS = new SecondOrderDynamics(1f, 1.2f, 0.5f, 0);
     // 用于跳跃延滞动画的平滑
@@ -82,6 +85,9 @@ public class FirstPersonRenderGunEvent {
     private static boolean lastOnGround = false;
     private static long jumpingTimeStamp = -1;
     private static long shootTimeStamp = -1;
+    private static Matrix4f oldAimingViewMatrix;
+    private static float oldViewIndex;
+    private static int currentViewIndex = -1;
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
@@ -346,6 +352,9 @@ public class FirstPersonRenderGunEvent {
         if (scopeId.equals(DefaultAssets.EMPTY_ATTACHMENT_ID)) {
             scopeId = iGun.getBuiltInAttachmentId(stack, AttachmentType.SCOPE);
         }
+        CompoundTag scopeTag = iGun.getAttachmentTag(stack, AttachmentType.SCOPE);
+        int zoomNumber = AttachmentItemDataAccessor.getZoomNumberFromTag(scopeTag);
+        int viewIndex = 1;
         if (DefaultAssets.isEmptyAttachmentId(scopeId)) {
             // 未安装瞄具，使用机瞄定位组
             aimingNodePath = model.getIronSightPath();
@@ -357,14 +366,35 @@ public class FirstPersonRenderGunEvent {
                 Optional<ClientAttachmentIndex> indexOptional = TimelessAPI.getClientAttachmentIndex(scopeId);
                 if (indexOptional.isPresent()) {
                     BedrockAttachmentModel attachmentModel = indexOptional.get().getAttachmentModel();
-                    if (attachmentModel != null && attachmentModel.getScopeViewPath() != null) {
-                        aimingNodePath.addAll(attachmentModel.getScopeViewPath());
+                    int[] views = indexOptional.get().getViews();
+                    viewIndex = views[zoomNumber % views.length] - 1;
+                    if (attachmentModel != null) {
+                        List<BedrockPart> scopeViewPath = attachmentModel.getScopeViewPath(currentViewIndex == -1 ? viewIndex : currentViewIndex);
+                        aimingNodePath.addAll(scopeViewPath);
                     }
                 }
             }
         }
+        Matrix4f aimingViewMatrix = getPositioningNodeInverse(aimingNodePath);
+        // 执行两个 scope view 之间的插值
+        if (currentViewIndex == -1) {
+            currentViewIndex = viewIndex;
+            oldViewIndex = viewIndex;
+            oldAimingViewMatrix = aimingViewMatrix;
+            SWITCH_VIEW_DYNAMICS = new SecondOrderDynamics(0.35f, 1.2f, 0.3f, viewIndex);
+        }
+        float view_interpret = SWITCH_VIEW_DYNAMICS.update(viewIndex);
+        float span = currentViewIndex - oldViewIndex;
+        float switchingProgress = Math.abs(span) < 0.05 ? 1 : (view_interpret - oldViewIndex) / span;
+        MathUtil.applyMatrixLerp(aimingViewMatrix, oldAimingViewMatrix, aimingViewMatrix, 1 - switchingProgress);
+        if (currentViewIndex != viewIndex) {
+            oldAimingViewMatrix = aimingViewMatrix;
+            oldViewIndex = view_interpret;
+            currentViewIndex = viewIndex;
+        }
+        // 应用瞄准变换
         MathUtil.applyMatrixLerp(transformMatrix, getPositioningNodeInverse(idleNodePath), transformMatrix, (1 - refitScreenOpeningProgress));
-        MathUtil.applyMatrixLerp(transformMatrix, getPositioningNodeInverse(aimingNodePath), transformMatrix, (1 - refitScreenOpeningProgress) * aimingProgress);
+        MathUtil.applyMatrixLerp(transformMatrix, aimingViewMatrix, transformMatrix, (1 - refitScreenOpeningProgress) * aimingProgress);
         // 应用改装界面开启时的定位
         float refitTransformProgress = (float) Easing.easeOutCubic(RefitTransform.getTransformProgress());
         AttachmentType oldType = RefitTransform.getOldTransformType();
@@ -547,7 +577,8 @@ public class FirstPersonRenderGunEvent {
         // 配合约束系数，计算约束位移需要的反向位移
         Vector3f inverseTranslation = new Vector3f(originTranslation);
         inverseTranslation.sub(animatedTranslation);
-        inverseTranslation.mul(1 - translationICA.x(), 1 - translationICA.y(), 1 - translationICA.z());
+        inverseTranslation.mulDirection(poseStack.last().pose());
+        inverseTranslation.mul(translationICA.x() - 1, translationICA.y() - 1, 1 - translationICA.z()); // 基岩版模型的旋转导致 xy 轴要反过来
         // 计算约束旋转需要的反向旋转。因需要插值，获取的是欧拉角
         Vector3f inverseRotation = new Vector3f(rotation);
         inverseRotation.mul(rotationICA.x() - 1, rotationICA.y() - 1, rotationICA.z() - 1);

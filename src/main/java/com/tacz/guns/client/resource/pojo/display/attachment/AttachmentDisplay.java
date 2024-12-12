@@ -33,6 +33,10 @@ public class AttachmentDisplay implements IDisplay {
     @Nullable
     private float[] zoom;
 
+    @SerializedName("views")
+    @Nullable
+    private int[] views;
+
     @SerializedName("scope")
     private boolean isScope = false;
 
@@ -41,6 +45,10 @@ public class AttachmentDisplay implements IDisplay {
 
     @SerializedName("fov")
     private float fov = 70;
+
+    @SerializedName("views_fov")
+    @Nullable
+    private float[] viewsFov;
 
     @SerializedName("sounds")
     private Map<String, ResourceLocation> sounds = Maps.newHashMap();
@@ -76,6 +84,11 @@ public class AttachmentDisplay implements IDisplay {
         return zoom;
     }
 
+    @Nullable
+    public int[] getViews() {
+        return views;
+    }
+
     public boolean isScope() {
         return isScope;
     }
@@ -86,6 +99,11 @@ public class AttachmentDisplay implements IDisplay {
 
     public float getFov() {
         return fov;
+    }
+
+    @Nullable
+    public float[] getViewsFov() {
+        return viewsFov;
     }
 
     public Map<String, ResourceLocation> getSounds() {

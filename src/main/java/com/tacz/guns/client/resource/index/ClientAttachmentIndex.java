@@ -29,8 +29,9 @@ public class ClientAttachmentIndex {
     private @Nullable Pair<BedrockAttachmentModel, ResourceLocation> lodModel;
     private ResourceLocation slotTexture;
     private AttachmentData data;
-    private float fov = 70.0f;
+    private float[] viewsFov;
     private float @Nullable [] zoom;
+    private int [] views;
     private boolean isScope;
     private boolean isSight;
     private boolean showMuzzle;
@@ -66,13 +67,30 @@ public class ClientAttachmentIndex {
         Preconditions.checkArgument(pojoDisplay != null, "index object missing display field");
         AttachmentDisplay display = ClientAssetsManager.INSTANCE.getAttachmentDisplay(pojoDisplay);
         Preconditions.checkArgument(display != null, "there is no corresponding display file");
-        Preconditions.checkArgument(display.getFov() > 0, "fov must > 0");
-        index.fov = display.getFov();
+        index.viewsFov = display.getViewsFov();
+        if (index.viewsFov == null) {
+            Preconditions.checkArgument(display.getFov() > 0, "fov must > 0");
+            index.viewsFov = new float[]{display.getFov()};
+        } else {
+            for(float fov : index.viewsFov) {
+                Preconditions.checkArgument(fov > 0, "fov must > 0");
+            }
+        }
         index.zoom = display.getZoom();
         if (index.zoom != null) {
             for (int i = 0; i < index.zoom.length; i++) {
                 if (index.zoom[i] < 1) {
                     throw new IllegalArgumentException("zoom must >= 1");
+                }
+            }
+        }
+        index.views = display.getViews();
+        if (index.views == null) {
+            index.views = new int[]{1};
+        } else {
+            for (int i = 0; i < index.views.length; i++) {
+                if (index.views[i] < 1) {
+                    throw new IllegalArgumentException("view index must >= 1");
                 }
             }
         }
@@ -213,12 +231,16 @@ public class ClientAttachmentIndex {
         return slotTexture;
     }
 
-    public float getFov() {
-        return fov;
+    public float[] getViewsFov() {
+        return viewsFov;
     }
 
     public float @Nullable [] getZoom() {
         return zoom;
+    }
+
+    public int[] getViews() {
+        return views;
     }
 
     public AttachmentData getData() {

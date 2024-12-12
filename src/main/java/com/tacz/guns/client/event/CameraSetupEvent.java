@@ -12,10 +12,10 @@ import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
+import com.tacz.guns.api.item.nbt.AttachmentItemDataAccessor;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.resource.GunDisplayInstance;
-import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
@@ -25,6 +25,7 @@ import com.tacz.guns.util.math.MathUtil;
 import com.tacz.guns.util.math.SecondOrderDynamics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -168,12 +169,19 @@ public class CameraSetupEvent {
             if (scopeItemId.equals(DefaultAssets.EMPTY_ATTACHMENT_ID)) {
                 scopeItemId = iGun.getBuiltInAttachmentId(stack, AttachmentType.SCOPE);
             }
-
+            CompoundTag scopeTag = iGun.getAttachmentTag(stack, AttachmentType.SCOPE);
+            int zoomNumber = AttachmentItemDataAccessor.getZoomNumberFromTag(scopeTag);
             // 尝试使用配件fov修改，若无则尝试使用枪械本身fov修改，否则维持不变
-            float modifiedFov = TimelessAPI.getClientAttachmentIndex(scopeItemId).map(ClientAttachmentIndex::getFov).orElse(
-                    TimelessAPI.getGunDisplay(stack).map(GunDisplayInstance::getZoomModelFov)
-                            .orElse((float) event.getFOV())
-            );
+            float modifiedFov = TimelessAPI.getClientAttachmentIndex(scopeItemId)
+                    .map(index -> {
+                        float[] viewsFov = index.getViewsFov();
+                        return viewsFov[zoomNumber % viewsFov.length];
+                    })
+                    .orElse(
+                        TimelessAPI.getGunDisplay(stack)
+                                .map(GunDisplayInstance::getZoomModelFov)
+                                .orElse((float) event.getFOV())
+                    );
             if (livingEntity instanceof LocalPlayer localPlayer) {
                 IClientPlayerGunOperator gunOperator = IClientPlayerGunOperator.fromLocalPlayer(localPlayer);
                 float aimingProgress = gunOperator.getClientAimingProgress((float) event.getPartialTick());

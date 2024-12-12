@@ -23,6 +23,8 @@ public class SecondOrderDynamics {
 
     private float target;
 
+    private boolean stop = false;
+
     /**
      * @param f  Natural frequency
      * @param z  Damping coefficient
@@ -61,8 +63,12 @@ public class SecondOrderDynamics {
         return py + 0.05f * pyd;
     }
 
+    public void stop() {
+        this.stop = true;
+    }
+
     private void update() {
-        while (true) {
+        while (!stop) {
             // 修正罕见的 NAN 错误
             if (Float.isNaN(py)) {
                 py = 0;
