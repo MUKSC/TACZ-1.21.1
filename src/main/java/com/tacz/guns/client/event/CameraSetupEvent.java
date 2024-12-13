@@ -225,7 +225,7 @@ public class CameraSetupEvent {
             float partialTicks = Minecraft.getInstance().getFrameTime();
             float aimingProgress = clientPlayerGunOperator.getClientAimingProgress(partialTicks);
             float zoom = iGun.getAimingZoom(mainHandItem);
-            float aimingRecoilModifier = 1 - aimingProgress + aimingProgress / (float) Math.sqrt(zoom);
+            float aimingRecoilModifier = 1 - aimingProgress + aimingProgress / (float) Math.min(Math.sqrt(zoom), 1.5);
             // 如果是趴下，那么后坐力按 data 设计减少（默认为降低一半）
             if (!player.isSwimming() && player.getPose() == Pose.SWIMMING) {
                 aimingRecoilModifier = aimingRecoilModifier * gunData.getCrawlRecoilMultiplier();

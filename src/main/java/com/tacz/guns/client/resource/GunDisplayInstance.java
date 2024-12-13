@@ -36,6 +36,7 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -186,17 +187,29 @@ public class GunDisplayInstance {
                 throw new IllegalArgumentException("animation not found: " + location);
             }
             // 将默认动画填入动画控制器
-            DefaultAnimation defaultAnimation = display.getDefaultAnimation();
+            ResourceLocation defaultAnimation = display.getDefaultAnimation();
             if (defaultAnimation != null) {
-                switch (defaultAnimation) {
-                    case RIFLE -> {
-                        for (ObjectAnimation animation : InternalAssetLoader.getDefaultRifleAnimations()) {
-                            controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                BedrockAnimationFile animationFile = ClientAssetsManager.INSTANCE.getBedrockAnimations(defaultAnimation);
+                if (animationFile == null) {
+                    throw new IllegalArgumentException("animation not found: " + defaultAnimation);
+                }
+                List<ObjectAnimation> animations = Animations.createAnimationFromBedrock(animationFile);
+                for (ObjectAnimation animation : animations) {
+                    controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                }
+            } else {
+                DefaultAnimationType defaultAnimationType = display.getDefaultAnimationType();
+                if (defaultAnimationType != null) {
+                    switch (defaultAnimationType) {
+                        case RIFLE -> {
+                            for (ObjectAnimation animation : InternalAssetLoader.getDefaultRifleAnimations()) {
+                                controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                            }
                         }
-                    }
-                    case PISTOL -> {
-                        for (ObjectAnimation animation : InternalAssetLoader.getDefaultPistolAnimations()) {
-                            controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                        case PISTOL -> {
+                            for (ObjectAnimation animation : InternalAssetLoader.getDefaultPistolAnimations()) {
+                                controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                            }
                         }
                     }
                 }

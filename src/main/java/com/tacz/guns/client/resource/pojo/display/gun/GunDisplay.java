@@ -52,7 +52,11 @@ public class GunDisplay implements IDisplay {
     private Map<String, Object> stateMachineParam = null;
     @Nullable
     @SerializedName("use_default_animation")
-    private DefaultAnimation defaultAnimation;
+    // 弃用，优先使用 default_animation 指定默认动画
+    private DefaultAnimationType defaultAnimationType;
+    @Nullable
+    @SerializedName("default_animation")
+    private ResourceLocation defaultAnimation = null;
     @Nullable
     @SerializedName("player_animator_3rd")
     private ResourceLocation playerAnimator3rd;
@@ -127,7 +131,12 @@ public class GunDisplay implements IDisplay {
     }
 
     @Nullable
-    public DefaultAnimation getDefaultAnimation() {
+    public DefaultAnimationType getDefaultAnimationType() {
+        return defaultAnimationType;
+    }
+
+    @Nullable
+    public ResourceLocation getDefaultAnimation() {
         return defaultAnimation;
     }
 
