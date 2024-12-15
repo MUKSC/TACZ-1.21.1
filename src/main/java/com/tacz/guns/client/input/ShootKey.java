@@ -118,7 +118,7 @@ public class ShootKey {
                     player.sendSystemMessage(Component.translatable("message.tacz.fire_select.fail"));
                 }
                 if (fireMode == FireMode.SEMI || isBurstSemi) {
-                    IClientPlayerGunOperator.fromLocalPlayer(player).shoot();
+                    lastTimeShootSuccess = IClientPlayerGunOperator.fromLocalPlayer(player).shoot() == ShootResult.SUCCESS;
                 }
             }
         }
