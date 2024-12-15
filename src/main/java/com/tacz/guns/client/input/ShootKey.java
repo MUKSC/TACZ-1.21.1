@@ -6,6 +6,7 @@ import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.api.entity.ShootResult;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
+import com.tacz.guns.client.gameplay.LocalPlayerSprint;
 import com.tacz.guns.client.sound.SoundPlayManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -33,12 +34,15 @@ public class ShootKey {
             InputConstants.Type.MOUSE,
             GLFW.GLFW_MOUSE_BUTTON_LEFT,
             "key.category.tacz");
+    private static boolean lastTimeShootSuccess = false;
 
     @SubscribeEvent
     public static void autoShoot(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END && !isInGame()) {
             return;
         }
+        LocalPlayerSprint.stopSprint = false;
+
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || player.isSpectator()) {
@@ -51,8 +55,19 @@ public class ShootKey {
                     .map(index -> index.getGunData().getBurstData().isContinuousShoot())
                     .orElse(false);
             IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            if (SHOOT_KEY.isDown() && (fireMode == FireMode.AUTO || isBurstAuto)) {
-                operator.shoot();
+            if (SHOOT_KEY.isDown()) {
+                // 能开火时禁止冲刺
+                LocalPlayerSprint.stopSprint = true;
+
+                if (fireMode != FireMode.AUTO && !isBurstAuto && lastTimeShootSuccess) {
+                    // 非全自动情况，禁止连续开火
+                    return;
+                }
+                if (operator.shoot() == ShootResult.SUCCESS) {
+                    lastTimeShootSuccess = true;
+                }
+            } else {
+                lastTimeShootSuccess = false;
             }
         }
     }
