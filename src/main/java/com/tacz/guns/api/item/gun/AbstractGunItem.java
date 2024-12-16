@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -89,6 +90,23 @@ public abstract class AbstractGunItem extends Item implements IGun {
      * 近战时调用
      */
     public abstract void melee(ShooterDataHolder dataHolder, LivingEntity user, ItemStack gunItem);
+
+    /**
+     * 初始化子弹角度和速度
+     * @param dataHolder 状态数据
+     * @param gunItem 枪械物品
+     * @param shooter 射击者
+     * @param projectile 子弹
+     * @param bulletCnt 多弹丸的子弹序数
+     * @param processedSpeed 修正后的子弹初速
+     * @param inaccuracy 修正后的子弹不准确度
+     * @param pitch 射击方向
+     * @param yaw 射击方向
+     */
+    public void doBulletSpread(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter, Projectile projectile,
+                                        int bulletCnt, float processedSpeed, float inaccuracy, float pitch, float yaw) {
+        projectile.shootFromRotation(projectile, pitch, yaw, 0.0F, processedSpeed, inaccuracy);
+    }
 
     /**
      * 换弹前的检查，完成如下检查：枪内弹药是否已经填满？玩家背包是否有可用弹药？

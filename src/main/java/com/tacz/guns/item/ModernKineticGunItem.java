@@ -10,6 +10,7 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.item.nbt.GunItemDataAccessor;
 import com.tacz.guns.command.sub.DebugCommand;
 import com.tacz.guns.debug.GunMeleeDebug;
+import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.attachment.EffectData;
@@ -24,13 +25,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaFunction;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
+import org.joml.Vector2d;
+import org.luaj.vm2.*;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import javax.annotation.Nullable;
@@ -198,6 +198,36 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         });
     }
 
+    @Override
+    public void doBulletSpread(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter, Projectile projectile,
+                               int bulletCnt, float processedSpeed, float inaccuracy, float pitch, float yaw) {
+        if (!(projectile instanceof EntityKineticBullet bullet)) {
+            return;
+        }
+        ModernKineticGunScriptAPI api = new ModernKineticGunScriptAPI();
+        api.setItemStack(gunItem);
+        api.setShooter(shooter);
+        api.setDataHolder(dataHolder);
+
+        CommonGunIndex gunIndex = api.getGunIndex();
+        if (gunIndex == null) {
+            return;
+        }
+        Optional.ofNullable(gunIndex.getScript())
+                .map(script -> checkFunction(script.get("calcSpread")))
+                .map(func -> func.call(CoerceJavaToLua.coerce(this) , LuaValue.valueOf(bulletCnt), LuaValue.valueOf(inaccuracy)))
+                .map(luaValue -> {
+                    if (luaValue.istable()){
+                        LuaTable table = luaValue.checktable();
+                        return new Vector2d(table.get(1).checkdouble(), table.get(2).checkdouble());
+                    }
+                    return null;
+                }).ifPresentOrElse(vector2d -> {
+                    bullet.shootFromRotation(bullet, pitch, yaw, 0.0F, processedSpeed, vector2d);
+                },() -> {
+                    bullet.shootFromRotation(bullet, pitch, yaw, 0.0F, processedSpeed, inaccuracy);
+                });
+    }
 
     private boolean defaultTickBolt(ModernKineticGunScriptAPI api) {
         GunData gunData = api.getGunIndex().getGunData();
