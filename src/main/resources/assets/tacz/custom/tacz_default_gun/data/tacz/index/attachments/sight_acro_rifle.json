@@ -1,0 +1,7 @@
+{
+  "hidden": false,
+  "name": "tacz.attachment.sight_acro_rifle.name",
+  "display": "tacz:sight_acro_rifle_display",
+  "data": "tacz:sight_acro_rifle_data",
+  "type": "scope"
+}

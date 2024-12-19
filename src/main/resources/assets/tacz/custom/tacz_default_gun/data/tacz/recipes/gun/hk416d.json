@@ -23,7 +23,7 @@
     "type": "gun",
     "id": "tacz:hk416d",
     "attachments": {
-      "stock": "tacz:oem_stock_tactical"
+      "stock": "tacz:stock_hk_slim_line"
     }
   },
   "type": "tacz:gun_smith_table_crafting"

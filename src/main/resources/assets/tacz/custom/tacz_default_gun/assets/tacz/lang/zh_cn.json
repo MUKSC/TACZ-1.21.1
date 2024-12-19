@@ -130,6 +130,17 @@
   "tacz.attachment.scope_acog_ta31.name": "§9TA31 2x 先进战斗光学瞄具",
   "tacz.attachment.scope_elcan_4x.name": "§5埃尔坎 4x 光学瞄具",
   "tacz.attachment.scope_retro_2x.name": "§93x 光学瞄具\"复古\"",
+  "tacz.attachment.sight_srs_02.name": "SRS-02 反射式瞄具",
+  "tacz.attachment.sight_okp7.name": "OKP-7 反射式瞄具",
+  "tacz.attachment.sight_acro_rifle.name": "ACRO P-1 增高 反射式瞄具",
+  "tacz.attachment.sight_acro_pistol.name": "ACRO P-1 反射式瞄具",
+  "tacz.attachment.sight_fastfire_rifle.name": "FastFire 增高 射式瞄具",
+  "tacz.attachment.sight_fastfire_pistol.name": "FastFire 反射式瞄具",
+  "tacz.attachment.sight_deltapoint_rifle.name": "DeltaPoint 增高 反射式瞄具",
+  "tacz.attachment.sight_deltapoint_pistol.name": "DeltaPoint 反射式瞄具",
+  "tacz.attachment.sight_pk06_rifle.name": "PK06 增高 反射式瞄具",
+  "tacz.attachment.sight_pk06_pistol.name": "PK06 反射式瞄具",
+  "tacz.attachment.scope_vudu.name": "§6巫毒 1-6x 组合式精确瞄准镜",
 
 
   "tacz.attachment.extended_mag_1.name": "重型弹药扩容弹匣",
@@ -159,6 +170,14 @@
   "tacz.attachment.grip_vertical_talon.name": "塔伦 SG2 前握把",
   "tacz.attachment.grip_vertical_military.name":"名驹 军用制式握把",
   "tacz.attachment.grip_vertical_ranger.name":"科赫 游骑兵重型握把",
+  "tacz.attachment.grip_osovets_black.name": "P-2 战术垂直握把",
+  "tacz.attachment.grip_rk0.name": "RK-0 垂直握把",
+  "tacz.attachment.grip_rk6.name": "RK-6 轻型阻手",
+  "tacz.attachment.grip_rk1_b25u.name": "RK-1 斜握把",
+  "tacz.attachment.grip_cobra.name": "SI 三角阻手",
+  "tacz.attachment.grip_td": "TD 骷髅斜握把",
+  "tacz.attachment.grip_se_5": "SE-5 斜握把",
+  "tacz.attachment.grip_cqr": "CQR 战术握把",
 
 
   "tacz.attachment.muzzle_brake_cyclone_d2.name": "气旋 D2 枪口制退器",
@@ -187,6 +206,11 @@
   "tacz.attachment.oem_stock_heavy.name": "原厂重型枪托",
   "tacz.attachment.oem_stock_light.name": "原厂轻型枪托",
   "tacz.attachment.oem_stock_tactical.name": "原厂战术枪托",
+  "tacz.attachment.stock_sba3.name": "SBA3 枪托",
+  "tacz.attachment.stock_hk_slim_line.name": "KS 枪托",
+  "tacz.attachment.stock_ak12.name": "伊兹玛什 枪托",
+  "tacz.attachment.stock_moe.name": "MOE 枪托",
+  "tacz.attachment.stock_ripstock.name": "RS 超轻型枪托",
 
   "tacz.block.gun_smith_table": "TaCZ枪械工作台"
 }

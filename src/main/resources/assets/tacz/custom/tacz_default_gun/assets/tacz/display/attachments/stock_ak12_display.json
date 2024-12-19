@@ -1,0 +1,10 @@
+{
+  "slot": "tacz:attachment/slot/stock_ak12",
+  "model": "tacz:attachment/stock_ak12_geo",
+  "texture": "tacz:attachment/uv/stock_ak12",
+  "adapter": "ar_stock_adapter",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_a",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}
