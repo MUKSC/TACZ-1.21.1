@@ -211,6 +211,7 @@
   "tacz.attachment.stock_ak12.name": "AK-12 Regular Stock",
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
+  "tacz.attachment.stock_m4ss.name": "M4SS Stock",
 
   "tacz.block.gun_smith_table": "TaCZ Gun Smith Table",
   "config.tacz.client.render.enable_tooltip_id": "Display Ids in Tooltip",

@@ -2,5 +2,6 @@
   "name": "tacz.attachment.scope_lpvo_1_6.name",
   "display": "tacz:scope_lpvo_1_6_display",
   "data": "tacz:scope_lpvo_1_6_data",
-  "type": "scope"
+  "type": "scope",
+  "sort": 100
 }

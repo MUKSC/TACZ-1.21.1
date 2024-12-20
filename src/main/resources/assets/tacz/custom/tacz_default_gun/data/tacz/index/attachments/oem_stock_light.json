@@ -2,5 +2,6 @@
   "name": "tacz.attachment.oem_stock_light.name",
   "display": "tacz:oem_stock_light_display",
   "data": "tacz:oem_stock_light_data",
-  "type": "stock"
+  "type": "stock",
+  "sort": 1
 }

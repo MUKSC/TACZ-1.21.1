@@ -3,5 +3,6 @@
   "name": "tacz.attachment.sight_okp7.name",
   "display": "tacz:sight_okp7_display",
   "data": "tacz:sight_okp7_data",
-  "type": "scope"
+  "type": "scope",
+  "sort": 10
 }

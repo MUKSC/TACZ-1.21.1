@@ -3,5 +3,6 @@
   "display": "tacz:ammo_mod_hp_display",
   "data": "tacz:ammo_mod_hp_data",
   "tooltip": "tacz.attachment.ammo_mod_hp.desc",
-  "type": "extended_mag"
+  "type": "extended_mag",
+  "sort": 1000
 }

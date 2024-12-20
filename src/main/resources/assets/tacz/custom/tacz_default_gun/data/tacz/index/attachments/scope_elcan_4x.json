@@ -2,5 +2,6 @@
   "name": "tacz.attachment.scope_elcan_4x.name",
   "display": "tacz:scope_elcan_4x_display",
   "data": "tacz:scope_elcan_4x_data",
-  "type": "scope"
+  "type": "scope",
+  "sort": 100
 }

@@ -3,5 +3,6 @@
   "name": "tacz.attachment.sight_deltapoint_rifle.name",
   "display": "tacz:sight_deltapoint_rifle_display",
   "data": "tacz:sight_deltapoint_rifle_data",
-  "type": "scope"
+  "type": "scope",
+  "sort": 10
 }

@@ -3,5 +3,6 @@
   "name": "tacz.attachment.sight_pk06_pistol.name",
   "display": "tacz:sight_pk06_pistol_display",
   "data": "tacz:sight_pk06_pistol_data",
-  "type": "scope"
+  "type": "scope",
+  "sort": 1
 }

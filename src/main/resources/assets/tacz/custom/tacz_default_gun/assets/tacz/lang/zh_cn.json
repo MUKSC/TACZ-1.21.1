@@ -207,10 +207,11 @@
   "tacz.attachment.oem_stock_light.name": "原厂轻型枪托",
   "tacz.attachment.oem_stock_tactical.name": "原厂战术枪托",
   "tacz.attachment.stock_sba3.name": "SBA3 枪托",
-  "tacz.attachment.stock_hk_slim_line.name": "KS 枪托",
-  "tacz.attachment.stock_ak12.name": "伊兹玛什 枪托",
-  "tacz.attachment.stock_moe.name": "MOE 枪托",
+  "tacz.attachment.stock_hk_slim_line.name": "KS 战术枪托",
+  "tacz.attachment.stock_ak12.name": "伊兹玛什 战术枪托",
+  "tacz.attachment.stock_moe.name": "MOE 轻型枪托",
   "tacz.attachment.stock_ripstock.name": "RS 超轻型枪托",
+  "tacz.attachment.stock_m4ss.name": "M4SS 战术枪托",
 
   "tacz.block.gun_smith_table": "TaCZ枪械工作台"
 }

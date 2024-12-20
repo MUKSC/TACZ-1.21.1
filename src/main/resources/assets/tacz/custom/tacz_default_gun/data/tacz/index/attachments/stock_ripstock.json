@@ -2,5 +2,6 @@
   "name": "tacz.attachment.stock_ripstock.name",
   "display": "tacz:stock_ripstock_display",
   "data": "tacz:stock_ripstock_data",
-  "type": "stock"
+  "type": "stock",
+  "sort": 10
 }
