@@ -55,6 +55,7 @@
   "tacz.gun.qbz_95.name": "QBZ-95 \"Longbow\"",
   "tacz.gun.p90.name": "P90 PDW",
   "tacz.gun.m870.name": "M870",
+  "tacz.gun.b93r.name": "B93R",
 
   
   "tacz.gun.ak47.desc": "From jungles to bays, it's always present.",
@@ -93,6 +94,7 @@
   "tacz.gun.qbz_95.desc": "...",
   "tacz.gun.p90.desc": "...",
   "tacz.gun.m870.desc": "...",
+  "tacz.gun.b93r.desc":"...",
   
 
   "tacz.ammo.9mm.name": "§a9mm Bullet",

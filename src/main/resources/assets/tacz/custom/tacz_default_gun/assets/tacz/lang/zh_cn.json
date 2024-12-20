@@ -55,6 +55,7 @@
   "tacz.gun.qbz_95.name": "95式 \"长弓\" 突击步枪",
   "tacz.gun.p90.name": "P90 冲锋枪",
   "tacz.gun.m870.name": "M870 霰弹枪",
+  "tacz.gun.b93r.name":"B93R 冲锋手枪",
 
 
   "tacz.gun.ak47.desc": "从雨林到海湾，永远不会错过它的身影",
@@ -93,6 +94,7 @@
   "tacz.gun.qbz_95.desc": "做最优质的战士！",
   "tacz.gun.p90.desc": "用它在防弹衣上画个笑脸",
   "tacz.gun.m870.desc": "你选错屋了，蠢货！",
+  "tacz.gun.b93r.desc":"...",
 
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",
