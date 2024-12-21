@@ -23,11 +23,11 @@
     "ignite": false,
     "pierce": 0
   },
-  "ammo_amount": 18,
+  "ammo_amount": 20,
   "extended_mag_ammo_amount": [
-    21,
-    24,
-    30
+    23,
+    26,
+    32
   ],
   "bolt": "closed_bolt",
   "reload": {
@@ -59,7 +59,7 @@
   "burst_data": {
     "continuous_shoot": false,
     "count": 3,
-    "bpm": 1080,
+    "bpm": 800,
     "min_interval": 0.4
   },
   "fire_mode_adjust": {
@@ -82,7 +82,7 @@
       {"time": 0.42, "value": [0, 0]}
     ],
     "yaw": [
-      {"time": 0, "value": [-0.25, -0.1]},
+      {"time": 0, "value": [-0.25, 0]},
       {"time": 0.18, "value": [0, 0]}
     ]
   },
