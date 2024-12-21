@@ -59,8 +59,8 @@
   "burst_data": {
     "continuous_shoot": false,
     "count": 3,
-    "bpm": 800,
-    "min_interval": 0.4
+    "bpm": 900,
+    "min_interval": 0.45
   },
   "fire_mode_adjust": {
     "semi": {
