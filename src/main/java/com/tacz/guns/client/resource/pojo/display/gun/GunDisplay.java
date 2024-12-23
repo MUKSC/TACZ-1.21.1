@@ -12,6 +12,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class GunDisplay implements IDisplay {
+    @SerializedName("model_type")
+    private String modelType = "default";
     @SerializedName("model")
     private ResourceLocation modelLocation;
     @SerializedName("texture")
@@ -86,6 +88,10 @@ public class GunDisplay implements IDisplay {
     private boolean showCrosshair = false;
     @SerializedName("controllable")
     private EnumMap<FireMode, ControllableData> controllableData = Maps.newEnumMap(FireMode.class);
+
+    public String getModelType() {
+        return modelType;
+    }
 
     public ResourceLocation getModelLocation() {
         return modelLocation;

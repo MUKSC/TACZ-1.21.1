@@ -12,6 +12,7 @@ import com.tacz.guns.api.client.animation.ObjectAnimation;
 import com.tacz.guns.api.client.animation.gltf.AnimationStructure;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.animation.statemachine.LuaStateMachineFactory;
+import com.tacz.guns.api.client.other.GunModelTypeManager;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.model.BedrockGunModel;
@@ -39,6 +40,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 /**
  * 经过处理和校验的枪械显示数据
@@ -122,6 +124,9 @@ public class GunDisplayInstance {
     }
 
     private void checkTextureAndModel(GunDisplay display) {
+        //获取模型类型
+        String modelType = display.getModelType();
+        BiFunction<BedrockModelPOJO, BedrockVersion, ? extends BedrockGunModel> constructor = GunModelTypeManager.getModelInstanceConstructor(modelType);
         // 检查模型
         ResourceLocation modelLocation = display.getModelLocation();
         Preconditions.checkArgument(modelLocation != null, "display object missing model field");
@@ -133,11 +138,11 @@ public class GunDisplayInstance {
         modelTexture = textureLocation;
         // 先判断是不是 1.10.0 版本基岩版模型文件
         if (BedrockVersion.isLegacyVersion(modelPOJO) && modelPOJO.getGeometryModelLegacy() != null) {
-            gunModel = new BedrockGunModel(modelPOJO, BedrockVersion.LEGACY);
+            gunModel = constructor.apply(modelPOJO, BedrockVersion.LEGACY);
         }
         // 判定是不是 1.12.0 版本基岩版模型文件
         if (BedrockVersion.isNewVersion(modelPOJO) && modelPOJO.getGeometryModelNew() != null) {
-            gunModel = new BedrockGunModel(modelPOJO, BedrockVersion.NEW);
+            gunModel = constructor.apply(modelPOJO, BedrockVersion.NEW);
         }
         Preconditions.checkArgument(gunModel != null, "there is no model data in the model file");
     }

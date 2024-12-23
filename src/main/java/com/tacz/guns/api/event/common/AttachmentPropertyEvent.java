@@ -9,13 +9,14 @@ import net.minecraftforge.eventbus.api.Event;
  * <p>
  * 如果有其他模组想要添加自定义的配件属性修改值，可以捕获此事件
  */
-public class AttachmentPropertyEvent extends Event {
+public class AttachmentPropertyEvent extends Event implements KubeJSGunEventPoster<AttachmentPropertyEvent> {
     private final ItemStack gunItem;
     private final AttachmentCacheProperty cacheProperty;
 
     public AttachmentPropertyEvent(ItemStack gunItem, AttachmentCacheProperty attachmentProperty) {
         this.gunItem = gunItem;
         this.cacheProperty = attachmentProperty;
+        postEventToKubeJS(this);
     }
 
     public ItemStack getGunItem() {
