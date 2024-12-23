@@ -28,17 +28,13 @@
     "texture": "tacz:flash/common_muzzle_flash",
     "scale": 0.4
   },
-  //暂时先用g17的占位
   "sounds": {
-    "reload_empty": "tacz:glock_17/glock17_reload_empty",
-    "reload_tactical": "tacz:glock_17/glock17_reload_tactical",
-    "inspect": "tacz:glock_17/glock17_inspect",
-    "inspect_empty": "tacz:glock_17/glock17_inspect_empty",
-    "draw": "tacz:glock_17/glock17_draw",
-    "shoot": "tacz:glock_17/glock17_shoot",
-    "shoot_3p": "tacz:glock_17/glock17_shoot_3p",
-    "silence": "tacz:glock_17/glock17_silence",
-    "silence_3p": "tacz:glock_17/glock17_silence_3p"
+    "draw": "tacz:b93r/b93r_draw",
+    "put_away": "tacz:b93r/b93r_put_away",
+    "shoot": "tacz:b93r/b93r_shoot",
+    "shoot_3p": "tacz:b93r/b93r_shoot_3p",
+    "silence": "tacz:b93r/b93r_silence",
+    "silence_3p": "tacz:b93r/b93r_silence_3p"
   },
   "offhand_show": {
     "pos": [4, 13, -1],

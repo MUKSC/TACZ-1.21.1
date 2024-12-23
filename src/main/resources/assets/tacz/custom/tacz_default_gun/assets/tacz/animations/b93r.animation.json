@@ -663,6 +663,23 @@
 						"1.775": [0, 0, 0]
 					}
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:b93r/b93r_reload_magrelease"
+				},
+				"0.275": {
+					"effect": "tacz:b93r/b93r_reload_magout"
+				},
+				"0.975": {
+					"effect": "tacz:b93r/b93r_reload_maghit"
+				},
+				"1.125": {
+					"effect": "tacz:b93r/b93r_reload_magin"
+				},
+				"1.275": {
+					"effect": "tacz:b93r/b93r_reload_end"
+				}
 			}
 		},
 		"reload_empty": {
@@ -1145,6 +1162,26 @@
 						"1.375": [7.5, 0, 0],
 						"1.45": [0, 0, 0]
 					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:b93r/b93r_reload_empty_raise"
+				},
+				"0.25": {
+					"effect": "tacz:b93r/b93r_reload_empty_magout"
+				},
+				"0.675": {
+					"effect": "tacz:b93r/b93r_reload_maghit"
+				},
+				"0.7": {
+					"effect": "tacz:b93r/b93r_reload_empty_magin"
+				},
+				"1.375": {
+					"effect": "tacz:b93r/b93r_reload_empty_charge"
+				},
+				"1.675": {
+					"effect": "tacz:b93r/b93r_reload_empty_end"
 				}
 			}
 		},
@@ -1629,6 +1666,35 @@
 				},
 				"slide_release": {
 					"rotation": [7.5, 0, 0]
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_1"
+				},
+				"0.875": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_5"
+				},
+				"1.875": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_2"
+				},
+				"3.8333": {
+					"effect": "tacz:b93r/b93r_reload_magout"
+				},
+				"4.4167": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_6"
+				},
+				"5.8333": {
+					"effect": "tacz:b93r/b93r_reload_maghit"
+				},
+				"6.0417": {
+					"effect": "tacz:b93r/b93r_reload_magin"
+				},
+				"6.7917": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_7"
+				},
+				"7.8333": {
+					"effect": "tacz:b93r/b93r_reload_end"
 				}
 			}
 		},
@@ -2211,6 +2277,38 @@
 						},
 						"8.2917": [0, 0, 0]
 					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_1"
+				},
+				"0.8542": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_5"
+				},
+				"1.875": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_2"
+				},
+				"3.8333": {
+					"effect": "tacz:b93r/b93r_reload_magout"
+				},
+				"4.4167": {
+					"effect": "tacz:b93r/b93r_inspect_mvmt_6"
+				},
+				"5.8333": {
+					"effect": "tacz:b93r/b93r_reload_maghit"
+				},
+				"6.0417": {
+					"effect": "tacz:b93r/b93r_reload_magin"
+				},
+				"6.7708": {
+					"effect": "tacz:b93r/b93r_inspect_slide_back"
+				},
+				"7.625": {
+					"effect": "tacz:b93r/b93r_inspect_slide_release"
+				},
+				"7.8333": {
+					"effect": "tacz:b93r/b93r_reload_end"
 				}
 			}
 		}

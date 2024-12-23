@@ -1,6 +1,6 @@
 {
   "ammo": "tacz:9mm",
-  "rpm": 400,
+  "rpm": 900,
   "bullet": {
     "life": 0.6,
     "bullet_amount": 1,
@@ -23,11 +23,11 @@
     "ignite": false,
     "pierce": 0
   },
-  "ammo_amount": 20,
+  "ammo_amount": 18,
   "extended_mag_ammo_amount": [
-    23,
-    26,
-    32
+    21,
+    24,
+    30
   ],
   "bolt": "closed_bolt",
   "reload": {
@@ -60,7 +60,7 @@
     "continuous_shoot": false,
     "count": 3,
     "bpm": 900,
-    "min_interval": 0.45
+    "min_interval": 0.4
   },
   "fire_mode_adjust": {
     "semi": {
@@ -70,6 +70,7 @@
     }
   },
   "allow_attachment_types": [
+    "muzzle",
     "scope",
     "extended_mag"
   ],
@@ -82,7 +83,7 @@
       {"time": 0.42, "value": [0, 0]}
     ],
     "yaw": [
-      {"time": 0, "value": [-0.25, 0]},
+      {"time": 0, "value": [-0.25, -0.1]},
       {"time": 0.18, "value": [0, 0]}
     ]
   },
