@@ -1,13 +1,13 @@
 {
-  "slot": "tacz:attachment/slot/scope_vudu",
-  "model": "tacz:attachment/scope_vudu_geo",
-  "texture": "tacz:attachment/uv/scope_vudu",
+  "slot": "tacz:attachment/slot/scope_hamr_slot",
+  "model": "tacz:attachment/scope_hamr_geo",
+  "texture": "tacz:attachment/uv/scope_hamr",
   "lod": {
-    "model": "tacz:attachment/lod/scope_vudu",
-    "texture": "tacz:attachment/lod/scope_vudu"
+    "model": "tacz:attachment/lod/scope_hamr",
+    "texture": "tacz:attachment/lod/scope_hamr"
   },
   "zoom": [
-    6.5,
+    3.25,
     1.25
   ],
   "views": [
