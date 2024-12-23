@@ -52,6 +52,11 @@
 					"rotation": [0, 22.5, 0]
 				},
 				{
+					"name": "muzzle_pos",
+					"parent": "positioning2",
+					"pivot": [0, 9.65625, -4.32812]
+				},
+				{
 					"name": "B93R",
 					"parent": "gun_and_righthand",
 					"pivot": [0, 5, 3.75]
