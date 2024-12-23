@@ -2,7 +2,7 @@
   "model": "tacz:gun/b93r_geo",
   "texture": "tacz:gun/uv/b93r",
   "lod": {
-    "model": "tacz:gun/lod/b93r_geo",
+    "model": "tacz:gun/lod/b93r",
     "texture": "tacz:gun/lod/b93r"
   },
   "hud": "tacz:gun/hud/b93r_hud",
