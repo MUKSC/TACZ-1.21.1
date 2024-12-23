@@ -439,16 +439,17 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     }
 
     protected void onHitBlock(BlockHitResult result, Vec3 startVec, Vec3 endVec) {
-        super.onHitBlock(result);
         if (result.getType() == HitResult.Type.MISS) {
             return;
         }
-        Vec3 hitVec = result.getLocation();
         BlockPos pos = result.getBlockPos();
+        Vec3 hitVec = result.getLocation();
         // 触发事件
+        // 提前触发事件以让事件可以取消原版的命中行为（例如敲钟，打倒靶子等）
         if (MinecraftForge.EVENT_BUS.post(new AmmoHitBlockEvent(this.level(), result, this.level().getBlockState(pos), this))) {
             return;
         }
+        super.onHitBlock(result);
         // 爆炸
         if (this.explosion) {
             ExplodeUtil.createExplosion(this.getOwner(), this, this.explosionDamage, this.explosionRadius, this.explosionKnockback, this.explosionDestroyBlock, hitVec);
