@@ -1,0 +1,30 @@
+{
+  "slot": "tacz:attachment/slot/scope_mk5hd_slot",
+  "model": "tacz:attachment/scope_mk5hd_geo",
+  "texture": "tacz:attachment/uv/scope_mk5hd",
+  "lod": {
+    "model": "tacz:attachment/lod/scope_mk5hd",
+    "texture": "tacz:attachment/lod/scope_mk5hd"
+  },
+  "zoom": [
+    5,
+    25,
+    1.25
+  ],
+  "views": [
+    2,
+    2,
+    1
+  ],
+  "views_fov": [
+    27.0,
+    10.0,
+    60.0
+  ],
+  "scope": true,
+  "sight": true,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_c",
+    "uninstall": "tacz:attachments/scope_general_c"
+  }
+}
