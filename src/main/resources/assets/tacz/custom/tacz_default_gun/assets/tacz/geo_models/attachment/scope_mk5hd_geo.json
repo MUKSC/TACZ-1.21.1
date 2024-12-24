@@ -16,6 +16,16 @@
 					"pivot": [0, -2.75, 0]
 				},
 				{
+					"name": "ammo_count_text",
+					"parent": "scope_body",
+					"pivot": [-0.75, 1.625, 2]
+				},
+				{
+					"name": "custom_text_ammo",
+					"parent": "scope_body",
+					"pivot": [-0.625, 1.625, 2]
+				},
+				{
 					"name": "mount",
 					"parent": "scope_body",
 					"pivot": [0, 0.825, 3.875],
@@ -7197,10 +7207,6 @@
 					"name": "scope_view_2",
 					"parent": "views",
 					"pivot": [0, 2.0625, 14]
-				},
-				{
-					"name": "ammo_count_text",
-					"pivot": [-10, -3, -180]
 				}
 			]
 		}
