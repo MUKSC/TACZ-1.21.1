@@ -2,6 +2,7 @@ package com.tacz.guns.resource.modifier.custom;
 
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class AimInaccuracyModifier implements IAttachmentModifier<Map<InaccuracyType, Modifier>, Map<InaccuracyType, Float>> {
-    public static final String ID = "aim_inaccuracy";
+    public static final String ID = GunProperties.AIM_INACCURACY.name();
 
     @Override
     public String getId() {

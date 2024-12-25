@@ -16,7 +16,6 @@ public class AttachmentPropertyEvent extends Event implements KubeJSGunEventPost
     public AttachmentPropertyEvent(ItemStack gunItem, AttachmentCacheProperty attachmentProperty) {
         this.gunItem = gunItem;
         this.cacheProperty = attachmentProperty;
-        postEventToKubeJS(this);
     }
 
     public ItemStack getGunItem() {

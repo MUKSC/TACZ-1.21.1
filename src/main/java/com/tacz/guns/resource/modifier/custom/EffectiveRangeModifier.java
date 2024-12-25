@@ -1,6 +1,7 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
@@ -22,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EffectiveRangeModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "effective_range";
+    public static final String ID = GunProperties.EFFECTIVE_RANGE.name();
 
     @Override
     public String getId() {

@@ -2,6 +2,7 @@ package com.tacz.guns.resource.modifier.custom;
 
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
@@ -18,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ExplosionModifier implements IAttachmentModifier<ExplosionModifier.ExplosionModifierValue, ExplosionData> {
-    public static final String ID = "explosion";
+    public static final String ID = GunProperties.EXPLOSION.name();
 
     @Override
     public String getId() {

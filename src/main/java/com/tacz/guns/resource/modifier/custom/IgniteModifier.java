@@ -1,6 +1,7 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class IgniteModifier implements IAttachmentModifier<Ignite, Ignite> {
-    public static final String ID = "ignite";
+    public static final String ID = GunProperties.IGNITE.name();
 
     @Override
     public String getId() {

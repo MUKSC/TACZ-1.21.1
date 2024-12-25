@@ -1,6 +1,7 @@
 package com.tacz.guns.compat.kubejs;
 
 import com.tacz.guns.GunMod;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.GunItemManager;
 import com.tacz.guns.compat.kubejs.custom.CustomGunItemBuilder;
@@ -44,6 +45,7 @@ public class TimelessKubeJSPlugin extends KubeJSPlugin {
     @Override
     public void registerBindings(BindingsEvent event) {
         event.add("TimelessItem", TimelessItemWrapper.class);
+        event.add("GunProperties", GunProperties.class);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class HeadShotModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "head_shot";
+    public static final String ID = GunProperties.HEADSHOT_MULTIPLIER.name();
 
     @Override
     public String getId() {

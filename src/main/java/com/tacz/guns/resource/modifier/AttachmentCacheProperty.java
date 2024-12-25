@@ -2,6 +2,7 @@ package com.tacz.guns.resource.modifier;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tacz.guns.api.GunProperty;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
@@ -10,6 +11,8 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.jetbrains.annotations.ApiStatus.*;
 
 /**
  * 所有与配件缓存计算相关的都在这里
@@ -53,5 +56,19 @@ public class AttachmentCacheProperty {
     @SuppressWarnings("unchecked")
     public <T> T getCache(String id) {
         return (T) cacheValues.get(id).getValue();
+    }
+
+    @Experimental
+    public <T> T getCache(GunProperty<T> key) {
+        return key.type().cast(cacheValues.get(key.name()).getValue());
+    }
+
+    @Experimental
+    @SuppressWarnings("unchecked")
+    public <T> void setCache(GunProperty<T> key, T value) {
+        if (!key.type().isInstance(value)) {
+            throw new IllegalArgumentException("Gun cache type mismatch, needs %s, found %s".formatted(key.type().getSimpleName(), value.getClass().getSimpleName()));
+        }
+        cacheValues.get(key.name()).setValue(value);
     }
 }

@@ -1,6 +1,7 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
@@ -19,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SilenceModifier implements IAttachmentModifier<Pair<Modifier, Boolean>, Pair<Integer, Boolean>> {
-    public static final String ID = "silence";
+    public static final String ID = GunProperties.SILENCE.name();
 
     @Override
     public String getId() {

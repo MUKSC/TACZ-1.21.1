@@ -1,6 +1,7 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.*;
 import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
@@ -25,7 +26,7 @@ import java.util.List;
  * right 是 Yaw
  */
 public class RecoilModifier implements IAttachmentModifier<Pair<Modifier, Modifier>, ParameterizedCachePair<Float, Float>> {
-    public static final String ID = "recoil";
+    public static final String ID = GunProperties.RECOIL.name();
 
     @Override
     public String getId() {

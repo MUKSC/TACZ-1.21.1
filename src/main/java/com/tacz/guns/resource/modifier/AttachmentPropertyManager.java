@@ -7,6 +7,7 @@ import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.event.common.AttachmentPropertyEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
+import com.tacz.guns.event.ChangeGunPropertyEvent;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.modifier.custom.*;
 import net.minecraft.resources.ResourceLocation;
@@ -58,7 +59,12 @@ public class AttachmentPropertyManager {
         ResourceLocation gunId = iGun.getGunId(gunItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(index -> {
             AttachmentCacheProperty cacheProperty = new AttachmentCacheProperty();
-            MinecraftForge.EVENT_BUS.post(new AttachmentPropertyEvent(gunItem, cacheProperty));
+            // 发布事件
+            AttachmentPropertyEvent event = new AttachmentPropertyEvent(gunItem, cacheProperty);
+            ChangeGunPropertyEvent.internalOnAttachmentPropertyEvent(event);
+            event.postEventToKubeJS(event);
+            MinecraftForge.EVENT_BUS.post(event);
+            // 更新实体的缓存对象
             IGunOperator.fromLivingEntity(shooter).updateCacheProperty(cacheProperty);
         });
     }
