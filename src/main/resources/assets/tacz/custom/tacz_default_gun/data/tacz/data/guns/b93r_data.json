@@ -23,11 +23,11 @@
     "ignite": false,
     "pierce": 0
   },
-  "ammo_amount": 18,
+  "ammo_amount": 20,
   "extended_mag_ammo_amount": [
-    21,
-    24,
-    30
+    23,
+    26,
+    32
   ],
   "bolt": "closed_bolt",
   "reload": {
