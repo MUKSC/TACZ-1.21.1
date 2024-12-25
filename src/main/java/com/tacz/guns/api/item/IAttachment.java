@@ -33,15 +33,15 @@ public interface IAttachment {
      */
     void setAttachmentId(ItemStack attachmentStack, @Nullable ResourceLocation attachmentId);
 
-    /**
-     * 获取配件的皮肤 ID
+    /**@deprecated
      */
+    @Deprecated
     @Nullable
     ResourceLocation getSkinId(ItemStack attachmentStack);
 
-    /**
-     * 设置配件的皮肤 ID
+    /**@deprecated
      */
+    @Deprecated
     void setSkinId(ItemStack attachmentStack, @Nullable ResourceLocation skinId);
 
     /**

@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class AttachmentNbtFactory extends TimelessItemNbtFactory<AttachmentItem, AttachmentNbtFactory>{
-    private ResourceLocation skinId = null;
 
     public AttachmentNbtFactory(@Nonnull AttachmentItem item) {
         super(item);
@@ -18,8 +17,8 @@ public class AttachmentNbtFactory extends TimelessItemNbtFactory<AttachmentItem,
         super((AttachmentItem) TimelessItemType.ATTACHMENT.getItem());
     }
 
+    @Deprecated
     public void setSkinId(ResourceLocation skinId) {
-        this.skinId = skinId;
     }
 
     @Override
@@ -27,7 +26,6 @@ public class AttachmentNbtFactory extends TimelessItemNbtFactory<AttachmentItem,
         ItemStack stack = new ItemStack(item, count);
         if (item instanceof IAttachment iAttachment) {
             iAttachment.setAttachmentId(stack, id);
-            iAttachment.setSkinId(stack, skinId);
         }
         return stack;
     }

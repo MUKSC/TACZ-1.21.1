@@ -201,15 +201,6 @@ public class ClientAttachmentIndex {
         }
     }
 
-//    private static void checkSkins(ResourceLocation registryName, ClientAttachmentIndex index) {
-//        Map<ResourceLocation, AttachmentSkin> skins = ClientAssetManager.INSTANCE.getAttachmentSkins(registryName);
-//        if (skins != null) {
-//            for (Map.Entry<ResourceLocation, AttachmentSkin> entry : skins.entrySet()) {
-//                ClientAttachmentSkinIndex skinIndex = ClientAttachmentSkinIndex.getInstance(entry.getValue());
-//                index.skinIndexMap.put(entry.getKey(), skinIndex);
-//            }
-//        }
-//    }
 
     private static void checkSounds(AttachmentDisplay display, ClientAttachmentIndex index) {
         Map<String, ResourceLocation> displaySounds = display.getSounds();
@@ -264,12 +255,10 @@ public class ClientAttachmentIndex {
         return data;
     }
 
+    @Deprecated
     @Nullable
     public ClientAttachmentSkinIndex getSkinIndex(@Nullable ResourceLocation skinName) {
-        if (skinName == null) {
-            return null;
-        }
-        return skinIndexMap.get(skinName);
+        return null;
     }
 
     public boolean isScope() {

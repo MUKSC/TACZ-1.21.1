@@ -8,7 +8,6 @@ import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.model.SlotModel;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
-import com.tacz.guns.client.resource.index.ClientAttachmentSkinIndex;
 import com.tacz.guns.util.RenderDistance;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -51,18 +50,7 @@ public class AttachmentItemRenderer extends BlockEntityWithoutLevelRenderer {
                 if (transformType == ItemDisplayContext.FIXED) {
                     poseStack.mulPose(Axis.YN.rotationDegrees(90f));
                 }
-                ResourceLocation skinId = iAttachment.getSkinId(stack);
-                ClientAttachmentSkinIndex skinIndex = attachmentIndex.getSkinIndex(skinId);
-                if (skinIndex != null) {
-                    // 有皮肤则渲染皮肤
-                    BedrockAttachmentModel model = skinIndex.getModel();
-                    ResourceLocation texture = skinIndex.getTexture();
-                    RenderType renderType = RenderType.entityCutout(texture);
-                    model.render(null, poseStack, transformType, renderType, pPackedLight, pPackedOverlay);
-                } else {
-                    // 没有皮肤，渲染默认模型
-                    this.renderDefaultAttachment(transformType, poseStack, pBuffer, pPackedLight, pPackedOverlay, attachmentIndex);
-                }
+                this.renderDefaultAttachment(transformType, poseStack, pBuffer, pPackedLight, pPackedOverlay, attachmentIndex);
             }, () -> {
                 // 没有这个 attachmentId，渲染黑紫材质以提醒
                 poseStack.translate(0.5, 1.5, 0.5);
