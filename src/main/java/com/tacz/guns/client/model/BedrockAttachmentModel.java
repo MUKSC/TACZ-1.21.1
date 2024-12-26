@@ -87,11 +87,14 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
             isScopeOcular.add(wrapper.isScope);
         }
         // 初始化 division 的 node path
+        ModelRendererWrapper divisionModel = modelMap.get(DIVISION_NODE);
         path = getPath(modelMap.get(DIVISION_NODE));
         i = 2;
         while (path != null) {
             divisionNodePaths.add(path);
-            path = getPath(modelMap.get(DIVISION_NODE + '_' + i++));
+            divisionModel.setHidden(true);
+            divisionModel = modelMap.get(DIVISION_NODE + '_' + i++);
+            path = getPath(divisionModel);
         }
 
         scopeBodyPath = getPath(modelMap.get(SCOPE_BODY_NODE));
