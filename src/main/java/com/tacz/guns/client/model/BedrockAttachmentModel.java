@@ -101,6 +101,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         ocularRingPath = getPath(modelMap.get(OCULAR_RING_NODE));
     }
 
+    @Nullable
     public List<BedrockPart> getScopeViewPath(int viewSwitchCount) {
         if (scopeViewPaths.isEmpty()) {
             return null;

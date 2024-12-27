@@ -370,7 +370,9 @@ public class FirstPersonRenderGunEvent {
                     viewIndex = views[zoomNumber % views.length] - 1;
                     if (attachmentModel != null) {
                         List<BedrockPart> scopeViewPath = attachmentModel.getScopeViewPath(currentViewIndex == -1 ? viewIndex : currentViewIndex);
-                        aimingNodePath.addAll(scopeViewPath);
+                        if (scopeViewPath != null) {
+                            aimingNodePath.addAll(scopeViewPath);
+                        }
                     }
                 }
             }
