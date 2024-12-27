@@ -213,7 +213,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         if (!divisionNodePaths.isEmpty()) {
             RenderSystem.disableDepthTest();
             for (int i = 0; i < divisionNodePaths.size(); i++) {
-                RenderSystem.stencilFunc(GL11.GL_EQUAL, i + 1, 0xFF);;
+                RenderSystem.stencilFunc(GL11.GL_EQUAL, i + 1, 0xFF);
                 renderTempPart(matrixStack, transformType, renderType, light, overlay, divisionNodePaths.get(i));
             }
             RenderSystem.enableDepthTest();
@@ -254,12 +254,12 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
             RenderSystem.depthMask(true);
             RenderSystem.colorMask(true, true, true, true);
             RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-            for (int i = 0; i < ocularNodePaths.size(); i++) {
+            for (int i = 0; i < ocularNodePaths.size() && i < divisionNodePaths.size(); i++) {
                 if (i > Byte.MAX_VALUE) {
                     throw new IllegalArgumentException("Index of oculus is out of range for 127");
                 }
                 if (selective && !isScopeOcular.get(i)) {
-                    RenderSystem.stencilFunc(GL11.GL_EQUAL, i + 1, 0xFF);;
+                    RenderSystem.stencilFunc(GL11.GL_EQUAL, i + 1, 0xFF);
                     renderTempPart(matrixStack, transformType, renderType, light, overlay, divisionNodePaths.get(i));
                 } else {
                     // 渲染目镜黑色遮罩
