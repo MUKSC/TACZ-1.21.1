@@ -6,14 +6,14 @@
   "armor_ignore": {
     "multiplier": 0.5
   },
-  "damage": {
-    "multiplier": 0.5
+  "head_shot":{
+    "multiplier": 0
   },
   "pierce": {
     "multiplier": 0
   },
   "rpm": {
-    "multiplier":0.8
+    "multiplier":0.85
   },
   "extended_mag_level": 1
 }

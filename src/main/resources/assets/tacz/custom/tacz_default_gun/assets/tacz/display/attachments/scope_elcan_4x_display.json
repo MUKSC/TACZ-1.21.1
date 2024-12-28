@@ -7,11 +7,18 @@
     "texture": "tacz:attachment/lod/scope_elcan_4x"
   },
   "zoom": [
-    1.3,
-    4.0
+    4.25,
+    1.25
+  ],
+  "views": [
+    2,
+    2
+  ],
+  "views_fov": [
+    40.0,
+    60.0
   ],
   "scope": true,
-  "fov": 70.0,
   "sounds": {
     "install": "tacz:attachments/scope_general_d",
     "uninstall": "tacz:attachments/scope_general_d"
