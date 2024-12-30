@@ -101,6 +101,7 @@ public class TimelessRecipeJS extends RecipeJS {
         JsonObject jsonObject = new JsonObject();
         JsonObject itemJson = new JsonObject();
         itemJson.addProperty("item", RegistryInfo.ITEM.getId(value.item.getItem()).toString());
+        itemJson.addProperty("count", value.getCount());
         jsonObject.addProperty("type", "custom");
         jsonObject.add("item", itemJson);
         jsonObject.addProperty("count", value.getCount());
