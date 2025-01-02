@@ -1,6 +1,7 @@
 package com.tacz.guns.entity.shooter;
 
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ShootResult;
 import com.tacz.guns.api.event.common.GunShootEvent;
 import com.tacz.guns.api.item.IGun;
@@ -15,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.LogicalSide;
 
 import java.util.Objects;
@@ -78,19 +80,34 @@ public class LivingEntityShoot {
         if (data.sprintTimeS > 0) {
             return ShootResult.IS_SPRINTING;
         }
+        IGunOperator gunOperator = IGunOperator.fromLivingEntity(shooter);
+        // 判断子弹数
         Bolt boltType = gunIndex.getGunData().getBolt();
+        // 是否为背包直读
+        boolean useInventoryAmmo = iGun.useInventoryAmmo(currentGunItem);
+        // 膛内是否有子弹
         boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(currentGunItem) && boltType != Bolt.OPEN_BOLT;
+        // 是否还有子弹 (创造模式是否消耗背包备弹)
+        boolean hasInventoryAmmo = iGun.hasInventoryAmmo(shooter, currentGunItem, gunOperator.needCheckAmmo()) || hasAmmoInBarrel;
         int ammoCount = iGun.getCurrentAmmoCount(currentGunItem) + (hasAmmoInBarrel ? 1 : 0);
-        // 创造模式也要判断子弹数
-        if (ammoCount < 1) {
+        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且总子弹数 < 1)
+        boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
+                !useInventoryAmmo && ammoCount < 1;
+        if (noAmmo) {
             return ShootResult.NO_AMMO;
         }
         // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
             return ShootResult.NEED_BOLT;
         }
+        // 闭膛的膛内检查逻辑
         if (boltType == Bolt.CLOSED_BOLT && !hasAmmoInBarrel) {
-            iGun.reduceCurrentAmmoCount(currentGunItem);
+            // 两种不同的上膛情况
+            if (useInventoryAmmo) {
+                consumeAmmoFromPlayer(1, currentGunItem, gunOperator.needCheckAmmo());
+            } else {
+                iGun.reduceCurrentAmmoCount(currentGunItem);
+            }
             iGun.setBulletInBarrel(currentGunItem, true);
         }
         // 触发射击事件
@@ -146,5 +163,24 @@ public class LivingEntityShoot {
             coolDown = coolDown - 5;
             return Math.max(coolDown, 0L);
         }).orElse(-1L);
+    }
+
+    /**
+     * 消耗备弹 TODO: 需要检查，是否有其他更简单的方法消耗背包内的弹药 (这段是直接从逻辑机 API 里复制过来的)
+     */
+    public void consumeAmmoFromPlayer(int neededAmount, ItemStack itemStack, boolean needCheckAmmo) {
+        if (!(itemStack.getItem() instanceof AbstractGunItem abstractGunItem)) {
+            return;
+        }
+        // 如果处于创造模式不消耗的情况
+        if (!needCheckAmmo) {
+            return;
+        }
+        if (abstractGunItem.useDummyAmmo(itemStack)) {
+            abstractGunItem.findAndExtractDummyAmmo(itemStack, neededAmount);
+        } else {
+            shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null)
+                    .map(cap -> abstractGunItem.findAndExtractInventoryAmmo(cap, itemStack, neededAmount));
+        }
     }
 }

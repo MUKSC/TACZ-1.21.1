@@ -109,7 +109,7 @@ public abstract class AbstractGunItem extends Item implements IGun {
     }
 
     /**
-     * 换弹前的检查，完成如下检查：枪内弹药是否已经填满？玩家背包是否有可用弹药？
+     * 换弹前的检查，完成如下检查：枪内弹药是否已经填满？玩家背包是否有可用弹药？是否为背包直读？
      * @param shooter 准备换弹的实体
      * @param gunItem 枪械物品
      * @return 是否满足换弹条件
@@ -126,9 +126,15 @@ public abstract class AbstractGunItem extends Item implements IGun {
         if (currentAmmoCount >= maxAmmoCount) {
             return false;
         }
+        // 背包直读不进行换弹
+        if (useInventoryAmmo(gunItem)) {
+            return false;
+        }
+        // 虚拟备弹处理
         if (useDummyAmmo(gunItem)) {
             return getDummyAmmoAmount(gunItem) > 0;
         }
+        // 检查背包内的弹药数量
         return shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null).map(cap -> {
             // 背包检查
             for (int i = 0; i < cap.getSlots(); i++) {
@@ -152,6 +158,10 @@ public abstract class AbstractGunItem extends Item implements IGun {
      */
     @Override
     public void dropAllAmmo(Player player, ItemStack gunItem) {
+        // 背包直读时不调用退弹
+        if (useInventoryAmmo(gunItem)) {
+            return;
+        }
         //TODO 这里操作的对象不应该是 Player 而是 LivingEntity。此外枪膛内的子弹也要退
         int ammoCount = getCurrentAmmoCount(gunItem);
         if (ammoCount <= 0) {
@@ -201,10 +211,22 @@ public abstract class AbstractGunItem extends Item implements IGun {
      * 枪械寻弹和扣除背包弹药逻辑
      * @param itemHandler 目标实体的背包
      * @param gunItem 枪械物品
-     * @param needAmmoCount 需要的弹药(物品)数量
-     * @return 寻找到的弹药(物品)数量
+     * @param needAmmoCount 需要的弹药 (物品) 数量
+     * @return 寻找到的弹药 (物品) 数量
      */
+    @Deprecated
     public int findAndExtractInventoryAmmos(IItemHandler itemHandler, ItemStack gunItem, int needAmmoCount) {
+        return findAndExtractInventoryAmmo(itemHandler, gunItem, needAmmoCount);
+    }
+
+    /**
+     * 枪械寻弹和扣除背包弹药逻辑
+     * @param itemHandler 目标实体的背包
+     * @param gunItem 枪械物品
+     * @param needAmmoCount 需要的弹药 (物品) 数量
+     * @return 寻找到的弹药 (物品) 数量
+     */
+    public int findAndExtractInventoryAmmo(IItemHandler itemHandler, ItemStack gunItem, int needAmmoCount) {
         int cnt = needAmmoCount;
         // 背包检查
         for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -352,5 +374,59 @@ public abstract class AbstractGunItem extends Item implements IGun {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * 获取是否使用弹药直读
+     * @param gun 枪械
+     * @return 是否使用弹药直读
+     */
+    @Override
+    public boolean useInventoryAmmo(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return false;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            // 是否为弹药直读
+            return gunIndex.getGunData().getReloadData().getType().equals(FeedType.INVENTORY);
+        }
+        return false;
+    }
+
+    /**
+     * 获取是否有供给弹药直读的弹药
+     * @param gun 枪械
+     * @return 是否有供给弹药直读的弹药
+     */
+    @Override
+    public boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo) {
+        // 如果不是背包直读，则直接返回 false
+        if (!useInventoryAmmo(gun)) {
+            return false;
+        }
+        // 如果不需要检查子弹，则直接返回 true
+        if (!needCheckAmmo) {
+            return true;
+        }
+        // 虚拟备弹处理
+        if (useDummyAmmo(gun)) {
+            return getDummyAmmoAmount(gun) > 0;
+        }
+        // 检查背包内的弹药数量
+        return shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null).map(cap -> {
+            // 背包检查
+            for (int i = 0; i < cap.getSlots(); i++) {
+                ItemStack checkAmmoStack = cap.getStackInSlot(i);
+                if (checkAmmoStack.getItem() instanceof IAmmo iAmmo && iAmmo.isAmmoOfGun(gun, checkAmmoStack)) {
+                    return true;
+                }
+                if (checkAmmoStack.getItem() instanceof IAmmoBox iAmmoBox && iAmmoBox.isAmmoBoxOfGun(gun, checkAmmoStack)) {
+                    return true;
+                }
+            }
+            return false;
+        }).orElse(false);
     }
 }

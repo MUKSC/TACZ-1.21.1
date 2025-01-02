@@ -236,14 +236,18 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         long boltFeedTime = rawBoltFeedTime == -1 ? boltActionTime : (long) (gunData.getBoltFeedTime() * 1000);
         if (api.getBoltTime() < boltFeedTime) {
             return true;
-        } else {
-            if (!api.hasAmmoInBarrel()) {
-                if (api.removeAmmoFromMagazine(1) != 0) {
+        }
+        if (!api.hasAmmoInBarrel()) {
+            // 如果是背包直读则检测消耗背包弹药
+            if (api.useInventoryAmmo()) {
+                if (api.consumeAmmoFromPlayer(1) == 1) {
                     api.setAmmoInBarrel(true);
                 }
+            } else if (api.removeAmmoFromMagazine(1) != 0) {
+                api.setAmmoInBarrel(true);
             }
-            return api.getBoltTime() < boltActionTime;
         }
+        return api.getBoltTime() < boltActionTime;
     }
 
     private ReloadState defaultTickReload(ModernKineticGunScriptAPI api) {

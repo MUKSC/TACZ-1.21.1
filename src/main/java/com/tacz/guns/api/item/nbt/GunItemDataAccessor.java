@@ -30,7 +30,6 @@ public interface GunItemDataAccessor extends IGun {
     String GUN_DUMMY_AMMO = "DummyAmmo";
     String GUN_MAX_DUMMY_AMMO = "MaxDummyAmmo";
     String GUN_ATTACHMENT_LOCK = "AttachmentLock";
-
     String GUN_DISPLAY_ID_TAG = "GunDisplayId";
 
     @Override
@@ -212,7 +211,10 @@ public interface GunItemDataAccessor extends IGun {
 
     @Override
     default void reduceCurrentAmmoCount(ItemStack gun) {
-        setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
+        // 只在不使用背包直读的情况下减少 AmmoCount
+        if (!useInventoryAmmo(gun)) {
+            setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
+        }
     }
 
     @Override
@@ -265,7 +267,7 @@ public interface GunItemDataAccessor extends IGun {
 
     @Override
     @NotNull
-    default  ResourceLocation getBuiltInAttachmentId(ItemStack gun, AttachmentType type) {
+    default ResourceLocation getBuiltInAttachmentId(ItemStack gun, AttachmentType type) {
         IGun iGun = IGun.getIGunOrNull(gun);
         if (iGun == null) {
             return DefaultAssets.EMPTY_ATTACHMENT_ID;

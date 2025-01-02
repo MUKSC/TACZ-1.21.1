@@ -163,30 +163,62 @@ public class ModernKineticGunScriptAPI {
         Bolt boltType = TimelessAPI.getCommonGunIndex(abstractGunItem.getGunId(itemStack))
                 .map(index -> index.getGunData().getBolt())
                 .orElse(null);
+        // 膛内是否有子弹
+        boolean hasAmmoInBarrel = abstractGunItem.hasBulletInBarrel(itemStack) && boltType != Bolt.OPEN_BOLT;
+        // 背包内是否还有子弹 (创造模式是否消耗背包备弹)
+        boolean hasInventoryAmmo = abstractGunItem.hasInventoryAmmo(shooter, itemStack, isReloadingNeedConsumeAmmo());
+        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且弹匣子弹数 < 1)
+        boolean noAmmo = useInventoryAmmo() && !hasInventoryAmmo ||
+                !useInventoryAmmo() && abstractGunItem.getCurrentAmmoCount(itemStack) < 1;
         if (boltType == null) {
             return false;
         }
+        // 栓动逻辑
         if (boltType == Bolt.MANUAL_ACTION) {
-            if (!abstractGunItem.hasBulletInBarrel(itemStack)) {
+            // 没有膛内子弹无法射击
+            if (!hasAmmoInBarrel) {
                 return false;
             }
+            // 没有弹匣内的子弹则消耗枪膛内的子弹
             abstractGunItem.setBulletInBarrel(itemStack, false);
-        } else if (boltType == Bolt.CLOSED_BOLT) {
-            if (abstractGunItem.getCurrentAmmoCount(itemStack) > 0) {
-                abstractGunItem.reduceCurrentAmmoCount(itemStack);
-            } else {
-                if (!abstractGunItem.hasBulletInBarrel(itemStack)) {
-                    return false;
+            return true;
+        }
+        // 闭膛逻辑
+        if (boltType == Bolt.CLOSED_BOLT) {
+            // 如果有弹匣内的子弹则优先消耗弹匣内的子弹
+            if (!noAmmo) {
+                // 如果背包直读则背包内射击后弹药 - 1
+                if (useInventoryAmmo()) {
+                    return consumeAmmoFromPlayer(1) == 1;
                 }
-                abstractGunItem.setBulletInBarrel(itemStack, false);
+                // 如果非背包直读则弹匣内子弹 - 1
+                abstractGunItem.reduceCurrentAmmoCount(itemStack);
+                return true;
             }
-        } else {
-            if (abstractGunItem.getCurrentAmmoCount(itemStack) == 0) {
+            // 没有膛内子弹无法射击
+            if (!hasAmmoInBarrel) {
                 return false;
             }
-            abstractGunItem.reduceCurrentAmmoCount(itemStack);
+            // 没有弹匣内的子弹则消耗枪膛内的子弹
+            abstractGunItem.setBulletInBarrel(itemStack, false);
+            return true;
         }
-        return true;
+        // 开膛逻辑
+        if (boltType == Bolt.OPEN_BOLT) {
+            // 没有子弹无法射击
+            if (noAmmo) {
+                return false;
+            }
+            // 如果背包直读则背包内射击后弹药 - 1
+            if (useInventoryAmmo()) {
+                return consumeAmmoFromPlayer(1) == 1;
+            }
+            // 如果非背包直读则弹匣内子弹 - 1
+            abstractGunItem.reduceCurrentAmmoCount(itemStack);
+            return true;
+        }
+        // 非三种已知 Bolt 类型 (目前不会出现)，默认返回 false
+        return false;
     }
 
     /**
@@ -360,11 +392,15 @@ public class ModernKineticGunScriptAPI {
      * @return 实际消耗的弹药数量
      */
     public int consumeAmmoFromPlayer(int neededAmount) {
+        // 如果处于背包直读并且创造模式不消耗的情况
+        if (useInventoryAmmo() && !isReloadingNeedConsumeAmmo()) {
+            return neededAmount;
+        }
         if (abstractGunItem.useDummyAmmo(itemStack)) {
             return abstractGunItem.findAndExtractDummyAmmo(itemStack, neededAmount);
         } else {
             return shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null)
-                    .map(cap -> abstractGunItem.findAndExtractInventoryAmmos(cap, itemStack, neededAmount))
+                    .map(cap -> abstractGunItem.findAndExtractInventoryAmmo(cap, itemStack, neededAmount))
                     .orElse(0);
         }
     }
@@ -582,8 +618,31 @@ public class ModernKineticGunScriptAPI {
         return gunIndex;
     }
 
+    // TODO: 测试检查 enum 值是否可以直接在 lua 中调用，以简化这个功能为下面那个方法
+    public int getBoltByInt() {
+        Bolt bolt = gunIndex.getGunData().getBolt();
+        if (bolt == Bolt.MANUAL_ACTION) {
+            return 1;
+        }
+        if (bolt == Bolt.CLOSED_BOLT) {
+            return 2;
+        }
+        if (bolt == Bolt.OPEN_BOLT) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public Bolt getBolt() {
+        return gunIndex.getGunData().getBolt();
+    }
+
     public void setDataHolder(ShooterDataHolder dataHolder) {
         this.dataHolder = dataHolder;
+    }
+
+    public boolean useInventoryAmmo() {
+        return abstractGunItem.useInventoryAmmo(itemStack);
     }
 
     ShooterDataHolder getDataHolder() {

@@ -31,27 +31,37 @@ public class LocalPlayerBolt {
         if (data.isBolting) {
             return;
         }
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return;
         }
-        GunData gunData = TimelessAPI.getClientGunIndex(iGun.getGunId(mainhandItem)).map(ClientGunIndex::getGunData).orElse(null);
+        GunData gunData = TimelessAPI.getClientGunIndex(iGun.getGunId(mainHandItem)).map(ClientGunIndex::getGunData).orElse(null);
         if (gunData == null) {
             return;
         }
 
-        TimelessAPI.getGunDisplay(mainhandItem).ifPresent(display -> {
+        TimelessAPI.getGunDisplay(mainHandItem).ifPresent(display -> {
+            IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
             // 检查 bolt 类型是否是 manual action
             Bolt boltType = gunData.getBolt();
+            // 是否为背包直读
+            boolean useInventoryAmmo = iGun.useInventoryAmmo(mainHandItem);
+            // 膛内是否有子弹
+            boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(mainHandItem) && boltType != Bolt.OPEN_BOLT;
+            // 背包内是否还有子弹 (创造模式是否消耗背包备弹)
+            boolean hasInventoryAmmo = iGun.hasInventoryAmmo(player, mainHandItem, gunOperator.needCheckAmmo());
+            // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且弹匣子弹数 < 1)
+            boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
+                    !useInventoryAmmo && iGun.getCurrentAmmoCount(mainHandItem) < 1;
             if (boltType != Bolt.MANUAL_ACTION) {
                 return;
             }
             // 检查是否有弹药在枪膛内
-            if (iGun.hasBulletInBarrel(mainhandItem)) {
+            if (hasAmmoInBarrel) {
                 return;
             }
             // 检查弹匣内是否有子弹
-            if (iGun.getCurrentAmmoCount(mainhandItem) == 0) {
+            if (noAmmo) {
                 return;
             }
             // 锁上状态锁
@@ -69,15 +79,15 @@ public class LocalPlayerBolt {
     }
 
     public void tickAutoBolt() {
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             data.isBolting = false;
             return;
         }
         bolt();
         if (data.isBolting) {
             // 对于客户端来说，膛内弹药被填入的状态同步到客户端的瞬间，bolt 过程才算完全结束
-            if (iGun.hasBulletInBarrel(mainhandItem)) {
+            if (iGun.hasBulletInBarrel(mainHandItem)) {
                 data.isBolting = false;
             }
         }

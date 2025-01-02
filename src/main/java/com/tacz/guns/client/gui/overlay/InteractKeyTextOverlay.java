@@ -32,7 +32,7 @@ public class InteractKeyTextOverlay implements IGuiOverlay {
         if (player == null || player.isSpectator()) {
             return;
         }
-        if (!IGun.mainhandHoldGun(player)) {
+        if (!IGun.mainHandHoldGun(player)) {
             return;
         }
         HitResult hitResult = mc.hitResult;

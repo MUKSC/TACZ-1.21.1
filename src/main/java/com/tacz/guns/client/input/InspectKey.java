@@ -34,7 +34,7 @@ public class InspectKey {
             if (player == null || player.isSpectator()) {
                 return;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (IGun.mainHandHoldGun(player)) {
                 IClientPlayerGunOperator.fromLocalPlayer(player).inspect();
             }
         }
@@ -46,7 +46,7 @@ public class InspectKey {
             if (player == null || player.isSpectator()) {
                 return false;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (IGun.mainHandHoldGun(player)) {
                 IClientPlayerGunOperator.fromLocalPlayer(player).inspect();
                 return true;
             }

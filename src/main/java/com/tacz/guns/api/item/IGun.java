@@ -36,17 +36,37 @@ public interface IGun {
     /**
      * 是否主手持枪
      */
+    @Deprecated
     static boolean mainhandHoldGun(LivingEntity livingEntity) {
+        return livingEntity.getMainHandItem().getItem() instanceof IGun;
+    }
+
+    /**
+     * 是否主手持枪
+     */
+    static boolean mainHandHoldGun(LivingEntity livingEntity) {
         return livingEntity.getMainHandItem().getItem() instanceof IGun;
     }
 
     /**
      * 获取主手枪械的开火模式
      */
+    @Deprecated
     static FireMode getMainhandFireMode(LivingEntity livingEntity) {
-        ItemStack mainhandItem = livingEntity.getMainHandItem();
-        if (mainhandItem.getItem() instanceof IGun iGun) {
-            return iGun.getFireMode(mainhandItem);
+        ItemStack mainHandItem = livingEntity.getMainHandItem();
+        if (mainHandItem.getItem() instanceof IGun iGun) {
+            return iGun.getFireMode(mainHandItem);
+        }
+        return FireMode.UNKNOWN;
+    }
+
+    /**
+     * 获取主手枪械的开火模式
+     */
+    static FireMode getMainHandFireMode(LivingEntity livingEntity) {
+        ItemStack mainHandItem = livingEntity.getMainHandItem();
+        if (mainHandItem.getItem() instanceof IGun iGun) {
+            return iGun.getFireMode(mainHandItem);
         }
         return FireMode.UNKNOWN;
     }
@@ -266,4 +286,14 @@ public interface IGun {
      * 设置枪管中的子弹有无，用于闭膛待击的枪械
      */
     void setBulletInBarrel(ItemStack gun, boolean bulletInBarrel);
+
+    /**
+     * 枪械是否为备弹直读
+     */
+    boolean useInventoryAmmo(ItemStack gun);
+
+    /**
+     * 获取枪械是否有备弹 (只针对背包直读读的机制使用)
+     */
+    boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo);
 }

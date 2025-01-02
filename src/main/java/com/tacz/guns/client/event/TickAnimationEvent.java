@@ -19,8 +19,8 @@ public class TickAnimationEvent {
         if (player == null) {
             return;
         }
-        ItemStack mainhandItem = player.getMainHandItem();
-        TimelessAPI.getGunDisplay(mainhandItem).ifPresent(gunIndex -> {
+        ItemStack mainHandItem = player.getMainHandItem();
+        TimelessAPI.getGunDisplay(mainHandItem).ifPresent(gunIndex -> {
             var animationStateMachine = gunIndex.getAnimationStateMachine();
             // 群组服切世界导致的特殊 BUG 处理，正常情况不会遇到此问题
             if (player.input == null) {
@@ -50,12 +50,12 @@ public class TickAnimationEvent {
         if (player == null) {
             return;
         }
-        ItemStack mainhandItem = player.getMainHandItem();
-        TimelessAPI.getGunDisplay(mainhandItem).ifPresent(gunIndex -> {
+        ItemStack mainHandItem = player.getMainHandItem();
+        TimelessAPI.getGunDisplay(mainHandItem).ifPresent(gunIndex -> {
             // 更新状态机
             var animationStateMachine = gunIndex.getAnimationStateMachine();
             animationStateMachine.processContextIfExist(context -> {
-                context.setCurrentGunItem(mainhandItem);
+                context.setCurrentGunItem(mainHandItem);
                 context.setPartialTicks(Minecraft.getInstance().getFrameTime());
             });
             animationStateMachine.visualUpdate();

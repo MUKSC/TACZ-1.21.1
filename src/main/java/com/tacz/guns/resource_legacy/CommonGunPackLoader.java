@@ -109,7 +109,7 @@ public class CommonGunPackLoader {
         if (server != null) {
             List<ServerPlayer> players = server.getPlayerList().getPlayers();
             players.forEach(player -> {
-                if (player != null && IGun.mainhandHoldGun(player)) {
+                if (player != null && IGun.mainHandHoldGun(player)) {
                     AttachmentPropertyManager.postChangeEvent(player, player.getMainHandItem());
                 }
             });

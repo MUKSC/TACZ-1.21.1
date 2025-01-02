@@ -296,12 +296,12 @@ public class FirstPersonRenderGunEvent {
             if (!shooter.equals(player)) {
                 return;
             }
-            ItemStack mainhandItem = player.getMainHandItem();
-            IGun iGun = IGun.getIGunOrNull(mainhandItem);
+            ItemStack mainHandItem = player.getMainHandItem();
+            IGun iGun = IGun.getIGunOrNull(mainHandItem);
             if (iGun == null) {
                 return;
             }
-            TimelessAPI.getClientGunIndex(iGun.getGunId(mainhandItem)).ifPresent(gunIndex -> {
+            TimelessAPI.getClientGunIndex(iGun.getGunId(mainHandItem)).ifPresent(gunIndex -> {
                 // 记录开火时间戳，用于后坐力程序动画
                 shootTimeStamp = System.currentTimeMillis();
                 // 记录枪口火焰数据

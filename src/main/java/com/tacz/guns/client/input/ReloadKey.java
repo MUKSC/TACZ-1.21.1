@@ -34,7 +34,12 @@ public class ReloadKey {
             if (player == null || player.isSpectator()) {
                 return;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (IGun.mainHandHoldGun(player)) {
+                IGun iGun = (IGun) player.getMainHandItem().getItem();
+                // 如果使用背包直读，则在输入时就屏蔽换弹
+                if (iGun.useInventoryAmmo(player.getMainHandItem())) {
+                    return;
+                }
                 IClientPlayerGunOperator.fromLocalPlayer(player).reload();
             }
         }
@@ -46,7 +51,7 @@ public class ReloadKey {
             if (player == null || player.isSpectator()) {
                 return false;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (IGun.mainHandHoldGun(player)) {
                 IClientPlayerGunOperator.fromLocalPlayer(player).reload();
                 return true;
             }
