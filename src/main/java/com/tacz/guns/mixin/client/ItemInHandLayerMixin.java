@@ -34,7 +34,7 @@ public class ItemInHandLayerMixin {
             MuzzleFlashRender.isSelf = true;
             ShellRender.isSelf = true;
         }
-        if (IGun.mainhandHoldGun(livingEntity) && arm == HumanoidArm.LEFT) {
+        if (IGun.mainHandHoldGun(livingEntity) && arm == HumanoidArm.LEFT) {
             ci.cancel();
         }
     }

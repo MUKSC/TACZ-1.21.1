@@ -21,25 +21,25 @@ public class LocalPlayerInspect {
 
     public void inspect() {
         // 暂定只有主手可以检视
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return;
         }
         // 检查状态锁
         if (data.clientStateLock) {
             return;
         }
-        GunData gunData = TimelessAPI.getClientGunIndex(iGun.getGunId(mainhandItem)).map(ClientGunIndex::getGunData).orElse(null);
+        GunData gunData = TimelessAPI.getClientGunIndex(iGun.getGunId(mainHandItem)).map(ClientGunIndex::getGunData).orElse(null);
         if (gunData == null) {
             return;
         }
-        TimelessAPI.getGunDisplay(mainhandItem).ifPresent(gunIndex -> {
+        TimelessAPI.getGunDisplay(mainHandItem).ifPresent(gunIndex -> {
             Bolt boltType = gunData.getBolt();
             boolean noAmmo;
             if (boltType == Bolt.OPEN_BOLT) {
-                noAmmo = iGun.getCurrentAmmoCount(mainhandItem) <= 0;
+                noAmmo = iGun.getCurrentAmmoCount(mainHandItem) <= 0;
             } else {
-                noAmmo = !iGun.hasBulletInBarrel(mainhandItem);
+                noAmmo = !iGun.hasBulletInBarrel(mainHandItem);
             }
             // 触发 inspect，停止播放声音
             SoundPlayManager.stopPlayGunSound();

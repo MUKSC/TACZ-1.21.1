@@ -42,7 +42,7 @@ public class CrawlKey {
             if (!(player instanceof IClientPlayerGunOperator operator)) {
                 return;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (IGun.mainHandHoldGun(player)) {
                 boolean action = true;
                 if (!KeyConfig.HOLD_TO_CRAWL.get()) {
                     action = !operator.isCrawl();
@@ -71,7 +71,7 @@ public class CrawlKey {
         if (!(player instanceof IClientPlayerGunOperator operator)) {
             return false;
         }
-        if (!IGun.mainhandHoldGun(player)) {
+        if (!IGun.mainHandHoldGun(player)) {
             return false;
         }
         boolean action = true;

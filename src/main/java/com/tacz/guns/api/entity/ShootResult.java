@@ -14,7 +14,7 @@ public enum ShootResult {
      */
     COOL_DOWN,
     /**
-     * 无弹药
+     * 无弹药 (或没有备弹)
      */
     NO_AMMO,
     /**

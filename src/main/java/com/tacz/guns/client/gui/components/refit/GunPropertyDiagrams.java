@@ -82,23 +82,31 @@ public final class GunPropertyDiagrams {
 
 
             // 弹匣容量
-            int barrelBulletAmount = (iGun.hasBulletInBarrel(gunItem) && index.getGunData().getBolt() != Bolt.OPEN_BOLT) ? 1 : 0;
-            int ammoAmount = gunData.getAmmoAmount() + barrelBulletAmount;
-            double ammoAmountPercent = Math.min(ammoAmount / 100.0, 1);
-            int ammoLength = (int) (barStartX + barMaxWidth * ammoAmountPercent);
-            int maxAmmoCount = AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, index.getGunData()) + barrelBulletAmount;
-            int addAmmoCount = Math.max(maxAmmoCount - ammoAmount, 0);
-            int addAmmoCountLength = (int) (barMaxWidth * addAmmoCount / 100.0);
-
-            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
-            graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
-            graphics.fill(barStartX, yOffset[0] + 2, ammoLength, yOffset[0] + 6, barBaseColor);
-            if (addAmmoCount > 0) {
-                int barRight = Math.min(ammoLength + addAmmoCountLength, barEndX);
-                graphics.fill(ammoLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
-                graphics.drawString(font, String.format("%d §a(+%d)", ammoAmount, addAmmoCount), valueTextStartX, yOffset[0], fontColor, false);
+            if (iGun.useInventoryAmmo(gunItem)) {
+                // 如果使用背包直读，则直接显示满条和 INV 的标注
+                graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
+                graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                graphics.fill(barStartX, yOffset[0] + 2, barStartX + barMaxWidth, yOffset[0] + 6, barBaseColor);
+                graphics.drawString(font, Component.literal("INV"), valueTextStartX, yOffset[0], fontColor, false);
             } else {
-                graphics.drawString(font, String.format("%d", ammoAmount), valueTextStartX, yOffset[0], fontColor, false);
+                int barrelBulletAmount = (iGun.hasBulletInBarrel(gunItem) && index.getGunData().getBolt() != Bolt.OPEN_BOLT) ? 1 : 0;
+                int ammoAmount = gunData.getAmmoAmount() + barrelBulletAmount;
+                double ammoAmountPercent = Math.min(ammoAmount / 100.0, 1);
+                int ammoLength = (int) (barStartX + barMaxWidth * ammoAmountPercent);
+                int maxAmmoCount = AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, index.getGunData()) + barrelBulletAmount;
+                int addAmmoCount = Math.max(maxAmmoCount - ammoAmount, 0);
+                int addAmmoCountLength = (int) (barMaxWidth * addAmmoCount / 100.0);
+
+                graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
+                graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                graphics.fill(barStartX, yOffset[0] + 2, ammoLength, yOffset[0] + 6, barBaseColor);
+                if (addAmmoCount > 0) {
+                    int barRight = Math.min(ammoLength + addAmmoCountLength, barEndX);
+                    graphics.fill(ammoLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                    graphics.drawString(font, String.format("%d §a(+%d)", ammoAmount, addAmmoCount), valueTextStartX, yOffset[0], fontColor, false);
+                } else {
+                    graphics.drawString(font, String.format("%d", ammoAmount), valueTextStartX, yOffset[0], fontColor, false);
+                }
             }
 
             yOffset[0] += 10;

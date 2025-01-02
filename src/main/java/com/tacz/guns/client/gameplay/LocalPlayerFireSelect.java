@@ -30,24 +30,24 @@ public class LocalPlayerFireSelect {
             return;
         }
         // 暂定为主手
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return;
         }
         if (MinecraftForge.EVENT_BUS.post(new GunFireSelectEvent(player, player.getMainHandItem(), LogicalSide.CLIENT))) {
             return;
         }
 
-        TimelessAPI.getGunDisplay(mainhandItem).ifPresent(gunIndex -> {
+        TimelessAPI.getGunDisplay(mainHandItem).ifPresent(gunIndex -> {
             // 播放音效
             SoundPlayManager.playFireSelectSound(player, gunIndex);
             // 发送切换开火模式的数据包，通知服务器
             NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerFireSelect());
             // 客户端切换开火模式
             if (iGun instanceof AbstractGunItem logicGun) {
-                logicGun.fireSelect(null, mainhandItem);
+                logicGun.fireSelect(null, mainHandItem);
             }
-            AttachmentPropertyManager.postChangeEvent(player, mainhandItem);
+            AttachmentPropertyManager.postChangeEvent(player, mainHandItem);
             // 动画状态机转移状态
             AnimationStateMachine<?> animationStateMachine = gunIndex.getAnimationStateMachine();
             if (animationStateMachine != null) {

@@ -110,7 +110,7 @@ public class ClientGunPackLoader {
 
         // 如果玩家此时持有枪械，那么需要刷新配件缓存
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null && IGun.mainhandHoldGun(player)) {
+        if (player != null && IGun.mainHandHoldGun(player)) {
             AttachmentPropertyManager.postChangeEvent(player, player.getMainHandItem());
         }
     }
