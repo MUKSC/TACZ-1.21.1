@@ -3,6 +3,7 @@ package com.tacz.guns.client.input;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.api.item.IGun;
+import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -36,8 +37,8 @@ public class ReloadKey {
             }
             if (IGun.mainHandHoldGun(player)) {
                 IGun iGun = (IGun) player.getMainHandItem().getItem();
-                // 如果使用背包直读，则在输入时就屏蔽换弹
-                if (iGun.useInventoryAmmo(player.getMainHandItem())) {
+                // 如果使用背包直读，且没有换弹冷却机制，则在输入时就屏蔽换弹
+                if (iGun.useInventoryAmmo(player.getMainHandItem()) && iGun.getMagazineLockType(player.getMainHandItem()) == MagazineLockType.DISABLED) {
                     return;
                 }
                 IClientPlayerGunOperator.fromLocalPlayer(player).reload();

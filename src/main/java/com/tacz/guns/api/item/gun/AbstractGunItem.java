@@ -122,13 +122,16 @@ public abstract class AbstractGunItem extends Item implements IGun {
             return false;
         }
 
+        // 背包直读，且没有换弹冷却机制时不进行换弹
+        if (useInventoryAmmo(gunItem) && getMagazineLockType(gunItem) == MagazineLockType.DISABLED) {
+            return false;
+        } else if (useInventoryAmmo(gunItem)) {
+            return true;
+        }
+
         int currentAmmoCount = getCurrentAmmoCount(gunItem);
         int maxAmmoCount = AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunIndex.getGunData());
         if (currentAmmoCount >= maxAmmoCount) {
-            return false;
-        }
-        // 背包直读不进行换弹
-        if (useInventoryAmmo(gunItem)) {
             return false;
         }
         // 虚拟备弹处理

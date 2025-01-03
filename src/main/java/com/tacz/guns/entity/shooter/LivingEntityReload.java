@@ -8,6 +8,7 @@ import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunReload;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -37,8 +38,8 @@ public class LivingEntityReload {
         }
         ResourceLocation gunId = gunItem.getGunId(currentGunItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(gunIndex -> {
-            // 检查是否为背包直读
-            if (gunItem.useInventoryAmmo(currentGunItem)) {
+            // 检查是否为背包直读，且没有换弹冷却机制
+            if (gunItem.useInventoryAmmo(currentGunItem) && gunItem.getMagazineLockType(currentGunItem) == MagazineLockType.DISABLED) {
                 return;
             }
             // 检查换弹是否还未完成
@@ -68,12 +69,12 @@ public class LivingEntityReload {
             NetworkHandler.sendToTrackingEntity(new ServerMessageGunReload(shooter.getId(), currentGunItem), shooter);
             Bolt boltType = gunIndex.getGunData().getBolt();
             int ammoCount = gunItem.getCurrentAmmoCount(currentGunItem) + (gunItem.hasBulletInBarrel(currentGunItem) && boltType != Bolt.OPEN_BOLT ? 1 : 0);
-            if (ammoCount <= 0) {
-                // 初始化空仓换弹的 tick 的状态
-                data.reloadStateType = ReloadState.StateType.EMPTY_RELOAD_FEEDING;
-            } else {
+            if (ammoCount > 0 || gunItem.useInventoryAmmo(currentGunItem)) {
                 // 初始化战术换弹的 tick 的状态
                 data.reloadStateType = ReloadState.StateType.TACTICAL_RELOAD_FEEDING;
+            } else {
+                // 初始化空仓换弹的 tick 的状态
+                data.reloadStateType = ReloadState.StateType.EMPTY_RELOAD_FEEDING;
             }
             data.reloadTimestamp = System.currentTimeMillis();
             // 调用枪械逻辑
