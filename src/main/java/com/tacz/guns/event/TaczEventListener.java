@@ -103,7 +103,7 @@ public class TaczEventListener {
             // 自动冷却
             int fireGap = 60000 / iGun.getRPM(gun);
             // 默认在停止射击 (且超出连射间隔) 50ms (1 tick) 后开始冷却
-            int defaultCoolingDelay = fireGap + 50;
+            int defaultCoolingDelay = fireGap + iGun.getCoolingDelay(gun);
             if (iGun.isOverHeat(gun)) {
                 // 如果过热，需要等待时间达到过热惩罚时间
                 if (System.currentTimeMillis() - latestFireTimestamp > defaultCoolingDelay + iGun.getOverHeatTime(gun)) {

@@ -21,6 +21,9 @@ public class HeatData {
     @SerializedName("cooling_rate")
     private int coolingRate = 1;
 
+    @SerializedName("cooling_delay")
+    private float coolingDelay = 0.05f;
+
     @SerializedName("over_heat_time")
     private float overHeatTime = 2f;
 
@@ -46,6 +49,10 @@ public class HeatData {
 
     public int getCoolingRate() {
         return useHeat ? coolingRate : 0;
+    }
+
+    public float getCoolingDelay() {
+        return useHeat ? coolingDelay : 0f;
     }
 
     public float getOverHeatTime() {

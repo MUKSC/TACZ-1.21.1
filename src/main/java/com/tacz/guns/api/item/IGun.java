@@ -349,6 +349,11 @@ public interface IGun {
     int getCoolingRate(ItemStack gun);
 
     /**
+     * 获取过热恢复延迟
+     */
+    int getCoolingDelay(ItemStack gun);
+
+    /**
      * 获取过热惩罚时间
      */
     int getOverHeatTime(ItemStack gun);

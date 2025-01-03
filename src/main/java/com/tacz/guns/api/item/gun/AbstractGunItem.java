@@ -576,6 +576,23 @@ public abstract class AbstractGunItem extends Item implements IGun {
     }
 
     /**
+     * 获取过热恢复延迟
+     * @param gun 枪械
+     * @return 过热恢复延迟数值
+     */
+    public int getCoolingDelay(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return 0;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return (int) (gunIndex.getGunData().getHeatData().getCoolingDelay() * 1000);
+        }
+        return 0;
+    }
+
+    /**
      * 获取过热惩罚时间
      * @param gun 枪械
      * @return 过热惩罚时间数值

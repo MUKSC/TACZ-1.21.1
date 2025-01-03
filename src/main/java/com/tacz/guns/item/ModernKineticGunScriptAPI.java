@@ -641,6 +641,14 @@ public class ModernKineticGunScriptAPI {
         return gunIndex.getGunData().getBolt();
     }
 
+    public boolean isOverHeat() {
+        return abstractGunItem.isOverHeat(itemStack);
+    }
+
+    public float getHeatProgress() {
+        return Mth.clamp((float) abstractGunItem.getHeatCount(itemStack) / abstractGunItem.getUpperLimit(itemStack), 0f, 1f);
+    }
+
     public void setDataHolder(ShooterDataHolder dataHolder) {
         this.dataHolder = dataHolder;
     }
