@@ -81,14 +81,20 @@ public final class GunPropertyDiagrams {
             yOffset[0] += 10;
 
 
+            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
             // 弹匣容量
             if (iGun.useInventoryAmmo(gunItem)) {
                 // 如果使用背包直读，则直接显示满条和 INV 的标注
-                graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
                 graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
                 graphics.fill(barStartX, yOffset[0] + 2, barStartX + barMaxWidth, yOffset[0] + 6, barBaseColor);
                 graphics.drawString(font, Component.literal("INV"), valueTextStartX, yOffset[0], fontColor, false);
+            } else if (iGun.isInfiniteAmmo(gunItem)) {
+                // 如果是无限子弹，则显示满条和 INF 的标注
+                graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                graphics.fill(barStartX, yOffset[0] + 2, barStartX + barMaxWidth, yOffset[0] + 6, barBaseColor);
+                graphics.drawString(font, Component.literal("INF"), valueTextStartX, yOffset[0], fontColor, false);
             } else {
+                // 其他正常的显示情况
                 int barrelBulletAmount = (iGun.hasBulletInBarrel(gunItem) && index.getGunData().getBolt() != Bolt.OPEN_BOLT) ? 1 : 0;
                 int ammoAmount = gunData.getAmmoAmount() + barrelBulletAmount;
                 double ammoAmountPercent = Math.min(ammoAmount / 100.0, 1);
@@ -97,7 +103,6 @@ public final class GunPropertyDiagrams {
                 int addAmmoCount = Math.max(maxAmmoCount - ammoAmount, 0);
                 int addAmmoCountLength = (int) (barMaxWidth * addAmmoCount / 100.0);
 
-                graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
                 graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
                 graphics.fill(barStartX, yOffset[0] + 2, ammoLength, yOffset[0] + 6, barBaseColor);
                 if (addAmmoCount > 0) {

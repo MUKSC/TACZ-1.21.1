@@ -57,6 +57,9 @@ public class GunData {
     @SerializedName("bolt_feed_time")
     private float boltFeedTime = -1;
 
+    @SerializedName("heat")
+    private HeatData heatData = new HeatData();
+
     @SerializedName("reload")
     private GunReloadData reloadData = new GunReloadData();
 
@@ -165,6 +168,10 @@ public class GunData {
 
     public float getBoltFeedTime() {
         return boltFeedTime;
+    }
+
+    public HeatData getHeatData() {
+        return heatData;
     }
 
     public GunReloadData getReloadData() {

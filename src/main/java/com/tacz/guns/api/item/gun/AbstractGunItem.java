@@ -14,6 +14,7 @@ import com.tacz.guns.inventory.tooltip.GunTooltip;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.FeedType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.client.Minecraft;
@@ -160,6 +161,10 @@ public abstract class AbstractGunItem extends Item implements IGun {
     public void dropAllAmmo(Player player, ItemStack gunItem) {
         // 背包直读时不调用退弹
         if (useInventoryAmmo(gunItem)) {
+            return;
+        }
+        // 过热无限弹药时不调用退弹
+        if (isInfiniteAmmo(gunItem)) {
             return;
         }
         //TODO 这里操作的对象不应该是 Player 而是 LivingEntity。此外枪膛内的子弹也要退
@@ -428,5 +433,162 @@ public abstract class AbstractGunItem extends Item implements IGun {
             }
             return false;
         }).orElse(false);
+    }
+
+    /**
+     * 获取 RPM
+     * @param gun 枪械
+     * @return RPM 数值
+     */
+    public int getRPM(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return 300;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            FireMode fireMode = getFireMode(gun);
+            return gunIndex.getGunData().getRoundsPerMinute(fireMode);
+        }
+        return 300;
+    }
+
+    /**
+     * 是否使用过热机制检查
+     * @param gun 枪械
+     * @return 是否使用过热机制
+     */
+    public boolean isUseHeat(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return false;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().getHeatData().isUseHeat();
+        }
+        return false;
+    }
+
+    /**
+     * 在使用过热机制的时候是否具有无限的弹匣弹药
+     * @param gun 枪械
+     * @return 是否具有无限的弹匣弹药
+     */
+    public boolean isInfiniteAmmo(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return false;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().getHeatData().isInfiniteAmmo();
+        }
+        return false;
+    }
+
+    /**
+     * 获取过热机制中的弹匣锁类型
+     * @param gun 枪械
+     * @return 弹匣锁类型
+     */
+    public MagazineLockType getMagazineLockType(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return MagazineLockType.DISABLED;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().getHeatData().getMagazineLockType();
+        }
+        return MagazineLockType.DISABLED;
+    }
+
+    private boolean overHeatLock = false;
+    /**
+     * 是否过热 (过热锁状态)
+     * @param gun 枪械
+     * @return 是否过热 (过热锁状态)
+     */
+    public boolean isOverHeat(ItemStack gun) {
+        if (!isUseHeat(gun)) {
+            return false;
+        }
+        if (overHeatLock) {
+            if (getHeatCount(gun) <= 0) {
+                overHeatLock = false;
+            }
+            return overHeatLock;
+        }
+        overHeatLock = getHeatCount(gun) >= getUpperLimit(gun);
+        return overHeatLock;
+    }
+
+    /**
+     * 获取过热上限
+     * @param gun 枪械
+     * @return 过热上限数值
+     */
+    public int getUpperLimit(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return 0;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().getHeatData().getUpperLimit();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取过热速度
+     * @param gun 枪械
+     * @return 过热速度数值
+     */
+    public int getHeatRate(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return 0;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().getHeatData().getHeatRate();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取过热恢复速度
+     * @param gun 枪械
+     * @return 过热恢复速度数值
+     */
+    public int getCoolingRate(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return 0;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().getHeatData().getCoolingRate();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取过热惩罚时间
+     * @param gun 枪械
+     * @return 过热惩罚时间数值
+     */
+    public int getOverHeatTime(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return 0;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return (int) (gunIndex.getGunData().getHeatData().getOverHeatTime() * 1000);
+        }
+        return 0;
     }
 }

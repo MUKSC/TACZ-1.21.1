@@ -39,6 +39,10 @@ public class LocalPlayerBolt {
         if (gunData == null) {
             return;
         }
+        // 判断是否过热
+        if (iGun.isOverHeat(mainHandItem)) {
+            return;
+        }
 
         TimelessAPI.getGunDisplay(mainHandItem).ifPresent(display -> {
             IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);

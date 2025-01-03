@@ -32,6 +32,10 @@ public class LivingEntityBolt {
         if (!(currentGunItem.getItem() instanceof AbstractGunItem iGun)) {
             return;
         }
+        // 判断是否过热
+        if (iGun.isOverHeat(currentGunItem)) {
+            return;
+        }
         ResourceLocation gunId = iGun.getGunId(currentGunItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(gunIndex -> {
             // 判断是否正在射击冷却

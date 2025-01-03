@@ -4,6 +4,7 @@ import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
+import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -296,4 +297,59 @@ public interface IGun {
      * 获取枪械是否有备弹 (只针对背包直读读的机制使用)
      */
     boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo);
+
+    /**
+     * 获取 RPM
+     */
+    int getRPM(ItemStack gun);
+
+    /**
+     * 是否使用过热机制
+     */
+    boolean isUseHeat(ItemStack gun);
+
+    /**
+     * 在使用过热机制的时候是否具有无限的弹匣弹药
+     */
+    boolean isInfiniteAmmo(ItemStack gun);
+
+    /**
+     * 获取过热机制中的弹匣锁类型
+     */
+    MagazineLockType getMagazineLockType(ItemStack gun);
+
+    /**
+     * 是否过热 (过热锁状态)
+     */
+    boolean isOverHeat(ItemStack gun);
+
+    /**
+     * 获取过热计数器
+     */
+    int getHeatCount(ItemStack gun);
+
+    /**
+     * 设置过热计数器
+     */
+    void setHeatCount(ItemStack gun, int heatCount);
+
+    /**
+     * 获取过热上限
+     */
+    int getUpperLimit(ItemStack gun);
+
+    /**
+     * 获取过热速度
+     */
+    int getHeatRate(ItemStack gun);
+
+    /**
+     * 获取过热恢复速度
+     */
+    int getCoolingRate(ItemStack gun);
+
+    /**
+     * 获取过热惩罚时间
+     */
+    int getOverHeatTime(ItemStack gun);
 }

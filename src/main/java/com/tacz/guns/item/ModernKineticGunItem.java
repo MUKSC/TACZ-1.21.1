@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.ReloadState;
+import com.tacz.guns.api.event.common.GunFinishReloadEvent;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
@@ -28,6 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector2d;
 import org.luaj.vm2.*;
@@ -337,6 +340,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
                 api.setAmmoInBarrel(true);
             }
         }
+        MinecraftForge.EVENT_BUS.post(new GunFinishReloadEvent(api.getItemStack(), LogicalSide.SERVER));
     }
 
     private void doMelee(LivingEntity user, float gunDistance, float meleeDistance, float rangeAngle, float knockback, float damage, List<EffectData> effects) {
