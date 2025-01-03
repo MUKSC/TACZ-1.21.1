@@ -41,6 +41,8 @@ public class GunHudOverlay implements IGuiOverlay {
     private static final DecimalFormat CURRENT_AMMO_FORMAT_PERCENT = new DecimalFormat("000%");
     private static final DecimalFormat INVENTORY_AMMO_FORMAT = new DecimalFormat("0000");
     private static long checkAmmoTimestamp = -1L;
+    private static long overHeatAlertTimestamp = -1L;
+    private static boolean overHeatAlert = false;
     private static int cacheMaxAmmoCount = 0;
     private static int cacheInventoryAmmoCount = 0;
 
@@ -98,7 +100,7 @@ public class GunHudOverlay implements IGuiOverlay {
         String currentAmmoCountText;
         if (display.getAmmoCountStyle() == AmmoCountStyle.PERCENT) {
             // 百分比模式
-            currentAmmoCountText = CURRENT_AMMO_FORMAT_PERCENT.format((float)ammoCount/(cacheMaxAmmoCount==0 ? 1f : cacheMaxAmmoCount));
+            currentAmmoCountText = CURRENT_AMMO_FORMAT_PERCENT.format((float) ammoCount / (cacheMaxAmmoCount == 0 ? 1f : cacheMaxAmmoCount));
         } else {
             // 普通模式
             currentAmmoCountText = CURRENT_AMMO_FORMAT.format(ammoCount);
@@ -119,6 +121,11 @@ public class GunHudOverlay implements IGuiOverlay {
 
         // 数字
         poseStack.pushPose();
+        // 如果无限弹药则显示白色 INF.，否则显示当前弹药数
+        if (iGun.isInfiniteAmmo(stack)) {
+            currentAmmoCountText = "INF.";
+            ammoCountColor = 0xFFFFFF;
+        }
         poseStack.scale(1.5f, 1.5f, 1);
         graphics.drawString(font, currentAmmoCountText, (width - 70) / 1.5f, (height - 43) / 1.5f, ammoCountColor, false);
         poseStack.popPose();
@@ -148,13 +155,19 @@ public class GunHudOverlay implements IGuiOverlay {
         ResourceLocation hudTexture = display.getHUDTexture();
         @Nullable ResourceLocation hudEmptyTexture = display.getHudEmptyTexture();
 
-        if (ammoCount <= 0) {
+        if (ammoCount <= 0 && !iGun.isInfiniteAmmo(stack)) {
             if (hudEmptyTexture == null) {
                 RenderSystem.setShaderColor(1, 0.3f, 0.3f, 1);
             } else {
                 hudTexture = hudEmptyTexture;
             }
         }
+
+        // 过热警告颜色设置
+        if (iGun.isOverHeat(stack)) {
+            handleOverHeatAlert();
+        }
+
         // 渲染枪械图标
         graphics.blit(hudTexture, width - 117, height - 44, 0, 0, 39, 13, 39, 13);
 
@@ -208,6 +221,19 @@ public class GunHudOverlay implements IGuiOverlay {
                 }
                 cacheInventoryAmmoCount += iAmmoBox.getAmmoCount(inventoryItem);
             }
+        }
+    }
+
+    private static void handleOverHeatAlert() {
+        // 0.25 秒刷新一次
+        if ((System.currentTimeMillis() - overHeatAlertTimestamp) > 250) {
+            overHeatAlertTimestamp = System.currentTimeMillis();
+            overHeatAlert = !overHeatAlert;
+        }
+        if (overHeatAlert) {
+            RenderSystem.setShaderColor(1, 0.3f, 0.3f, 1);
+        } else {
+            RenderSystem.setShaderColor(1, 1, 0.3f, 1);
         }
     }
 }

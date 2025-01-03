@@ -13,6 +13,7 @@ import com.tacz.guns.resource.index.CommonGunIndex;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,7 @@ public interface GunItemDataAccessor extends IGun {
     String GUN_MAX_DUMMY_AMMO = "MaxDummyAmmo";
     String GUN_ATTACHMENT_LOCK = "AttachmentLock";
     String GUN_DISPLAY_ID_TAG = "GunDisplayId";
+    String GUN_HEAT_COUNT = "GunHeatCount";
 
     @Override
     default boolean useDummyAmmo(ItemStack gun) {
@@ -211,10 +213,15 @@ public interface GunItemDataAccessor extends IGun {
 
     @Override
     default void reduceCurrentAmmoCount(ItemStack gun) {
-        // 只在不使用背包直读的情况下减少 AmmoCount
-        if (!useInventoryAmmo(gun)) {
-            setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
+        // 如果使用背包直读的情况
+        if (useInventoryAmmo(gun)) {
+            return;
         }
+        // 如果过热模式无限弹药的情况
+        if (isInfiniteAmmo(gun)) {
+            return;
+        }
+        setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
     }
 
     @Override
@@ -355,5 +362,22 @@ public interface GunItemDataAccessor extends IGun {
     default void setBulletInBarrel(ItemStack gun, boolean bulletInBarrel) {
         CompoundTag nbt = gun.getOrCreateTag();
         nbt.putBoolean(GUN_HAS_BULLET_IN_BARREL, bulletInBarrel);
+    }
+
+    @Override
+    default int getHeatCount(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        if (nbt.contains(GUN_HEAT_COUNT, Tag.TAG_INT)) {
+            return Mth.clamp(nbt.getInt(GUN_HEAT_COUNT), 0, getUpperLimit(gun));
+        }
+        return 0;
+    }
+
+    @Override
+    default void setHeatCount(ItemStack gun, int heatCount) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        if (isUseHeat(gun)) {
+            nbt.putInt(GUN_HEAT_COUNT, heatCount);
+        }
     }
 }

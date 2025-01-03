@@ -396,6 +396,10 @@ public class ModernKineticGunScriptAPI {
         if (useInventoryAmmo() && !isReloadingNeedConsumeAmmo()) {
             return neededAmount;
         }
+        // 如果是过热系统无限弹药的情况
+        if (abstractGunItem.isInfiniteAmmo(itemStack)) {
+            return neededAmount;
+        }
         if (abstractGunItem.useDummyAmmo(itemStack)) {
             return abstractGunItem.findAndExtractDummyAmmo(itemStack, neededAmount);
         } else {

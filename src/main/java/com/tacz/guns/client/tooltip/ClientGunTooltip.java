@@ -150,6 +150,9 @@ public class ClientGunTooltip implements ClientTooltipComponent {
             if (iGun.useInventoryAmmo(gun)) {
                 this.ammoCountText = Component.translatable("tooltip.tacz.gun.inventory_mode").withStyle(ChatFormatting.YELLOW);
             }
+            if (iGun.isInfiniteAmmo(gun)) {
+                this.ammoCountText = Component.translatable("tooltip.tacz.gun.infinite_ammo").withStyle(ChatFormatting.YELLOW);
+            }
             this.maxWidth = Math.max(font.width(this.ammoCountText) + 22, this.maxWidth);
         }
 

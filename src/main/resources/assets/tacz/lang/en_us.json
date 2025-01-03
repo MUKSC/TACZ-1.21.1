@@ -5,6 +5,7 @@
   "toast.tacz.sub.final_level": "Man and gun become one",
   "tooltip.tacz.gun.level": "Level: ",
   "tooltip.tacz.gun.inventory_mode": "Use Inv. Ammo",
+  "tooltip.tacz.gun.infinite_ammo": "Inf. Magazine Ammo",
   "custom.tacz.error.no_name": "Error: No Name",
   "commands.tacz.reload.success": "§a§l[TACZ]§r All pack is reload, time: %.3f ms",
   "commands.tacz.reload.overwrite_on": "§a§l●§r Now that the overwrite config is turned on, §6any changes in the tacz default gun pack will be §lreset!",

@@ -81,9 +81,13 @@ public class LocalPlayerShoot {
         }
         // 因为开火冷却检测用了特别定制的方法，所以不检查状态锁，而是手动检查是否换弹、切枪
         IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
+        // 检查是否过热
+        if (iGun.isUseHeat(mainHandItem) && iGun.isOverHeat(mainHandItem)) {
+            SoundPlayManager.playDryFireSound(player, display);
+            return ShootResult.OVER_HEAT;
+        }
         // 检查是否正在换弹
         if (gunOperator.getSynReloadState().getStateType().isReloading()) {
-
             return ShootResult.IS_RELOADING;
         }
         // 检查是否正在切枪
@@ -100,17 +104,14 @@ public class LocalPlayerShoot {
         }
         // 判断子弹数
         Bolt boltType = gunIndex.getGunData().getBolt();
-        // 是否为背包直读
-        boolean useInventoryAmmo = iGun.useInventoryAmmo(mainHandItem);
         // 膛内是否有子弹
         boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(mainHandItem) && boltType != Bolt.OPEN_BOLT;
         // 是否还有子弹 (创造模式是否消耗背包备弹)
         boolean hasInventoryAmmo = iGun.hasInventoryAmmo(player, mainHandItem, gunOperator.needCheckAmmo()) || hasAmmoInBarrel;
         int ammoCount = iGun.getCurrentAmmoCount(mainHandItem) + (hasAmmoInBarrel ? 1 : 0);
-        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且总子弹数 < 1)
-        boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
-                !useInventoryAmmo && ammoCount < 1;
-        if (noAmmo) {
+        // 判断有子弹的条件 (背包直读且包内有子弹 / 总子弹数 > 0 / 过热模式且无限子弹)
+        boolean hasAmmo = hasInventoryAmmo || ammoCount > 0 || iGun.isInfiniteAmmo(mainHandItem);
+        if (!hasAmmo) {
             SoundPlayManager.playDryFireSound(player, display);
             return ShootResult.NO_AMMO;
         }
