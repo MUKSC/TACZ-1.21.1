@@ -37,6 +37,13 @@ public class TimelessCommonEvents implements TimelessKubeJSEventRegister{
             GunDrawEvent.class,
             GunKubeJSEvents.GunDrawEventJS::new
     );
+    public static final EventHandler GUN_FINISH_RELOAD = INSTANCE.registerTimelessCommonEvent(
+            "gunFinishReload",
+            GunKubeJSEvents.GunFinishReloadEventJS.class,
+            GunFinishReloadEvent.class,
+            GunKubeJSEvents.GunFinishReloadEventJS::new,
+            true
+    );
     public static final EventHandler GUN_FIRE = INSTANCE.registerTimelessCommonEvent(
             "gunFire",
             GunKubeJSEvents.GunFireEventJS.class,
