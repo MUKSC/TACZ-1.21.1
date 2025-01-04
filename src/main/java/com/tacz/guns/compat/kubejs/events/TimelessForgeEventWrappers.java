@@ -167,6 +167,16 @@ public interface TimelessForgeEventWrappers {
         }
     }
 
+    interface GunFinishReloadWrapper extends ForgeEventWrapper<GunFinishReloadEvent> {
+        default ItemStack getGunItemStack() {
+            return getForgeEvent().getGunItemStack();
+        }
+
+        default LogicalSide getLogicalSide() {
+            return getForgeEvent().getLogicalSide();
+        }
+    }
+
     interface GunFireWrapper extends ForgeEventWrapper<GunFireEvent> {
         default LivingEntity getShooter() {
             return getForgeEvent().getShooter();

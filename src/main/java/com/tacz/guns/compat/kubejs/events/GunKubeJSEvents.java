@@ -10,6 +10,7 @@ import com.tacz.guns.api.item.IGun;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventJS;
+import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.script.ScriptTypeHolder;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
@@ -140,6 +141,23 @@ public class GunKubeJSEvents {
         @Override
         public ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getEntity();
+        }
+    }
+
+    public static class GunFinishReloadEventJS extends GunEventJS<GunFinishReloadEvent> implements TimelessForgeEventWrappers.GunFinishReloadWrapper {
+        public GunFinishReloadEventJS(GunFinishReloadEvent event) {
+            super(event);
+        }
+
+        @Nonnull
+        protected ItemStack getEventItemStack() {
+            return event.getGunItemStack();
+        }
+
+        @HideFromJS
+        @Nullable
+        public ScriptTypeHolder getTypeHolder() {
+            return event.getLogicalSide().isClient() ? ScriptType.CLIENT : ScriptType.SERVER;
         }
     }
 
