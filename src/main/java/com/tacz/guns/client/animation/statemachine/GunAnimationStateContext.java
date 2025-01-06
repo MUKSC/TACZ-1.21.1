@@ -20,6 +20,7 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -82,6 +83,24 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
             Bolt boltType = gunData.getBolt();
             return boltType != Bolt.OPEN_BOLT && iGun.hasBulletInBarrel(currentGunItem);
         }).orElse(false);
+    }
+
+    /**
+     * 获取枪械是否处于过热状态。
+     * @return 枪械是否处于过热状态。如果是非使用过热的武器或者不处于过热状态，则此方法返回 false。
+     */
+    public boolean isOverHeat() {
+        return iGun.isOverHeat(currentGunItem);
+    }
+
+    /**
+     * 获取枪械的过热进程。
+     * 你有可能并非得到 1 的过热进程返回，但是却处于过热的锁定状态。
+     * 返回值范围为 0 - 1，0 代表完全没有过热，1 代表完全过热 (表现为没有过热条和满过热条)。
+     * @return 枪械的过热进程。如果是非使用过热的武器或者不处于过热状态，则此方法返回 0。
+     */
+    public float getHeatProgress() {
+        return Mth.clamp((float) iGun.getHeatCount(currentGunItem) / iGun.getUpperLimit(currentGunItem), 0f, 1f);
     }
 
     /**

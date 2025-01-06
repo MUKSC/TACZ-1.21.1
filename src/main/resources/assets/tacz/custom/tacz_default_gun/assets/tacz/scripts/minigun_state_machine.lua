@@ -22,11 +22,13 @@ local MAIN_TRACK = increment(static_track_top)
 -- 开火的轨道行
 local GUN_KICK_TRACK_LINE = increment(track_line_top)
 
--- 混合轨道行 和 其中的两条轨道,用于叠加动画,如跑步走路跳跃, LOOP_TRACK 只有定义却尚未启用,因此作用尚不得知
+-- 混合轨道行 和 其中的轨道用于叠加动画,如跑步走路跳跃, LOOP_TRACK 只有定义却尚未启用,因此作用尚不得知
 local BLENDING_TRACK_LINE = increment(track_line_top)
 local MOVEMENT_TRACK = increment(blending_track_top)
 local OVER_HEAT_TRACK = increment(blending_track_top)
 local OVER_HEATING_TRACK = increment(blending_track_top)
+local SPIN_NORMAL_TRACK = increment(blending_track_top)
+local SPIN_FIRE_TRACK = increment(blending_track_top)
 local LOOP_TRACK = increment(blending_track_top)
 
 -- 播放丢枪动画的方法
@@ -86,7 +88,7 @@ function base_track_state.entry(this, context)
     context:runAnimation("static_idle", context:getTrack(STATIC_TRACK_LINE, BASE_TRACK), false, LOOP, 0)
 end
 
--- 空挂部分,该部分到 153 行结束
+-- 空挂部分,该部分到 155 行结束
 -- 由于空挂分为"空挂"和"不空挂"两类,因此这里面需要两个状态来调控当前武器
 -- 空挂的两个状态之间是会来回切换的,因此每个子状态都需要以下三个方法来操作
 -- entry 方法是进入该状态时发生的事,只在进入状态时执行一次
@@ -152,7 +154,7 @@ function bolt_caught_states.bolt_caught.transition(this, context, input)
 end
 -- 结束空挂部分
 
--- 主轨道状态,该部分到 271 行结束
+-- 主轨道状态,该部分到 273 行结束
 -- 主轨道控制的是武器的基本动作,包括换弹,检视,刺刀攻击,掏枪,丢枪
 -- 除了检视，其他动作不需要单独的状态控制。
 -- 检视状态需要被射击输入打断，此外，进入检视时，需要隐藏准心，退出检视时恢复准心。
@@ -283,7 +285,7 @@ function gun_kick_state.transition(this, context, input)
     return nil
 end
 
--- 移动轨道的状态,这部分到 450 行结束
+-- 移动轨道的状态,这部分到 452 行结束
 local movement_track_states = {
     -- 静止不动(或者在天上)
     idle = {},
@@ -367,7 +369,7 @@ function movement_track_states.run.transition(this, context, input)
     -- 收到闲置输入则转去闲置态
     if (input == INPUT_IDLE) then
         return this.movement_track_states.idle
-    -- 收到行走输入则转去行走态
+        -- 收到行走输入则转去行走态
     elseif (input == INPUT_WALK) then
         return this.movement_track_states.walk
     end
@@ -449,7 +451,7 @@ function movement_track_states.walk.transition(this, context, input)
 end
 -- 结束移动轨道的状态
 
--- 过热部分,该部分到 505 行结束
+-- 过热部分,该部分到 524 行结束
 -- 过热部分的内容完全参照空挂部分
 
 local over_heat_states = {
@@ -459,27 +461,37 @@ local over_heat_states = {
     over_heat = {}
 }
 
--- 进入"不过热"状态
-function over_heat_states.normal.entry(this, context)
-    this.over_heat_states.normal.update(this, context)
-end
-
 -- 更新"不过热"状态
 function over_heat_states.normal.update(this, context)
-    if (isOverHeat(context)) then
-        context:trigger(this.INPUT_OVER_HEAT)
+    local track = context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK)
+    if (context:isHolding(track)) then
+        if (isOverHeat(context)) then
+            context:trigger(this.INPUT_OVER_HEAT)
+        else
+            context:runAnimation("spin", track, true, PLAY_ONCE_HOLD, 0)
+        end
     end
+end
+
+-- 进入"不过热"状态
+function over_heat_states.normal.entry(this, context)
+    context:runAnimation("spin", context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK), true, PLAY_ONCE_HOLD, 0)
 end
 
 -- 转出"不过热"状态
 function over_heat_states.normal.transition(this, context, input)
+    -- 如果收到了"过热"的输入,那么直接转到"过热"状态
     if (input == this.INPUT_OVER_HEAT) then
         return this.over_heat_states.over_heat
     end
 end
 
+local holdTime = 0
 -- 进入"过热"状态
 function over_heat_states.over_heat.entry(this, context)
+    -- 进入过热时在主轨道行的过热轨道播放过热的动画
+    context:runAnimation("spin_low", context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK), true, PLAY_ONCE_HOLD, 0.2)
+    holdTime = context:getCurrentTimestamp()
     -- 仅播放一次的过热时触发的动画,比如大量冒烟和警报声
     context:runAnimation("over_heat", context:getTrack(BLENDING_TRACK_LINE, OVER_HEAT_TRACK), true, PLAY_ONCE_STOP, 0.2)
     -- 一直循环执行的过热触发动画,比如缓慢的冒烟
@@ -488,8 +500,15 @@ end
 
 -- 更新"过热"状态
 function over_heat_states.over_heat.update(this, context)
-    if (not isOverHeat(context)) then
-        context:trigger(this.INPUT_COOLING_HEAT)
+    local track = context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK)
+    if (context:isHolding(track)) then
+        if (isOverHeat(context)) then
+            if (context:getCurrentTimestamp() - holdTime > 2300) then
+                context:runAnimation("spin", context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK), true, PLAY_ONCE_HOLD, 0)
+            end
+        else
+            context:trigger(this.INPUT_COOLING_HEAT)
+        end
     end
 end
 
@@ -503,6 +522,63 @@ function over_heat_states.over_heat.transition(this, context, input)
     end
 end
 -- 结束过热部分
+
+-- 旋转部分,该部分到 581 行结束
+-- 旋转部分的内容完全参照空挂部分
+
+local spin_states = {
+    -- normal 是默认旋转的状态
+    normal = {},
+    -- fire 是开火旋转的状态
+    fire = {}
+}
+
+-- 进入"默认旋转"状态
+function spin_states.normal.entry(this, context)
+end
+
+-- 转出"默认旋转"状态
+function spin_states.normal.transition(this, context, input)
+    -- 如果收到了"开火"的输入,那么直接转到"开火旋转"状态
+    if (input == INPUT_SHOOT) then
+        return this.spin_states.fire
+    end
+end
+
+-- 进入开火状态
+function spin_states.fire.entry(this, context)
+    -- 首先播放一次动画并将轨道挂起
+    context:runAnimation("spin", context:getTrack(BLENDING_TRACK_LINE, SPIN_FIRE_TRACK), true, PLAY_ONCE_HOLD, 0.2)
+end
+
+-- 开火过程中实时更新
+function spin_states.fire.update(this, context)
+    local track = context:getTrack(BLENDING_TRACK_LINE, SPIN_FIRE_TRACK)
+    local lastShootTime = context:getLastShootTimestamp()
+    local nowTime = context:getCurrentTimestamp()
+    local shootInterval = context:getShootInterval()
+    -- 判断轨道是否被挂起，判断挂起是为了防止叠加的旋转动画播到一半停止导致的枪管角度瞬移
+    if (context:isHolding(track)) then
+        -- 判断枪有没有连射，给 2 tick 的容错以防游戏卡顿
+        if (nowTime - lastShootTime > shootInterval + 100) then
+            -- 轨道被挂起 且 没有连射 就触发停止射击的输入
+            context:trigger(this.INPUT_STOP_SHOOT)
+        else
+            -- 轨道被挂起 且 在连射 就继续叠加播放旋转动画
+            context:runAnimation("spin", track, true, PLAY_ONCE_HOLD, 0.2)
+        end
+    end
+end
+
+-- 转出射击态
+function spin_states.fire.transition(this, context, input)
+    if (input == this.INPUT_STOP_SHOOT) then
+        -- 收到停止射击信号则播放枪管转速逐渐下降的动画
+        context:runAnimation("spin_low", context:getTrack(BLENDING_TRACK_LINE, SPIN_FIRE_TRACK), true, PLAY_ONCE_STOP, 0.2)
+        return this.spin_states.normal
+    end
+end
+-- 结束开火旋转部分
 
 local M = {
     -- 轨道行
@@ -522,17 +598,21 @@ local M = {
     MOVEMENT_TRACK = MOVEMENT_TRACK,
     OVER_HEAT_TRACK = OVER_HEAT_TRACK,
     OVER_HEATING_TRACK = OVER_HEATING_TRACK,
+    SPIN_NORMAL_TRACK = SPIN_NORMAL_TRACK,
+    SPIN_FIRE_TRACK = SPIN_FIRE_TRACK,
     LOOP_TRACK = LOOP_TRACK,
     -- 状态
     base_track_state = base_track_state,
     bolt_caught_states = bolt_caught_states,
     over_heat_states = over_heat_states,
+    spin_states = spin_states,
     main_track_states = main_track_states,
     gun_kick_state = gun_kick_state,
     movement_track_states = movement_track_states,
     -- 输入
     INPUT_BOLT_CAUGHT = "bolt_caught",
     INPUT_BOLT_NORMAL = "bolt_normal",
+    INPUT_STOP_SHOOT = "input_stop_shoot",
     INPUT_OVER_HEAT = "over_heat",
     INPUT_COOLING_HEAT = "cooling_heat",
     INPUT_INSPECT_RETREAT = "inspect_retreat"
@@ -557,6 +637,7 @@ function M:states()
         self.base_track_state,
         self.bolt_caught_states.normal,
         self.over_heat_states.normal,
+        self.spin_states.normal,
         self.main_track_states.start,
         self.gun_kick_state,
         self.movement_track_states.idle

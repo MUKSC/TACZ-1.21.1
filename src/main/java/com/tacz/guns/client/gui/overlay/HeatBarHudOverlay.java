@@ -1,6 +1,5 @@
 package com.tacz.guns.client.gui.overlay;
 
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.tacz.guns.GunMod;
@@ -19,8 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-
-import java.awt.*;
 
 public class HeatBarHudOverlay implements IGuiOverlay {
     private static final ResourceLocation HEAT_BASE = new ResourceLocation(GunMod.MOD_ID, "textures/gui/heat_base.png");
@@ -77,7 +74,6 @@ public class HeatBarHudOverlay implements IGuiOverlay {
                 } else {
                     RenderSystem.setShaderColor(1, 1, 1, alpha);
                 }
-                Minecraft.getInstance().getTextureManager().bindForSetup(HEAT_BASE);
                 graphics.blit(HEAT_BASE, -48, -48, 0, 0, 96, 96, 96, 96);
             }
             poseStack.popPose();
@@ -93,7 +89,6 @@ public class HeatBarHudOverlay implements IGuiOverlay {
                         RenderSystem.setShaderColor(1f, 1f, 0.3f, alpha);
                     }
                 }
-                Minecraft.getInstance().getTextureManager().bindForSetup(HEAT_BAR);
                 graphics.blit(HEAT_BAR, -48, -48, 0, 0, 96, 96, 96, 96);
             }
             poseStack.popPose();
@@ -102,7 +97,6 @@ public class HeatBarHudOverlay implements IGuiOverlay {
             {
                 poseStack.translate(totalTranslateX, totalTranslateY, 0);
                 RenderSystem.setShaderColor(0.4f, 0.4f, 0.4f, 0.4f * alpha);
-                Minecraft.getInstance().getTextureManager().bindForSetup(HEAT_BAR);
                 graphics.blit(HEAT_BAR, -48, -48, 0, 0, 96, 96, 96, 96);
             }
             poseStack.popPose();

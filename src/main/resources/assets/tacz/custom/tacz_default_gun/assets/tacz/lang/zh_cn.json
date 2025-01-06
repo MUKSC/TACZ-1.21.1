@@ -56,6 +56,7 @@
   "tacz.gun.p90.name": "P90 冲锋枪",
   "tacz.gun.m870.name": "M870 霰弹枪",
   "tacz.gun.b93r.name":"B93R 冲锋手枪",
+  "tacz.gun.minigun.name":"M134 转管机枪",
 
 
   "tacz.gun.ak47.desc": "从雨林到海湾，永远不会错过它的身影",
@@ -95,6 +96,7 @@
   "tacz.gun.p90.desc": "用它在防弹衣上画个笑脸",
   "tacz.gun.m870.desc": "你选错屋了，蠢货！",
   "tacz.gun.b93r.desc":"...",
+  "tacz.gun.minigun.desc":"呼呼呼——",
 
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",

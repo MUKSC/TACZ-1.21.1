@@ -56,6 +56,7 @@
   "tacz.gun.p90.name": "P90 PDW",
   "tacz.gun.m870.name": "M870",
   "tacz.gun.b93r.name": "B93R",
+  "tacz.gun.minigun.name":"M134 Minigun",
 
   
   "tacz.gun.ak47.desc": "From jungles to bays, it's always present.",
@@ -95,6 +96,7 @@
   "tacz.gun.p90.desc": "...",
   "tacz.gun.m870.desc": "...",
   "tacz.gun.b93r.desc":"...",
+  "tacz.gun.minigun.desc":"...",
   
 
   "tacz.ammo.9mm.name": "§a9mm Bullet",
