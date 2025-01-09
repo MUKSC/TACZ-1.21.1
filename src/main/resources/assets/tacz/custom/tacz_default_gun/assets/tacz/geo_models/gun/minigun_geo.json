@@ -6,9 +6,9 @@
 				"identifier": "geometry.minigun_2",
 				"texture_width": 256,
 				"texture_height": 256,
-				"visible_bounds_width": 5,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0.5, 0]
 			},
 			"bones": [
 				{
@@ -18,12 +18,14 @@
 				{
 					"name": "idle_view",
 					"parent": "views",
-					"pivot": [3.1559, 16.0497, 13.1524]
+					"pivot": [3.125, 14.09096, 14.20835],
+					"rotation": [4.98107, 0.43523, -4.98107]
 				},
 				{
 					"name": "iron_view",
 					"parent": "views",
-					"pivot": [3.1559, 16.0497, 13.1524]
+					"pivot": [3.125, 14.09096, 14.20835],
+					"rotation": [4.98107, 0.43523, -4.98107]
 				},
 				{
 					"name": "refit_view",
@@ -44,8 +46,8 @@
 				{
 					"name": "fixed",
 					"parent": "positioning",
-					"pivot": [6, -5, 0],
-					"rotation": [0, 90, 45]
+					"pivot": [3, 2, 0],
+					"rotation": [0, 90, 0]
 				},
 				{
 					"name": "ground",
@@ -90,7 +92,7 @@
 					"name": "shell",
 					"parent": "positioning2",
 					"pivot": [4, -1, 6.7],
-					"rotation": [159.05898, -40.78947, -149.63881]
+					"rotation": [149.35766, -54.46865, -143.94761]
 				},
 				{
 					"name": "barrel_rotate",
@@ -526,7 +528,14 @@
 								"south": {"uv": [7, 117], "uv_size": [0.5, 2]},
 								"west": {"uv": [52, 45], "uv_size": [4, 2]}
 							}
-						},
+						}
+					]
+				},
+				{
+					"name": "muzzle_illuminated",
+					"parent": "muzzle_default",
+					"pivot": [0.99021, 4.30536, -23.00781],
+					"cubes": [
 						{
 							"origin": [0.89646, 4.21161, -24.01562],
 							"size": [0.1875, 0.1875, 2.01562],
