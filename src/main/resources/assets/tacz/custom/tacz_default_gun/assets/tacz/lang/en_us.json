@@ -57,6 +57,7 @@
   "tacz.gun.m870.name": "M870",
   "tacz.gun.b93r.name": "B93R",
   "tacz.gun.minigun.name":"M134 Minigun",
+  "tacz.gun.springfield1873.name": "Springfield 1873 Trapdoor Rifle",
 
   
   "tacz.gun.ak47.desc": "From jungles to bays, it's always present.",
@@ -97,6 +98,7 @@
   "tacz.gun.m870.desc": "...",
   "tacz.gun.b93r.desc":"...",
   "tacz.gun.minigun.desc":"...",
+  "tacz.gun.springfield1873.desc": "Poverty shrinks not the gun",
   
 
   "tacz.ammo.9mm.name": "§a9mm Bullet",
