@@ -76,6 +76,13 @@
       // "destroy_block": false
     // }
   },
+  // 射击声音传播距离修正
+  "fire_sound": {
+    // 射击声音传播距离修正乘数
+    "fire_multiplier": 1.0,
+    // 消音器射击声音传播距离修正乘数
+    "silence_multiplier": 1.0
+  },
   "heat":  {
     // 是否使用过热系统，默认为 false，禁用时下方的所有设置不生效
     "use_heat": false,

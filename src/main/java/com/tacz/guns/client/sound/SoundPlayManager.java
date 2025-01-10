@@ -6,6 +6,7 @@ import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.config.common.GunConfig;
 import com.tacz.guns.init.ModSounds;
 import com.tacz.guns.network.message.ServerMessageSound;
+import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.sound.SoundManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -73,12 +74,12 @@ public class SoundPlayManager {
         });
     }
 
-    public static void playShootSound(LivingEntity entity, GunDisplayInstance gunIndex) {
-        playClientSound(entity, gunIndex.getSounds(SoundManager.SHOOT_SOUND), 0.8f, 0.9f + entity.getRandom().nextFloat() * 0.125f, GunConfig.DEFAULT_GUN_FIRE_SOUND_DISTANCE.get());
+    public static void playShootSound(LivingEntity entity, GunDisplayInstance gunIndex, GunData gunData) {
+        playClientSound(entity, gunIndex.getSounds(SoundManager.SHOOT_SOUND), 0.8f, 0.9f + entity.getRandom().nextFloat() * 0.125f, (int) (GunConfig.DEFAULT_GUN_FIRE_SOUND_DISTANCE.get() * gunData.getFireSound().getFireMultiplier()));
     }
 
-    public static void playSilenceSound(LivingEntity entity, GunDisplayInstance gunIndex) {
-        playClientSound(entity, gunIndex.getSounds(SoundManager.SILENCE_SOUND), 0.6f, 0.9f + entity.getRandom().nextFloat() * 0.125f, GunConfig.DEFAULT_GUN_OTHER_SOUND_DISTANCE.get());
+    public static void playSilenceSound(LivingEntity entity, GunDisplayInstance gunIndex, GunData gunData) {
+        playClientSound(entity, gunIndex.getSounds(SoundManager.SILENCE_SOUND), 0.6f, 0.9f + entity.getRandom().nextFloat() * 0.125f, (int) (GunConfig.DEFAULT_GUN_SILENCE_SOUND_DISTANCE.get() * gunData.getFireSound().getSilenceMultiplier()));
     }
 
     public static void playDryFireSound(LivingEntity entity, GunDisplayInstance gunIndex) {
