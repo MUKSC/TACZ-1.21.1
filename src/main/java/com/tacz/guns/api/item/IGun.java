@@ -357,4 +357,9 @@ public interface IGun {
      * 获取过热惩罚时间
      */
     int getOverHeatTime(ItemStack gun);
+
+    /**
+     * 获取是否可以趴下
+     */
+    boolean isCanCrawl(ItemStack gun);
 }
