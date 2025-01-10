@@ -28,6 +28,10 @@ public class LocalPlayerCrawl {
         if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return;
         }
+        // 不允许趴下的武器
+        if (!iGun.isCanCrawl(mainHandItem)) {
+            return;
+        }
         // 冷却时间没到，不执行
         if (crawCooldownTicks > 0) {
             return;
@@ -50,6 +54,12 @@ public class LocalPlayerCrawl {
         // 持枪才能按键趴下
         ItemStack mainHandItem = player.getMainHandItem();
         if (!(mainHandItem.getItem() instanceof IGun iGun)) {
+            isCrawling = false;
+            this.setCrawlPose();
+            return;
+        }
+        // 不允许趴下的武器，则取消趴下状态
+        if (!iGun.isCanCrawl(mainHandItem)) {
             isCrawling = false;
             this.setCrawlPose();
             return;

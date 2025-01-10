@@ -35,8 +35,7 @@ public class ReloadKey {
             if (player == null || player.isSpectator()) {
                 return;
             }
-            if (IGun.mainHandHoldGun(player)) {
-                IGun iGun = (IGun) player.getMainHandItem().getItem();
+            if (player.getMainHandItem().getItem() instanceof IGun iGun) {
                 // 如果使用背包直读，且没有换弹冷却机制，则在输入时就屏蔽换弹
                 if (iGun.useInventoryAmmo(player.getMainHandItem()) && iGun.getMagazineLockType(player.getMainHandItem()) == MagazineLockType.DISABLED) {
                     return;
