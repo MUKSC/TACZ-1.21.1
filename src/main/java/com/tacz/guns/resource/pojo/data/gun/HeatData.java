@@ -4,58 +4,69 @@ import com.google.gson.annotations.SerializedName;
 
 public class HeatData {
     @SerializedName("use_heat")
-    private boolean useHeat = false;
+    private boolean useHeat;
 
     @SerializedName("infinite_ammo")
-    private boolean infiniteAmmo = false;
+    private boolean infiniteAmmo;
 
     @SerializedName("magazine_lock_type")
-    private MagazineLockType magazineLockType = MagazineLockType.DISABLED;
+    private MagazineLockType magazineLockType;
 
     @SerializedName("upper_limit")
-    private int upperLimit = 100;
+    private int upperLimit;
 
     @SerializedName("heat_rate")
-    private int heatRate = 2;
+    private int heatRate;
 
     @SerializedName("cooling_rate")
-    private int coolingRate = 1;
+    private int coolingRate;
 
     @SerializedName("cooling_delay")
-    private float coolingDelay = 0.05f;
+    private float coolingDelay;
 
     @SerializedName("over_heat_time")
-    private float overHeatTime = 2f;
+    private float overHeatTime;
+
+    public HeatData(boolean useHeat, boolean infiniteAmmo, MagazineLockType magazineLockType, int upperLimit, int heatRate, int coolingRate, float coolingDelay, float overHeatTime) {
+        this.useHeat = useHeat;
+        this.infiniteAmmo = infiniteAmmo;
+        this.magazineLockType = magazineLockType;
+        this.upperLimit = upperLimit;
+        this.heatRate = heatRate;
+        this.coolingRate = coolingRate;
+        this.coolingDelay = coolingDelay;
+        this.overHeatTime = overHeatTime;
+    }
 
     public boolean isUseHeat() {
         return useHeat;
     }
 
     public boolean isInfiniteAmmo() {
-        return useHeat && infiniteAmmo;
+        return infiniteAmmo;
     }
 
     public MagazineLockType getMagazineLockType() {
-        return useHeat ? magazineLockType : MagazineLockType.DISABLED;
+        return magazineLockType;
     }
 
     public int getUpperLimit() {
-        return useHeat ? upperLimit : 0;
+        return upperLimit;
     }
 
     public int getHeatRate() {
-        return useHeat ? heatRate : 0;
+        return heatRate;
     }
 
     public int getCoolingRate() {
-        return useHeat ? coolingRate : 0;
+        return coolingRate;
     }
 
     public float getCoolingDelay() {
-        return useHeat ? coolingDelay : 0f;
+        return coolingDelay;
     }
 
     public float getOverHeatTime() {
-        return useHeat ? overHeatTime : 0f;
+        return overHeatTime;
     }
 }

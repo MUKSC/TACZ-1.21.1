@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Ignite {
     @SerializedName("entity")
-    private boolean igniteEntity = false;
+    private boolean igniteEntity;
 
     @SerializedName("block")
-    private boolean igniteBlock = false;
+    private boolean igniteBlock;
 
     public Ignite(boolean igniteEntity, boolean igniteBlock) {
         this.igniteEntity = igniteEntity;

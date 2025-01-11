@@ -49,13 +49,13 @@ public class HeatBarHudOverlay implements IGuiOverlay {
         }
 
         // 如果不是过热类武器则取消
-        if (!iGun.isUseHeat(stack)) {
+        if (!iGun.isUseHeat(stack, player)) {
             return;
         }
 
         float anchorPointX = width / 2f;
         float anchorPointY = height / 2f;
-        int heatProgress = Math.min(99, iGun.getHeatCount(stack) * 100 / iGun.getUpperLimit(stack));
+        int heatProgress = Math.min(99, iGun.getHeatCount(stack, player) * 100 / iGun.getUpperLimit(stack, player));
         float totalTranslateX = 0;
         float totalTranslateY = 16;
         String heatText = heatProgress + "%";
@@ -69,7 +69,7 @@ public class HeatBarHudOverlay implements IGuiOverlay {
             poseStack.pushPose();
             {
                 poseStack.translate(totalTranslateX, totalTranslateY, 0);
-                if (iGun.isOverHeat(stack)) {
+                if (iGun.isOverHeat(stack, player)) {
                     handleOverHeatAlert(alpha);
                 } else {
                     RenderSystem.setShaderColor(1, 1, 1, alpha);
@@ -82,7 +82,7 @@ public class HeatBarHudOverlay implements IGuiOverlay {
             {
                 poseStack.scale(heatProgress / 100f, 1f, 1f);
                 poseStack.translate(totalTranslateX, totalTranslateY, 0);
-                if (iGun.isOverHeat(stack)) {
+                if (iGun.isOverHeat(stack, player)) {
                     handleOverHeatAlert(alpha);
                 } else {
                     if (heatProgress >= 60) {
@@ -107,7 +107,7 @@ public class HeatBarHudOverlay implements IGuiOverlay {
                 poseStack.translate(totalTranslateX, totalTranslateY, 0);
                 poseStack.translate(-8.5, 14, 0);
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-                if (iGun.isOverHeat(stack)) {
+                if (iGun.isOverHeat(stack, player)) {
                     poseStack.translate(-15.5, 0, 0);
                     handleOverHeatAlert(alpha);
                     graphics.drawString(font, "OVERHEAT!", 0, 0, color, false);

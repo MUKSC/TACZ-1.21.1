@@ -40,7 +40,7 @@ public class LocalPlayerBolt {
             return;
         }
         // 判断是否过热
-        if (iGun.isOverHeat(mainHandItem)) {
+        if (iGun.isOverHeat(mainHandItem, player)) {
             return;
         }
 

@@ -64,7 +64,7 @@ public class LocalPlayerReload {
         }
         TimelessAPI.getGunDisplay(mainHandItem).ifPresent(display -> {
             // 检查是否为背包直读，且没有换弹冷却机制
-            if (gunItem.useInventoryAmmo(mainHandItem) && gunItem.getMagazineLockType(mainHandItem) == MagazineLockType.DISABLED) {
+            if (gunItem.useInventoryAmmo(mainHandItem) && gunItem.getMagazineLockType(mainHandItem, player) == MagazineLockType.DISABLED) {
                 return;
             }
             // 检查状态锁

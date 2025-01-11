@@ -82,7 +82,7 @@ public class LocalPlayerShoot {
         // 因为开火冷却检测用了特别定制的方法，所以不检查状态锁，而是手动检查是否换弹、切枪
         IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
         // 检查是否过热
-        if (iGun.isUseHeat(mainHandItem) && iGun.isOverHeat(mainHandItem)) {
+        if (iGun.isUseHeat(mainHandItem, player) && iGun.isOverHeat(mainHandItem, player)) {
             SoundPlayManager.playDryFireSound(player, display);
             return ShootResult.OVER_HEAT;
         }
@@ -110,7 +110,7 @@ public class LocalPlayerShoot {
         boolean hasInventoryAmmo = iGun.hasInventoryAmmo(player, mainHandItem, gunOperator.needCheckAmmo()) || hasAmmoInBarrel;
         int ammoCount = iGun.getCurrentAmmoCount(mainHandItem) + (hasAmmoInBarrel ? 1 : 0);
         // 判断有子弹的条件 (背包直读且包内有子弹 / 总子弹数 > 0 / 过热模式且无限子弹)
-        boolean hasAmmo = hasInventoryAmmo || ammoCount > 0 || iGun.isInfiniteAmmo(mainHandItem);
+        boolean hasAmmo = hasInventoryAmmo || ammoCount > 0 || iGun.isInfiniteAmmo(mainHandItem, player);
         if (!hasAmmo) {
             SoundPlayManager.playDryFireSound(player, display);
             return ShootResult.NO_AMMO;

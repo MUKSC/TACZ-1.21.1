@@ -52,7 +52,7 @@ public class ClientMessageRefitGun {
                         // 刷新配件数据
                         AttachmentPropertyManager.postChangeEvent(player, gunItem);
                         inventory.setItem(message.attachmentSlotIndex, oldAttachmentItem);
-                        // 如果卸载的是扩容弹匣，吐出所有子弹
+                        // 如果装载的是扩容弹匣，吐出所有子弹
                         if (message.attachmentType == AttachmentType.EXTENDED_MAG) {
                             iGun.dropAllAmmo(player, gunItem);
                         }

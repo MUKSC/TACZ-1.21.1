@@ -64,7 +64,7 @@ public class GunData {
     private FireSound fireSound = new FireSound();
 
     @SerializedName("heat")
-    private HeatData heatData = new HeatData();
+    private @Nullable HeatData heatData;
 
     @SerializedName("reload")
     private GunReloadData reloadData = new GunReloadData();
@@ -184,6 +184,7 @@ public class GunData {
         return fireSound;
     }
 
+    @Nullable
     public HeatData getHeatData() {
         return heatData;
     }

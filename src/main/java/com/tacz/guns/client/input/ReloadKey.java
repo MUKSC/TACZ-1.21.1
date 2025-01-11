@@ -37,7 +37,7 @@ public class ReloadKey {
             }
             if (player.getMainHandItem().getItem() instanceof IGun iGun) {
                 // 如果使用背包直读，且没有换弹冷却机制，则在输入时就屏蔽换弹
-                if (iGun.useInventoryAmmo(player.getMainHandItem()) && iGun.getMagazineLockType(player.getMainHandItem()) == MagazineLockType.DISABLED) {
+                if (iGun.useInventoryAmmo(player.getMainHandItem()) && iGun.getMagazineLockType(player.getMainHandItem(), player) == MagazineLockType.DISABLED) {
                     return;
                 }
                 IClientPlayerGunOperator.fromLocalPlayer(player).reload();

@@ -90,7 +90,7 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
      * @return 枪械是否处于过热状态。如果是非使用过热的武器或者不处于过热状态，则此方法返回 false。
      */
     public boolean isOverHeat() {
-        return iGun.isOverHeat(currentGunItem);
+        return Minecraft.getInstance().player != null && iGun.isOverHeat(currentGunItem, Minecraft.getInstance().player);
     }
 
     /**
@@ -100,7 +100,8 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
      * @return 枪械的过热进程。如果是非使用过热的武器或者不处于过热状态，则此方法返回 0。
      */
     public float getHeatProgress() {
-        return Mth.clamp((float) iGun.getHeatCount(currentGunItem) / iGun.getUpperLimit(currentGunItem), 0f, 1f);
+        return Minecraft.getInstance().player != null ?
+                Mth.clamp((float) iGun.getHeatCount(currentGunItem, Minecraft.getInstance().player) / iGun.getUpperLimit(currentGunItem, Minecraft.getInstance().player), 0f, 1f) : 0f;
     }
 
     /**

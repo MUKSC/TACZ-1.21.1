@@ -19,6 +19,7 @@ public class GunProperties {
     public static final GunProperty<LinkedList<ExtraDamage.DistanceDamagePair>> DAMAGE              = GunProperty.of("damage", new TypeToken<>() {});
     public static final GunProperty<Float>                                      EFFECTIVE_RANGE     = GunProperty.of("effective_range", Float.class);
     public static final GunProperty<ExplosionData>                              EXPLOSION           = GunProperty.of("explosion", ExplosionData.class);
+    public static final GunProperty<HeatData>                                   HEAT                = GunProperty.of("heat", HeatData.class);
     public static final GunProperty<MoveSpeed>                                  MOVE_SPEED          = GunProperty.of("movement_speed", MoveSpeed.class);
     public static final GunProperty<Float>                                      HEADSHOT_MULTIPLIER = GunProperty.of("head_shot", Float.class);
     public static final GunProperty<Ignite>                                     IGNITE              = GunProperty.of("ignite", Ignite.class);
