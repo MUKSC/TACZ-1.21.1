@@ -563,6 +563,9 @@ public abstract class AbstractGunItem extends Item implements IGun {
             if (isOverHeat(gun, player)) {
                 setBulletInBarrel(gun, false);
                 setCurrentAmmoCount(gun, 0);
+            } else {
+                setBulletInBarrel(gun, true);
+                setCurrentAmmoCount(gun, 1);
             }
         }
         // 退出无限弹药模式触发一次
