@@ -180,11 +180,11 @@ public class GunData {
         return boltFeedTime;
     }
 
-    @Nullable
     public FireSound getFireSound() {
         return fireSound;
     }
 
+    @Nullable
     public HeatData getHeatData() {
         return heatData;
     }
