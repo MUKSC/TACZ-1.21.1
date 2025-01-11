@@ -5,6 +5,7 @@ import com.tacz.guns.api.event.common.GunFinishReloadEvent;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
@@ -28,14 +29,18 @@ public class TaczEventListener {
         if (!(gun.getItem() instanceof IGun iGun)) {
             return;
         }
+        LivingEntity shooter = event.getShooter();
+        if (shooter == null) {
+            return;
+        }
         // 不使用过热机制则不处理
-        if (!iGun.isUseHeat(gun)) {
+        if (!iGun.isUseHeat(gun, shooter)) {
             return;
         }
         latestFireTimestamp = System.currentTimeMillis();
-        iGun.setHeatCount(gun, iGun.getHeatCount(gun) + iGun.getHeatRate(gun));
+        iGun.setHeatCount(gun, iGun.getHeatCount(gun, shooter) + iGun.getHeatRate(gun, shooter), shooter);
         // 如果触发过热则清空无限弹药所有位置的子弹
-        if (iGun.isOverHeat(gun) && iGun.isInfiniteAmmo(gun)) {
+        if (iGun.isOverHeat(gun, shooter) && iGun.isInfiniteAmmo(gun, shooter)) {
             iGun.setBulletInBarrel(gun, false);
             iGun.setCurrentAmmoCount(gun, 0);
         }
@@ -51,17 +56,21 @@ public class TaczEventListener {
         if (!(gun.getItem() instanceof IGun iGun)) {
             return;
         }
-        // 不使用过热机制则不处理
-        if (!iGun.isUseHeat(gun)) {
+        LivingEntity entity = event.getEntity();
+        if (entity == null) {
             return;
         }
-        MagazineLockType magazineLockType = iGun.getMagazineLockType(gun);
+        // 不使用过热机制则不处理
+        if (!iGun.isUseHeat(gun, entity)) {
+            return;
+        }
+        MagazineLockType magazineLockType = iGun.getMagazineLockType(gun, entity);
         // 如果弹匣锁不启用则不处理
         if (magazineLockType == MagazineLockType.DISABLED) {
             return;
         }
         // 完全恢复冷却
-        iGun.setHeatCount(gun, 0);
+        iGun.setHeatCount(gun, 0, entity);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -80,39 +89,39 @@ public class TaczEventListener {
                 return;
             }
             // 不使用过热机制则不处理
-            if (!iGun.isUseHeat(gun)) {
+            if (!iGun.isUseHeat(gun, entity)) {
                 return;
             }
             // 如果没有过热则设置无限弹药为有子弹状态
-            if (!iGun.isOverHeat(gun) && iGun.isInfiniteAmmo(gun)) {
+            if (!iGun.isOverHeat(gun, entity) && iGun.isInfiniteAmmo(gun, entity)) {
                 iGun.setCurrentAmmoCount(gun, 1);
             }
             // 无需冷却情况不处理
-            if (iGun.getHeatCount(gun) <= 0) {
+            if (iGun.getHeatCount(gun, entity) <= 0) {
                 return;
             }
-            MagazineLockType magazineLockType = iGun.getMagazineLockType(gun);
+            MagazineLockType magazineLockType = iGun.getMagazineLockType(gun, entity);
             // 如果具备完全弹匣锁，禁用自动冷却
             if (magazineLockType == MagazineLockType.ALL) {
                 return;
             }
             // 如果是过热，且具备过热弹匣锁，禁用自动冷却
-            if (iGun.isOverHeat(gun) && magazineLockType == MagazineLockType.OVER_HEAT) {
+            if (iGun.isOverHeat(gun, entity) && magazineLockType == MagazineLockType.OVER_HEAT) {
                 return;
             }
             // 自动冷却
             int fireGap = 60000 / iGun.getRPM(gun);
             // 默认在停止射击 (且超出连射间隔) 50ms (1 tick) 后开始冷却
-            int defaultCoolingDelay = fireGap + iGun.getCoolingDelay(gun);
-            if (iGun.isOverHeat(gun)) {
+            int defaultCoolingDelay = fireGap + iGun.getCoolingDelay(gun, entity);
+            if (iGun.isOverHeat(gun, entity)) {
                 // 如果过热，需要等待时间达到过热惩罚时间
-                if (System.currentTimeMillis() - latestFireTimestamp > defaultCoolingDelay + iGun.getOverHeatTime(gun)) {
-                    iGun.setHeatCount(gun, iGun.getHeatCount(gun) - iGun.getCoolingRate(gun));
+                if (System.currentTimeMillis() - latestFireTimestamp > defaultCoolingDelay + iGun.getOverHeatTime(gun, entity)) {
+                    iGun.setHeatCount(gun, iGun.getHeatCount(gun, entity) - iGun.getCoolingRate(gun, entity), entity);
                 }
             } else {
                 // 如果未过热，需要等待时间达到冷却延迟
                 if (System.currentTimeMillis() - latestFireTimestamp > defaultCoolingDelay) {
-                    iGun.setHeatCount(gun, iGun.getHeatCount(gun) - iGun.getCoolingRate(gun));
+                    iGun.setHeatCount(gun, iGun.getHeatCount(gun, entity) - iGun.getCoolingRate(gun, entity), entity);
                 }
             }
         }

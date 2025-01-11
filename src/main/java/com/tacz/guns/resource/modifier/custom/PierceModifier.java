@@ -31,7 +31,7 @@ public class PierceModifier implements IAttachmentModifier<Modifier, Integer> {
     @Override
     public JsonProperty<Modifier> readJson(String json) {
         PierceModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, PierceModifier.Data.class);
-        return new PierceModifier.DamageJsonProperty(data.getPierce());
+        return new PierceModifier.PierceJsonProperty(data.getPierce());
     }
 
     @Override
@@ -71,8 +71,8 @@ public class PierceModifier implements IAttachmentModifier<Modifier, Integer> {
         return 1;
     }
 
-    public static class DamageJsonProperty extends JsonProperty<Modifier> {
-        public DamageJsonProperty(Modifier value) {
+    public static class PierceJsonProperty extends JsonProperty<Modifier> {
+        public PierceJsonProperty(Modifier value) {
             super(value);
         }
 

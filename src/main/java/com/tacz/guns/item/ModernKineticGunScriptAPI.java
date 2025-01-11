@@ -192,7 +192,7 @@ public class ModernKineticGunScriptAPI {
                     return consumeAmmoFromPlayer(1) == 1;
                 }
                 // 如果非背包直读则弹匣内子弹 - 1
-                abstractGunItem.reduceCurrentAmmoCount(itemStack);
+                abstractGunItem.reduceCurrentAmmoCount(itemStack, shooter);
                 return true;
             }
             // 没有膛内子弹无法射击
@@ -214,7 +214,7 @@ public class ModernKineticGunScriptAPI {
                 return consumeAmmoFromPlayer(1) == 1;
             }
             // 如果非背包直读则弹匣内子弹 - 1
-            abstractGunItem.reduceCurrentAmmoCount(itemStack);
+            abstractGunItem.reduceCurrentAmmoCount(itemStack, shooter);
             return true;
         }
         // 非三种已知 Bolt 类型 (目前不会出现)，默认返回 false
@@ -397,7 +397,7 @@ public class ModernKineticGunScriptAPI {
             return neededAmount;
         }
         // 如果是过热系统无限弹药的情况
-        if (abstractGunItem.isInfiniteAmmo(itemStack)) {
+        if (abstractGunItem.isInfiniteAmmo(itemStack, shooter)) {
             return neededAmount;
         }
         if (abstractGunItem.useDummyAmmo(itemStack)) {
@@ -642,11 +642,11 @@ public class ModernKineticGunScriptAPI {
     }
 
     public boolean isOverHeat() {
-        return abstractGunItem.isOverHeat(itemStack);
+        return abstractGunItem.isOverHeat(itemStack, shooter);
     }
 
     public float getHeatProgress() {
-        return Mth.clamp((float) abstractGunItem.getHeatCount(itemStack) / abstractGunItem.getUpperLimit(itemStack), 0f, 1f);
+        return Mth.clamp((float) abstractGunItem.getHeatCount(itemStack, shooter) / abstractGunItem.getUpperLimit(itemStack, shooter), 0f, 1f);
     }
 
     public void setDataHolder(ShooterDataHolder dataHolder) {

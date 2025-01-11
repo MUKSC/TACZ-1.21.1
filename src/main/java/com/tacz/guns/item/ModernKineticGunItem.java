@@ -340,7 +340,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
                 api.setAmmoInBarrel(true);
             }
         }
-        MinecraftForge.EVENT_BUS.post(new GunFinishReloadEvent(api.getItemStack(), LogicalSide.SERVER));
+        MinecraftForge.EVENT_BUS.post(new GunFinishReloadEvent(api.getShooter(), api.getItemStack(), LogicalSide.SERVER));
     }
 
     private void doMelee(LivingEntity user, float gunDistance, float meleeDistance, float rangeAngle, float knockback, float damage, List<EffectData> effects) {

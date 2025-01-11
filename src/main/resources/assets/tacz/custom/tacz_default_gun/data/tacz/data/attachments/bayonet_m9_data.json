@@ -134,5 +134,40 @@
     // "hide_particles": true
     // }
     // ]
+//  },
+    // 过热系统配置
+//  "heat": {
+      // 是否使用过热（只要枪械 data 或任意配件内设置为 true，枪械就会启用过热）
+//    "use_heat": true,
+      // 是否使用无限弹药（只要枪械 data 或任意配件内设置为 true，枪械就会启用无限弹药）
+//    "infinite_ammo": true,
+      // 弹匣锁（如果枪械 data 关闭了弹匣锁，则所有配件按 all > over_heat > assist 的优先级来确认最终的弹匣锁类型）
+      // （如果枪械 data 开启了弹匣锁，那么只要配件中有 disabled，那么最终弹匣锁就会被关闭）
+//    "magazine_lock_type": "over_heat",
+      // 过热上限配置
+//    "upper_limit": {
+//      "addend": 0,
+//      "multiplier": 1
+//    },
+      // 过热速率配置
+//    "heat_rate": {
+//      "addend": 0,
+//      "multiplier": 1
+//    },
+      // 冷却速率配置
+//    "cooling_rate": {
+//      "addend": 0,
+//      "multiplier": 1
+//    },
+      // 冷却延时配置
+//    "cooling_delay": {
+//      "addend": 0,
+//      "multiplier": 1
+//    },
+      // 过热惩罚时间配置
+//    "over_heat_time": {
+//      "addend": 0,
+//      "multiplier": 1
+//    }
   }
 }

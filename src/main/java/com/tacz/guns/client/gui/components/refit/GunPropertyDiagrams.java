@@ -88,7 +88,7 @@ public final class GunPropertyDiagrams {
                 graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
                 graphics.fill(barStartX, yOffset[0] + 2, barStartX + barMaxWidth, yOffset[0] + 6, barBaseColor);
                 graphics.drawString(font, Component.literal("INV"), valueTextStartX, yOffset[0], fontColor, false);
-            } else if (iGun.isInfiniteAmmo(gunItem)) {
+            } else if (iGun.isInfiniteAmmo(gunItem, player)) {
                 // 如果是无限子弹，则显示满条和 INF 的标注
                 graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
                 graphics.fill(barStartX, yOffset[0] + 2, barStartX + barMaxWidth, yOffset[0] + 6, barBaseColor);

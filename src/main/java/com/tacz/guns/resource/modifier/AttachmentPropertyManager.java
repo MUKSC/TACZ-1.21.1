@@ -1,6 +1,7 @@
 package com.tacz.guns.resource.modifier;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
@@ -10,8 +11,10 @@ import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.event.ChangeGunPropertyEvent;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.modifier.custom.*;
+import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.StringUtils;
@@ -19,10 +22,7 @@ import org.luaj.vm2.script.LuaScriptEngineFactory;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class AttachmentPropertyManager {
     private static final ScriptEngine LUAJ_ENGINE = new LuaScriptEngineFactory().getScriptEngine();
@@ -36,6 +36,7 @@ public class AttachmentPropertyManager {
         MODIFIERS.put(DamageModifier.ID, new DamageModifier());
         MODIFIERS.put(EffectiveRangeModifier.ID, new EffectiveRangeModifier());
         MODIFIERS.put(ExplosionModifier.ID, new ExplosionModifier());
+        MODIFIERS.put(HeatModifier.ID, new HeatModifier());
         MODIFIERS.put(HeadShotModifier.ID, new HeadShotModifier());
         MODIFIERS.put(IgniteModifier.ID, new IgniteModifier());
         MODIFIERS.put(InaccuracyModifier.ID, new InaccuracyModifier());
@@ -66,6 +67,13 @@ public class AttachmentPropertyManager {
             MinecraftForge.EVENT_BUS.post(event);
             // 更新实体的缓存对象
             IGunOperator.fromLivingEntity(shooter).updateCacheProperty(cacheProperty);
+            // 做一次无限弹药检查（用于在进入和退出无限弹药模式时刷新枪械的子弹数据）
+            if (!iGun.isInfiniteAmmo(gunItem, shooter)) {
+                if (shooter instanceof Player player) {
+                    // 做一次弹匣检查（用于处理装载扩容弹匣后装满子弹，然后装上无限弹药配件后先卸载扩容弹匣，再卸载无限弹药配件导致的子弹数目异常）
+                    iGun.magazineCheck(player, gunItem);
+                }
+            }
         });
     }
 
@@ -94,13 +102,34 @@ public class AttachmentPropertyManager {
         return value;
     }
 
-    public static boolean eval(List<Boolean> modified, boolean defaultValue) {
-        if (defaultValue) {
-            // 如果默认值为 true，那么只要有一个 false 就返回 false
+    public static boolean eval(List<Boolean> modified, boolean matchType) {
+        if (matchType) {
+            // 如果设定值为 true，那么只要有一个 false 就返回 false
             return modified.stream().allMatch(s -> s);
         } else {
-            // 如果默认值为 false，那么只要有一个 true 就返回 true
+            // 如果设定值为 false，那么只要有一个 true 就返回 true
             return modified.stream().anyMatch(s -> s);
+        }
+    }
+
+    public static MagazineLockType eval(List<MagazineLockType> modified, MagazineLockType defaultValue) {
+        // 如果默认值为非 disabled，那么只要有一个 disabled 就返回 disabled（关闭弹匣锁）
+        if (defaultValue != MagazineLockType.DISABLED) {
+            return modified.stream().anyMatch(s -> s == MagazineLockType.DISABLED) ? MagazineLockType.DISABLED : defaultValue;
+        } else {
+            // 如果默认值为 disabled，那么按照一个定好的优先级进行判断使用哪种弹匣锁（all > over_heat > assist）
+            Set<MagazineLockType> magazineLockTypes = Sets.newHashSet();
+            magazineLockTypes.addAll(modified);
+            if (magazineLockTypes.contains(MagazineLockType.ALL)) {
+                return MagazineLockType.ALL;
+            }
+            if (magazineLockTypes.contains(MagazineLockType.OVER_HEAT)) {
+                return MagazineLockType.OVER_HEAT;
+            }
+            if (magazineLockTypes.contains(MagazineLockType.ASSIST)) {
+                return MagazineLockType.ASSIST;
+            }
+            return MagazineLockType.DISABLED;
         }
     }
 

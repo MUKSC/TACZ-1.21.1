@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,9 @@ public interface GunItemDataAccessor extends IGun {
     String GUN_ID_TAG = "GunId";
     String GUN_FIRE_MODE_TAG = "GunFireMode";
     String GUN_HAS_BULLET_IN_BARREL = "HasBulletInBarrel";
+    String GUN_HAS_ORIGINAL_BULLET_IN_BARREL = "HasOriginalBulletInBarrel";
     String GUN_CURRENT_AMMO_COUNT_TAG = "GunCurrentAmmoCount";
+    String GUN_ORIGINAL_AMMO_COUNT_TAG = "GunOriginalAmmoCount";
     String GUN_ATTACHMENT_BASE = "Attachment";
     String GUN_EXP_TAG = "GunLevelExp";
     String GUN_DUMMY_AMMO = "DummyAmmo";
@@ -212,13 +215,28 @@ public interface GunItemDataAccessor extends IGun {
     }
 
     @Override
-    default void reduceCurrentAmmoCount(ItemStack gun) {
+    default int getOriginalAmmoCount(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        if (nbt.contains(GUN_ORIGINAL_AMMO_COUNT_TAG, Tag.TAG_INT)) {
+            return nbt.getInt(GUN_ORIGINAL_AMMO_COUNT_TAG);
+        }
+        return 0;
+    }
+
+    @Override
+    default void setOriginalAmmoCount(ItemStack gun, int ammoCount) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        nbt.putInt(GUN_ORIGINAL_AMMO_COUNT_TAG, Math.max(ammoCount, 0));
+    }
+
+    @Override
+    default void reduceCurrentAmmoCount(ItemStack gun, LivingEntity entity) {
         // 如果使用背包直读的情况
         if (useInventoryAmmo(gun)) {
             return;
         }
         // 如果过热模式无限弹药的情况
-        if (isInfiniteAmmo(gun)) {
+        if (isInfiniteAmmo(gun, entity)) {
             return;
         }
         setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
@@ -365,18 +383,33 @@ public interface GunItemDataAccessor extends IGun {
     }
 
     @Override
-    default int getHeatCount(ItemStack gun) {
+    default boolean hasOriginalBulletInBarrel(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        if (nbt.contains(GUN_HAS_ORIGINAL_BULLET_IN_BARREL, Tag.TAG_BYTE)) {
+            return nbt.getBoolean(GUN_HAS_ORIGINAL_BULLET_IN_BARREL);
+        }
+        return false;
+    }
+
+    @Override
+    default void setOriginalBulletInBarrel(ItemStack gun, boolean bulletInBarrel) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        nbt.putBoolean(GUN_HAS_ORIGINAL_BULLET_IN_BARREL, bulletInBarrel);
+    }
+
+    @Override
+    default int getHeatCount(ItemStack gun, LivingEntity player) {
         CompoundTag nbt = gun.getOrCreateTag();
         if (nbt.contains(GUN_HEAT_COUNT, Tag.TAG_INT)) {
-            return Mth.clamp(nbt.getInt(GUN_HEAT_COUNT), 0, getUpperLimit(gun));
+            return Mth.clamp(nbt.getInt(GUN_HEAT_COUNT), 0, getUpperLimit(gun, player));
         }
         return 0;
     }
 
     @Override
-    default void setHeatCount(ItemStack gun, int heatCount) {
+    default void setHeatCount(ItemStack gun, int heatCount, LivingEntity player) {
         CompoundTag nbt = gun.getOrCreateTag();
-        if (isUseHeat(gun)) {
+        if (isUseHeat(gun, player)) {
             nbt.putInt(GUN_HEAT_COUNT, heatCount);
         }
     }

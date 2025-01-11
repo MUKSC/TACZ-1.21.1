@@ -122,7 +122,7 @@ public class GunHudOverlay implements IGuiOverlay {
         // 数字
         poseStack.pushPose();
         // 如果无限弹药则显示白色 INF.，否则显示当前弹药数
-        if (iGun.isInfiniteAmmo(stack)) {
+        if (iGun.isInfiniteAmmo(stack, player)) {
             currentAmmoCountText = "INF.";
             ammoCountColor = 0xFFFFFF;
         }
@@ -155,7 +155,7 @@ public class GunHudOverlay implements IGuiOverlay {
         ResourceLocation hudTexture = display.getHUDTexture();
         @Nullable ResourceLocation hudEmptyTexture = display.getHudEmptyTexture();
 
-        if (ammoCount <= 0 && !iGun.isInfiniteAmmo(stack)) {
+        if (ammoCount <= 0 && !iGun.isInfiniteAmmo(stack, player)) {
             if (hudEmptyTexture == null) {
                 RenderSystem.setShaderColor(1, 0.3f, 0.3f, 1);
             } else {
@@ -164,7 +164,7 @@ public class GunHudOverlay implements IGuiOverlay {
         }
 
         // 过热警告颜色设置
-        if (iGun.isOverHeat(stack)) {
+        if (iGun.isOverHeat(stack, player)) {
             handleOverHeatAlert();
         }
 

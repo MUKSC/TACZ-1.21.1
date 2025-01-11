@@ -18,6 +18,6 @@ public class IgniteSerializer implements JsonDeserializer<Ignite> {
             boolean igniteBlock = GsonHelper.getAsBoolean(jsonObject, "block", false);
             return new Ignite(igniteEntity, igniteBlock);
         }
-        throw new JsonSyntaxException("Expected " + json + " to be a Pair because it's not an array");
+        throw new JsonSyntaxException(json + " has wrong format or structure");
     }
 }

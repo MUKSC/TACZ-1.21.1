@@ -58,7 +58,7 @@ public class GunData {
     private float boltFeedTime = -1;
 
     @SerializedName("heat")
-    private HeatData heatData = new HeatData();
+    private @Nullable HeatData heatData;
 
     @SerializedName("reload")
     private GunReloadData reloadData = new GunReloadData();
@@ -170,6 +170,7 @@ public class GunData {
         return boltFeedTime;
     }
 
+    @Nullable
     public HeatData getHeatData() {
         return heatData;
     }

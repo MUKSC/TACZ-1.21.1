@@ -33,7 +33,7 @@ public class LivingEntityBolt {
             return;
         }
         // 判断是否过热
-        if (iGun.isOverHeat(currentGunItem)) {
+        if (iGun.isOverHeat(currentGunItem, shooter)) {
             return;
         }
         ResourceLocation gunId = iGun.getGunId(currentGunItem);

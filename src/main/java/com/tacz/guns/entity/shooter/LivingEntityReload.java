@@ -39,7 +39,7 @@ public class LivingEntityReload {
         ResourceLocation gunId = gunItem.getGunId(currentGunItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(gunIndex -> {
             // 检查是否为背包直读，且没有换弹冷却机制
-            if (gunItem.useInventoryAmmo(currentGunItem) && gunItem.getMagazineLockType(currentGunItem) == MagazineLockType.DISABLED) {
+            if (gunItem.useInventoryAmmo(currentGunItem) && gunItem.getMagazineLockType(currentGunItem, shooter) == MagazineLockType.DISABLED) {
                 return;
             }
             // 检查换弹是否还未完成
