@@ -934,6 +934,29 @@
 				"bullet": {
 					"position": [0, -4, 0]
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:springfield1873/springfield1873_reload_start"
+				},
+				"0.1667": {
+					"effect": "tacz:springfield1873/springfield1873_hammer"
+				},
+				"0.6667": {
+					"effect": "tacz:springfield1873/springfield1873_reload_boltopen"
+				},
+				"0.8333": {
+					"effect": "tacz:springfield1873/springfield1873_shell_casing"
+				},
+				"1.2": {
+					"effect": "tacz:springfield1873/springfield1873_shell_eject"
+				},
+				"1.3667": {
+					"effect": "tacz:springfield1873/springfield1873_reload_load"
+				},
+				"1.8167": {
+					"effect": "tacz:springfield1873/springfield1873_reload_closebolt"
+				}
 			}
 		},
 		"inspect": {
@@ -2026,6 +2049,41 @@
 				"bullet": {
 					"position": [0, -4, 0]
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_up"
+				},
+				"1.2333": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_rotate"
+				},
+				"4.2": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_mvmnt"
+				},
+				"6.0": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_closer"
+				},
+				"7.0667": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_leveropen"
+				},
+				"7.2167": {
+					"effect": "tacz:springfield1873/springfield1873_shell_casing"
+				},
+				"7.4": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_rattle_catchbullet"
+				},
+				"8.4": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_mvmnt2"
+				},
+				"9.9667": {
+					"effect": "tacz:springfield1873/springfield1873_reload_load"
+				},
+				"10.4667": {
+					"effect": "tacz:springfield1873/springfield1873_reload_closebolt"
+				},
+				"11.0333": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_end"
+				}
 			}
 		},
 		"inspect_empty": {
@@ -2870,6 +2928,35 @@
 						"9.5333": [0, 0, 0]
 					},
 					"position": [0, 0, 0]
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_up"
+				},
+				"1.2333": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_rotate"
+				},
+				"4.2": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_mvmnt"
+				},
+				"6.0": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_closer"
+				},
+				"6.5667": {
+					"effect": "tacz:springfield1873/springfield1873_hammer"
+				},
+				"7.1": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_leveropen"
+				},
+				"8.6": {
+					"effect": "tacz:springfield1873/springfield1873_reload_closebolt"
+				},
+				"8.7333": {
+					"effect": "tacz:springfield1873/springfield1873_inspect_empty_end"
+				},
+				"9.3": {
+					"effect": "tacz:springfield1873/springfield1873_fire_first"
 				}
 			}
 		},
