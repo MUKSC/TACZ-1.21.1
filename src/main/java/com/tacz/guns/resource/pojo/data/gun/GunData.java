@@ -30,6 +30,9 @@ public class GunData {
     @SerializedName("extended_mag_ammo_amount")
     private int @Nullable [] extendedMagAmmoAmount = null;
 
+    @SerializedName("can_crawl")
+    private boolean canCrawl = true;
+
     @SerializedName("bolt")
     private Bolt bolt = Bolt.OPEN_BOLT;
 
@@ -56,6 +59,9 @@ public class GunData {
 
     @SerializedName("bolt_feed_time")
     private float boltFeedTime = -1;
+
+    @SerializedName("fire_sound")
+    private FireSound fireSound = new FireSound();
 
     @SerializedName("heat")
     private @Nullable HeatData heatData;
@@ -120,6 +126,10 @@ public class GunData {
         return extendedMagAmmoAmount;
     }
 
+    public boolean isCanCrawl() {
+        return canCrawl;
+    }
+
     public Bolt getBolt() {
         return bolt;
     }
@@ -171,6 +181,10 @@ public class GunData {
     }
 
     @Nullable
+    public FireSound getFireSound() {
+        return fireSound;
+    }
+
     public HeatData getHeatData() {
         return heatData;
     }

@@ -189,9 +189,9 @@ public class LocalPlayerShoot {
                     // 开火需要打断检视
                     SoundPlayManager.stopPlayGunSound(display, SoundManager.INSPECT_SOUND);
                     if (useSilenceSound) {
-                        SoundPlayManager.playSilenceSound(player, display);
+                        SoundPlayManager.playSilenceSound(player, display, gunData);
                     } else {
-                        SoundPlayManager.playShootSound(player, display);
+                        SoundPlayManager.playShootSound(player, display, gunData);
                     }
                 }
             });

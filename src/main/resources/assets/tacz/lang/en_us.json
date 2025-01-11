@@ -228,6 +228,8 @@
   "config.tacz.common.gun": "Gun",
   "config.tacz.common.gun.default_gun_fire_sound_distance": "Default Gun Fire Sound Distance",
   "config.tacz.common.gun.default_gun_fire_sound_distance.desc": "The default fire sound range (block)",
+  "config.tacz.common.gun.default_gun_silence_sound_distance": "Default Gun Silencer Fire Sound Distance",
+  "config.tacz.common.gun.default_gun_silence_sound_distance.desc": "The silencer default fire sound range (block)",
   "config.tacz.common.gun.default_gun_other_sound_distance": "Other Gun Sound Distance",
   "config.tacz.common.gun.default_gun_other_sound_distance.desc": "The range (block) of other gun sound, reloading sound etc.",
   "config.tacz.common.gun.creative_player_consume_ammo": "Creative Player Consume Ammo",

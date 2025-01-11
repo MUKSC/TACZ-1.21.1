@@ -9,6 +9,8 @@
     37,
     40
   ],
+  // 是否允许趴下
+  "can_crawl": true,
   // 枪栓类型：开膛待机（open_bolt）、闭膛待击（closed_bolt）、手动上膛（manual_action)
   "bolt": "closed_bolt",
   // 每分钟射出弹药量，最大不应超过 1200
@@ -73,6 +75,13 @@
       // 爆炸是否破坏方块，默认为 false，需要服务器也开启爆炸破坏方块才能使用
       // "destroy_block": false
     // }
+  },
+  // 射击声音传播距离修正
+  "fire_sound": {
+    // 射击声音传播距离修正乘数
+    "fire_multiplier": 1.0,
+    // 消音器射击声音传播距离修正乘数
+    "silence_multiplier": 1.0
   },
   "heat":  {
     // 是否使用过热系统，默认为 false，禁用时下方的所有设置不生效

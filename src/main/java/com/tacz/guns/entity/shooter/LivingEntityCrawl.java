@@ -29,6 +29,12 @@ public class LivingEntityCrawl {
             return;
         }
         ItemStack currentGunItem = data.currentGunItem.get();
+        // 不允许趴下的武器，则取消趴下状态
+        if (!iGun.isCanCrawl(currentGunItem)) {
+            data.isCrawling = false;
+            this.setCrawlPose();
+            return;
+        }
         // 如果获取不到 gunIndex，则取消趴下状态
         ResourceLocation gunId = iGun.getGunId(currentGunItem);
         if (TimelessAPI.getCommonGunIndex(gunId).isEmpty()) {

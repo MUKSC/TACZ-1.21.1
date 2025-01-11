@@ -762,4 +762,21 @@ public abstract class AbstractGunItem extends Item implements IGun {
         }
         return 0;
     }
+
+    /**
+     * 获取是否可以趴下射击
+     * @param gun 枪械
+     * @return 是否可以趴下射击
+     */
+    public boolean isCanCrawl(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return false;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            return gunIndex.getGunData().isCanCrawl();
+        }
+        return false;
+    }
 }
