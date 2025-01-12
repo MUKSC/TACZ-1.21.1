@@ -1,6 +1,7 @@
 {
-  "ammo": "tacz:50ae",
-  "bolt": "manual_action",
+  "ammo": "tacz:45-70",
+  "bolt": "open_bolt",
+  "ammo_amount": 1,
   "rpm": 90,
   "bullet": {
     "life": 0.8,

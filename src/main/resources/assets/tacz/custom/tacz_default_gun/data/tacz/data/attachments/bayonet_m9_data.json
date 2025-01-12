@@ -143,6 +143,7 @@
 //    "infinite_ammo": true,
       // 弹匣锁（如果枪械 data 关闭了弹匣锁，则所有配件按 all > over_heat > assist 的优先级来确认最终的弹匣锁类型）
       // （如果枪械 data 开启了弹匣锁，那么只要配件中有 disabled，那么最终弹匣锁就会被关闭）
+      // 弹匣锁相关的详细设置情况请移步 ak47_data.json 查看
 //    "magazine_lock_type": "over_heat",
       // 过热上限配置
 //    "upper_limit": {
