@@ -18,6 +18,8 @@ local BOLT_CAUGHT_TRACK = increment(static_track_top)
 local SAFETY_TRACK = increment(static_track_top) -- 待实现
 local ADS_TRACK = increment(static_track_top) -- 待实现
 local MAIN_TRACK = increment(static_track_top)
+local FIRE_MODE_TRACK = increment(static_track_top)
+local SWITCH_MODE_TRACK = increment(static_track_top)
 
 -- 开火的轨道行
 local GUN_KICK_TRACK_LINE = increment(track_line_top)
@@ -111,6 +113,83 @@ local base_track_state = {}
 function base_track_state.entry(this, context)
     -- 在 主轨道行 的 基础轨道 上循环播放 static_idle
     context:runAnimation("static_idle", context:getTrack(STATIC_TRACK_LINE, BASE_TRACK), false, LOOP, 0)
+end
+
+local fire_mode_state = {
+    semi = {},
+    burst = {},
+    auto = {},
+    draw = {}
+}
+
+function fire_mode_state.draw.update(this, context)
+    context:trigger(this.INPUT_MODE_DRAW)
+end
+
+function fire_mode_state.draw.transition(this, context,input)
+    if (input == this.INPUT_MODE_DRAW) then
+        if (context:getFireMode() == SEMI) then
+            context:runAnimation("static_semi", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
+            return fire_mode_state.semi
+        elseif (context:getFireMode() == BURST) then
+            context:runAnimation("static_burst", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
+            return fire_mode_state.burst
+        elseif (context:getFireMode() == AUTO) then
+            context:runAnimation("static_auto", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
+            return fire_mode_state.auto
+        end
+    end
+end
+
+function fire_mode_state.semi.update(this, context)
+    local track = context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK)
+    if (context:isHolding(track)) then
+        context:runAnimation("static_semi", track, true, PLAY_ONCE_HOLD, 0)
+    end
+    if (context:getFireMode() == AUTO) then
+        context:trigger(this.INPUT_MODE_AUTO)
+    end
+end
+
+function fire_mode_state.semi.transition(this, context,input)
+    if(input == this.INPUT_MODE_AUTO)then
+        context:runAnimation("switch_auto", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
+        return fire_mode_state.auto
+    end
+end
+
+function fire_mode_state.burst.update(this, context)
+    local track = context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK)
+    if (context:isHolding(track)) then
+        context:runAnimation("static_burst", track, true, PLAY_ONCE_HOLD, 0)
+    end
+    if (context:getFireMode() == SEMI) then
+        context:trigger(this.INPUT_MODE_SEMI)
+    end
+end
+
+function fire_mode_state.burst.transition(this, context,input)
+    if(input == this.INPUT_MODE_SEMI)then
+        context:runAnimation("switch_semi", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
+        return fire_mode_state.semi
+    end
+end
+
+function fire_mode_state.auto.update(this, context)
+    local track = context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK)
+    if (context:isHolding(track)) then
+        context:runAnimation("static_auto", track, true, PLAY_ONCE_HOLD, 0)
+    end
+    if (context:getFireMode() == BURST) then
+        context:trigger(this.INPUT_MODE_BURST)
+    end
+end
+
+function fire_mode_state.auto.transition(this, context,input)
+    if(input == this.INPUT_MODE_BURST)then
+        context:runAnimation("switch_burst", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
+        return fire_mode_state.burst
+    end
 end
 
 -- 空挂部分,该部分到 147 行结束
@@ -290,6 +369,18 @@ function main_track_states.inspect.transition(this, context, input)
     end
     -- 特殊地,射击应当打断检视,当检测到射击输入时应该直接停止动画并返回闲置态
     if (input == INPUT_SHOOT) then
+        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
+        return this.main_track_states.idle
+    end
+    if (input == this.INPUT_MODE_AUTO) then
+        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
+        return this.main_track_states.idle
+    end
+    if (input == this.INPUT_MODE_BURST) then
+        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
+        return this.main_track_states.idle
+    end
+    if (input == this.INPUT_MODE_SEMI) then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
         return this.main_track_states.idle
     end
@@ -489,6 +580,8 @@ local M = {
     SAFETY_TRACK = SAFETY_TRACK,
     ADS_TRACK = ADS_TRACK,
     MAIN_TRACK = MAIN_TRACK,
+    FIRE_MODE_TRACK = FIRE_MODE_TRACK,
+    SWITCH_MODE_TRACK = SWITCH_MODE_TRACK,
     -- 混合轨道
     blending_track_top = blending_track_top,
     MOVEMENT_TRACK = MOVEMENT_TRACK,
@@ -499,10 +592,15 @@ local M = {
     main_track_states = main_track_states,
     gun_kick_state = gun_kick_state,
     movement_track_states = movement_track_states,
+    fire_mode_state = fire_mode_state,
     -- 输入
     INPUT_BOLT_CAUGHT = "bolt_caught",
     INPUT_BOLT_NORMAL = "bolt_normal",
-    INPUT_INSPECT_RETREAT = "inspect_retreat"
+    INPUT_INSPECT_RETREAT = "inspect_retreat",
+    INPUT_MODE_SEMI = "input_mode_semi",
+    INPUT_MODE_BURST = "input_mode_burst",
+    INPUT_MODE_AUTO = "input_mode_auto",
+    INPUT_MODE_DRAW = "input_mode_draw"
 }
 
 -- 状态机初始化函数，在切枪的时候调用
@@ -521,6 +619,7 @@ end
 
 function M:states()
     return {
+        self.fire_mode_state.draw,
         self.base_track_state,
         self.bolt_caught_states.normal,
         self.main_track_states.start,
