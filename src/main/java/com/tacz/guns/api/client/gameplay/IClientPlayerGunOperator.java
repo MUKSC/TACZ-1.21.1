@@ -90,4 +90,8 @@ public interface IClientPlayerGunOperator {
      * 客户端射击冷却时间
      */
     long getClientShootCoolDown();
+
+    boolean isReadyToDraw();
+
+    void resetDraw();
 }

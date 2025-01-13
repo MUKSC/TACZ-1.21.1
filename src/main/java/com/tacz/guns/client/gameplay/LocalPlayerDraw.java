@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class LocalPlayerDraw {
     private final LocalPlayerDataHolder data;
     private final LocalPlayer player;
+    public boolean readyToDraw = false;
 
     public LocalPlayerDraw(LocalPlayerDataHolder data, LocalPlayer player) {
         this.data = data;
@@ -68,26 +69,15 @@ public class LocalPlayerDraw {
 
     private void doDraw(ItemStack currentItem, long putAwayTime) {
         TimelessAPI.getGunDisplay(currentItem).ifPresent(display -> {
-            // 初始化状态机
-            AnimationStateMachine<GunAnimationStateContext> animationStateMachine = display.getAnimationStateMachine();
-            if (animationStateMachine == null) {
-                return;
-            }
-            if (animationStateMachine.isInitialized()) {
-                animationStateMachine.exit();
-            }
-            GunAnimationStateContext context = new GunAnimationStateContext();
-            context.setCurrentGunItem(currentItem);
-            animationStateMachine.setContext(context);
-            animationStateMachine.initialize();
             // 取消预定中的 draw 行为
             if (data.drawFuture != null) {
                 data.drawFuture.cancel(false);
             }
             // 根据 put away time 预定 draw 行为
             data.drawFuture = LocalPlayerDataHolder.SCHEDULED_EXECUTOR_SERVICE.schedule(() -> {
+                this.readyToDraw = true;
+
                 Minecraft.getInstance().submitAsync(() -> {
-                    animationStateMachine.trigger(GunAnimationConstant.INPUT_DRAW);
                     SoundPlayManager.stopPlayGunSound();
                     SoundPlayManager.playDrawSound(player, display);
                 });
