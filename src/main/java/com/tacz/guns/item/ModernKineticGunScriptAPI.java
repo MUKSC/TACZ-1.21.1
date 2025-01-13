@@ -150,6 +150,18 @@ public class ModernKineticGunScriptAPI {
                     SoundManager.sendSoundToNearby(shooter, soundDistance, gunId, gunDisplayId, soundId, 0.8f, 0.9f + shooter.getRandom().nextFloat() * 0.125f);
                 }
             }
+            // 成功射击，设置当前开火时间戳
+            dataHolder.lastFireTimestamp = System.currentTimeMillis();
+            // 如果使用过热系统，进行过热相关操作
+            if (abstractGunItem.isUseHeat(itemStack, shooter)) {
+                // 过热计数
+                abstractGunItem.setHeatCount(itemStack, abstractGunItem.getHeatCount(itemStack, shooter) + abstractGunItem.getHeatRate(itemStack, shooter), shooter);
+                // 如果触发过热则清空无限弹药模式下所有位置的子弹
+                if (isOverHeat() && abstractGunItem.isInfiniteAmmo(itemStack, shooter)) {
+                    abstractGunItem.setBulletInBarrel(itemStack, false);
+                    abstractGunItem.setCurrentAmmoCount(itemStack, 0);
+                }
+            }
             return true;
         }, period, cycles);
     }

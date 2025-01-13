@@ -340,7 +340,23 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
                 api.setAmmoInBarrel(true);
             }
         }
-        MinecraftForge.EVENT_BUS.post(new GunFinishReloadEvent(api.getShooter(), api.getItemStack(), LogicalSide.SERVER));
+        // 发送枪械结束换弹事件
+        ItemStack gun = api.getItemStack();
+        LivingEntity shooter = api.getShooter();
+        if (shooter == null) {
+            return;
+        }
+        MinecraftForge.EVENT_BUS.post(new GunFinishReloadEvent(shooter, gun, LogicalSide.SERVER));
+        // 结束换弹时判断是否要对过热系统进行操作
+        if (isUseHeat(api.getItemStack(), api.getShooter())) {
+            MagazineLockType magazineLockType = getMagazineLockType(gun, shooter);
+            // 如果弹匣锁不启用则不处理
+            if (magazineLockType == MagazineLockType.DISABLED) {
+                return;
+            }
+            // 完全恢复冷却
+            setHeatCount(gun, 0, shooter);
+        }
     }
 
     private void doMelee(LivingEntity user, float gunDistance, float meleeDistance, float rangeAngle, float knockback, float damage, List<EffectData> effects) {

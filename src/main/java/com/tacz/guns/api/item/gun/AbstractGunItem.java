@@ -545,9 +545,9 @@ public abstract class AbstractGunItem extends Item implements IGun {
 
     /**
      * 该检测仅用于在进入/退出无限弹药模式时，刷新枪械的子弹数据
-     * @param gun
-     * @param infiniteAmmo
-     * @param player
+     * @param gun 枪械
+     * @param infiniteAmmo 当前是否为无限弹药
+     * @param player 玩家
      * @return 输入的 infiniteAmmo（即当前是否为无限弹药）
      */
     private boolean infiniteAmmoCheck(ItemStack gun, boolean infiniteAmmo, LivingEntity player) {
