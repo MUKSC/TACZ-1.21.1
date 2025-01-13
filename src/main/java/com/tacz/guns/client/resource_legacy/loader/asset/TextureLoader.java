@@ -31,7 +31,7 @@ public final class TextureLoader {
                 GunMod.LOGGER.warn(MARKER, "{} file don't exist", zipPath);
                 return false;
             }
-            ResourceLocation id = new ResourceLocation(namespace, path);
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, path);
             ZipPackTexture zipPackTexture = new ZipPackTexture(id, zipFile.getName());
             Minecraft.getInstance().textureManager.register(id, zipPackTexture);
             return true;

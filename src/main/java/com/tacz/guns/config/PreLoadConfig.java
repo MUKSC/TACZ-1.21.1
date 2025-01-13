@@ -1,6 +1,7 @@
 package com.tacz.guns.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.tacz.guns.GunMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ConfigTracker;
@@ -24,8 +25,8 @@ public class PreLoadConfig {
     }
 
     public static PreLoadModConfig getModConfig() {
-        ModLoadingContext ctx = ModLoadingContext.get();
-        var c = new PreLoadModConfig(ModConfig.Type.COMMON, spec, ctx.getActiveContainer(), "tacz-pre.toml");
+        ModLoadingContext ctx = GunMod.context;
+        var c = new PreLoadModConfig(ModConfig.Type.COMMON, spec, ctx.getContainer(), "tacz-pre.toml");
         // 从 ConfigTracker 中移除，防止从默认文件夹重复加载
         ConfigTracker.INSTANCE.configSets().get(ModConfig.Type.COMMON).remove(c);
         ConfigTracker.INSTANCE.fileMap().remove(c.getFileName(), c);

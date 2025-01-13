@@ -18,7 +18,7 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0.24,6.2)', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
@@ -34,9 +34,9 @@ apply plugin: 'java'
 // 版本号，正式发布需要修改这一行
 version = FORMAT.format(new Date())
 group = "com.tacz"
-archivesBaseName = "tacz-1.20.1"
+archivesBaseName = "tacz-1.21.1"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 mixin {
     add sourceSets.main, "tacz.refmap.json"
@@ -45,15 +45,16 @@ mixin {
 
 minecraft {
     // 使用 parchment 来反混淆变量名
-    mappings channel: 'parchment', version: '2023.08.20-1.20.1'
+    mappings channel: 'parchment', version: '2024.11.17-1.21.1'
     // 使用 access transformer 来修改原版的一些方法访问修饰符
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    copyIdeResources = true
+    reobf = false
     // 运行参数
     runs {
         client {
             // 使用 JetBrainsRuntime 时需要的参数，否则无法热重载
             // 如果你使用别的 JDK，那么可以删除这一行
-            jvmArgs "-XX:+AllowEnhancedClassRedefinition"
             // 每个启动单独区分文件夹
             workingDirectory project.file('run/client_a')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -135,6 +136,17 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
     maven { url "https://maven.shedaniel.me/" } // cloth config api
     maven { url "https://dvs1.progwml6.com/files/maven/" }
     maven { url "https://modmaven.dev" }
@@ -179,38 +191,38 @@ dependencies {
     }
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly(fg.deobf("mezz.jei:jei-1.20.1-common-api:${jei_version}"))
-    compileOnly(fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-1.21.1-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-1.21.1-forge-api:${jei_version}"))
     // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-1.20.1-forge:15.20.0.104"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-1.21.1-forge:19.21.0.247"))
     // 性能分析工具模组
-    runtimeOnly fg.deobf("curse.maven:spark-361579:4738952")
+    runtimeOnly fg.deobf("curse.maven:spark-361579:5759669")
     // 假人，测试近战伤害
-    runtimeOnly fg.deobf("curse.maven:selene-499980:5478857")
-    runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:5319203")
+//    runtimeOnly fg.deobf("curse.maven:selene-499980:5478857")
+//    runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:5319203")
     // 手柄按键支持
-    implementation fg.deobf("curse.maven:framework-549225:4718251")
-    compileOnly(fg.deobf("curse.maven:controllable-317269:4598985"))
+//    implementation fg.deobf("curse.maven:framework-549225:4718251")
+//    compileOnly(fg.deobf("curse.maven:controllable-317269:4598985"))
 
     // 越肩视角，用来兼容第三人称准星
-    implementation fg.deobf("curse.maven:shoulder-surfing-reloaded-243190:5455954")
+    compileOnly fg.deobf("curse.maven:shoulder-surfing-reloaded-243190:6043498")
 
-    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
+    compileOnly fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
 
-    compileOnly fg.deobf("curse.maven:embeddium-908741:${embeddedt_id}")
+    compileOnly "maven.modrinth:sodium:mc1.21.1-0.6.5-neoforge"
     // 同时兼容两个版本
-    compileOnly fg.deobf('libs:oculus_legacy:mc1.20.1-1.6.13')
-    compileOnly fg.deobf('libs:oculus:mc1.20.1-1.7.0')
+    compileOnly "maven.modrinth:iris:1.8.1+1.21.1-neoforge"
 
     runtimeOnly fg.deobf("curse.maven:carry-on-274259:${carry_on_id}")
 
-    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${player_animation_lib}")
+    compileOnly fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${player_animation_lib}")
 
+    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
     // 引入 MixinExtras 以解决一些棘手的 Mixin 冲突问题（比如 @Redirect 不能嵌套）
     // 如果未来有迁移到 Fabric / NeoForge 的计划，请注意这两个框架都已自带 MixinExtras，无需自行打包。
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.6"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.6")) {
-        jarJar.ranged(it, "[0.3.6,)")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+        jarJar.ranged(it, "[0.4.1,)")
     }
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
@@ -221,7 +233,8 @@ jar {
     manifest {
         attributes([
                 "Implementation-Title"  : project.name,
-                "Implementation-Version": project.version
+                "Implementation-Version": project.version,
+                "MixinConfigs": "tacz.mixins.json"
         ])
     }
 }
@@ -233,4 +246,13 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+jarJar.enable()
+build.dependsOn tasks.jarJar
+
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
 }

@@ -1,6 +1,7 @@
 package com.tacz.guns.entity;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.PropertyMap;
 import com.tacz.guns.api.entity.ITargetEntity;
 import com.tacz.guns.api.event.common.EntityHurtByGunEvent;
 import com.tacz.guns.config.client.RenderConfig;
@@ -10,6 +11,7 @@ import com.tacz.guns.init.ModItems;
 import com.tacz.guns.init.ModSounds;
 import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunHurt;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -19,8 +21,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.MinecartTNT;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
@@ -32,15 +38,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 import static net.minecraft.world.entity.vehicle.AbstractMinecart.Type.RIDEABLE;
 
-public class TargetMinecart extends AbstractMinecart implements ITargetEntity {
-    public static EntityType<TargetMinecart> TYPE = EntityType.Builder.<TargetMinecart>of(TargetMinecart::new, MobCategory.MISC)
+/* FIXME: I don't know what's happening here so I just disable this for now
+    It says I need to implement `VehicleEntity.getDropItem`, but IDE doesn't show the option to implement and when I try to implement it manually, the compiler complains about `Method does not override method from its superclass`*/
+public abstract class TargetMinecart extends AbstractMinecart implements ITargetEntity {
+    public static EntityType<MinecartTNT> TYPE = EntityType.Builder.<MinecartTNT>of(MinecartTNT::new, MobCategory.MISC)
             .sized(0.75F, 2.4F)
             .clientTrackingRange(8)
             .build("target_minecart");
 
-    private @Nullable GameProfile gameProfile = null;
+    private @Nullable ResolvableProfile gameProfile = null;
 
     public TargetMinecart(EntityType<TargetMinecart> type, Level world) {
         super(type, world);
@@ -55,7 +65,7 @@ public class TargetMinecart extends AbstractMinecart implements ITargetEntity {
         if (this.level().isClientSide() || this.isRemoved()) {
             return;
         }
-        if (!(source.isIndirect())) {
+        if (source.isDirect()) {
             return;
         }
         Entity sourceEntity = source.getEntity();
@@ -107,14 +117,14 @@ public class TargetMinecart extends AbstractMinecart implements ITargetEntity {
         if (this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             ItemStack itemStack = new ItemStack(ModItems.TARGET_MINECART.get());
             if (this.hasCustomName()) {
-                itemStack.setHoverName(this.getCustomName());
+                itemStack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
             }
             this.spawnAtLocation(itemStack);
         }
     }
 
-    @Override
-    protected Item getDropItem() {
+    // FIXME: @Override
+    public Item getDropItem() {
         return ModItems.TARGET_MINECART.get();
     }
 
@@ -122,7 +132,7 @@ public class TargetMinecart extends AbstractMinecart implements ITargetEntity {
     public ItemStack getPickResult() {
         ItemStack itemStack = new ItemStack(ModItems.TARGET_MINECART.get());
         if (this.hasCustomName()) {
-            itemStack.setHoverName(this.getCustomName());
+            itemStack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
         }
         return itemStack;
     }
@@ -130,10 +140,9 @@ public class TargetMinecart extends AbstractMinecart implements ITargetEntity {
     @Nullable
     public GameProfile getGameProfile() {
         if (this.gameProfile == null && this.getCustomName() != null) {
-            this.gameProfile = new GameProfile(null, this.getCustomName().getString());
-            SkullBlockEntity.updateGameprofile(this.gameProfile, gameProfile -> this.gameProfile = gameProfile);
+            this.gameProfile = new ResolvableProfile(Optional.of(this.getCustomName().getString()), Optional.empty(), new PropertyMap());
         }
-        return gameProfile;
+        return gameProfile.gameProfile();
     }
 
     @Override

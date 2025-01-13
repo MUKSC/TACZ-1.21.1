@@ -5,24 +5,22 @@ import com.tacz.guns.client.gui.GunSmithTableScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class PreventsHotbarEvent {
-    @SubscribeEvent
-    public static void onRenderHotbarEvent(RenderGuiOverlayEvent.Pre event) {
+    public static void onRenderHotbarEvent(CallbackInfo ci) {
         // todo 需要测试行为
         Screen screen = Minecraft.getInstance().screen;
         // 枪械合成台界面关闭背景
         if (screen instanceof GunSmithTableScreen) {
-            event.setCanceled(true);
+            ci.cancel();
             return;
         }
         // 枪械改装界面关闭背景
         if (screen instanceof GunRefitScreen) {
-            event.setCanceled(true);
+            ci.cancel();
         }
     }
 }

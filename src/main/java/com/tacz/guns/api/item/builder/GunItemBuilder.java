@@ -8,6 +8,7 @@ import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.item.gun.GunItemManager;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
@@ -64,7 +65,7 @@ public final class GunItemBuilder {
         return this;
     }
 
-    public ItemStack build() {
+    public ItemStack build(HolderLookup.Provider provider) {
         String itemType = TimelessAPI.getCommonGunIndex(gunId).map(index -> index.getPojo().getItemType()).orElse(null);
         Preconditions.checkArgument(itemType != null, "Could not found gun id: " + gunId);
 
@@ -79,7 +80,7 @@ public final class GunItemBuilder {
             iGun.setBulletInBarrel(gun, this.bulletInBarrel);
             this.attachments.forEach((type, id) -> {
                 ItemStack attachmentStack = AttachmentItemBuilder.create().setId(id).build();
-                iGun.installAttachment(gun, attachmentStack);
+                iGun.installAttachment(provider, gun, attachmentStack);
             });
         }
         return gun;

@@ -1,6 +1,7 @@
 package com.tacz.guns.client.resource_legacy.download;
 
 import com.google.common.collect.Maps;
+import com.google.common.hash.Hashing;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.client.gui.GunPackProgressScreen;
 import com.tacz.guns.client.resource_legacy.ClientReloadManager;
@@ -50,7 +51,7 @@ public class ClientGunPackDownloader {
         WorldVersion currentVersion = SharedConstants.getCurrentVersion();
 
         map.put("X-Minecraft-Username", user.getName());
-        map.put("X-Minecraft-UUID", user.getUuid());
+        map.put("X-Minecraft-UUID", user.getProfileId().toString());
         map.put("X-Minecraft-Version", currentVersion.getName());
         map.put("X-Minecraft-Version-ID", currentVersion.getId());
         map.put("X-TACZ-Version", ModList.get().getModFileById(GunMod.MOD_ID).versionString());
@@ -84,7 +85,7 @@ public class ClientGunPackDownloader {
                 Minecraft minecraft = Minecraft.getInstance();
                 minecraft.executeBlocking(() -> minecraft.setScreen(progressScreen));
                 URL url = new URL(plainUrl);
-                downloadFuture = HttpUtil.downloadTo(gunPack, url, getDownloadHeaders(), MAX_FILE_SIZE, progressScreen, minecraft.getProxy());
+                downloadFuture = CompletableFuture.supplyAsync(() -> HttpUtil.downloadFile(gunPack.toPath(), url, getDownloadHeaders(), Hashing.sha1(), null, MAX_FILE_SIZE, minecraft.getProxy(), progressScreen));
             }
 
             // 下载完成后的处理

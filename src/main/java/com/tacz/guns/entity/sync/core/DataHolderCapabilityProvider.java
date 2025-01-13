@@ -1,6 +1,7 @@
 package com.tacz.guns.entity.sync.core;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -25,14 +26,14 @@ public class DataHolderCapabilityProvider implements ICapabilitySerializable<Lis
     }
 
     @Override
-    public ListTag serializeNBT() {
+    public ListTag serializeNBT(HolderLookup.Provider provider) {
         ListTag list = new ListTag();
         this.holder.dataMap.forEach((key, entry) -> {
             if (key.save()) {
                 CompoundTag keyTag = new CompoundTag();
                 keyTag.putString("ClassKey", key.classKey().id().toString());
                 keyTag.putString("DataKey", key.id().toString());
-                keyTag.put("Value", entry.writeValue());
+                keyTag.put("Value", entry.writeValue(provider));
                 list.add(keyTag);
             }
         });
@@ -40,7 +41,7 @@ public class DataHolderCapabilityProvider implements ICapabilitySerializable<Lis
     }
 
     @Override
-    public void deserializeNBT(ListTag listTag) {
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag listTag) {
         this.holder.dataMap.clear();
         listTag.forEach(entryTag -> {
             CompoundTag keyTag = (CompoundTag) entryTag;
@@ -56,7 +57,7 @@ public class DataHolderCapabilityProvider implements ICapabilitySerializable<Lis
                 return;
             }
             DataEntry<?, ?> entry = new DataEntry<>(syncedDataKey);
-            entry.readValue(value);
+            entry.readValue(provider, value);
             this.holder.dataMap.put(syncedDataKey, entry);
         });
     }

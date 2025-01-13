@@ -20,10 +20,10 @@ import java.util.List;
 public class InteractKeyConfigRead {
     private static final EnumMap<Type, List<ResourceLocation>> WHITELIST = new EnumMap<>(Type.class);
     private static final EnumMap<Type, List<ResourceLocation>> BLACKLIST = new EnumMap<>(Type.class);
-    private static final TagKey<Block> WHITELIST_BLOCKS = BlockTags.create(new ResourceLocation(GunMod.MOD_ID, "interact_key/whitelist"));
-    private static final TagKey<Block> BLACKLIST_BLOCKS = BlockTags.create(new ResourceLocation(GunMod.MOD_ID, "interact_key/blacklist"));
-    private static final TagKey<EntityType<?>> WHITELIST_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(GunMod.MOD_ID, "interact_key/whitelist"));
-    private static final TagKey<EntityType<?>> BLACKLIST_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(GunMod.MOD_ID, "interact_key/blacklist"));
+    private static final TagKey<Block> WHITELIST_BLOCKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "interact_key/whitelist"));
+    private static final TagKey<Block> BLACKLIST_BLOCKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "interact_key/blacklist"));
+    private static final TagKey<EntityType<?>> WHITELIST_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "interact_key/whitelist"));
+    private static final TagKey<EntityType<?>> BLACKLIST_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "interact_key/blacklist"));
 
     public static void init() {
         WHITELIST.clear();
@@ -80,7 +80,7 @@ public class InteractKeyConfigRead {
             if (StringUtils.isBlank(data)) {
                 return;
             }
-            ResourceLocation id = new ResourceLocation(data);
+            ResourceLocation id = ResourceLocation.parse(data);
             storeList.computeIfAbsent(type, t -> Lists.newArrayList()).add(id);
         });
     }

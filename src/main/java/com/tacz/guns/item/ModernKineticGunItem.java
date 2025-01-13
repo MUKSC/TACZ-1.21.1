@@ -1,6 +1,7 @@
 package com.tacz.guns.item;
 
 import com.google.common.base.Suppliers;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.ReloadState;
@@ -15,9 +16,11 @@ import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.attachment.EffectData;
 import com.tacz.guns.resource.pojo.data.attachment.MeleeData;
 import com.tacz.guns.resource.pojo.data.gun.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.luaj.vm2.LuaError;
@@ -48,8 +52,8 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
     public static final String TYPE_NAME = "modern_kinetic";
 
     private static final DoubleFunction<AttributeModifier> AM_FACTORY = amount -> new AttributeModifier(
-            UUID.randomUUID(), "TACZ Melee Damage",
-            amount, AttributeModifier.Operation.ADDITION
+            ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "melee_damage"),
+            amount, AttributeModifier.Operation.ADD_VALUE
     );
 
     public ModernKineticGunItem() {
@@ -369,19 +373,22 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
             return;
         }
         target.knockback(knockback, (float) Math.sin(Math.toRadians(user.getYRot())), (float) -Math.cos(Math.toRadians(user.getYRot())));
+        DamageSource source;
         if (user instanceof Player player) {
-            target.hurt(user.damageSources().playerAttack(player), damage);
+            source = user.damageSources().playerAttack(player);
         } else {
-            target.hurt(user.damageSources().mobAttack(user), damage);
+            source = user.damageSources().mobAttack(user);
         }
-        // 修复近战枪械不触发神化词条/宝石的bug
-        user.doEnchantDamageEffects(user, target);
+        target.hurt(source, damage);
+        if (target.level() instanceof ServerLevel serverLevel) {
+            EnchantmentHelper.doPostAttackEffects(serverLevel, target, source);
+        }
 
         if (!target.isAlive()) {
             return;
         }
         for (EffectData data : effects) {
-            MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue(data.getEffectId());
+            Holder<MobEffect> mobEffect = ForgeRegistries.MOB_EFFECTS.getHolder(data.getEffectId()).orElse(null);
             if (mobEffect == null) {
                 continue;
             }

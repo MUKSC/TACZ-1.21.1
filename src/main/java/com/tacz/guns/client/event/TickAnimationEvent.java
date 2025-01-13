@@ -56,7 +56,7 @@ public class TickAnimationEvent {
             var animationStateMachine = gunIndex.getAnimationStateMachine();
             animationStateMachine.processContextIfExist(context -> {
                 context.setCurrentGunItem(mainhandItem);
-                context.setPartialTicks(Minecraft.getInstance().getFrameTime());
+                context.setPartialTicks(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
             });
             animationStateMachine.visualUpdate();
         });

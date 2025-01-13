@@ -41,7 +41,7 @@ public final class RecipeLoader {
                 return false;
             }
             try (InputStream stream = zipFile.getInputStream(entry)) {
-                ResourceLocation registryName = new ResourceLocation(namespace, path);
+                ResourceLocation registryName = ResourceLocation.fromNamespaceAndPath(namespace, path);
                 String json = IOUtils.toString(stream, StandardCharsets.UTF_8);
                 loadFromJsonString(registryName, json);
                 CommonGunPackNetwork.addData(DataType.RECIPES, registryName, json);
@@ -78,6 +78,6 @@ public final class RecipeLoader {
 
     public static void loadFromJsonString(ResourceLocation id, String json) {
         TableRecipe tableRecipe = CommonGunPackLoader.GSON.fromJson(json, TableRecipe.class);
-        CommonAssetManager.INSTANCE.putRecipe(id, new GunSmithTableRecipe(id, tableRecipe));
+        CommonAssetManager.INSTANCE.putRecipe(id, new GunSmithTableRecipe(tableRecipe));
     }
 }

@@ -8,11 +8,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class ServerMessageUpdateEntityData {
     private final int entityId;
@@ -39,9 +38,8 @@ public class ServerMessageUpdateEntityData {
         return new ServerMessageUpdateEntityData(entityId, entries);
     }
 
-    public static void handle(ServerMessageUpdateEntityData message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageUpdateEntityData message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(() -> onHandle(message));
         }
         context.setPacketHandled(true);

@@ -1,5 +1,6 @@
 package com.tacz.guns.client.event;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.tacz.guns.GunMod;
@@ -21,6 +22,7 @@ import com.tacz.guns.client.model.functional.ShellRender;
 import com.tacz.guns.client.renderer.item.GunItemRenderer;
 import com.tacz.guns.client.resource.InternalAssetLoader;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
+import com.tacz.guns.compat.iris.IrisCompat;
 import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.math.Easing;
@@ -48,6 +50,7 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
@@ -121,8 +124,15 @@ public class FirstPersonRenderGunEvent {
                 context.setPartialTicks(event.getPartialTick());
             });
             animationStateMachine.update();
-
             PoseStack poseStack = event.getPoseStack();
+            // FIXME: Apparently this is wrong since `applyAnimationConstraintTransform` is producing slightly different results than the other versions
+            if (!IrisCompat.isPackInUseQuick()) {
+                Quaternionf quaternionf = Minecraft.getInstance().gameRenderer.getMainCamera().rotation().conjugate(new Quaternionf());
+                Matrix4f matrix4f1 = (new Matrix4f()).rotation(quaternionf).invert();
+                poseStack.mulPose(matrix4f1.invert(new Matrix4f()));
+                RenderSystem.getModelViewStack().pushMatrix().mul(matrix4f1);
+                RenderSystem.applyModelViewMatrix();
+            }
             poseStack.pushPose();
             // 逆转原版施加在手上的延滞效果，改为写入模型动画数据中
             float xRotOffset = Mth.lerp(event.getPartialTick(), player.xBobO, player.xBob);
@@ -165,6 +175,10 @@ public class FirstPersonRenderGunEvent {
                 // 恢复手臂渲染
                 gunModel.setRenderHand(renderHand);
                 // 渲染完成后，将动画数据从模型中清除，不对其他视角下的模型渲染产生影响
+                if (!IrisCompat.isPackInUseQuick()) {
+                    RenderSystem.getModelViewStack().popMatrix();
+                    RenderSystem.applyModelViewMatrix();
+                }
                 poseStack.popPose();
                 gunModel.cleanAnimationTransform();
             }
@@ -375,7 +389,7 @@ public class FirstPersonRenderGunEvent {
         MathUtil.applyMatrixLerp(transformMatrix, getPositioningNodeInverse(toNode), transformMatrix, refitScreenOpeningProgress * refitTransformProgress);
         // 应用变换到 PoseStack
         poseStack.translate(0, 1.5f, 0);
-        poseStack.mulPoseMatrix(transformMatrix);
+        poseStack.mulPose(transformMatrix);
         poseStack.translate(0, -1.5f, 0);
     }
 

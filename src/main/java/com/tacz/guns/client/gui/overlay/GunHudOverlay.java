@@ -26,17 +26,15 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 
-public class GunHudOverlay implements IGuiOverlay {
-    private static final ResourceLocation SEMI = new ResourceLocation(GunMod.MOD_ID, "textures/hud/fire_mode_semi.png");
-    private static final ResourceLocation AUTO = new ResourceLocation(GunMod.MOD_ID, "textures/hud/fire_mode_auto.png");
-    private static final ResourceLocation BURST = new ResourceLocation(GunMod.MOD_ID, "textures/hud/fire_mode_burst.png");
+public class GunHudOverlay {
+    private static final ResourceLocation SEMI = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "textures/hud/fire_mode_semi.png");
+    private static final ResourceLocation AUTO = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "textures/hud/fire_mode_auto.png");
+    private static final ResourceLocation BURST = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "textures/hud/fire_mode_burst.png");
     private static final DecimalFormat CURRENT_AMMO_FORMAT = new DecimalFormat("000");
     private static final DecimalFormat CURRENT_AMMO_FORMAT_PERCENT = new DecimalFormat("000%");
     private static final DecimalFormat INVENTORY_AMMO_FORMAT = new DecimalFormat("0000");
@@ -44,8 +42,7 @@ public class GunHudOverlay implements IGuiOverlay {
     private static int cacheMaxAmmoCount = 0;
     private static int cacheInventoryAmmoCount = 0;
 
-    @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
+    public static void render(GuiGraphics graphics, float partialTick, int width, int height) {
         if (!RenderConfig.GUN_HUD_ENABLE.get()) {
             return;
         }

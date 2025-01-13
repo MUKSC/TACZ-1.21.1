@@ -3,9 +3,7 @@ package com.tacz.guns.network.message;
 import com.tacz.guns.api.entity.IGunOperator;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ClientMessagePlayerReloadGun {
     public ClientMessagePlayerReloadGun() {
@@ -18,9 +16,8 @@ public class ClientMessagePlayerReloadGun {
         return new ClientMessagePlayerReloadGun();
     }
 
-    public static void handle(ClientMessagePlayerReloadGun message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessagePlayerReloadGun message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             context.enqueueWork(() -> {
                 ServerPlayer entity = context.getSender();
                 if (entity == null) {

@@ -4,9 +4,7 @@ import com.tacz.guns.api.entity.IGunOperator;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ClientMessagePlayerDrawGun {
     public ClientMessagePlayerDrawGun() {
@@ -19,9 +17,8 @@ public class ClientMessagePlayerDrawGun {
         return new ClientMessagePlayerDrawGun();
     }
 
-    public static void handle(ClientMessagePlayerDrawGun message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessagePlayerDrawGun message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             context.enqueueWork(() -> {
                 ServerPlayer entity = context.getSender();
                 if (entity == null) {

@@ -2,13 +2,12 @@ package com.tacz.guns.network.message;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ServerMessageLevelUp {
     private final ItemStack gun;
@@ -19,20 +18,19 @@ public class ServerMessageLevelUp {
         this.level = level;
     }
 
-    public static void encode(ServerMessageLevelUp message, FriendlyByteBuf buf) {
-        buf.writeItemStack(message.gun, true);
+    public static void encode(ServerMessageLevelUp message, RegistryFriendlyByteBuf buf) {
+        ItemStack.STREAM_CODEC.encode(buf, message.gun);
         buf.writeInt(message.level);
     }
 
-    public static ServerMessageLevelUp decode(FriendlyByteBuf buf) {
-        ItemStack gun = buf.readItem();
+    public static ServerMessageLevelUp decode(RegistryFriendlyByteBuf buf) {
+        ItemStack gun = ItemStack.STREAM_CODEC.decode(buf);
         int level = buf.readInt();
         return new ServerMessageLevelUp(gun, level);
     }
 
-    public static void handle(ServerMessageLevelUp message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageLevelUp message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(() -> onLevelUp(message));
         }
         context.setPacketHandled(true);

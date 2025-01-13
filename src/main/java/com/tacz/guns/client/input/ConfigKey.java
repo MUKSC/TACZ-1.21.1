@@ -24,7 +24,6 @@ import org.lwjgl.glfw.GLFW;
 
 import static com.tacz.guns.util.InputExtraCheck.isInGame;
 
-@OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ConfigKey {
     public static final KeyMapping OPEN_CONFIG_KEY = new KeyMapping("key.tacz.open_config.desc",
@@ -38,7 +37,7 @@ public class ConfigKey {
     public static void onOpenConfig(InputEvent.Key event) {
         if (isInGame() && event.getAction() == GLFW.GLFW_PRESS
                 && OPEN_CONFIG_KEY.matches(event.getKey(), event.getScanCode())
-                && OPEN_CONFIG_KEY.getKeyModifier().equals(KeyModifier.getActiveModifier())) {
+                && OPEN_CONFIG_KEY.getKeyModifier().isActive(OPEN_CONFIG_KEY.getKeyConflictContext())) {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player == null || player.isSpectator()) {
                 return;

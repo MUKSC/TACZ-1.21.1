@@ -1,8 +1,10 @@
 package com.tacz.guns.api.util;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -13,7 +15,7 @@ import org.jetbrains.annotations.ApiStatus;
 public record LuaNbtAccessor(CompoundTag nbt) {
 
     public static LuaNbtAccessor from(ItemStack stack) {
-        return new LuaNbtAccessor(stack.getTag());
+        return new LuaNbtAccessor(stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag());
     }
 
     public static LuaNbtAccessor from(CompoundTag nbt) {

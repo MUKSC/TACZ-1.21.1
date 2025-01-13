@@ -10,6 +10,7 @@ import com.tacz.guns.client.sound.SoundPlayManager;
 import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessagePlayerFireSelect;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,7 +43,7 @@ public class LocalPlayerFireSelect {
             // 播放音效
             SoundPlayManager.playFireSelectSound(player, gunIndex);
             // 发送切换开火模式的数据包，通知服务器
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerFireSelect());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerFireSelect(), Minecraft.getInstance().getConnection().getConnection());
             // 客户端切换开火模式
             if (iGun instanceof AbstractGunItem logicGun) {
                 logicGun.fireSelect(null, mainhandItem);

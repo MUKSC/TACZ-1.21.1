@@ -252,7 +252,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
             if (type == AttachmentType.NONE) {
                 continue;
             }
-            ItemStack attachmentItem = iGun.getAttachment(gunItem, type);
+            ItemStack attachmentItem = iGun.getAttachment(Minecraft.getInstance().level.registryAccess(), gunItem, type);
             if (attachmentItem.isEmpty()) {
                 attachmentItem = iGun.getBuiltinAttachment(gunItem, type);
             }

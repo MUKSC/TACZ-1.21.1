@@ -43,7 +43,7 @@ public final class CommonAttachmentIndexLoader {
             }
             try (InputStream stream = zipFile.getInputStream(entry)) {
                 String json = IOUtils.toString(stream, StandardCharsets.UTF_8);
-                ResourceLocation registryName = new ResourceLocation(namespace, id);
+                ResourceLocation registryName = ResourceLocation.fromNamespaceAndPath(namespace, id);
                 loadAttachmentFromJsonString(registryName, json);
                 CommonGunPackNetwork.addData(DataType.ATTACHMENT_INDEX, registryName, json);
             } catch (IllegalArgumentException | JsonSyntaxException | JsonIOException exception) {

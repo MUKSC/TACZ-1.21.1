@@ -1,5 +1,6 @@
 package com.tacz.guns.compat.controllable;
 
+/* FIXME: Replace with Controlify?
 import com.mrcrayfish.controllable.Controllable;
 import com.mrcrayfish.controllable.client.binding.BindingRegistry;
 import com.mrcrayfish.controllable.client.binding.ButtonBinding;
@@ -34,6 +35,7 @@ public class ControllableInner {
     public static final ButtonBinding INSPECT = new ButtonBinding(-1, "key.tacz.inspect.desc", "key.category.tacz", GUN_KEY_CONFLICT);
 
     public static void init() {
+
         BindingRegistry.getInstance().register(AIM);
         BindingRegistry.getInstance().register(SHOOT);
         BindingRegistry.getInstance().register(RELOAD);
@@ -132,4 +134,4 @@ public class ControllableInner {
             return this == other;
         }
     }
-}
+}*/

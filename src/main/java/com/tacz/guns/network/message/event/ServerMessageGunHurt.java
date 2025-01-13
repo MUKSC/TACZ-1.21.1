@@ -10,11 +10,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 public class ServerMessageGunHurt {
     private final int bulletId;
@@ -61,9 +60,8 @@ public class ServerMessageGunHurt {
         return new ServerMessageGunHurt(bulletId, hurtEntityId, attackerId, gunId, gunDisplayId, amount, isHeadShot, headshotMultiplier);
     }
 
-    public static void handle(ServerMessageGunHurt message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageGunHurt message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(() -> onHurt(message));
         }
         context.setPacketHandled(true);

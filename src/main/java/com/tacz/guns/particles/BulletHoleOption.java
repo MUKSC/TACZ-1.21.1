@@ -1,8 +1,7 @@
 package com.tacz.guns.particles;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.init.ModParticles;
@@ -10,40 +9,26 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class BulletHoleOption implements ParticleOptions {
-    public static final Codec<BulletHoleOption> CODEC = RecordCodecBuilder.create(builder ->
-            builder.group(Codec.INT.fieldOf("dir").forGetter(option -> option.direction.ordinal()),
-                    Codec.LONG.fieldOf("pos").forGetter(option -> option.pos.asLong()),
-                    Codec.STRING.fieldOf("ammo_id").forGetter(option -> option.ammoId),
-                    Codec.STRING.fieldOf("gun_id").forGetter(option -> option.gunId),
-                    Codec.STRING.optionalFieldOf("gun_display_id", DefaultAssets.DEFAULT_GUN_DISPLAY_ID.toString()).forGetter(option -> option.gunDisplayId)
-            ).apply(builder, BulletHoleOption::new));
-
-    @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<BulletHoleOption> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Override
-        public BulletHoleOption fromCommand(ParticleType<BulletHoleOption> particleType, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            int dir = reader.readInt();
-            reader.expect(' ');
-            long pos = reader.readLong();
-            reader.expect(' ');
-            String ammoId = reader.readString();
-            reader.expect(' ');
-            String gunId = reader.readString();
-            reader.expect(' ');
-            String gunDisplayId = reader.readString();
-            return new BulletHoleOption(dir, pos, ammoId, gunId, gunDisplayId);
-        }
-
-        @Override
-        public BulletHoleOption fromNetwork(ParticleType<BulletHoleOption> particleType, FriendlyByteBuf buffer) {
-            return new BulletHoleOption(buffer.readVarInt(), buffer.readLong(), buffer.readUtf(), buffer.readUtf(), buffer.readUtf());
-        }
-    };
+    public static final MapCodec<BulletHoleOption> CODEC = RecordCodecBuilder.mapCodec(builder ->
+        builder.group(Codec.INT.fieldOf("dir").forGetter(option -> option.direction.ordinal()),
+            Codec.LONG.fieldOf("pos").forGetter(option -> option.pos.asLong()),
+            Codec.STRING.fieldOf("ammo_id").forGetter(option -> option.ammoId),
+            Codec.STRING.fieldOf("gun_id").forGetter(option -> option.gunId),
+            Codec.STRING.optionalFieldOf("gun_display_id", DefaultAssets.DEFAULT_GUN_DISPLAY_ID.toString()).forGetter(option -> option.gunDisplayId)
+    ).apply(builder, BulletHoleOption::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, BulletHoleOption> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.INT, (option) -> option.direction.ordinal(),
+        ByteBufCodecs.VAR_LONG, (option) -> option.pos.asLong(),
+        ByteBufCodecs.STRING_UTF8, BulletHoleOption::getAmmoId,
+        ByteBufCodecs.STRING_UTF8, BulletHoleOption::getGunId,
+        ByteBufCodecs.STRING_UTF8, BulletHoleOption::getGunDisplayId,
+        BulletHoleOption::new
+    );
 
     private final Direction direction;
     private final BlockPos pos;
@@ -90,19 +75,5 @@ public class BulletHoleOption implements ParticleOptions {
     @Override
     public ParticleType<?> getType() {
         return ModParticles.BULLET_HOLE.get();
-    }
-
-    @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
-        buffer.writeEnum(this.direction);
-        buffer.writeBlockPos(this.pos);
-        buffer.writeUtf(this.ammoId);
-        buffer.writeUtf(this.gunId);
-        buffer.writeUtf(this.gunDisplayId);
-    }
-
-    @Override
-    public String writeToString() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + this.direction.getName();
     }
 }

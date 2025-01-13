@@ -4,9 +4,7 @@ import com.tacz.guns.inventory.GunSmithTableMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ClientMessageCraft {
     private final ResourceLocation recipeId;
@@ -26,9 +24,8 @@ public class ClientMessageCraft {
         return new ClientMessageCraft(buf.readResourceLocation(), buf.readVarInt());
     }
 
-    public static void handle(ClientMessageCraft message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessageCraft message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             context.enqueueWork(() -> {
                 ServerPlayer entity = context.getSender();
                 if (entity == null) {

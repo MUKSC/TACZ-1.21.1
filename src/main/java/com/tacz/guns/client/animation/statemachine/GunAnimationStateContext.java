@@ -20,6 +20,7 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -382,8 +383,8 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
             gunData = TimelessAPI.getClientGunIndex(iGun.getGunId(currentGunItem))
                     .map(ClientGunIndex::getGunData).orElse(null);
         }
-        if (currentGunItem.hasTag()) {
-            nbtUtil = new LuaNbtAccessor(currentGunItem.getTag());
+        if (currentGunItem.has(DataComponents.CUSTOM_DATA)) {
+            nbtUtil = new LuaNbtAccessor(currentGunItem.get(DataComponents.CUSTOM_DATA).copyTag());
         }
     }
 

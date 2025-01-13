@@ -3,9 +3,7 @@ package com.tacz.guns.network.message;
 import com.tacz.guns.api.entity.IGunOperator;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ClientMessagePlayerZoom {
     public static void encode(ClientMessagePlayerZoom message, FriendlyByteBuf buf) {
@@ -15,9 +13,8 @@ public class ClientMessagePlayerZoom {
         return new ClientMessagePlayerZoom();
     }
 
-    public static void handle(ClientMessagePlayerZoom message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessagePlayerZoom message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             context.enqueueWork(() -> {
                 ServerPlayer entity = context.getSender();
                 if (entity == null) {

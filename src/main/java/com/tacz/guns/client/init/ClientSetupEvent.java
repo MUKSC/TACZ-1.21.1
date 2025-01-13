@@ -2,9 +2,6 @@ package com.tacz.guns.client.init;
 
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.ThirdPersonManager;
-import com.tacz.guns.client.gui.overlay.GunHudOverlay;
-import com.tacz.guns.client.gui.overlay.InteractKeyTextOverlay;
-import com.tacz.guns.client.gui.overlay.KillAmountOverlay;
 import com.tacz.guns.client.input.*;
 import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.tooltip.ClientAmmoBoxTooltip;
@@ -25,13 +22,10 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
-import static net.minecraftforge.client.gui.overlay.VanillaGuiOverlay.CROSSHAIR;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class ClientSetupEvent {
@@ -58,15 +52,6 @@ public class ClientSetupEvent {
         event.register(AmmoBoxTooltip.class, ClientAmmoBoxTooltip::new);
         event.register(AttachmentItemTooltip.class, ClientAttachmentItemTooltip::new);
         event.register(BlockItemTooltip.class, ClientBlockItemTooltip::new);
-    }
-
-    @SubscribeEvent
-    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-        // 注册 HUD
-        event.registerAboveAll("tac_gun_hud_overlay", new GunHudOverlay());
-        event.registerAboveAll("tac_kill_amount_overlay", new KillAmountOverlay());
-        event.registerAbove(CROSSHAIR.id(), "tac_interact_key_overlay", new InteractKeyTextOverlay());
-
     }
 
     @SubscribeEvent

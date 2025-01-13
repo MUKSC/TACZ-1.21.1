@@ -6,10 +6,13 @@ import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.builder.AttachmentItemBuilder;
 import com.tacz.guns.api.item.builder.GunItemBuilder;
 import com.tacz.guns.resource.pojo.data.recipe.GunResult;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,26 +48,27 @@ public class RawGunTableResult {
         this.nbt = nbt;
     }
 
-    public static GunSmithTableResult init(RawGunTableResult raw) {
+    public static GunSmithTableResult init(HolderLookup.Provider provider, RawGunTableResult raw) {
         GunSmithTableResult result = switch (raw.type) {
-            case GunSmithTableResult.GUN -> raw.getGunStack();
+            case GunSmithTableResult.GUN -> raw.getGunStack(provider);
             case GunSmithTableResult.AMMO -> raw.getAmmoStack();
             case GunSmithTableResult.ATTACHMENT -> raw.getAttachmentStack();
             default -> new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY);
         };
         if (raw.nbt != null) {
-            CompoundTag itemTag = result.getResult().getOrCreateTag();
-            for (String key : raw.nbt.getAllKeys()) {
-                Tag tag = raw.nbt.get(key);
-                if (tag != null) {
-                    itemTag.put(key, tag);
+            result.getResult().update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> data.update(tag -> {
+                for (String key : raw.nbt.getAllKeys()) {
+                    Tag value = raw.nbt.get(key);
+                    if (value != null) {
+                        tag.put(key, value);
+                    }
                 }
-            }
+            }));
         }
         return result;
     }
 
-    private GunSmithTableResult getGunStack() {
+    private GunSmithTableResult getGunStack(HolderLookup.Provider provider) {
         int ammoCount;
         EnumMap<AttachmentType, ResourceLocation> attachments;
         if (extraData != null) {
@@ -82,7 +86,7 @@ public class RawGunTableResult {
                     .setAmmoCount(ammoCount)
                     .setAmmoInBarrel(false)
                     .putAllAttachment(attachments)
-                    .setFireMode(gunIndex.getGunData().getFireModeSet().get(0)).build();
+                    .setFireMode(gunIndex.getGunData().getFireModeSet().get(0)).build(provider);
             String group = gunIndex.getType();
             return new GunSmithTableResult(itemStack, group);
         }).orElse(new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY));

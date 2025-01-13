@@ -13,14 +13,14 @@
   "client": [
     "client.AbstractButtonMixin",
     "client.GameRendererMixin",
+    "client.GuiMixin",
     "client.HumanoidModelMixin",
     "client.ItemInHandLayerMixin",
     "client.ItemInHandRendererMixin",
     "client.LanguageMixin",
     "client.LocalPlayerMixin",
     "client.MouseHandlerMixin",
-    "client.PlayerModelMixin",
-    "client.StairBlockAccessor"
+    "client.PlayerModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -3,7 +3,7 @@ package com.tacz.guns.init;
 import com.tacz.guns.client.gui.compat.ClothConfigScreen;
 import com.tacz.guns.compat.carryon.BlackList;
 import com.tacz.guns.compat.cloth.MenuIntegration;
-import com.tacz.guns.compat.oculus.OculusCompat;
+import com.tacz.guns.compat.iris.IrisCompat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CompatRegistry {
     public static final String CLOTH_CONFIG = "cloth_config";
-    public static final String OCULUS = "oculus";
+    public static final String IRIS = "iris";
     public static final String CARRY_ON_ID = "carryon";
 
     @SubscribeEvent
@@ -26,7 +26,7 @@ public class CompatRegistry {
                 ClothConfigScreen.registerNoClothConfigPage();
             }
         });
-        event.enqueueWork(() -> checkModLoad(OCULUS, OculusCompat::initCompat));
+        event.enqueueWork(() -> checkModLoad(IRIS, IrisCompat::initCompat));
         event.enqueueWork(() -> checkModLoad(CARRY_ON_ID, BlackList::addBlackList));
     }
 

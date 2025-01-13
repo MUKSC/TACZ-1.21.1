@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.Mod;
 import java.io.File;
 
 
-@OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class PlayerEnterWorld {
 

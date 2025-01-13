@@ -13,6 +13,7 @@ import com.tacz.guns.client.resource.pojo.PackInfo;
 import com.tacz.guns.inventory.tooltip.AttachmentItemTooltip;
 import com.tacz.guns.resource.pojo.data.attachment.AttachmentData;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -59,7 +60,7 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
         ItemStack attachment = AttachmentItemBuilder.create().setId(attachmentId).build();
         TimelessAPI.getAllCommonGunIndex().forEach(entry -> {
             ResourceLocation gunId = entry.getKey();
-            ItemStack gun = GunItemBuilder.create().setId(gunId).build();
+            ItemStack gun = GunItemBuilder.create().setId(gunId).build(Minecraft.getInstance().level.registryAccess());
             if (!(gun.getItem() instanceof IGun iGun)) {
                 return;
             }

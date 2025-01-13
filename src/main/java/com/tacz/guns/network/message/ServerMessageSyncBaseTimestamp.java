@@ -9,12 +9,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class ServerMessageSyncBaseTimestamp {
     private static final Marker MARKER = MarkerManager.getMarker("SYNC_BASE_TIMESTAMP");
@@ -27,9 +26,8 @@ public class ServerMessageSyncBaseTimestamp {
         return new ServerMessageSyncBaseTimestamp();
     }
 
-    public static void handle(ServerMessageSyncBaseTimestamp message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageSyncBaseTimestamp message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             long timestamp = System.currentTimeMillis();
             context.enqueueWork(() -> updateBaseTimestamp(timestamp));
         }

@@ -1,5 +1,6 @@
 package com.tacz.guns.compat.cloth;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.compat.cloth.client.KeyClothConfig;
 import com.tacz.guns.compat.cloth.client.RenderClothConfig;
 import com.tacz.guns.compat.cloth.client.ZoomClothConfig;
@@ -11,7 +12,6 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.fml.ModLoadingContext;
 
 import javax.annotation.Nullable;
 
@@ -34,7 +34,7 @@ public class MenuIntegration {
     }
 
     public static void registerModsPage() {
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
+        GunMod.context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
                 new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> getConfigScreen(parent)));
     }
 

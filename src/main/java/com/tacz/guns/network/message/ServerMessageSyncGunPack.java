@@ -7,10 +7,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 
 public class ServerMessageSyncGunPack {
@@ -33,9 +32,8 @@ public class ServerMessageSyncGunPack {
         return new ServerMessageSyncGunPack(map);
     }
 
-    public static void handle(ServerMessageSyncGunPack message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageSyncGunPack message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(() -> doSync(message));
         }
         context.setPacketHandled(true);

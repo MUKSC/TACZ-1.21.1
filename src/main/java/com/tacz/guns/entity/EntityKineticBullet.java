@@ -33,8 +33,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -61,7 +60,6 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,9 +73,9 @@ import static com.tacz.guns.api.event.common.GunDamageSourcePart.NON_ARMOR_PIERC
  */
 public class EntityKineticBullet extends Projectile implements IEntityAdditionalSpawnData {
     public static final EntityType<EntityKineticBullet> TYPE = EntityType.Builder.<EntityKineticBullet>of(EntityKineticBullet::new, MobCategory.MISC).noSummon().noSave().fireImmune().sized(0.0625F, 0.0625F).clientTrackingRange(5).updateInterval(5).setShouldReceiveVelocityUpdates(false).build("bullet");
-    public static final TagKey<EntityType<?>> USE_MAGIC_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("tacz:use_magic_damage_on"));
-    public static final TagKey<EntityType<?>> USE_VOID_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("tacz:use_void_damage_on"));
-    public static final TagKey<EntityType<?>> PRETEND_MELEE_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("tacz:pretend_melee_damage_on"));
+    public static final TagKey<EntityType<?>> USE_MAGIC_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("tacz:use_magic_damage_on"));
+    public static final TagKey<EntityType<?>> USE_VOID_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("tacz:use_void_damage_on"));
+    public static final TagKey<EntityType<?>> PRETEND_MELEE_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("tacz:pretend_melee_damage_on"));
 
     /**
      * 允许其他 mod 使用 persistent data（永久数据） 控制曳光弹的颜色和粗细。<p>
@@ -197,7 +195,8 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     }
 
     @Override
-    protected void defineSynchedData() {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -367,7 +366,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         }
         // 点燃
         if (this.igniteEntity && AmmoConfig.IGNITE_ENTITY.get()) {
-            entity.setSecondsOnFire(this.igniteEntityTime);
+            entity.setRemainingFireTicks(this.igniteEntityTime);
             // 给予粒子效果
             if (this.level() instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + entity.getEyeHeight(), entity.getZ(), 1, 0, 0, 0, 0);
@@ -500,11 +499,6 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         parts.core().invulnerableTime = 0;
         // 穿甲伤害
         parts.hitPart().hurt(source2, damage * armorDamagePercent);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

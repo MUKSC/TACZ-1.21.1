@@ -10,6 +10,7 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import net.minecraft.server.packs.PackType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -27,15 +28,18 @@ public class GunMod {
      */
     public static final String DEFAULT_GUN_PACK_NAME = "tacz_default_gun";
 
-    public GunMod() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
+    public static FMLJavaModLoadingContext context = null;
+
+    public GunMod(FMLJavaModLoadingContext context) {
+        GunMod.context = context;
+        context.registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
+        context.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
+        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
 
         Dist side = FMLLoader.getDist();
         GunPackLoader.INSTANCE.packType = side.isClient() ? PackType.CLIENT_RESOURCES : PackType.SERVER_DATA;
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus bus = context.getModEventBus();
         ModBlocks.BLOCKS.register(bus);
         ModBlocks.TILE_ENTITIES.register(bus);
         ModCreativeTabs.TABS.register(bus);

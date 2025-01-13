@@ -10,6 +10,7 @@ import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
 import com.tacz.guns.resource.pojo.AmmoIndexPOJO;
 import com.tacz.guns.util.ColorHex;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -147,7 +148,7 @@ public class ClientAmmoIndex {
                 AmmoParticle particle = display.getParticle();
                 String name = particle.getName();
                 if (StringUtils.isNoneBlank()) {
-                    particle.setParticleOptions(ParticleArgument.readParticle(new StringReader(name), BuiltInRegistries.PARTICLE_TYPE.asLookup()));
+                    particle.setParticleOptions(ParticleArgument.readParticle(new StringReader(name), Minecraft.getInstance().level.registryAccess()));
                     Preconditions.checkArgument(particle.getCount() > 0, "particle count must be greater than 0");
                     Preconditions.checkArgument(particle.getLifeTime() > 0, "particle life time must be greater than 0");
                     index.particle = particle;

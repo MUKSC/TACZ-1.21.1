@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
 public class PlayerAnimatorCompat {
-    public static ResourceLocation LOWER_ANIMATION = new ResourceLocation(GunMod.MOD_ID, "lower_animation");
-    public static ResourceLocation LOOP_UPPER_ANIMATION = new ResourceLocation(GunMod.MOD_ID, "loop_upper_animation");
-    public static ResourceLocation ONCE_UPPER_ANIMATION = new ResourceLocation(GunMod.MOD_ID, "once_upper_animation");
-    public static ResourceLocation ROTATION_ANIMATION = new ResourceLocation(GunMod.MOD_ID, "rotation");
+    public static ResourceLocation LOWER_ANIMATION = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "lower_animation");
+    public static ResourceLocation LOOP_UPPER_ANIMATION = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "loop_upper_animation");
+    public static ResourceLocation ONCE_UPPER_ANIMATION = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "once_upper_animation");
+    public static ResourceLocation ROTATION_ANIMATION = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "rotation");
 
     private static final String MOD_ID = "playeranimator";
     private static boolean INSTALLED = false;

@@ -4,9 +4,7 @@ import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.client.sound.SoundPlayManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ServerMessageSound {
     private final int entityId;
@@ -52,9 +50,8 @@ public class ServerMessageSound {
         return new ServerMessageSound(entityId, gunId, gunDisplayId, soundName, volume, pitch, distance);
     }
 
-    public static void handle(ServerMessageSound message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageSound message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(() -> SoundPlayManager.playMessageSound(message));
         }
         context.setPacketHandled(true);

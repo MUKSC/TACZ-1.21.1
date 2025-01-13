@@ -6,7 +6,7 @@ import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
-import com.tacz.guns.compat.oculus.OculusCompat;
+import com.tacz.guns.compat.iris.IrisCompat;
 import com.tacz.guns.util.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -155,7 +155,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
         part.render(poseStack, transformType, vertexConsumer, light, overlay);
-        if (!OculusCompat.endBatch(bufferSource)) {
+        if (!IrisCompat.endBatch(bufferSource)) {
             bufferSource.endBatch(renderType);
         }
         part.visible = false;
@@ -190,7 +190,6 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
             RenderSystem.stencilFunc(GL11.GL_NOTEQUAL, 1, 0xFF);
             renderTempPart(matrixStack, transformType, renderType, light, overlay, scopeBodyPath);
         }
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
         // 渲染圆形模板层
         RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xFF);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_INCR);
@@ -203,17 +202,26 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         float rad = 80 * scopeViewRadiusModifier;
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            rad *= IClientPlayerGunOperator.fromLocalPlayer(player).getClientAimingProgress(Minecraft.getInstance().getFrameTime());
+            rad *= IClientPlayerGunOperator.fromLocalPlayer(player).getClientAimingProgress(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
         }
-        builder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-        builder.vertex(centerX, centerY, -90.0D).color(255, 255, 255, 255).endVertex();
+        BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+        builder.addVertex(centerX, centerY, -90.0F).setColor(255, 255, 255, 255);
         for (int i = 0; i <= 90; i++) {
             float angle = (float) i * ((float) Math.PI * 2F) / 90.0F;
             float sin = Mth.sin(angle);
             float cos = Mth.cos(angle);
-            builder.vertex(centerX + cos * rad, centerY + sin * rad, -90.0D).color(255, 255, 255, 255).endVertex();
+            builder.addVertex(centerX + cos * rad, centerY + sin * rad, -90.0F).setColor(255, 255, 255, 255);
         }
-        BufferUploader.drawWithShader(builder.end());
+        /* FIXME: This is another way to fix the rendering issue, instead of what we have now on `FirstPersonRenderGunEvent`
+            I'm not sure what the best way is; I'm not even sure what the actual problem is in the first place
+        builder.addVertex(matrixStack.last(), 0, 0, 0).setColor(255, 255, 255, 255);
+        for (int i = 0; i <= 90; i++) {
+            float angle = (float) i * ((float) Math.PI * 2F) / 90.0F;
+            float sin = Mth.sin(angle);
+            float cos = Mth.cos(angle);
+            builder.addVertex(matrixStack.last(), cos * rad, sin * rad, 0).setColor(255, 255, 255, 255);
+        }*/
+        BufferUploader.drawWithShader(builder.buildOrThrow());
         RenderSystem.depthMask(true);
         RenderSystem.colorMask(true, true, true, true);
         // 渲染目镜黑色遮罩

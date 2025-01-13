@@ -10,8 +10,7 @@ import cpw.mods.jarhandling.SecureJar;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.*;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.forgespi.locating.IModFile;
 import net.minecraftforge.resource.DelegatingPackResources;
-import net.minecraftforge.resource.PathPackResources;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -92,7 +90,7 @@ public enum GunPackLoader implements RepositorySource {
         List<PathPackResources> extensionPacks = new ArrayList<>();
 
         for(GunPack gunPack : gunPacks) {
-            PathPackResources packResources = new PathPackResources(gunPack.name, false, gunPack.path) {
+            PathPackResources packResources = new PathPackResources(new PackLocationInfo(gunPack.name, Component.literal(gunPack.name), PackSource.BUILT_IN, Optional.empty()), gunPack.path) {
                 private final SecureJar secureJar = SecureJar.from(gunPack.path);
 
                 @NotNull
@@ -115,21 +113,21 @@ public enum GunPackLoader implements RepositorySource {
             extensionPacks.add(packResources);
         }
 
-
-        return Pack.readMetaAndCreate("tacz_resources", Component.literal("TACZ Resources"), true, (id) -> {
-            return new DelegatingPackResources(id, false, new PackMetadataSection(Component.translatable("tacz.resources.modresources"),
-                    SharedConstants.getCurrentVersion().getPackVersion(packType)), extensionPacks) {
-                public IoSupplier<InputStream> getRootResource(String... paths) {
-                    if (paths.length == 1 && paths[0].equals("pack.png")) {
-                        Path logoPath = getModIcon("tacz");
-                        if (logoPath != null) {
-                            return IoSupplier.create(logoPath);
-                        }
+        PackLocationInfo info = new PackLocationInfo("tacz_resources", Component.literal("TACZ Resources"), PackSource.BUILT_IN, Optional.empty());
+        PackMetadataSection meta = new PackMetadataSection(Component.translatable("tacz.resources.modresources"), SharedConstants.getCurrentVersion().getPackVersion(packType), Optional.empty());
+        DelegatingPackResources pack = new DelegatingPackResources(info, meta, extensionPacks) {
+            public IoSupplier<InputStream> getRootResource(String... paths) {
+                if (paths.length == 1 && paths[0].equals("pack.png")) {
+                    Path logoPath = getModIcon("tacz");
+                    if (logoPath != null) {
+                        return IoSupplier.create(logoPath);
                     }
-                    return null;
                 }
-            };
-        }, packType, Pack.Position.BOTTOM, PackSource.BUILT_IN);
+                return null;
+            }
+        };
+        PackSelectionConfig config = new PackSelectionConfig(true, Pack.Position.BOTTOM, false);
+        return Pack.readMetaAndCreate(info, pack.supplier(), packType, config);
     }
 
     public static @Nullable Path getModIcon(String modId) {

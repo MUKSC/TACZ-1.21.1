@@ -49,6 +49,7 @@ public class LivingEntityAim {
                 AttachmentItemDataAccessor.setZoomNumberToTag(scopeTag, zoomNumber);
             });
         }
+        iGun.setAttachmentTag(currentGunItem, AttachmentType.SCOPE, scopeTag);
     }
 
     public void tickAimingProgress() {

@@ -13,6 +13,7 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessagePlayerMelee;
 import com.tacz.guns.resource.pojo.data.attachment.MeleeData;
 import com.tacz.guns.resource.pojo.data.gun.GunDefaultMeleeData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -87,7 +88,7 @@ public class LocalPlayerMelee {
         if (prepareMelee()) {
             SoundPlayManager.playMeleeBayonetSound(player, display);
             // 发送执行近战的数据包，通知服务器
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerMelee());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerMelee(), Minecraft.getInstance().getConnection().getConnection());
             // 动画状态机转移状态
             AnimationStateMachine<?> animationStateMachine = display.getAnimationStateMachine();
             if (animationStateMachine != null) {
@@ -100,7 +101,7 @@ public class LocalPlayerMelee {
         if (prepareMelee()) {
             SoundPlayManager.playMeleeStockSound(player, display);
             // 发送执行近战的数据包，通知服务器
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerMelee());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerMelee(), Minecraft.getInstance().getConnection().getConnection());
             // 动画状态机转移状态
             AnimationStateMachine<?> animationStateMachine = display.getAnimationStateMachine();
             if (animationStateMachine != null) {
@@ -114,7 +115,7 @@ public class LocalPlayerMelee {
             // 播放音效
             SoundPlayManager.playMeleePushSound(player, display);
             // 发送执行近战的数据包，通知服务器
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerMelee());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerMelee(), Minecraft.getInstance().getConnection().getConnection());
             // 动画状态机转移状态
             AnimationStateMachine<?> animationStateMachine = display.getAnimationStateMachine();
             if (animationStateMachine != null) {

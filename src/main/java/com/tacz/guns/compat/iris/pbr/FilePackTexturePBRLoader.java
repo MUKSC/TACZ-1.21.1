@@ -1,8 +1,8 @@
-package com.tacz.guns.compat.oculus.newly.pbr;
+package com.tacz.guns.compat.iris.pbr;
 
 import com.tacz.guns.client.resource_legacy.texture.FilePackTexture;
-import net.irisshaders.iris.texture.pbr.PBRType;
-import net.irisshaders.iris.texture.pbr.loader.PBRTextureLoader;
+import net.irisshaders.iris.pbr.loader.PBRTextureLoader;
+import net.irisshaders.iris.pbr.texture.PBRType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
@@ -12,8 +12,8 @@ public class FilePackTexturePBRLoader implements PBRTextureLoader<FilePackTextur
     @Override
     public void load(FilePackTexture filePackTexture, ResourceManager resourceManager, PBRTextureConsumer pbrTextureConsumer) {
         ResourceLocation id = filePackTexture.getRegisterId();
-        ResourceLocation pbrNormalId = new ResourceLocation(id.getNamespace(), id.getPath() + PBRType.NORMAL.getSuffix());
-        ResourceLocation pbrSpecularId = new ResourceLocation(id.getNamespace(), id.getPath() + PBRType.SPECULAR.getSuffix());
+        ResourceLocation pbrNormalId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + PBRType.NORMAL.getSuffix());
+        ResourceLocation pbrSpecularId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + PBRType.SPECULAR.getSuffix());
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         if (textureManager.byPath.containsKey(pbrNormalId)) {
             pbrTextureConsumer.acceptNormalTexture(textureManager.getTexture(pbrNormalId));

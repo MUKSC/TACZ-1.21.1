@@ -5,11 +5,9 @@ import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-
-import java.util.function.Supplier;
 
 public class ClientMessageSyncBaseTimestamp {
     private static final Marker MARKER = MarkerManager.getMarker("SYNC_BASE_TIMESTAMP");
@@ -22,9 +20,8 @@ public class ClientMessageSyncBaseTimestamp {
         return new ClientMessageSyncBaseTimestamp();
     }
 
-    public static void handle(ClientMessageSyncBaseTimestamp message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessageSyncBaseTimestamp message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             long timestamp = System.currentTimeMillis();
             context.enqueueWork(() -> {
                 ServerPlayer entity = context.getSender();

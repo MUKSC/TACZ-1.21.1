@@ -7,9 +7,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ServerMessageRefreshRefitScreen {
     public static void encode(ServerMessageRefreshRefitScreen message, FriendlyByteBuf buf) {
@@ -19,9 +17,8 @@ public class ServerMessageRefreshRefitScreen {
         return new ServerMessageRefreshRefitScreen();
     }
 
-    public static void handle(ServerMessageRefreshRefitScreen message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageRefreshRefitScreen message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(ServerMessageRefreshRefitScreen::updateScreen);
         }
         context.setPacketHandled(true);

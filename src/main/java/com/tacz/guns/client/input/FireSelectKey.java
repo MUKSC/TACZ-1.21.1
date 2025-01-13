@@ -17,7 +17,6 @@ import org.lwjgl.glfw.GLFW;
 
 import static com.tacz.guns.util.InputExtraCheck.isInGame;
 
-@OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class FireSelectKey {
     public static final KeyMapping FIRE_SELECT_KEY = new KeyMapping("key.tacz.fire_select.desc",

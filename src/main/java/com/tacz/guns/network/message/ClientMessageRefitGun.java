@@ -8,9 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ClientMessageRefitGun {
     private final int attachmentSlotIndex;
@@ -33,9 +31,8 @@ public class ClientMessageRefitGun {
         return new ClientMessageRefitGun(buf.readInt(), buf.readInt(), buf.readEnum(AttachmentType.class));
     }
 
-    public static void handle(ClientMessageRefitGun message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessageRefitGun message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             context.enqueueWork(() -> {
                 ServerPlayer player = context.getSender();
                 if (player == null) {
@@ -47,8 +44,8 @@ public class ClientMessageRefitGun {
                 IGun iGun = IGun.getIGunOrNull(gunItem);
                 if (iGun != null) {
                     if (iGun.allowAttachment(gunItem, attachmentItem)) {
-                        ItemStack oldAttachmentItem = iGun.getAttachment(gunItem, message.attachmentType);
-                        iGun.installAttachment(gunItem, attachmentItem);
+                        ItemStack oldAttachmentItem = iGun.getAttachment(player.registryAccess(), gunItem, message.attachmentType);
+                        iGun.installAttachment(player.registryAccess(), gunItem, attachmentItem);
                         // 刷新配件数据
                         AttachmentPropertyManager.postChangeEvent(player, gunItem);
                         inventory.setItem(message.attachmentSlotIndex, oldAttachmentItem);

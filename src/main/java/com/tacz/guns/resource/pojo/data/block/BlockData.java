@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockData {
     @NotNull
     @SerializedName("filter")
-    private ResourceLocation filter = new ResourceLocation(GunMod.MOD_ID, "default");
+    private ResourceLocation filter = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "default");
 
     @NotNull
     public ResourceLocation getFilter() {

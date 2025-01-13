@@ -38,7 +38,7 @@ public final class AttachmentDisplayLoader {
                 return false;
             }
             try (InputStream stream = zipFile.getInputStream(entry)) {
-                ResourceLocation registryName = new ResourceLocation(namespace, path);
+                ResourceLocation registryName = ResourceLocation.fromNamespaceAndPath(namespace, path);
                 AttachmentDisplay display = ClientGunPackLoader.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), AttachmentDisplay.class);
                 ClientAssetManager.INSTANCE.putAttachmentDisplay(registryName, display);
                 return true;

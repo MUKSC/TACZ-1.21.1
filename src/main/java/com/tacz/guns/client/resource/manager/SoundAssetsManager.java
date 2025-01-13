@@ -1,8 +1,8 @@
 package com.tacz.guns.client.resource.manager;
 
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.audio.OggAudioStream;
 import com.tacz.guns.GunMod;
+import net.minecraft.client.sounds.JOrbisAudioStream;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -37,7 +37,7 @@ public class SoundAssetsManager extends SimplePreparableReloadListener<Map<Resou
             ResourceLocation resourcelocation = entry.getKey();
             ResourceLocation resourcelocation1 = filetoidconverter.fileToId(resourcelocation);
 
-            try (InputStream stream = entry.getValue().open(); OggAudioStream audioStream = new OggAudioStream(stream)) {
+            try (InputStream stream = entry.getValue().open(); JOrbisAudioStream audioStream = new JOrbisAudioStream(stream)) {
                 ByteBuffer bytebuffer = audioStream.readAll();
                 output.put(resourcelocation1, new SoundData(bytebuffer, audioStream.getFormat()));
             } catch (IOException exception) {

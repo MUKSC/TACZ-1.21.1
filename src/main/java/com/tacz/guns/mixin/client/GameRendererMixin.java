@@ -25,9 +25,6 @@ public abstract class GameRendererMixin {
     @Shadow
     public abstract Minecraft getMinecraft();
 
-    @Shadow
-    public abstract void render(float pPartialTicks, long pNanoTime, boolean pRenderLevel);
-
     @Inject(method = "bobHurt", at = @At("HEAD"), cancellable = true)
     public void onBobHurt(PoseStack pMatrixStack, float pPartialTicks, CallbackInfo ci) {
         // 取消受伤导致的视角摇晃

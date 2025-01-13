@@ -15,6 +15,7 @@ import com.tacz.guns.network.message.ClientMessagePlayerCancelReload;
 import com.tacz.guns.network.message.ClientMessagePlayerReloadGun;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +45,7 @@ public class LocalPlayerReload {
                 return;
             }
             // 发包通知服务器
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerCancelReload());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerCancelReload(), Minecraft.getInstance().getConnection().getConnection());
             // 执行本地取消换弹逻辑
             this.cancelReload(display);
         });
@@ -78,7 +79,7 @@ public class LocalPlayerReload {
                 return;
             }
             // 发包通知服务器
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerReloadGun());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerReloadGun(), Minecraft.getInstance().getConnection().getConnection());
             // 执行客户端 reload 相关内容
             this.doReload(gunItem, display, gunData, mainhandItem);
         });

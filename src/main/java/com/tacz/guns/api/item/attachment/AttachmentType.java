@@ -1,8 +1,11 @@
 package com.tacz.guns.api.item.attachment;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.serialization.Codec;
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
-public enum AttachmentType {
+public enum AttachmentType implements StringRepresentable {
     /**
      * 瞄具
      */
@@ -36,5 +39,12 @@ public enum AttachmentType {
     /**
      * 用来表示物品不是配件的情况。
      */
-    NONE
+    NONE;
+
+    public static final Codec<AttachmentType> CODEC = StringRepresentable.fromEnum(AttachmentType::values);
+
+    @Override
+    public @NotNull String getSerializedName() {
+        return name();
+    }
 }

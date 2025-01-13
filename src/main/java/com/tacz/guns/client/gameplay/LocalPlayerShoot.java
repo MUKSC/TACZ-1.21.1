@@ -161,7 +161,7 @@ public class LocalPlayerShoot {
                 data.clientLastShootTimestamp = data.clientShootTimestamp;
                 data.clientShootTimestamp = System.currentTimeMillis();
                 // 发送开火的数据包，通知服务器
-                NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp));
+                NetworkHandler.CHANNEL.send(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp), Minecraft.getInstance().getConnection().getConnection());
             }
 
             // todo 需要检查

@@ -16,6 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -59,9 +60,9 @@ public class GunSmithTableMenu extends AbstractContainerMenu {
         if (filter != null && !filter.contains(recipeId)) {
             return null;
         }
-        Recipe<?> recipe = recipeManager.byKey(recipeId).orElse(null);
-        if (recipe instanceof GunSmithTableRecipe) {
-            return (GunSmithTableRecipe) recipe;
+        RecipeHolder<?> holder = recipeManager.byKey(recipeId).orElse(null);
+        if (holder != null && holder.value() instanceof GunSmithTableRecipe recipe) {
+            return recipe;
         }
         return null;
     }

@@ -28,7 +28,7 @@ public class AdjustmentYRotModifier implements Function<String, Optional<Adjustm
             return Optional.empty();
         }
 
-        float partialTick = mc.getPartialTick();
+        float partialTick = mc.getTimer().getGameTimeDeltaPartialTick(false);
         float yBodyRot = Mth.rotLerp(partialTick, player.yBodyRotO, player.yBodyRot);
         float yHeadRot = Mth.rotLerp(partialTick, player.yHeadRotO, player.yHeadRot);
         float xRot = Mth.lerp(partialTick, player.xRotO, player.getXRot());

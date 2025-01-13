@@ -39,7 +39,7 @@ public final class BedrockModelLoader {
                 return false;
             }
             try (InputStream modelFileStream = zipFile.getInputStream(entry)) {
-                ResourceLocation registryName = new ResourceLocation(namespace, path);
+                ResourceLocation registryName = ResourceLocation.fromNamespaceAndPath(namespace, path);
                 BedrockModelPOJO modelPOJO = GSON.fromJson(new InputStreamReader(modelFileStream, StandardCharsets.UTF_8), BedrockModelPOJO.class);
                 ClientAssetManager.INSTANCE.putModel(registryName, modelPOJO);
                 return true;

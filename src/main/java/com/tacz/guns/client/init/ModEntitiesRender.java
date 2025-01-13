@@ -22,7 +22,8 @@ public class ModEntitiesRender {
     @SubscribeEvent
     public static void onEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
         EntityRenderers.register(EntityKineticBullet.TYPE, EntityBulletRenderer::new);
-        EntityRenderers.register(TargetMinecart.TYPE, TargetMinecartRenderer::new);
+        /* FIXME: Fix `TargetMinecart` first
+        EntityRenderers.register(TargetMinecart.TYPE, TargetMinecartRenderer::new);*/
         BlockEntityRenderers.register(GunSmithTableBlockEntity.TYPE, GunSmithTableRenderer::new);
         BlockEntityRenderers.register(TargetBlockEntity.TYPE, TargetRenderer::new);
         BlockEntityRenderers.register(StatueBlockEntity.TYPE, StatueRenderer::new);

@@ -10,9 +10,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -103,6 +101,8 @@ public final class GetJarResources {
     }
 
     private static void copyFolder(URI sourceURI, Path targetPath) throws IOException {
+        // FIXME: I'm not sure if this is correct
+        URI fileSourceURI = URI.create(sourceURI.getRawSchemeSpecificPart());
         if (Files.isDirectory(targetPath)) {
             // 备份原文件夹
             backupFiles(targetPath);
@@ -113,7 +113,8 @@ public final class GetJarResources {
         try (Stream<Path> stream = Files.walk(Paths.get(sourceURI), Integer.MAX_VALUE)) {
             stream.forEach(source -> {
                 // 生成目标路径
-                Path target = targetPath.resolve(sourceURI.relativize(source.toUri()).toString());
+                URI fileSource = URI.create(source.toUri().getRawSchemeSpecificPart());
+                Path target = targetPath.resolve(fileSourceURI.relativize(fileSource).toString());
                 try {
                     // 复制文件或文件夹
                     if (Files.isDirectory(source)) {

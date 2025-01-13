@@ -10,7 +10,7 @@
       ],
       "functions": [
         {
-          "function": "minecraft:copy_nbt",
+          "function": "minecraft:copy_custom_data",
           "ops": [
             {
               "op": "replace",
@@ -30,13 +30,13 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "tacz:workbench_c",
+              "block": "tacz:workbench_b",
               "properties": {
-                "half": "lower"
+                "part": "foot"
               }
             }
           ],
-          "name": "tacz:workbench_c"
+          "name": "tacz:workbench_b"
         }
       ],
       "rolls": 1

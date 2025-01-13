@@ -8,9 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ClientMessageUnloadAttachment {
     private final int gunSlotIndex;
@@ -30,9 +28,8 @@ public class ClientMessageUnloadAttachment {
         return new ClientMessageUnloadAttachment(buf.readInt(), buf.readEnum(AttachmentType.class));
     }
 
-    public static void handle(ClientMessageUnloadAttachment message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isServer()) {
+    public static void handle(ClientMessageUnloadAttachment message, CustomPayloadEvent.Context context) {
+        if (context.isServerSide()) {
             context.enqueueWork(() -> {
                 ServerPlayer player = context.getSender();
                 if (player == null) {
@@ -42,9 +39,9 @@ public class ClientMessageUnloadAttachment {
                 ItemStack gunItem = inventory.getItem(message.gunSlotIndex);
                 IGun iGun = IGun.getIGunOrNull(gunItem);
                 if (iGun != null) {
-                    ItemStack attachmentItem = iGun.getAttachment(gunItem, message.attachmentType);
+                    ItemStack attachmentItem = iGun.getAttachment(player.registryAccess(), gunItem, message.attachmentType);
                     if (!attachmentItem.isEmpty() && inventory.add(attachmentItem)) {
-                        iGun.unloadAttachment(gunItem, message.attachmentType);
+                        iGun.unloadAttachment(player.registryAccess(), gunItem, message.attachmentType);
                         // 刷新配件数据
                         AttachmentPropertyManager.postChangeEvent(player, gunItem);
                         // 如果卸载的是扩容弹匣，吐出所有子弹

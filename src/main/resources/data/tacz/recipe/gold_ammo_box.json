@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "result": {
-    "item": "tacz:target"
+    "id": "tacz:ammo_box",
+    "components": {
+      "minecraft:custom_data": "{Level: 1}"
+    }
   },
   "pattern": [
-    "III",
-    "IRI",
-    " P "
+    "PIP",
+    "P P",
+    "PPP"
   ],
   "key": {
     "I": {
-      "tag": "forge:ingots/iron"
-    },
-    "R": {
-      "item": "minecraft:redstone"
+      "tag": "forge:ingots/gold"
     },
     "P": {
       "tag": "minecraft:planks"

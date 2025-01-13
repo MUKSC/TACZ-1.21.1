@@ -119,7 +119,7 @@ public record SyncedDataKey<E extends Entity, T>(Pair<ResourceLocation, Resource
          * Sets the id for the synced key using a String. This is a required property.
          */
         public Builder<E, T> id(String id) {
-            this.id = new ResourceLocation(id);
+            this.id = ResourceLocation.parse(id);
             return this;
         }
 

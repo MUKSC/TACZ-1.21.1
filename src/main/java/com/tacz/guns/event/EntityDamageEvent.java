@@ -2,7 +2,9 @@ package com.tacz.guns.event;
 
 import com.tacz.guns.init.ModAttributes;
 import com.tacz.guns.init.ModDamageTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -17,7 +19,7 @@ public class EntityDamageEvent {
         if (event.getSource().is(ModDamageTypes.BULLETS_TAG)) {
             LivingEntity living = event.getEntity();
 
-            AttributeInstance resistance = living.getAttribute(ModAttributes.BULLET_RESISTANCE.get());
+            AttributeInstance resistance = ModAttributes.BULLET_RESISTANCE.getHolder().map(living::getAttribute).orElse(null);
             if (resistance != null) {
                 float modifiedDamage = event.getAmount() * (float) (1 - resistance.getValue());
                 event.setAmount(modifiedDamage);

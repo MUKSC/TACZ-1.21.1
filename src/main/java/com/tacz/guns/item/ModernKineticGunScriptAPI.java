@@ -30,6 +30,7 @@ import com.tacz.guns.sound.SoundManager;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.tacz.guns.util.CycleTaskHelper;
 import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -600,8 +601,8 @@ public class ModernKineticGunScriptAPI {
         Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(gunId);
         gunIndex = gunIndexOptional.orElse(null);
         abstractGunItem = gunItem;
-        if (itemStack.hasTag()) {
-            nbtUtil = new LuaNbtAccessor(itemStack.getTag());
+        if (itemStack.has(DataComponents.CUSTOM_DATA)) {
+            nbtUtil = new LuaNbtAccessor(itemStack.get(DataComponents.CUSTOM_DATA).copyTag());
         }
     }
 }

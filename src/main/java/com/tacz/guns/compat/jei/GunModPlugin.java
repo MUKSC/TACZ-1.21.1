@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 @JeiPlugin
 public class GunModPlugin implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(GunMod.MOD_ID, "jei");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "jei");
 
     private Map<ResourceLocation, RecipeType<GunSmithTableRecipe>> recipeTypeMap = new HashMap<>();
 
@@ -52,11 +53,11 @@ public class GunModPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         if(Minecraft.getInstance().level==null) return;
         RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
-        List<GunSmithTableRecipe> recipes = recipeManager.getAllRecipesFor(ModRecipe.GUN_SMITH_TABLE_CRAFTING.get());
+        List<RecipeHolder<GunSmithTableRecipe>> recipes = recipeManager.getAllRecipesFor(ModRecipe.GUN_SMITH_TABLE_CRAFTING.get());
 
         for (var entry : recipeTypeMap.entrySet()) {
             TimelessAPI.getCommonBlockIndex(entry.getKey()).ifPresent(blockIndex -> {
-                List<GunSmithTableRecipe> recipeList = blockIndex.getFilter().filter(recipes, GunSmithTableRecipe::getId);
+                List<GunSmithTableRecipe> recipeList = blockIndex.getFilter().filter(recipes, RecipeHolder::id).stream().map(RecipeHolder::value).toList();
                 registration.addRecipes(entry.getValue(), recipeList);
             });
         }

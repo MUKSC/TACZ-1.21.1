@@ -5,10 +5,7 @@ import com.tacz.guns.config.common.AmmoConfig;
 import com.tacz.guns.entity.EntityKineticBullet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractGlassBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.StainedGlassPaneBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,8 +21,10 @@ public class DestroyGlassBlock {
         EntityKineticBullet ammo = event.getAmmo();
         Block stateBlock = state.getBlock();
         NoteBlockInstrument instrument = state.instrument();
-        if (AmmoConfig.DESTROY_GLASS.get() && (stateBlock instanceof AbstractGlassBlock ||
+        if (AmmoConfig.DESTROY_GLASS.get() && (stateBlock instanceof StainedGlassBlock ||
+                stateBlock instanceof TintedGlassBlock ||
                 stateBlock instanceof StainedGlassPaneBlock ||
+                (stateBlock instanceof TransparentBlock && instrument.equals(NoteBlockInstrument.HAT)) ||
                 (stateBlock instanceof IronBarsBlock && instrument.equals(NoteBlockInstrument.HAT)))) {
             level.destroyBlock(pos, false, ammo.getOwner());
         }

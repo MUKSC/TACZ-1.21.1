@@ -293,7 +293,7 @@ public abstract class AbstractGunItem extends Item implements IGun {
                         .setFireMode(gunData.getFireModeSet().get(0))
                         .setAmmoCount(gunData.getAmmoAmount())
                         .setAmmoInBarrel(true)
-                        .build();
+                        .build(Minecraft.getInstance().level.registryAccess());
                 stacks.add(itemStack);
             }
         });

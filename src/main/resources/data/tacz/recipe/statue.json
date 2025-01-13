@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "result": {
-    "item": "tacz:statue"
+    "id": "tacz:statue"
   },
   "pattern": [
     " _ ",

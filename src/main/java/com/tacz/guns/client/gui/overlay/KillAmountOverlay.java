@@ -10,15 +10,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class KillAmountOverlay implements IGuiOverlay {
+public class KillAmountOverlay {
     private static long killTimestamp = -1L;
     private static int killAmount = 0;
 
-    @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
+    public static void render(GuiGraphics graphics, float partialTick, int width, int height) {
         if (!RenderConfig.KILL_AMOUNT_ENABLE.get()) {
             return;
         }

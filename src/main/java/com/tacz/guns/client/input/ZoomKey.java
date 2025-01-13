@@ -18,7 +18,6 @@ import org.lwjgl.glfw.GLFW;
 
 import static com.tacz.guns.util.InputExtraCheck.isInGame;
 
-@OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ZoomKey {
     public static final KeyMapping ZOOM_KEY = new KeyMapping("key.tacz.zoom.desc",
@@ -50,7 +49,7 @@ public class ZoomKey {
             }
             IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
             if (operator.isAim()) {
-                NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerZoom());
+                NetworkHandler.CHANNEL.send(new ClientMessagePlayerZoom(), Minecraft.getInstance().getConnection().getConnection());
                 return true;
             }
         }
@@ -64,7 +63,7 @@ public class ZoomKey {
         }
         IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
         if (operator.isAim()) {
-            NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerZoom());
+            NetworkHandler.CHANNEL.send(new ClientMessagePlayerZoom(), Minecraft.getInstance().getConnection().getConnection());
         }
     }
 }

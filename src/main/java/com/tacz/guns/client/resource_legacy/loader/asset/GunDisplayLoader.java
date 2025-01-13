@@ -38,7 +38,7 @@ public final class GunDisplayLoader {
                 return false;
             }
             try (InputStream stream = zipFile.getInputStream(entry)) {
-                ResourceLocation registryName = new ResourceLocation(namespace, path);
+                ResourceLocation registryName = ResourceLocation.fromNamespaceAndPath(namespace, path);
                 GunDisplay display = ClientGunPackLoader.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), GunDisplay.class);
                 ClientAssetManager.INSTANCE.putGunDisplay(registryName, display);
                 return true;

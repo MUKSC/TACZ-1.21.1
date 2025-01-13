@@ -1,16 +1,18 @@
 package com.tacz.guns.resource.serialize;
 
 import com.google.gson.*;
+import com.mojang.serialization.JsonOps;
 import com.tacz.guns.crafting.result.GunSmithTableResult;
 import com.tacz.guns.crafting.result.RawGunTableResult;
 import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.pojo.data.recipe.GunResult;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraft.world.item.component.CustomData;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
@@ -29,7 +31,7 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
                 count = Math.max(GsonHelper.getAsInt(jsonObject, "count"), 1);
             }
             if (jsonObject.has("nbt")) {
-                extraTag = CraftingHelper.getNBT(jsonObject.get("nbt"));
+                extraTag = CompoundTag.CODEC.parse(JsonOps.INSTANCE, jsonObject.get("nbt")).getOrThrow();
             }
 
             GunSmithTableResult result;
@@ -50,16 +52,18 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
                 case GunSmithTableResult.CUSTOM -> {
                     JsonObject resultObject = GsonHelper.getAsJsonObject(jsonObject, "item");
                     String group = GsonHelper.getAsString(jsonObject, "group", StringUtils.EMPTY);
-                    ItemStack itemStack = CraftingHelper.getItemStack(resultObject, true);
+                    ItemStack itemStack = ItemStack.CODEC.parse(JsonOps.INSTANCE, resultObject).getOrThrow();
                     result = new GunSmithTableResult(itemStack, group);
                     if (extraTag != null) {
-                        CompoundTag itemTag = result.getResult().getOrCreateTag();
-                        for (String key : extraTag.getAllKeys()) {
-                            Tag tag = extraTag.get(key);
-                            if (tag != null) {
-                                itemTag.put(key, tag);
+                        final CompoundTag finalExtraTag = extraTag;
+                        result.getResult().update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> data.update(tag -> {
+                            for (String key : finalExtraTag.getAllKeys()) {
+                                Tag value = finalExtraTag.get(key);
+                                if (value != null) {
+                                    tag.put(key, value);
+                                }
                             }
-                        }
+                        }));
                     }
                 }
                 default -> {
@@ -72,6 +76,6 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
     }
 
     private ResourceLocation getId(JsonObject jsonObject) {
-        return new ResourceLocation(GsonHelper.getAsString(jsonObject, "id"));
+        return ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "id"));
     }
 }

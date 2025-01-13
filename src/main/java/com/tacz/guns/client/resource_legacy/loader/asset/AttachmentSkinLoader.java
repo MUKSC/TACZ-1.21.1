@@ -38,7 +38,7 @@ public final class AttachmentSkinLoader {
                 return false;
             }
             try (InputStream stream = zipFile.getInputStream(entry)) {
-                ResourceLocation registryName = new ResourceLocation(namespace, path);
+                ResourceLocation registryName = ResourceLocation.fromNamespaceAndPath(namespace, path);
                 AttachmentSkin display = ClientGunPackLoader.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), AttachmentSkin.class);
                 ClientAssetManager.INSTANCE.putAttachmentSkin(registryName, display);
                 return true;

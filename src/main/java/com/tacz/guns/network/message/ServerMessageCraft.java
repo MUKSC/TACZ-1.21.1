@@ -6,9 +6,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ServerMessageCraft {
     private final int menuId;
@@ -25,9 +23,8 @@ public class ServerMessageCraft {
         return new ServerMessageCraft(buf.readVarInt());
     }
 
-    public static void handle(ServerMessageCraft message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
+    public static void handle(ServerMessageCraft message, CustomPayloadEvent.Context context) {
+        if (context.isClientSide()) {
             context.enqueueWork(() -> updateScreen(message.menuId));
         }
         context.setPacketHandled(true);

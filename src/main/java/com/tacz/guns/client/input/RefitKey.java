@@ -17,7 +17,6 @@ import org.lwjgl.glfw.GLFW;
 
 import static com.tacz.guns.util.InputExtraCheck.isInGame;
 
-@OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class RefitKey {
     public static final KeyMapping REFIT_KEY = new KeyMapping("key.tacz.refit.desc",

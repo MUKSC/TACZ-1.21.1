@@ -9,14 +9,13 @@ import com.tacz.guns.network.NetworkHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.function.Supplier;
 
 public class ServerMessageSyncedEntityDataMapping extends LoginIndexHolder implements IMessage<ServerMessageSyncedEntityDataMapping> {
     public static final Marker HANDSHAKE = MarkerManager.getMarker("TACZ_HANDSHAKE");
@@ -55,12 +54,12 @@ public class ServerMessageSyncedEntityDataMapping extends LoginIndexHolder imple
     }
 
     @Override
-    public void handle(ServerMessageSyncedEntityDataMapping message, Supplier<NetworkEvent.Context> supplier) {
+    public void handle(ServerMessageSyncedEntityDataMapping message, CustomPayloadEvent.Context context) {
         GunMod.LOGGER.debug(HANDSHAKE, "Received synced key mappings from server");
         CountDownLatch block = new CountDownLatch(1);
-        supplier.get().enqueueWork(() -> {
+        context.enqueueWork(() -> {
             if (!SyncedEntityData.instance().updateMappings(message)) {
-                supplier.get().getNetworkManager().disconnect(Component.literal("Connection closed - [TacZ] Received unknown synced data keys."));
+                context.getConnection().disconnect(Component.literal("Connection closed - [TacZ] Received unknown synced data keys."));
             }
             block.countDown();
         });
@@ -69,8 +68,8 @@ public class ServerMessageSyncedEntityDataMapping extends LoginIndexHolder imple
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        supplier.get().setPacketHandled(true);
-        NetworkHandler.HANDSHAKE_CHANNEL.reply(new Acknowledge(), supplier.get());
+        context.setPacketHandled(true);
+        NetworkHandler.HANDSHAKE_CHANNEL.reply(new Acknowledge(), context);
     }
 
     public Map<ResourceLocation, List<Pair<ResourceLocation, Integer>>> getKeyMap() {

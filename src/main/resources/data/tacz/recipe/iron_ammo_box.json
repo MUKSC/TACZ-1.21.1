@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "result": {
-    "item": "tacz:ammo_box",
-    "nbt": {
-      "Level": 2
+    "id": "tacz:ammo_box",
+    "components": {
+      "minecraft:custom_data": "{Level: 0}"
     }
   },
   "pattern": [
@@ -13,7 +13,7 @@
   ],
   "key": {
     "I": {
-      "tag": "forge:gems/diamond"
+      "tag": "forge:ingots/iron"
     },
     "P": {
       "tag": "minecraft:planks"

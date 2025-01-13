@@ -16,7 +16,7 @@ public class SyncBaseTimestamp {
     public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player player && !event.getLevel().isClientSide()) {
-            NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new ServerMessageSyncBaseTimestamp());
+            NetworkHandler.CHANNEL.send(new ServerMessageSyncBaseTimestamp(), PacketDistributor.PLAYER.with((ServerPlayer) player));
         }
     }
 }
