@@ -19,7 +19,7 @@
   },
   "muzzle_flash": {
     "texture": "tacz:flash/common_muzzle_flash",
-    "scale": 2.5
+    "scale": 1
   },
   "ammo":{
     "particle": {
