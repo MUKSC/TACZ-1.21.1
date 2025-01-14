@@ -58,6 +58,7 @@
   "tacz.gun.b93r.name": "B93R",
   "tacz.gun.minigun.name": "M134 Minigun",
   "tacz.gun.springfield1873.name": "Springfield 1873 Trapdoor Rifle",
+  "tacz.gun.spr15hb.name": "SPR-15 HB \"Sagittarius\"",
 
   
   "tacz.gun.ak47.desc": "From jungles to bays, it's always present.",
@@ -97,7 +98,7 @@
   "tacz.gun.p90.desc": "...",
   "tacz.gun.m870.desc": "...",
   "tacz.gun.b93r.desc":"...",
-  "tacz.gun.minigun.desc":"...",
+  "tacz.gun.minigun.desc":"\"Burn me to the ground\"",
   "tacz.gun.springfield1873.desc": "Poverty shrinks not the gun",
   
 
@@ -150,6 +151,7 @@
   "tacz.attachment.scope_vudu.name": "§6Vudu 1-6x Scope",
   "tacz.attachment.scope_hamr.name": "§5HAMR 3x Scope",
   "tacz.attachment.scope_mk5hd.name": "§6Mark 5 HD 5-25x Scope",
+  "tacz.attachment.scope_1873_6x.name":"§5Vintage Springfield Scope",
 
 
   "tacz.attachment.extended_mag_1.name": "Heavy Ammo Extended Mag",
