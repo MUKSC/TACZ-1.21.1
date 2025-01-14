@@ -13,6 +13,8 @@ import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.nbt.AttachmentItemDataAccessor;
 import com.tacz.guns.client.animation.screen.RefitTransform;
+import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
+import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.model.bedrock.BedrockModel;
@@ -121,6 +123,24 @@ public class FirstPersonRenderGunEvent {
             if (gunModel == null) {
                 return;
             }
+
+            var p = IClientPlayerGunOperator.fromLocalPlayer(player);
+            if (p.isReadyToDraw()) {
+                if (stack == player.getMainHandItem()) {
+                    if (animationStateMachine.isInitialized()) {
+                        animationStateMachine.exit();
+                    }
+
+                    GunAnimationStateContext context = new GunAnimationStateContext();
+                    context.setCurrentGunItem(stack);
+                    animationStateMachine.setContext(context);
+                    animationStateMachine.initialize();
+
+                    animationStateMachine.trigger(GunAnimationConstant.INPUT_DRAW);
+                    p.resetDraw();
+                }
+            }
+
             // 在渲染之前，先更新动画，让动画数据写入模型
             animationStateMachine.processContextIfExist(context -> {
                 context.setCurrentGunItem(stack);

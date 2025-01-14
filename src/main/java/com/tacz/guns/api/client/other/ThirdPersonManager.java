@@ -33,8 +33,39 @@ public final class ThirdPersonManager {
         }
     };
 
+    private static final String MINI_GUN_NAME = "minigun";
+    private static final IThirdPersonAnimation MINI_GUN = new IThirdPersonAnimation() {
+        @Override
+        public void animateGunHold(LivingEntity entity, ModelPart rightArm, ModelPart leftArm, ModelPart body, ModelPart head) {
+            body.yRot = head.yRot+0.8f;
+
+            double cosTheta = Math.cos(-body.yRot);
+            double sinTheta = Math.sin(-body.yRot);
+
+            float x = rightArm.x;
+            rightArm.x = (float) (x * cosTheta);
+            rightArm.z = (float) (x * sinTheta);
+
+            rightArm.yRot = 0.1F + body.yRot;
+            rightArm.xRot = -0.7F + body.xRot;
+
+            float x2 = leftArm.x;
+            leftArm.x = (float) (x2 * cosTheta);
+            leftArm.z = (float) (x2 * sinTheta);
+
+            leftArm.yRot = 0.2F + body.yRot;
+            leftArm.xRot = -1F + body.xRot;
+        }
+
+        @Override
+        public void animateGunAim(LivingEntity entity, ModelPart rightArm, ModelPart leftArm, ModelPart body, ModelPart head, float aimProgress) {
+            this.animateGunHold(entity, rightArm, leftArm, body, head);
+        }
+    };
+
     public static void registerDefault() {
         CACHE.put(RESERVED_DEFAULT_NAME, DEFAULT);
+        CACHE.put(MINI_GUN_NAME, MINI_GUN);
     }
 
     public static void register(String name, IThirdPersonAnimation animation) {
