@@ -95,8 +95,12 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
     @Override
     @Unique
     public void initialData() {
-        // draw 中会进行 ShooterDataHolder 的 init，以及配件数据的刷新
-        this.tacz$draw.draw(() -> tacz$shooter.getMainHandItem());
+        // 初始化 ShooterDataHolder
+        this.tacz$data.initialData();
+        // 刷新当前武器
+        this.tacz$data.currentGunItem = () -> tacz$shooter.getMainHandItem();
+        // 刷新配件属性缓存
+        AttachmentPropertyManager.postChangeEvent(tacz$shooter, tacz$shooter.getMainHandItem());
     }
 
     @Unique
