@@ -67,7 +67,7 @@ public class TargetBlockEntity extends BlockEntity implements Nameable {
         if (this.owner != null) {
             this.owner.resolve().thenAcceptAsync((profile) -> {
                 this.owner = profile;
-                this.setChanged();
+                this.refresh();
             }, CHECKED_MAIN_THREAD_EXECUTOR);
         }
     }
