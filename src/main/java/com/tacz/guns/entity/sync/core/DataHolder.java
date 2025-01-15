@@ -1,7 +1,6 @@
 package com.tacz.guns.entity.sync.core;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@AutoRegisterCapability
 public class DataHolder {
     public Map<SyncedDataKey<?, ?>, DataEntry<?, ?>> dataMap = new HashMap<>();
     private boolean dirty = false;

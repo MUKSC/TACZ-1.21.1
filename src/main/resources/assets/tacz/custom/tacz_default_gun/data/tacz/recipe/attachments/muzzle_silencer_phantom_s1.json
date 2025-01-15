@@ -2,19 +2,19 @@
   "materials": [
     {
       "item": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       },
       "count": 16
     },
     {
       "item": {
-        "tag": "forge:leather"
+        "tag": "c:leathers"
       },
       "count": 6
     },
     {
       "item": {
-        "tag": "forge:dusts/redstone"
+        "tag": "c:dusts/redstone"
       },
       "count": 2
     }

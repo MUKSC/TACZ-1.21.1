@@ -1,0 +1,38 @@
+[versions]
+neoforge = "21.1.93"
+neoforge-range = "[21,)"
+moddev = "2.0.74"
+parchment = "2024.11.17"
+minecraft = "1.21.1"
+minecraft-range = "[1.21.1]"
+
+commons-math = "3.6.1"
+luaj = "3.0.8-figura"
+bcel = "6.6.1"
+
+cloth-config = "15.0.140"
+player-animation-lib = "2.0.1+1.21.1"
+sodium-modrinth = "mc1.21.1-0.6.5-neoforge"
+iris-modrinth = "1.8.1+1.21.1-neoforge"
+carry-on-modrinth = "2.2.2"
+shoulder-surfing-reloaded-modrinth = "1.21.1-4.7.0+neoforge"
+jei = "19.21.0.247"
+
+[libraries]
+org-apache-commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math" }
+com-github-figuraMC-luaj-core = { module = "com.github.FiguraMC.luaj:luaj-core", version.ref = "luaj" }
+com-github-figuraMC-luaj-jse = { module = "com.github.FiguraMC.luaj:luaj-jse", version.ref = "luaj" }
+org-apache-bcel = { module = "org.apache.bcel:bcel", version.ref = "bcel" }
+
+me-shedaniel-cloth-config-neoforge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "cloth-config" }
+dev-kosmx-player-animation-lib-forge = { module = "dev.kosmx.player-anim:player-animation-lib-forge", version.ref = "player-animation-lib" }
+maven-modrinth-sodium = { module = "maven.modrinth:sodium", version.ref = "sodium-modrinth" }
+maven-modrinth-iris = { module = "maven.modrinth:iris", version.ref = "iris-modrinth" }
+maven-modrinth-carry-on = { module = "maven.modrinth:carry-on", version.ref = "carry-on-modrinth" }
+maven-modrinth-shoulder-surfing-reloaded = { module = "maven.modrinth:shoulder-surfing-reloaded", version.ref = "shoulder-surfing-reloaded-modrinth" }
+mezz-jei-common-api = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
+mezz-jei-neoforge-api = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
+mezz-jei-neoforge = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
+
+[plugins]
+moddev = { id = "net.neoforged.moddev", version.ref = "moddev" }

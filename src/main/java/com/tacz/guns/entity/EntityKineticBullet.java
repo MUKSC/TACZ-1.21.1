@@ -33,6 +33,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -54,12 +55,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+import net.neoforged.neoforge.entity.PartEntity;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +72,7 @@ import static com.tacz.guns.api.event.common.GunDamageSourcePart.NON_ARMOR_PIERC
 /**
  * 动能武器打出的子弹实体。
  */
-public class EntityKineticBullet extends Projectile implements IEntityAdditionalSpawnData {
+public class EntityKineticBullet extends Projectile implements IEntityWithComplexSpawn {
     public static final EntityType<EntityKineticBullet> TYPE = EntityType.Builder.<EntityKineticBullet>of(EntityKineticBullet::new, MobCategory.MISC).noSummon().noSave().fireImmune().sized(0.0625F, 0.0625F).clientTrackingRange(5).updateInterval(5).setShouldReceiveVelocityUpdates(false).build("bullet");
     public static final TagKey<EntityType<?>> USE_MAGIC_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("tacz:use_magic_damage_on"));
     public static final TagKey<EntityType<?>> USE_VOID_DAMAGE_ON = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("tacz:use_void_damage_on"));
@@ -205,8 +206,8 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         // 调用 TaC 子弹服务器事件
         this.onBulletTick();
         // 粒子效果
-        if (this.level().isClientSide) {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> AmmoParticleSpawner.addParticle(this));
+        if (this.level().isClientSide && FMLEnvironment.dist == Dist.CLIENT) {
+            AmmoParticleSpawner.addParticle(this);
         }
         // 子弹模型的旋转与抛物线
         Vec3 movement = this.getDeltaMovement();
@@ -347,7 +348,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         float headShotMultiplier = Math.max(this.headShot, 0);
         // 发布Pre事件
         var preEvent = new EntityHurtByGunEvent.Pre(this, entity, attacker, this.gunId, this.gunDisplayId, damage, sources, headshot, headShotMultiplier, LogicalSide.SERVER);
-        var cancelled = MinecraftForge.EVENT_BUS.post(preEvent);
+        var cancelled = NeoForge.EVENT_BUS.post(preEvent).isCanceled();
         if (cancelled) {
             return;
         }
@@ -403,10 +404,10 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
                 int attackerId = attacker == null ? 0 : attacker.getId();
                 // 如果生物死了
                 if (livingCore.isDeadOrDying()) {
-                    MinecraftForge.EVENT_BUS.post(new EntityKillByGunEvent(this, livingCore, attacker, newGunId, gunDisplayId, damage, sources, headshot, headShotMultiplier, LogicalSide.SERVER));
+                    NeoForge.EVENT_BUS.post(new EntityKillByGunEvent(this, livingCore, attacker, newGunId, gunDisplayId, damage, sources, headshot, headShotMultiplier, LogicalSide.SERVER));
                     NetworkHandler.sendToDimension(new ServerMessageGunKill(getId(), livingCore.getId(), attackerId, newGunId, gunDisplayId, damage, headshot, headShotMultiplier), livingCore);
                 } else {
-                    MinecraftForge.EVENT_BUS.post(new EntityHurtByGunEvent.Post(this, livingCore, attacker, newGunId, gunDisplayId, damage, sources, headshot, headShotMultiplier, LogicalSide.SERVER));
+                    NeoForge.EVENT_BUS.post(new EntityHurtByGunEvent.Post(this, livingCore, attacker, newGunId, gunDisplayId, damage, sources, headshot, headShotMultiplier, LogicalSide.SERVER));
                     NetworkHandler.sendToDimension(new ServerMessageGunHurt(getId(), livingCore.getId(), attackerId, newGunId, gunDisplayId, damage, headshot, headShotMultiplier), livingCore);
                 }
             }
@@ -421,7 +422,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         Vec3 hitVec = result.getLocation();
         BlockPos pos = result.getBlockPos();
         // 触发事件
-        if (MinecraftForge.EVENT_BUS.post(new AmmoHitBlockEvent(this.level(), result, this.level().getBlockState(pos), this))) {
+        if (NeoForge.EVENT_BUS.post(new AmmoHitBlockEvent(this.level(), result, this.level().getBlockState(pos), this)).isCanceled()) {
             return;
         }
         // 爆炸
@@ -502,7 +503,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     }
 
     @Override
-    public void writeSpawnData(FriendlyByteBuf buffer) {
+    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
         buffer.writeFloat(getXRot());
         buffer.writeFloat(getYRot());
         buffer.writeDouble(getDeltaMovement().x);
@@ -527,7 +528,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     }
 
     @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
         setXRot(additionalData.readFloat());
         setYRot(additionalData.readFloat());
         setDeltaMovement(additionalData.readDouble(), additionalData.readDouble(), additionalData.readDouble());

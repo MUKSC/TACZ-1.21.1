@@ -1,41 +1,43 @@
 package com.tacz.guns.network.message;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.entity.IGunOperator;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
 
-public class ClientMessagePlayerShoot {
+public class ClientMessagePlayerShoot implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<ClientMessagePlayerShoot> TYPE = new CustomPacketPayload.Type<>(
+        ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "client_player_shoot")
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientMessagePlayerShoot> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.VAR_LONG, message -> message.timestamp,
+        ClientMessagePlayerShoot::new
+    );
+
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
     /**
      * 这里的 timestamp 应该是基于 base timestamp 的相对值
      */
-    private long timestamp;
-
-    public ClientMessagePlayerShoot() {
-    }
+    private final long timestamp;
 
     public ClientMessagePlayerShoot(long timestamp) {
         this.timestamp = timestamp;
     }
 
-    public static void encode(ClientMessagePlayerShoot message, FriendlyByteBuf buf) {
-        buf.writeLong(message.timestamp);
-    }
-
-    public static ClientMessagePlayerShoot decode(FriendlyByteBuf buf) {
-        return new ClientMessagePlayerShoot(buf.readLong());
-    }
-
-    public static void handle(ClientMessagePlayerShoot message, CustomPayloadEvent.Context context) {
-        if (context.isServerSide()) {
-            context.enqueueWork(() -> {
-                ServerPlayer entity = context.getSender();
-                if (entity == null) {
-                    return;
-                }
-                IGunOperator.fromLivingEntity(entity).shoot(entity::getXRot, entity::getYRot, message.timestamp);
-            });
-        }
-        context.setPacketHandled(true);
+    public static void handle(ClientMessagePlayerShoot message, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ServerPlayer entity = (ServerPlayer) context.player();
+            IGunOperator.fromLivingEntity(entity).shoot(entity::getXRot, entity::getYRot, message.timestamp);
+        });
     }
 }

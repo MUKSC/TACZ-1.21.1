@@ -24,7 +24,6 @@ import com.tacz.guns.crafting.result.GunSmithTableResult;
 import com.tacz.guns.init.ModCreativeTabs;
 import com.tacz.guns.init.ModRecipe;
 import com.tacz.guns.inventory.GunSmithTableMenu;
-import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessageCraft;
 import com.tacz.guns.resource.filter.RecipeFilter;
 import com.tacz.guns.util.RenderDistance;
@@ -39,7 +38,6 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -54,7 +52,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -149,7 +148,7 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
 
     }
 
-    private void putRecipeType(RegistryObject<CreativeModeTab> tab) {
+    private void putRecipeType(DeferredHolder<CreativeModeTab, CreativeModeTab> tab) {
         String name = tab.getId().getPath();
         this.recipes.put(name, Lists.newArrayList());
         this.recipeKeys.add(name);
@@ -226,7 +225,7 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
                         return;
                     }
                 }
-                NetworkHandler.CHANNEL.send(new ClientMessageCraft(this.selectedRecipe.id(), this.menu.containerId), Minecraft.getInstance().getConnection().getConnection());
+                PacketDistributor.sendToServer(new ClientMessageCraft(this.selectedRecipe.id(), this.menu.containerId));
             }
         }));
     }
@@ -525,7 +524,7 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         int scissorH = (int) (height * windowGuiScale);
         RenderSystem.enableScissor(scissorX, scissorY, scissorW, scissorH);
 
-        Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

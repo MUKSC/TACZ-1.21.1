@@ -24,7 +24,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.luaj.vm2.LuaTable;
 
 import java.util.Optional;
@@ -164,7 +164,7 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
             return iGun.getDummyAmmoAmount(currentGunItem) > 0;
         }
         return processCameraEntity(entity ->
-                    entity.getCapability(ForgeCapabilities.ITEM_HANDLER, null)
+                    Optional.ofNullable(entity.getCapability(Capabilities.ItemHandler.ENTITY, null))
                         .map(cap -> {
                             // 背包检查
                             for (int i = 0; i < cap.getSlots(); i++) {

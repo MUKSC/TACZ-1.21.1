@@ -13,7 +13,6 @@ import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.client.sound.SoundPlayManager;
-import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessagePlayerShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
@@ -26,8 +25,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
@@ -116,7 +116,7 @@ public class LocalPlayerShoot {
             return ShootResult.IS_SPRINTING;
         }
         // 触发开火事件
-        if (MinecraftForge.EVENT_BUS.post(new GunShootEvent(player, mainhandItem, LogicalSide.CLIENT))) {
+        if (NeoForge.EVENT_BUS.post(new GunShootEvent(player, mainhandItem, LogicalSide.CLIENT)).isCanceled()) {
             return ShootResult.FORGE_EVENT_CANCEL;
         }
         // 切换状态锁，不允许换弹、检视等行为进行。
@@ -161,14 +161,14 @@ public class LocalPlayerShoot {
                 data.clientLastShootTimestamp = data.clientShootTimestamp;
                 data.clientShootTimestamp = System.currentTimeMillis();
                 // 发送开火的数据包，通知服务器
-                NetworkHandler.CHANNEL.send(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp), Minecraft.getInstance().getConnection().getConnection());
+                PacketDistributor.sendToServer(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp));
             }
 
             // todo 需要检查
             // 播放声音和状态机触发需要从异步线程上传到主线程执行，否则会引起cme
             Minecraft.getInstance().submitAsync(() -> {
                 // 触发击发事件
-                boolean fire = !MinecraftForge.EVENT_BUS.post(new GunFireEvent(player, mainhandItem, LogicalSide.CLIENT));
+                boolean fire = !NeoForge.EVENT_BUS.post(new GunFireEvent(player, mainhandItem, LogicalSide.CLIENT)).isCanceled();
                 if (fire) {
                     // 动画和声音循环播放
                     AnimationStateMachine<?> animationStateMachine = display.getAnimationStateMachine();

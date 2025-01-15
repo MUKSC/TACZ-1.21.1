@@ -36,13 +36,12 @@ public class TargetMinecartItem extends Item {
                 if (railshape.isAscending()) {
                     yOffset = 0.5;
                 }
-                /* FIXME: Fix `TargetMinecart` first
                 TargetMinecart targetMinecart = new TargetMinecart(level, (double) blockpos.getX() + 0.5, (double) blockpos.getY() + 0.0625 + yOffset, (double) blockpos.getZ() + 0.5);
                 if (itemstack.has(DataComponents.CUSTOM_NAME)) {
                     targetMinecart.setCustomName(itemstack.getHoverName());
                 }
                 level.addFreshEntity(targetMinecart);
-                level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);*/
+                level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);
             }
             itemstack.shrink(1);
             return InteractionResult.sidedSuccess(level.isClientSide);

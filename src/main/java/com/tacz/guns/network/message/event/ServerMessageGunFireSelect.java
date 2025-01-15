@@ -1,18 +1,38 @@
 package com.tacz.guns.network.message.event;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.event.common.GunFireSelectEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.network.CustomPayloadEvent;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
 
-public class ServerMessageGunFireSelect {
+public class ServerMessageGunFireSelect implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<ServerMessageGunFireSelect> TYPE = new CustomPacketPayload.Type<>(
+        ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "server_gun_fire_select")
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerMessageGunFireSelect> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.INT, message -> message.shooterId,
+        ItemStack.STREAM_CODEC, message -> message.gunItemStack,
+        ServerMessageGunFireSelect::new
+    );
+
+    @Override
+    public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
     private final int shooterId;
     private final ItemStack gunItemStack;
 
@@ -21,22 +41,8 @@ public class ServerMessageGunFireSelect {
         this.gunItemStack = gunItemStack;
     }
 
-    public static void encode(ServerMessageGunFireSelect message, RegistryFriendlyByteBuf buf) {
-        buf.writeVarInt(message.shooterId);
-        ItemStack.STREAM_CODEC.encode(buf, message.gunItemStack);
-    }
-
-    public static ServerMessageGunFireSelect decode(RegistryFriendlyByteBuf buf) {
-        int shooterId = buf.readVarInt();
-        ItemStack gunItemStack = ItemStack.STREAM_CODEC.decode(buf);
-        return new ServerMessageGunFireSelect(shooterId, gunItemStack);
-    }
-
-    public static void handle(ServerMessageGunFireSelect message, CustomPayloadEvent.Context context) {
-        if (context.isClientSide()) {
-            context.enqueueWork(() -> doClientEvent(message));
-        }
-        context.setPacketHandled(true);
+    public static void handle(ServerMessageGunFireSelect message, IPayloadContext context) {
+        context.enqueueWork(() -> doClientEvent(message));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -47,7 +53,7 @@ public class ServerMessageGunFireSelect {
         }
         if (level.getEntity(message.shooterId) instanceof LivingEntity shooter) {
             GunFireSelectEvent gunFireSelectEvent = new GunFireSelectEvent(shooter, message.gunItemStack, LogicalSide.CLIENT);
-            MinecraftForge.EVENT_BUS.post(gunFireSelectEvent);
+            NeoForge.EVENT_BUS.post(gunFireSelectEvent);
         }
     }
 }

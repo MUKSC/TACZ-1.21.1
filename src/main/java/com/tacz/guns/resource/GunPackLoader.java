@@ -14,12 +14,11 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.repository.RepositorySource;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.forgespi.locating.IModFile;
-import net.minecraftforge.resource.DelegatingPackResources;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforgespi.language.IModInfo;
+import net.neoforged.neoforgespi.locating.IModFile;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -35,10 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -71,7 +67,8 @@ public enum GunPackLoader implements RepositorySource {
         }
 
         // 确保配置文件加载，这个阶段将比标准的forge配置文件加载早
-        PreLoadConfig.load(resourcePacksPath);
+        /* FIXME: I'm not sure what these are supposed do and how to implement this on NeoForge
+        PreLoadConfig.load(resourcePacksPath);*/
 
         // 仅在第一次加载时复制默认资源包
         if (firstLoad) {
@@ -111,7 +108,7 @@ public enum GunPackLoader implements RepositorySource {
             }
         };
         PackSelectionConfig config = new PackSelectionConfig(true, Pack.Position.BOTTOM, false);
-        return Pack.readMetaAndCreate(info, pack.supplier(), packType, config);
+        return Pack.readMetaAndCreate(info, pack, packType, config);
     }
 
     public static @Nullable Path getModIcon(String modId) {

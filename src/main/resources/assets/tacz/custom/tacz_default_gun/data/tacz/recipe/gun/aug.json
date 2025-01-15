@@ -2,13 +2,13 @@
   "materials": [
     {
       "item": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       },
       "count": 39
     },
     {
       "item": {
-        "tag": "forge:gems/lapis"
+        "tag": "c:gems/lapis"
       },
       "count": 8
     },
@@ -20,7 +20,7 @@
     },
     {
       "item": {
-        "tag": "forge:gems/amethyst"
+        "tag": "c:gems/amethyst"
       },
       "count": 1
     }

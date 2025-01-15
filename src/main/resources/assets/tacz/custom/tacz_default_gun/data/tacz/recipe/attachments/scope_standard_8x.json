@@ -2,25 +2,25 @@
   "materials": [
     {
       "item": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       },
       "count": 18
     },
     {
       "item": {
-        "tag": "forge:gems/amethyst"
+        "tag": "c:gems/amethyst"
       },
       "count": 8
     },
     {
       "item": {
-        "tag": "forge:dusts/glowstone"
+        "tag": "c:dusts/glowstone"
       },
       "count": 8
     },
     {
       "item": {
-        "tag": "forge:dusts/redstone"
+        "tag": "c:dusts/redstone"
       },
       "count": 8
     }

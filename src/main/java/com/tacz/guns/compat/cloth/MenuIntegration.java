@@ -11,11 +11,14 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.ConfigScreenHandler;
+import net.neoforged.fml.IExtensionPoint;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class MenuIntegration {
+public class MenuIntegration implements IExtensionPoint {
     public static ConfigBuilder getConfigBuilder() {
         ConfigBuilder root = ConfigBuilder.create().setTitle(Component.literal("Timeless and Classics Guns"));
         root.setGlobalized(true);
@@ -34,11 +37,17 @@ public class MenuIntegration {
     }
 
     public static void registerModsPage() {
-        GunMod.context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
-                new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> getConfigScreen(parent)));
+        GunMod.container.registerExtensionPoint(MenuIntegration.Factory.class, new MenuIntegration.Factory());
     }
 
     public static Screen getConfigScreen(@Nullable Screen parent) {
         return MenuIntegration.getConfigBuilder().setParentScreen(parent).build();
+    }
+
+    public static class Factory implements IConfigScreenFactory {
+        @Override
+        public @NotNull Screen createScreen(@NotNull ModContainer container, @NotNull Screen parent) {
+            return getConfigScreen(parent);
+        }
     }
 }

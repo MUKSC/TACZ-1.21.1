@@ -9,7 +9,6 @@ import com.tacz.guns.client.animation.screen.RefitTransform;
 import com.tacz.guns.client.gui.components.FlatColorButton;
 import com.tacz.guns.client.gui.components.refit.*;
 import com.tacz.guns.client.sound.SoundPlayManager;
-import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessageRefitGun;
 import com.tacz.guns.network.message.ClientMessageUnloadAttachment;
 import com.tacz.guns.sound.SoundManager;
@@ -21,11 +20,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class GunRefitScreen extends Screen {
     public static final ResourceLocation SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "textures/gui/refit_slot.png");
     public static final ResourceLocation TURN_PAGE_TEXTURE = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "textures/gui/refit_turn_page.png");
@@ -157,7 +154,7 @@ public class GunRefitScreen extends Screen {
                     int slotIndex = ((InventoryAttachmentSlot) b).getSlotIndex();
                     SoundPlayManager.playerRefitSound(inventory.getItem(slotIndex), player, SoundManager.INSTALL_SOUND);
                     ClientMessageRefitGun message = new ClientMessageRefitGun(slotIndex, inventory.selected, RefitTransform.getCurrentTransformType());
-                    NetworkHandler.CHANNEL.send(message, Minecraft.getInstance().getConnection().getConnection());
+                    PacketDistributor.sendToServer(message);
                 });
                 this.addRenderableWidget(button);
                 currentY = currentY + SLOT_SIZE;
@@ -231,7 +228,7 @@ public class GunRefitScreen extends Screen {
                         if (freeSlot != -1) {
                             SoundPlayManager.playerRefitSound(attachmentItem, player, SoundManager.UNINSTALL_SOUND);
                             ClientMessageUnloadAttachment message = new ClientMessageUnloadAttachment(inventory.selected, RefitTransform.getCurrentTransformType());
-                            NetworkHandler.CHANNEL.send(message, Minecraft.getInstance().getConnection().getConnection());
+                            PacketDistributor.sendToServer(message);
                         } else {
                             player.sendSystemMessage(Component.translatable("gui.tacz.gun_refit.unload.no_space"));
                         }

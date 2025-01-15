@@ -4,11 +4,8 @@ import com.tacz.guns.client.gui.GunRefitScreen;
 import com.tacz.guns.client.gui.GunSmithTableScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class PreventsHotbarEvent {
     public static void onRenderHotbarEvent(CallbackInfo ci) {
         // todo 需要测试行为

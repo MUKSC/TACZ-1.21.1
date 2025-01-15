@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
@@ -125,11 +124,6 @@ public class TargetBlockEntity extends BlockEntity implements Nameable {
             BlockState state = level.getBlockState(worldPosition);
             level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
         }
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return AABB.encapsulatingFullBlocks(worldPosition.offset(-2, 0, -2), worldPosition.offset(2, 2, 2));
     }
 
     public void hit(Level level, BlockState state, BlockHitResult hit, boolean isUpperBlock) {

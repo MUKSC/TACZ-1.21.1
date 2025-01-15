@@ -1,26 +1,26 @@
 package com.tacz.guns.config.client;
 
 import com.tacz.guns.client.renderer.crosshair.CrosshairType;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class RenderConfig {
-    public static ForgeConfigSpec.IntValue GUN_LOD_RENDER_DISTANCE;
-    public static ForgeConfigSpec.IntValue BULLET_HOLE_PARTICLE_LIFE;
-    public static ForgeConfigSpec.DoubleValue BULLET_HOLE_PARTICLE_FADE_THRESHOLD;
-    public static ForgeConfigSpec.EnumValue<CrosshairType> CROSSHAIR_TYPE;
-    public static ForgeConfigSpec.DoubleValue HIT_MARKET_START_POSITION;
-    public static ForgeConfigSpec.BooleanValue HEAD_SHOT_DEBUG_HITBOX;
-    public static ForgeConfigSpec.BooleanValue GUN_HUD_ENABLE;
-    public static ForgeConfigSpec.BooleanValue KILL_AMOUNT_ENABLE;
-    public static ForgeConfigSpec.DoubleValue KILL_AMOUNT_DURATION_SECOND;
-    public static ForgeConfigSpec.IntValue TARGET_RENDER_DISTANCE;
-    public static ForgeConfigSpec.BooleanValue FIRST_PERSON_BULLET_TRACER_ENABLE;
-    public static ForgeConfigSpec.BooleanValue DISABLE_INTERACT_HUD_TEXT;
-    public static ForgeConfigSpec.IntValue DAMAGE_COUNTER_RESET_TIME;
-    public static ForgeConfigSpec.BooleanValue DISABLE_MOVEMENT_ATTRIBUTE_FOV;
-    public static ForgeConfigSpec.BooleanValue ENABLE_TACZ_ID_IN_TOOLTIP;
+    public static ModConfigSpec.IntValue GUN_LOD_RENDER_DISTANCE;
+    public static ModConfigSpec.IntValue BULLET_HOLE_PARTICLE_LIFE;
+    public static ModConfigSpec.DoubleValue BULLET_HOLE_PARTICLE_FADE_THRESHOLD;
+    public static ModConfigSpec.EnumValue<CrosshairType> CROSSHAIR_TYPE;
+    public static ModConfigSpec.DoubleValue HIT_MARKET_START_POSITION;
+    public static ModConfigSpec.BooleanValue HEAD_SHOT_DEBUG_HITBOX;
+    public static ModConfigSpec.BooleanValue GUN_HUD_ENABLE;
+    public static ModConfigSpec.BooleanValue KILL_AMOUNT_ENABLE;
+    public static ModConfigSpec.DoubleValue KILL_AMOUNT_DURATION_SECOND;
+    public static ModConfigSpec.IntValue TARGET_RENDER_DISTANCE;
+    public static ModConfigSpec.BooleanValue FIRST_PERSON_BULLET_TRACER_ENABLE;
+    public static ModConfigSpec.BooleanValue DISABLE_INTERACT_HUD_TEXT;
+    public static ModConfigSpec.IntValue DAMAGE_COUNTER_RESET_TIME;
+    public static ModConfigSpec.BooleanValue DISABLE_MOVEMENT_ATTRIBUTE_FOV;
+    public static ModConfigSpec.BooleanValue ENABLE_TACZ_ID_IN_TOOLTIP;
 
-    public static void init(ForgeConfigSpec.Builder builder) {
+    public static void init(ModConfigSpec.Builder builder) {
         builder.push("render");
 
         builder.comment("How far to display the lod model, 0 means always display");

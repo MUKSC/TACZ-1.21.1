@@ -1,6 +1,10 @@
 package com.tacz.guns.resource.network;
 
-public enum DataType {
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.RecordBuilder;
+import net.minecraft.util.StringRepresentable;
+
+public enum DataType implements StringRepresentable {
     /**
      * 需要同步到客户端的数据类型
      */
@@ -14,5 +18,12 @@ public enum DataType {
     ATTACHMENT_TAGS,
     ALLOW_ATTACHMENT_TAGS,
     BLOCK_DATA,
-    BLOCK_INDEX,
+    BLOCK_INDEX;
+
+    public static final Codec<DataType> CODEC = StringRepresentable.fromEnum(DataType::values);
+
+    @Override
+    public String getSerializedName() {
+        return name();
+    }
 }

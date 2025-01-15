@@ -2,13 +2,13 @@
   "materials": [
     {
       "item": {
-        "tag": "forge:ingots/copper"
+        "tag": "c:ingots/copper"
       },
       "count": 15
     },
     {
       "item": {
-        "tag": "forge:gunpowder"
+        "tag": "c:gunpowders"
       },
       "count": 5
     }

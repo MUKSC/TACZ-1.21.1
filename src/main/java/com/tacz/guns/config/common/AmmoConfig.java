@@ -1,21 +1,21 @@
 package com.tacz.guns.config.common;
 
 import com.google.common.collect.Lists;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 
 public class AmmoConfig {
-    public static ForgeConfigSpec.BooleanValue EXPLOSIVE_AMMO_DESTROYS_BLOCK;
-    public static ForgeConfigSpec.BooleanValue EXPLOSIVE_AMMO_FIRE;
-    public static ForgeConfigSpec.BooleanValue EXPLOSIVE_AMMO_KNOCK_BACK;
-    public static ForgeConfigSpec.IntValue EXPLOSIVE_AMMO_VISIBLE_DISTANCE;
-    public static ForgeConfigSpec.ConfigValue<List<String>> PASS_THROUGH_BLOCKS;
-    public static ForgeConfigSpec.BooleanValue DESTROY_GLASS;
-    public static ForgeConfigSpec.BooleanValue IGNITE_BLOCK;
-    public static ForgeConfigSpec.BooleanValue IGNITE_ENTITY;
+    public static ModConfigSpec.BooleanValue EXPLOSIVE_AMMO_DESTROYS_BLOCK;
+    public static ModConfigSpec.BooleanValue EXPLOSIVE_AMMO_FIRE;
+    public static ModConfigSpec.BooleanValue EXPLOSIVE_AMMO_KNOCK_BACK;
+    public static ModConfigSpec.IntValue EXPLOSIVE_AMMO_VISIBLE_DISTANCE;
+    public static ModConfigSpec.ConfigValue<List<String>> PASS_THROUGH_BLOCKS;
+    public static ModConfigSpec.BooleanValue DESTROY_GLASS;
+    public static ModConfigSpec.BooleanValue IGNITE_BLOCK;
+    public static ModConfigSpec.BooleanValue IGNITE_ENTITY;
 
-    public static void init(ForgeConfigSpec.Builder builder) {
+    public static void init(ModConfigSpec.Builder builder) {
         builder.push("ammo");
 
         builder.comment("Warning: Ammo with explosive properties can break blocks");

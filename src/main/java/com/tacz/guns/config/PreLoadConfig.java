@@ -2,20 +2,19 @@ package com.tacz.guns.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.tacz.guns.GunMod;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ConfigTracker;
-import net.minecraftforge.fml.config.IConfigEvent;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.nio.file.Path;
 
 public class PreLoadConfig {
-    private static ForgeConfigSpec spec;
-    public static ForgeConfigSpec.BooleanValue override;
+    public static ModConfigSpec spec;
+    public static ModConfigSpec.BooleanValue override;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         builder.push("gunpack");
         builder.comment("When enabled, the mod will not try to overwrite the default pack under .minecraft/tacz\n" +
                 "Since 1.0.4, the overwriting will only run when you start client or a dedicated server");
@@ -24,9 +23,10 @@ public class PreLoadConfig {
         spec = builder.build();
     }
 
+    /* FIXME: I'm not sure what these are supposed do and how to implement this on NeoForge
     public static PreLoadModConfig getModConfig() {
-        ModLoadingContext ctx = GunMod.context;
-        var c = new PreLoadModConfig(ModConfig.Type.COMMON, spec, ctx.getContainer(), "tacz-pre.toml");
+        ModContainer container = GunMod.container;
+        var c = new PreLoadModConfig(ModConfig.Type.COMMON, spec, container, "tacz-pre.toml");
         // 从 ConfigTracker 中移除，防止从默认文件夹重复加载
         ConfigTracker.INSTANCE.configSets().get(ModConfig.Type.COMMON).remove(c);
         ConfigTracker.INSTANCE.fileMap().remove(c.getFileName(), c);
@@ -40,5 +40,5 @@ public class PreLoadConfig {
         config.setConfigData(configData);
         config.fireEvent(IConfigEvent.loading(config));
         config.save();
-    }
+    }*/
 }

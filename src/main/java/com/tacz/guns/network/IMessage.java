@@ -1,12 +1,8 @@
 package com.tacz.guns.network;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public interface IMessage<T> {
-    void encode(T message, FriendlyByteBuf buffer);
-
-    T decode(FriendlyByteBuf buffer);
-
-    void handle(T message, CustomPayloadEvent.Context context);
+public interface IMessage extends CustomPacketPayload {
+    void handle(IPayloadContext context);
 }

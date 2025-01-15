@@ -8,7 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.EventHooks;
 
 public class ExplodeUtil {
     public static void createExplosion(Entity owner, Entity exploder, float damage, float radius, boolean knockback, boolean destroy, Vec3 hitPos) {
@@ -26,7 +26,7 @@ public class ExplodeUtil {
         // 创建爆炸
         ProjectileExplosion explosion = new ProjectileExplosion(level, owner, exploder, null, null, hitPos.x(), hitPos.y(), hitPos.z(), damage, radius, knockback, mode);
         // 监听 forge 事件
-        if (ForgeEventFactory.onExplosionStart(level, explosion)) {
+        if (EventHooks.onExplosionStart(level, explosion)) {
             return;
         }
         // 执行爆炸逻辑

@@ -2,25 +2,25 @@
   "materials": [
     {
       "item": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       },
       "count": 12
     },
     {
       "item": {
-        "tag": "forge:ingots/gold"
+        "tag": "c:ingots/gold"
       },
       "count": 5
     },
     {
       "item": {
-        "tag": "forge:dusts/redstone"
+        "tag": "c:dusts/redstone"
       },
       "count": 6
     },
     {
       "item": {
-        "tag": "forge:glass"
+        "tag": "c:glass_blocks"
       },
       "count": 4
     }

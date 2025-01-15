@@ -18,6 +18,7 @@ import com.tacz.guns.resource.pojo.data.attachment.MeleeData;
 import com.tacz.guns.resource.pojo.data.gun.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -30,7 +31,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaValue;
@@ -41,7 +41,6 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.DoubleFunction;
 import java.util.function.Supplier;
 
@@ -388,7 +387,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
             return;
         }
         for (EffectData data : effects) {
-            Holder<MobEffect> mobEffect = ForgeRegistries.MOB_EFFECTS.getHolder(data.getEffectId()).orElse(null);
+            Holder<MobEffect> mobEffect = BuiltInRegistries.MOB_EFFECT.getHolder(data.getEffectId()).orElse(null);
             if (mobEffect == null) {
                 continue;
             }

@@ -4,12 +4,13 @@ import com.tacz.guns.entity.EntityKineticBullet;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * 子弹击中方块时触发的事件，目前仅在服务端触发
  */
-public class AmmoHitBlockEvent extends Event {
+public class AmmoHitBlockEvent extends Event implements ICancellableEvent {
     private final Level level;
     private final BlockHitResult hitResult;
     private final BlockState state;
@@ -20,11 +21,6 @@ public class AmmoHitBlockEvent extends Event {
         this.hitResult = hitResult;
         this.state = state;
         this.ammo = ammo;
-    }
-
-    @Override
-    public boolean isCancelable() {
-        return true;
     }
 
     public Level getLevel() {

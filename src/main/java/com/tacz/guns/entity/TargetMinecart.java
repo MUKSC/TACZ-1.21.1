@@ -21,19 +21,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.MinecartTNT;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,10 +38,8 @@ import java.util.Optional;
 
 import static net.minecraft.world.entity.vehicle.AbstractMinecart.Type.RIDEABLE;
 
-/* FIXME: I don't know what's happening here so I just disable this for now
-    It says I need to implement `VehicleEntity.getDropItem`, but IDE doesn't show the option to implement and when I try to implement it manually, the compiler complains about `Method does not override method from its superclass`*/
-public abstract class TargetMinecart extends AbstractMinecart implements ITargetEntity {
-    public static EntityType<MinecartTNT> TYPE = EntityType.Builder.<MinecartTNT>of(MinecartTNT::new, MobCategory.MISC)
+public class TargetMinecart extends AbstractMinecart implements ITargetEntity {
+    public static EntityType<TargetMinecart> TYPE = EntityType.Builder.<TargetMinecart>of(TargetMinecart::new, MobCategory.MISC)
             .sized(0.75F, 2.4F)
             .clientTrackingRange(8)
             .build("target_minecart");
@@ -85,7 +79,7 @@ public abstract class TargetMinecart extends AbstractMinecart implements ITarget
             if (entity instanceof EntityKineticBullet projectile) {
                 boolean isHeadshot = false;
                 float headshotMultiplier = 1;
-                MinecraftForge.EVENT_BUS.post(new EntityHurtByGunEvent.Post(projectile, this, player, projectile.getGunId(), projectile.getGunDisplayId(), damage, Pair.of(source, source), isHeadshot, headshotMultiplier, LogicalSide.SERVER));
+                NeoForge.EVENT_BUS.post(new EntityHurtByGunEvent.Post(projectile, this, player, projectile.getGunId(), projectile.getGunDisplayId(), damage, Pair.of(source, source), isHeadshot, headshotMultiplier, LogicalSide.SERVER));
                 NetworkHandler.sendToDimension(new ServerMessageGunHurt(projectile.getId(), this.getId(), player.getId(), projectile.getGunId(), projectile.getGunDisplayId(), damage, isHeadshot, headshotMultiplier), this);
             }
         }

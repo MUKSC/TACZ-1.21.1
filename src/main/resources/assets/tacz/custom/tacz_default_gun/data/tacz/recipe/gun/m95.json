@@ -2,31 +2,31 @@
   "materials": [
     {
       "item": {
-        "tag": "forge:gems/diamond"
+        "tag": "c:gems/diamond"
       },
       "count": 15
     },
     {
       "item": {
-        "tag": "forge:ingots/gold"
+        "tag": "c:ingots/gold"
       },
       "count": 60
     },
     {
       "item": {
-        "tag": "forge:ingots/netherite"
+        "tag": "c:ingots/netherite"
       },
       "count": 3
     },
     {
       "item": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       },
       "count": 300
     },
     {
       "item": {
-        "tag": "forge:rods/blaze"
+        "tag": "c:rods/blaze"
       },
       "count": 5
     }

@@ -3,19 +3,17 @@ package com.tacz.guns;
 import com.tacz.guns.api.resource.ResourceManager;
 import com.tacz.guns.config.ClientConfig;
 import com.tacz.guns.config.CommonConfig;
+import com.tacz.guns.config.PreLoadConfig;
 import com.tacz.guns.config.ServerConfig;
 import com.tacz.guns.init.*;
 import com.tacz.guns.resource.GunPackLoader;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import net.minecraft.server.packs.PackType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoader;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,18 +26,19 @@ public class GunMod {
      */
     public static final String DEFAULT_GUN_PACK_NAME = "tacz_default_gun";
 
-    public static FMLJavaModLoadingContext context = null;
+    public static net.neoforged.fml.ModContainer container;
 
-    public GunMod(FMLJavaModLoadingContext context) {
-        GunMod.context = context;
-        context.registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
-        context.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
-        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
+    public GunMod(IEventBus bus, net.neoforged.fml.ModContainer container) {
+        GunMod.container = container;
+        container.registerConfig(ModConfig.Type.COMMON, PreLoadConfig.spec, "tacz-pre.toml");
+        container.registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
+        container.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
+        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
 
         Dist side = FMLLoader.getDist();
         GunPackLoader.INSTANCE.packType = side.isClient() ? PackType.CLIENT_RESOURCES : PackType.SERVER_DATA;
 
-        IEventBus bus = context.getModEventBus();
+        CapabilityRegistry.ATTACHMENT_TYPES.register(bus);
         ModBlocks.BLOCKS.register(bus);
         ModBlocks.TILE_ENTITIES.register(bus);
         ModCreativeTabs.TABS.register(bus);

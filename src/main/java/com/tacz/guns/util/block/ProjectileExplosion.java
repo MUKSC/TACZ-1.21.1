@@ -24,6 +24,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ProjectileExplosion extends Explosion {
     private final ExplosionDamageCalculator damageCalculator;
 
     public ProjectileExplosion(Level level, Entity owner, Entity exploder, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator damageCalculator, double x, double y, double z, float power, float radius, boolean knockback, Explosion.BlockInteraction mode) {
-        super(level, exploder, source, damageCalculator, x, y, z, radius, AmmoConfig.EXPLOSIVE_AMMO_FIRE.get(), mode, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION, SoundEvents.GENERIC_EXPLODE);
+        super(level, exploder, source, damageCalculator, x, y, z, radius, AmmoConfig.EXPLOSIVE_AMMO_FIRE.get(), mode, ParticleTypes.EXPLOSION_EMITTER, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE);
         this.level = level;
         this.x = x;
         this.y = y;
@@ -115,7 +116,7 @@ public class ProjectileExplosion extends Explosion {
         int maxZ = Mth.floor(this.z + (double) radius + 1.0D);
         radius *= 2;
         List<Entity> entities = this.level.getEntities(this.exploder, new AABB(minX, minY, minZ, maxX, maxY, maxZ));
-        net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, entities, radius);
+        EventHooks.onExplosionDetonate(this.level, this, entities, radius);
         Vec3 explosionPos = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : entities) {

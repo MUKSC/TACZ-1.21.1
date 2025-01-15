@@ -6,15 +6,16 @@ import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
+@EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class TickAnimationEvent {
     @SubscribeEvent
-    public static void tickAnimation(TickEvent.ClientTickEvent event) {
+    public static void tickAnimation(ClientTickEvent.Pre event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
@@ -39,10 +40,7 @@ public class TickAnimationEvent {
     }
 
     @SubscribeEvent
-    public static void tickAnimation(TickEvent.RenderTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            return;
-        }
+    public static void tickAnimation(RenderFrameEvent.Post event) {
         if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
             return;
         }

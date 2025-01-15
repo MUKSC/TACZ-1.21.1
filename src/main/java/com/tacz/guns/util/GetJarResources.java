@@ -3,7 +3,7 @@ package com.tacz.guns.util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.tacz.guns.GunMod;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.TrueFileFilter;

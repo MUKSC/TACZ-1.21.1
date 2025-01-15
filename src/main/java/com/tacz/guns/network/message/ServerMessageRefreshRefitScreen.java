@@ -1,27 +1,35 @@
 package com.tacz.guns.network.message;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.client.gui.GunRefitScreen;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
 
-public class ServerMessageRefreshRefitScreen {
-    public static void encode(ServerMessageRefreshRefitScreen message, FriendlyByteBuf buf) {
+public class ServerMessageRefreshRefitScreen implements CustomPacketPayload {
+    public static final ServerMessageRefreshRefitScreen INSTANCE = new ServerMessageRefreshRefitScreen();
+    public static final CustomPacketPayload.Type<ServerMessageRefreshRefitScreen> TYPE = new CustomPacketPayload.Type<>(
+        ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "server_refresh_refit_screen")
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerMessageRefreshRefitScreen> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+
+    private ServerMessageRefreshRefitScreen() { }
+
+    @Override
+    public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static ServerMessageRefreshRefitScreen decode(FriendlyByteBuf buf) {
-        return new ServerMessageRefreshRefitScreen();
-    }
-
-    public static void handle(ServerMessageRefreshRefitScreen message, CustomPayloadEvent.Context context) {
-        if (context.isClientSide()) {
-            context.enqueueWork(ServerMessageRefreshRefitScreen::updateScreen);
-        }
-        context.setPacketHandled(true);
+    public static void handle(ServerMessageRefreshRefitScreen message, IPayloadContext context) {
+        context.enqueueWork(ServerMessageRefreshRefitScreen::updateScreen);
     }
 
     @OnlyIn(Dist.CLIENT)

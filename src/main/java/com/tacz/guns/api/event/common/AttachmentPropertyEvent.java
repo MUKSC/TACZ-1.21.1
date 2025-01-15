@@ -2,7 +2,7 @@ package com.tacz.guns.api.event.common;
 
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /**
  * 缓存配件属性修改值时触发的事件

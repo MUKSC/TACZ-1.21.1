@@ -10,8 +10,8 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -30,7 +30,7 @@ public class PlayerAnimatorCompat {
         INSTALLED = ModList.get().isLoaded(MOD_ID);
         if (isInstalled()) {
             AnimationDataRegisterFactory.registerData();
-            MinecraftForge.EVENT_BUS.register(new AnimationManager());
+            NeoForge.EVENT_BUS.register(new AnimationManager());
         }
     }
 

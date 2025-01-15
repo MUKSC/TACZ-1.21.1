@@ -3,7 +3,7 @@ package com.tacz.guns.compat.iris;
 import com.tacz.guns.init.CompatRegistry;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 public final class IrisCompat {
     public static void initCompat() {

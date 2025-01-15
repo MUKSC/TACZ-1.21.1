@@ -3,10 +3,17 @@ package com.tacz.guns.entity.sync.core;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.Validate;
 
 public class DataEntry<E extends Entity, T> {
+    public static final StreamCodec<RegistryFriendlyByteBuf, DataEntry<?, ?>> STREAM_CODEC = StreamCodec.of(
+        (buffer, entry) -> entry.write(buffer),
+        DataEntry::read
+    );
+
     private final SyncedDataKey<E, T> key;
     private T value;
     private boolean dirty;
