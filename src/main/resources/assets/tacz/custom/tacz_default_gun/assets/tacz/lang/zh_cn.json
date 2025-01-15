@@ -55,10 +55,8 @@
   "tacz.gun.qbz_95.name": "95式 \"长弓\" 突击步枪",
   "tacz.gun.p90.name": "P90 冲锋枪",
   "tacz.gun.m870.name": "M870 霰弹枪",
-  "tacz.gun.b93r.name": "B93R 冲锋手枪",
-  "tacz.gun.minigun.name": "M134 转管机枪",
-  "tacz.gun.springfield1873.name": "春田 1873 活门步枪",
-  "tacz.gun.spr15hb.name": "SPR-15 HB “射手座” 反狙击步枪",
+  "tacz.gun.b93r.name":"B93R 冲锋手枪",
+  "tacz.gun.minigun.name":"M134 转管机枪",
 
 
   "tacz.gun.ak47.desc": "从雨林到海湾，永远不会错过它的身影",
@@ -81,7 +79,7 @@
   "tacz.gun.rpk.desc": "轻装上阵，火力升级",
   "tacz.gun.scar_h.desc": "贵的东西唯一的缺点，就是贵",
   "tacz.gun.scar_l.desc": "不要触碰任何高速运动的部件...哎哟！",
-  "tacz.gun.sks_tactical.desc": "收藏家们非常乐意看到自己喜欢的经典款式在现代重生",
+  "tacz.gun.sks_tactical.desc": "收藏家们非常乐意看到自己喜欢的经典款式在现代重生，它也不例外",
   "tacz.gun.ump45.desc": "让对手的心电图和它一样平",
   "tacz.gun.uzi.desc": "总比空着手要强",
   "tacz.gun.vector45.desc": "打的很快，有点太快了。",
@@ -90,7 +88,7 @@
   "tacz.gun.mk14.desc": "不是生不逢时，只是选错位置",
   "tacz.gun.p320.desc": "据说把它丢出去可以靠走火消灭对手",
   "tacz.gun.aug.desc": "端着它可拉风了，不是么？",
-  "tacz.gun.m700.desc": "极简主义贯彻者",
+  "tacz.gun.m700.desc": "何必挑挑拣拣，有它就足够了",
   "tacz.gun.m107.desc": "礼貌性地毁灭他们",
   "tacz.gun.m1911.desc": "经典永恒，何必再一次发明轮子？",
   "tacz.gun.type_81.desc": "值得信赖的伙伴",
@@ -98,9 +96,7 @@
   "tacz.gun.p90.desc": "用它在防弹衣上画个笑脸",
   "tacz.gun.m870.desc": "你选错屋了，蠢货！",
   "tacz.gun.b93r.desc":"...",
-  "tacz.gun.minigun.desc":"“我将焚烧殆尽”",
-  "tacz.gun.springfield1873.desc": "人穷枪不短",
-  "tacz.gun.spr15hb.desc":"精准所至，金石为开",
+  "tacz.gun.minigun.desc":"呼呼呼——",
 
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",
@@ -112,6 +108,7 @@
   "tacz.ammo.357mag.name": "§c.357 马格南 手枪弹",
   "tacz.ammo.50bmg.name": "§c.50 BMG 狙击弹",
   "tacz.ammo.58x42.name": "§e5.8mm 步枪弹",
+  "tacz.ammo.45_70.name": "§e45-70 “政府” 步枪弹",
   "tacz.ammo.68x51fury.name": "§b6.8×51mm 步枪弹",
   "tacz.ammo.308.name": "§b.308 温彻斯特 步枪弹",
   "tacz.ammo.338.name": "§c.338 拉普马格南 狙击弹",
@@ -151,7 +148,6 @@
   "tacz.attachment.scope_vudu.name": "§6巫毒 1-6x 组合式精确瞄准镜",
   "tacz.attachment.scope_hamr.name": "§5HAMR 3x 组合式光学瞄具",
   "tacz.attachment.scope_mk5hd.name": "§6Mark 5 HD 5-25x 组合式光学瞄具",
-  "tacz.attachment.scope_1873_6x.name":"§5老式春田神射手瞄具",
 
 
   "tacz.attachment.extended_mag_1.name": "重型弹药扩容弹匣",
