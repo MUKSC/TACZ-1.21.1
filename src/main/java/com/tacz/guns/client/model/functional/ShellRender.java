@@ -3,6 +3,7 @@ package com.tacz.guns.client.model.functional;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.model.BedrockAmmoModel;
@@ -35,6 +36,9 @@ public class ShellRender implements IFunctionalRenderer {
     }
 
     public void addShell(Vector3f randomVelocity) {
+        if (SHELL_QUEUE.size() > 128) {
+            SHELL_QUEUE.pollFirst();
+        }
         double xRandom = Math.random() * randomVelocity.x();
         double yRandom = Math.random() * randomVelocity.y();
         double zRandom = Math.random() * randomVelocity.z();
@@ -59,6 +63,10 @@ public class ShellRender implements IFunctionalRenderer {
             }
             long lifeTime = (long) (shellEjection.getLivingTime() * 1000);
 
+            if (!SHELL_QUEUE.isEmpty()) {
+                GunMod.LOGGER.info("Shell Queue Size: " + SHELL_QUEUE.size());
+            }
+
             // 检查有没有需要踢出去的队列
             checkShellQueue(lifeTime);
 
@@ -76,8 +84,9 @@ public class ShellRender implements IFunctionalRenderer {
             }
 
             // 渲染抛壳
-            gunModel.delegateRender((poseStack1, vertexConsumer1, transformType1, light, overlay) ->
-                    SHELL_QUEUE.forEach(data -> renderSingleShell(transformType1, light, overlay, data, initialVelocity, acceleration, angularVelocity, model, location)));
+            gunModel.delegateRender((poseStack1, vertexConsumer1, transformType1, light, overlay) ->{
+                SHELL_QUEUE.forEach(data -> renderSingleShell(transformType1, light, overlay, data, initialVelocity, acceleration, angularVelocity, model, location));
+            });
         });
     }
 

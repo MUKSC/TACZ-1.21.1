@@ -25,6 +25,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import org.joml.Vector3f;
 import org.luaj.vm2.LuaTable;
 
 import java.util.Optional;
@@ -348,11 +349,22 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
      * @param index 抛壳窗序号
      */
     public void popShellFrom(int index) {
-        BedrockGunModel gunModel = display.getGunModel();
-        if (display.getShellEjection() != null && gunModel != null) {
-            ShellRender shellRender = gunModel.getShellRender(index);
-            if (shellRender != null) {
-                shellRender.addShell(display.getShellEjection().getRandomVelocity());
+        if (display.getShellEjection() != null) {
+            BedrockGunModel gunModel = display.getGunModel();
+            if (gunModel != null) {
+                ShellRender shellRender = gunModel.getShellRender(index);
+                Vector3f velocity = display.getShellEjection().getRandomVelocity();
+                if (shellRender != null) {
+                    shellRender.addShell(velocity);
+                }
+
+                var lod = display.getLodModel();
+                if (lod != null) {
+                    ShellRender lodShell = lod.getLeft().getShellRender(index);
+                    if (lodShell != null) {
+                        lodShell.addShell(velocity);
+                    }
+                }
             }
         }
     }
