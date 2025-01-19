@@ -3,7 +3,6 @@ package com.tacz.guns.client.model.functional;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.model.BedrockAmmoModel;
@@ -62,10 +61,6 @@ public class ShellRender implements IFunctionalRenderer {
                 return;
             }
             long lifeTime = (long) (shellEjection.getLivingTime() * 1000);
-
-            if (!SHELL_QUEUE.isEmpty()) {
-                GunMod.LOGGER.info("Shell Queue Size: " + SHELL_QUEUE.size());
-            }
 
             // 检查有没有需要踢出去的队列
             checkShellQueue(lifeTime);
