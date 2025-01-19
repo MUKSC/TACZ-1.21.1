@@ -9,6 +9,22 @@
     37,
     40
   ],
+  // 指定逻辑机及相关数值的修改
+  "script": "tacz:ak47_gun_logic",
+  "script_param": {
+    "reload_feed": 1.55,
+    "reload_cooldown": 2.0,
+    "empty_feed": 2.25,
+    "empty_cooldown": 2.6,
+    "reload_xmag2_feed": 1.54,
+    "reload_xmag2_cooldown": 2.29,
+    "empty_xmag2_feed": 2.5,
+    "empty_xmag2_cooldown": 2.85,
+    "reload_xmag3_feed": 1.54,
+    "reload_xmag3_cooldown": 2.29,
+    "empty_xmag3_feed": 2.5,
+    "empty_xmag3_cooldown": 2.85
+  },
   // 是否允许趴下
   "can_crawl": true,
   // 枪栓类型：开膛待机（open_bolt）、闭膛待击（closed_bolt）、手动上膛（manual_action)
@@ -88,13 +104,7 @@
     "use_heat": false,
     // 是否使用无限弹匣内弹药，默认为 false，建议搭配下方弹匣锁一同使用
     "infinite_ammo": false,
-    /* 弹匣锁（弹药直读时无效），弹匣锁触发时不会冷却，直至换弹结束后完全冷却（disabled 禁用弹匣锁，over_heat 完全过热时上锁，all 不再自动冷却，assist 不会上锁，但是可以依靠换弹冷却）
-       弹匣锁设置        是否会自动冷却         换弹后是否能重置冷却条（如果是，则在使用背包直读机制时依旧可以触发换弹行为用于冷却）
-       disabled         是                   否
-       over_heat        非过热是，过热否       是
-       all              否                   是
-       assist           是                   是
-    */
+    // 弹匣锁（弹药直读时无效），弹匣锁触发时不会冷却，直至换弹结束后完全冷却（disabled 禁用弹匣锁，over_heat 完全过热时上锁，all 不再自动冷却，assist 不会上锁，但是可以依靠换弹冷却）
     "magazine_lock_type": "disabled",
     // 过热计数器上限
     "upper_limit": 100,

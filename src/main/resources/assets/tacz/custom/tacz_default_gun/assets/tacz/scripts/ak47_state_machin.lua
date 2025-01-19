@@ -120,14 +120,12 @@ end
 local fire_mode_state = {
     -- 半自动状态
     semi = {},
-    -- 连射状态
-    burst = {},
     -- 全自动状态
     auto = {},
     -- 掏枪状态
     draw = {}
 }
--- 从131行到148行这一块专门用来检测枪械在掏枪（播放draw）时枪械处于什么射击模式，以便切换到对应模式的idle
+-- 从128行到143行这一块专门用来检测枪械在掏枪（播放draw）时枪械处于什么射击模式，以便切换到对应模式的idle
 function fire_mode_state.draw.update(this, context)
     context:trigger(this.INPUT_MODE_DRAW)
 end
@@ -137,9 +135,6 @@ function fire_mode_state.draw.transition(this, context,input)
         if (context:getFireMode() == SEMI) then
             context:runAnimation("static_semi", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
             return fire_mode_state.semi
-        elseif (context:getFireMode() == BURST) then
-            context:runAnimation("static_burst", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
-            return fire_mode_state.burst
         elseif (context:getFireMode() == AUTO) then
             context:runAnimation("static_auto", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
             return fire_mode_state.auto
@@ -156,40 +151,12 @@ function fire_mode_state.semi.update(this, context)
         context:trigger(this.INPUT_MODE_AUTO)
     end
 end
-
+-- 检测到开火输入、换弹输入、检视输入时后打断快慢机动画，不然会出现两个动画在不同的轨道播放，从而出现动画衔接问题
 function fire_mode_state.semi.transition(this, context,input)
     if(input == this.INPUT_MODE_AUTO)then
         context:runAnimation("switch_auto", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
         return fire_mode_state.auto
     end
--- 检测到开火输入、换弹输入、检视输入时后打断快慢机动画，不然会出现两个动画在不同的轨道播放，从而出现动画衔接问题
-    if(input == INPUT_SHOOT)then
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
-    end
-    if(input == INPUT_RELOAD)then
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
-    end
-    if(input == INPUT_INSPECT)then
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
-    end
-end
-
-function fire_mode_state.burst.update(this, context)
-    local track = context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK)
-    if (context:isHolding(track)) then
-        context:runAnimation("static_burst", track, true, PLAY_ONCE_HOLD, 0)
-    end
-    if (context:getFireMode() == SEMI) then
-        context:trigger(this.INPUT_MODE_SEMI)
-    end
-end
-
-function fire_mode_state.burst.transition(this, context,input)
-    if(input == this.INPUT_MODE_SEMI)then
-        context:runAnimation("switch_semi", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
-        return fire_mode_state.semi
-    end
-
     if(input == INPUT_SHOOT)then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
     end
@@ -206,15 +173,15 @@ function fire_mode_state.auto.update(this, context)
     if (context:isHolding(track)) then
         context:runAnimation("static_auto", track, true, PLAY_ONCE_HOLD, 0)
     end
-    if (context:getFireMode() == BURST) then
-        context:trigger(this.INPUT_MODE_BURST)
+    if (context:getFireMode() == SEMI) then
+        context:trigger(this.INPUT_MODE_SEMI)
     end
 end
 
 function fire_mode_state.auto.transition(this, context,input)
-    if(input == this.INPUT_MODE_BURST)then
-        context:runAnimation("switch_burst", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
-        return fire_mode_state.burst
+    if(input == this.INPUT_MODE_SEMI)then
+        context:runAnimation("switch_semi", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
+        return fire_mode_state.semi
     end
     if(input == INPUT_SHOOT)then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
@@ -222,7 +189,7 @@ function fire_mode_state.auto.transition(this, context,input)
     if(input == INPUT_RELOAD)then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
     end
-    if(input == INPUT_INSPECT )then
+    if(input == INPUT_INSPECT)then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
     end
 end
