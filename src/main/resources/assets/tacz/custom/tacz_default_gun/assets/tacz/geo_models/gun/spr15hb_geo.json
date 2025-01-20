@@ -1282,6 +1282,11 @@
 					"pivot": [0, 9.4875, -27]
 				},
 				{
+					"name": "shell",
+					"parent": "positioning2",
+					"pivot": [-0.2, 9.6875, 2.975]
+				},
+				{
 					"name": "muzzle_pos",
 					"parent": "positioning2",
 					"pivot": [0, 9.4875, -23.75]
@@ -1306,11 +1311,6 @@
 					"name": "grip_pos",
 					"parent": "positioning2",
 					"pivot": [0, 8.09375, -5]
-				},
-				{
-					"name": "shell",
-					"parent": "positioning2",
-					"pivot": [-0.2, 9.6875, 2.975]
 				},
 				{
 					"name": "sight_folded",
@@ -5553,7 +5553,8 @@
 								"north": {"uv": [0, 94], "uv_size": [1, 2]},
 								"east": {"uv": [10, 106], "uv_size": [0.5, 2]},
 								"south": {"uv": [94, 3], "uv_size": [1, 2]},
-								"west": {"uv": [12, 106], "uv_size": [0.5, 2]}
+								"west": {"uv": [12, 106], "uv_size": [0.5, 2]},
+								"up": {"uv": [40.5, 146.5], "uv_size": [-0.5, -0.5]}
 							}
 						},
 						{

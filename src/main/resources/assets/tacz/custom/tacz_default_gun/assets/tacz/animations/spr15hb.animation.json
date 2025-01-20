@@ -569,10 +569,26 @@
 					"rotation": [0.1, 0.1, 0.1],
 					"position": [0.1, 0.15, 0.1]
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:spr15hb/spr15hb_reload_rattle"
+				},
+				"0.375": {
+					"effect": "tacz:spr15hb/spr15hb_reload_magout"
+				},
+				"0.7917": {
+					"effect": "tacz:spr15hb/spr15hb_reload_maghit"
+				},
+				"0.875": {
+					"effect": "tacz:spr15hb/spr15hb_reload_magin"
+				},
+				"0.9583": {
+					"effect": "tacz:spr15hb/spr15hb_reload_end"
+				}
 			}
 		},
 		"reload_empty": {
-			"loop": true,
 			"animation_length": 2.6667,
 			"bones": {
 				"lefthand": {
@@ -1040,10 +1056,32 @@
 					"rotation": [0.1, 0.1, 0.1],
 					"position": [0.1, 0.15, 0.1]
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:spr15hb/spr15hb_reload_empty_raise"
+				},
+				"0.3333": {
+					"effect": "tacz:spr15hb/spr15hb_reload_empty_magout"
+				},
+				"0.875": {
+					"effect": "tacz:spr15hb/spr15hb_reload_empty_mag_drop"
+				},
+				"1.2083": {
+					"effect": "tacz:spr15hb/spr15hb_reload_maghit"
+				},
+				"1.2917": {
+					"effect": "tacz:spr15hb/spr15hb_reload_magin"
+				},
+				"1.4583": {
+					"effect": "tacz:spr15hb/spr15hb_reload_empty_end"
+				},
+				"1.8333": {
+					"effect": "tacz:spr15hb/spr15hb_reload_empty_charge"
+				}
 			}
 		},
 		"inspect": {
-			"loop": true,
 			"animation_length": 7.5833,
 			"bones": {
 				"lefthand": {
@@ -1474,10 +1512,29 @@
 						}
 					}
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_raise"
+				},
+				"1.7083": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rotate"
+				},
+				"4.0417": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rotate2"
+				},
+				"5.5": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rattle"
+				},
+				"6.0833": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rattle2"
+				},
+				"6.8333": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_end"
+				}
 			}
 		},
 		"inspect_empty": {
-			"loop": true,
 			"animation_length": 7.5833,
 			"bones": {
 				"lefthand": {
@@ -1917,6 +1974,26 @@
 						}
 					}
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_raise"
+				},
+				"1.7083": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rotate"
+				},
+				"4.0417": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rotate2"
+				},
+				"5.5": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rattle"
+				},
+				"6.0833": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_rattle2"
+				},
+				"6.8333": {
+					"effect": "tacz:spr15hb/spr15hb_inspect_end"
+				}
 			}
 		},
 		"shoot": {
@@ -1999,7 +2076,10 @@
 				"bullet_in_barrel": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.2333": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.2333": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"camera": {
