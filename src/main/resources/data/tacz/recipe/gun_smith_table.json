@@ -13,7 +13,7 @@
       "tag": "minecraft:logs"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "B": {
       "item": "minecraft:iron_block"

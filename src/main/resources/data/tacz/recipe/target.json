@@ -10,7 +10,7 @@
   ],
   "key": {
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "R": {
       "item": "minecraft:redstone"

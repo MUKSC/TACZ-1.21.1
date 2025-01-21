@@ -13,7 +13,7 @@
   ],
   "key": {
     "I": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "P": {
       "tag": "minecraft:planks"
