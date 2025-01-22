@@ -1761,7 +1761,7 @@
 				{
 					"name": "constraint",
 					"parent": "m4a1",
-					"pivot": [0, 12.525, -18.625]
+					"pivot": [0, 12.5875, -6.625]
 				},
 				{
 					"name": "gun_body",

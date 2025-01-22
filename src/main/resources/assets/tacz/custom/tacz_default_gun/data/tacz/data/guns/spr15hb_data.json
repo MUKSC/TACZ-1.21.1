@@ -67,8 +67,8 @@
       "damage": 1,
       "rpm": -400,
       "head_shot_multiplier": 0.25,
-      "aim_inaccuracy": 0.2,
-      "other_inaccuracy": 0.5
+      "aim_inaccuracy": -0.05,
+      "other_inaccuracy": -0.5
     }
   },
   "recoil": {
