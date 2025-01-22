@@ -7,8 +7,8 @@
 				"texture_width": 256,
 				"texture_height": 256,
 				"visible_bounds_width": 4,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0.5, 0]
 			},
 			"bones": [
 				{
@@ -4738,7 +4738,7 @@
 				{
 					"name": "constraint",
 					"parent": "gun_and_righthand",
-					"pivot": [-0.225, 11.325, -13.825]
+					"pivot": [0, 11.8125, -4]
 				},
 				{
 					"name": "positioning2",
@@ -4764,22 +4764,23 @@
 				{
 					"name": "scope_pos",
 					"parent": "positioning2",
-					"pivot": [0, 11.25, 2.625]
+					"pivot": [0, 11.25, 1]
 				},
 				{
 					"name": "stock_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8.2125, 11.25]
+					"pivot": [0, 8.2125, 10.25]
 				},
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 6.375, -8.625]
+					"pivot": [0, 6.375, -9.875]
 				},
 				{
 					"name": "shell",
 					"parent": "positioning2",
-					"pivot": [-0.2, 9.6875, 2.975]
+					"pivot": [-0.2, 8.1875, 0],
+					"rotation": [0, 10, 0]
 				},
 				{
 					"name": "handguard_tactical",
@@ -11745,7 +11746,14 @@
 								"up": {"uv": [156, 194], "uv_size": [0.5, 0.5]},
 								"down": {"uv": [158, 194.5], "uv_size": [0.5, -0.5]}
 							}
-						},
+						}
+					]
+				},
+				{
+					"name": "fore_sight_illuminated",
+					"parent": "fore_sight",
+					"pivot": [-0.00157, 11.81028, -8.75],
+					"cubes": [
 						{
 							"origin": [-0.04844, 11.76119, -8.84375],
 							"size": [0.09375, 0.09375, 0.25],
@@ -11883,7 +11891,7 @@
 					"cubes": [
 						{
 							"origin": [-0.08793, 11.54688, 3.90625],
-							"size": [0.17586, 0.07812, 0.0625],
+							"size": [0.17586, 0.0625, 0.0625],
 							"pivot": [0, 11.8125, 3.5],
 							"rotation": [0, 0, 45],
 							"uv": {
@@ -11897,7 +11905,7 @@
 						},
 						{
 							"origin": [-0.125, 11.5625, 3.90625],
-							"size": [0.25, 0.0625, 0.0625],
+							"size": [0.25, 0.04688, 0.0625],
 							"uv": {
 								"north": {"uv": [74, 201], "uv_size": [0.5, 0.5]},
 								"east": {"uv": [82, 201], "uv_size": [0.5, 0.5]},
@@ -11909,7 +11917,7 @@
 						},
 						{
 							"origin": [-0.08793, 11.54688, 3.90625],
-							"size": [0.17586, 0.07812, 0.0625],
+							"size": [0.17586, 0.0625, 0.0625],
 							"pivot": [0, 11.8125, 3.9375],
 							"rotation": [0, 0, -45],
 							"uv": {
@@ -11922,8 +11930,8 @@
 							}
 						},
 						{
-							"origin": [0.1875, 11.6875, 3.90625],
-							"size": [0.0625, 0.14062, 0.0625],
+							"origin": [0.20313, 11.6875, 3.90625],
+							"size": [0.04688, 0.14062, 0.0625],
 							"uv": {
 								"north": {"uv": [201, 94], "uv_size": [0.5, 0.5]},
 								"east": {"uv": [96, 201], "uv_size": [0.5, 0.5]},
@@ -11935,7 +11943,7 @@
 						},
 						{
 							"origin": [-0.25, 11.6875, 3.90625],
-							"size": [0.0625, 0.14062, 0.0625],
+							"size": [0.04688, 0.14062, 0.0625],
 							"uv": {
 								"north": {"uv": [48, 201], "uv_size": [0.5, 0.5]},
 								"east": {"uv": [50, 201], "uv_size": [0.5, 0.5]},
@@ -12350,7 +12358,7 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 11.8125, 9.9375]
+					"pivot": [0, 11.8125, 9.75]
 				},
 				{
 					"name": "idle_view",
