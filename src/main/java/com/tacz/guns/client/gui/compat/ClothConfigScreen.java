@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +28,7 @@ public class ClothConfigScreen extends Screen {
 
     public static void registerNoClothConfigPage() {
         if (!ModList.get().isLoaded(CompatRegistry.CLOTH_CONFIG)) {
-            GunMod.container.registerExtensionPoint(ClothConfigScreen.Factory.class, new ClothConfigScreen.Factory());
+            GunMod.container.registerExtensionPoint(IConfigScreenFactory.class, (container, screen ) -> new ClothConfigScreen(screen));
         }
     }
 
@@ -63,13 +62,6 @@ public class ClothConfigScreen extends Screen {
                 }
                 minecraft.setScreen(this);
             }, url, true));
-        }
-    }
-
-    public static class Factory implements IConfigScreenFactory {
-        @Override
-        public @NotNull Screen createScreen(@NotNull ModContainer container, @NotNull Screen parent) {
-            return new ClothConfigScreen(parent);
         }
     }
 }
