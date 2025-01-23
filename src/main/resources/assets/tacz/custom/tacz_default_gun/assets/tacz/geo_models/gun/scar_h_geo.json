@@ -2083,7 +2083,7 @@
 				{
 					"name": "constraint",
 					"parent": "scar_h",
-					"pivot": [0, 12.875, -11]
+					"pivot": [0, 12.8125, 8]
 				},
 				{
 					"name": "additional_magazine",
@@ -9685,7 +9685,7 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 12.825, 15]
+					"pivot": [0, 12.825, 14.5]
 				},
 				{
 					"name": "refit_view",
