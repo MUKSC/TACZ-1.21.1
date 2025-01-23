@@ -31,10 +31,12 @@
     "living_time": 1.0
   },
   "sounds": {
-    "shoot": "tacz:scar_l/scar_l_shoot",
-    "shoot_3p": "tacz:scar_l/scar_l_shoot_3p",
-    "silence": "tacz:scar_l/scar_l_silence",
-    "silence_3p": "tacz:scar_l/scar_l_silence_3p",
+    "shoot": "tacz:g36k/g36k_shoot",
+    "shoot_3p": "tacz:g36k/g36k_shoot_3p",
+    "silence": "tacz:g36k/g36k_silence",
+    "silence_3p": "tacz:g36k/g36k_silence_3p",
+    "draw": "tacz:g36k/g36k_draw",
+    "put_away": "tacz:g36k/g36k_put_away",
     "dry_fire": "tacz:dry_fire",
     "fire_select": "tacz:fire_select",
     "head_hit": "tacz:head_hit",

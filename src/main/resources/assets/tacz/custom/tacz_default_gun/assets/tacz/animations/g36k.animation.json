@@ -287,11 +287,6 @@
 						}
 					}
 				}
-			},
-			"sound_effects": {
-				"0.0": {
-					"effect": "p01_ar_mike4_raise"
-				}
 			}
 		},
 		"put_away": {
@@ -965,19 +960,22 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "wfoly_lm_mgolf36_reload_fast_armag_lift"
+					"effect": "tacz:g36k/g36k_reload_lift"
+				},
+				"0.0333": {
+					"effect": "tacz:g36k/g36k_reload_arm_up"
 				},
 				"0.8667": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_magout"
+					"effect": "tacz:g36k/g36k_reload_magout"
 				},
 				"1.3667": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_hit_mag_well"
+					"effect": "tacz:g36k/g36k_reload_maghit"
 				},
 				"1.5": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_magin"
+					"effect": "tacz:g36k/g36k_reload_magin"
 				},
 				"2.2667": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_end"
+					"effect": "tacz:g36k/g36k_reload_end"
 				}
 			}
 		},
@@ -1796,28 +1794,34 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_fast_armag_lift"
+					"effect": "tacz:g36k/g36k_reload_lift"
 				},
-				"0.3333": {
-					"effect": "wfoly_lm_mgolf36_reload_fast_armag_mag_well_hit"
+				"0.0333": {
+					"effect": "tacz:g36k/g36k_reload_arm_up"
 				},
 				"0.9": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_magout"
+					"effect": "tacz:g36k/g36k_reload_empty_magout"
 				},
 				"1.1333": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_mag_hit_well"
+					"effect": "tacz:g36k/g36k_mag_drop"
 				},
 				"1.4": {
-					"effect": "mag_drop_ar_poly_dirt_03"
+					"effect": "tacz:g36k/g36k_reload_maghit"
 				},
 				"1.7": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_magin"
+					"effect": "tacz:g36k/g36k_reload_empty_magin"
 				},
 				"2.0333": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_charge"
+					"effect": "tacz:g36k/g36k_reload_empty_charge"
 				},
-				"2.8333": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_end"
+				"2.3667": {
+					"effect": "tacz:g36k/g36k_reload_empty_bolt_lever"
+				},
+				"2.5667": {
+					"effect": "tacz:g36k/g36k_reload_empty_end"
+				},
+				"2.6667": {
+					"effect": "tacz:g36k/g36k_reload_empty_end1"
 				}
 			}
 		},
@@ -2559,40 +2563,40 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "wfoly_lm_mgolf36_raise"
+					"effect": "tacz:g36k/g36k_inspect_raise"
 				},
 				"1.5": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_lift"
+					"effect": "tacz:g36k/g36k_inspect_lift"
 				},
 				"1.9": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_magout"
+					"effect": "tacz:g36k/g36k_reload_magout"
 				},
 				"2.8333": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_hit_mag_well"
+					"effect": "tacz:g36k/g36k_reload_maghit"
 				},
 				"3.0": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_magin"
+					"effect": "tacz:g36k/g36k_reload_magin"
 				},
 				"3.4333": {
 					"effect": "tacz:aug/aug_reload_maghitwell"
 				},
 				"3.5": {
-					"effect": "wfoly_lm_mgolf36_raise_quick"
+					"effect": "tacz:g36k/g36k_inspect_raise_quick"
 				},
 				"3.9333": {
-					"effect": "ump45_reload_empty_fast_charge"
+					"effect": "tacz:g36k/g36k_inspect_fast_charge"
 				},
 				"4.4333": {
-					"effect": "p03_ar_augolf_inspect_boltback"
+					"effect": "tacz:g36k/g36k_inspect_boltback"
 				},
 				"4.4667": {
-					"effect": "p10_sm_victor_inspect_boltrelease"
+					"effect": "tacz:g36k/g36k_inspect_boltrelease"
 				},
 				"4.5333": {
-					"effect": "wfoly_lm_mgolf36_reload_lift"
+					"effect": "tacz:g36k/g36k_reload_lift"
 				},
 				"5.0333": {
-					"effect": "wfoly_lm_mgolf36_reload_end"
+					"effect": "tacz:g36k/g36k_reload_end"
 				}
 			}
 		},
@@ -3480,15 +3484,9 @@
 				"mag_and_bullet": {
 					"scale": {
 						"3.0": [1, 1, 1],
-						"3.0333": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						},
+						"3.0333": {"pre": [1, 1, 1], "post": [0, 0, 0]},
 						"5.6667": [0, 0, 0],
-						"5.7": {
-							"pre": [0, 0, 0],
-							"post": [1, 1, 1]
-						}
+						"5.7": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
 				},
 				"camera": {
@@ -3774,37 +3772,37 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "wfoly_lm_mgolf36_raise"
+					"effect": "tacz:g36k/g36k_inspect_raise"
 				},
 				"1.5": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_lift"
+					"effect": "tacz:g36k/g36k_inspect_lift"
 				},
 				"1.9": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_magout"
+					"effect": "tacz:g36k/g36k_reload_magout"
 				},
 				"2.7333": {
-					"effect": "wfoly_lm_mgolf36_reload_arm_up"
+					"effect": "tacz:g36k/g36k_reload_arm_up"
 				},
 				"3.3667": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_armag_charge"
+					"effect": "tacz:g36k/g36k_reload_empty_charge"
 				},
 				"4.3667": {
-					"effect": "p03_ar_augolf_inspect_empty_boltchecks"
+					"effect": "tacz:g36k/g36k_inspect_boltcheck"
 				},
 				"5.3": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_fast_armup"
+					"effect": "tacz:g36k/g36k_inspect_fast_armup"
 				},
 				"5.8667": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_hit_mag_well"
+					"effect": "tacz:g36k/g36k_reload_maghit"
 				},
 				"6.2": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_magin"
+					"effect": "tacz:g36k/g36k_reload_magin"
 				},
 				"6.6": {
-					"effect": "wfoly_lm_mgolf36_reload_empty_fast_charge"
+					"effect": "tacz:g36k/g36k_inspect_empty_fast_charge"
 				},
 				"7.3333": {
-					"effect": "wfoly_lm_mgolf36_reload_armag_end"
+					"effect": "tacz:g36k/g36k_reload_end"
 				}
 			}
 		}
