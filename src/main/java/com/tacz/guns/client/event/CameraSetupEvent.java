@@ -48,8 +48,8 @@ public class CameraSetupEvent {
     /**
      * 用于平滑 FOV 变化
      */
-    private static final SecondOrderDynamics WORLD_FOV_DYNAMICS = new SecondOrderDynamics(0.5f, 1.2f, 0.5f, 0);
-    private static final SecondOrderDynamics ITEM_MODEL_FOV_DYNAMICS = new SecondOrderDynamics(0.5f, 1.2f, 0.5f, 0);
+    public static final SecondOrderDynamics WORLD_FOV_DYNAMICS = new SecondOrderDynamics(0.5f, 1.2f, 0.5f, 0);
+    public static final SecondOrderDynamics ITEM_MODEL_FOV_DYNAMICS = new SecondOrderDynamics(0.5f, 1.2f, 0.5f, 0);
     private static PolynomialSplineFunction pitchSplineFunction;
     private static PolynomialSplineFunction yawSplineFunction;
     private static long shootTimeStamp = -1L;

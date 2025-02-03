@@ -66,6 +66,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.util.*;
 
@@ -125,8 +126,9 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     // 曳光弹
     private boolean isTracerAmmo;
     // 只对客户端有用的曳光弹数据
-    private Vec3 originCameraPosition;
-    private Vec3 originRenderOffset;
+    private float cameraXRot;
+    private float cameraYRot;
+    private Vector3f firstPersonRenderOffset;
     // 发射的枪械 ID
     private ResourceLocation gunId;
     // 枪械display ID
@@ -602,20 +604,28 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         return this.random;
     }
 
-    public Vec3 getOriginCameraPosition() {
-        return originCameraPosition;
+    public float getCameraYRot() {
+        return cameraYRot;
     }
 
-    public void setOriginCameraPosition(Vec3 originCameraPosition) {
-        this.originCameraPosition = originCameraPosition;
+    public void setCameraYRot(float cameraYRot) {
+        this.cameraYRot = cameraYRot;
     }
 
-    public Vec3 getOriginRenderOffset() {
-        return originRenderOffset;
+    public float getCameraXRot() {
+        return cameraXRot;
     }
 
-    public void setOriginRenderOffset(Vec3 originRenderOffset) {
-        this.originRenderOffset = originRenderOffset;
+    public void setCameraXRot(float cameraXRot) {
+        this.cameraXRot = cameraXRot;
+    }
+
+    public Vector3f getFirstPersonRenderOffset() {
+        return firstPersonRenderOffset;
+    }
+
+    public void setFirstPersonRenderOffset(Vector3f originRenderOffset) {
+        this.firstPersonRenderOffset = originRenderOffset;
     }
 
     public Optional<float[]> getTracerColorOverride() {

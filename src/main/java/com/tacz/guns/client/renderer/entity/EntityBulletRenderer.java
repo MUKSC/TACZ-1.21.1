@@ -3,11 +3,15 @@ package com.tacz.guns.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.client.event.FirstPersonRenderGunEvent;
 import com.tacz.guns.client.model.BedrockAmmoModel;
 import com.tacz.guns.client.model.bedrock.BedrockModel;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.InternalAssetLoader;
+import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.entity.EntityKineticBullet;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -24,6 +28,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -81,23 +86,40 @@ public class EntityBulletRenderer extends EntityRenderer<EntityKineticBullet> {
                 double trailLength = 0.85 * bullet.getDeltaMovement().length();
                 double disToEye = bulletPosition.distanceTo(shooter.getEyePosition(partialTicks));
                 trailLength = Math.min(trailLength, disToEye * 0.8);
-                if (this.entityRenderDispatcher.options.getCameraType().isFirstPerson() && bullet.getOwner() instanceof LocalPlayer) {
-                    // 自己打的曳光弹在第一人称的渲染委托给 FirstPersonRenderGunEvent
-                    poseStack.popPose();
-                    return;
-                } else {
-                    // 说是 override 其实默认值是 1
-                    // 所以这里直接乘也没关系
-                    width *= bullet.getTracerSizeOverride();
-                    width *= (float) Math.max(1.0, disToEye / 3.5);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, bullet.yRotO, bullet.getYRot()) - 180.0F));
-                    poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, bullet.xRotO, bullet.getXRot())));
-                    poseStack.translate(0, -0.2, trailLength / 2.0);
-                    poseStack.scale(width, width, (float) trailLength);
+                boolean isFirstPerson = this.entityRenderDispatcher.options.getCameraType().isFirstPerson() && bullet.getOwner() instanceof LocalPlayer;
+                if (isFirstPerson) {
+                    if (!RenderConfig.FIRST_PERSON_BULLET_TRACER_ENABLE.get()) {
+                        return;
+                    }
+                    // 第一人称渲染自己的曳光弹的时候需要应用偏移
+                    Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+                    Vector3f offset = bullet.getFirstPersonRenderOffset();
+                    if (offset == null) {
+                        offset = new Vector3f(FirstPersonRenderGunEvent.muzzleRenderOffset);
+                        bullet.setCameraXRot(camera.getXRot());
+                        bullet.setCameraYRot(camera.getYRot());
+                        bullet.setFirstPersonRenderOffset(offset);
+                    }
+                    // 摄像机旋转
+                    poseStack.mulPose(Axis.YN.rotationDegrees(bullet.getCameraYRot() + 180f));
+                    poseStack.mulPose(Axis.XN.rotationDegrees(bullet.getCameraXRot()));
+                    // 应用偏移
+                    poseStack.translate(offset.x, offset.y, offset.z);
+                    // 逆转摄像机旋转
+                    poseStack.mulPose(Axis.XP.rotationDegrees(bullet.getCameraXRot()));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(bullet.getCameraYRot() + 180f));
                 }
+                // 说是 override 其实默认值是 1
+                // 所以这里直接乘也没关系
+                width *= bullet.getTracerSizeOverride();
+                width *= (float) Math.max(1.0, disToEye / 3.5);
+                poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, bullet.yRotO, bullet.getYRot()) - 180.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, bullet.xRotO, bullet.getXRot())));
+                poseStack.translate(0, isFirstPerson ? 0 : -0.2, trailLength / 2.0);
+                poseStack.scale(width, width, (float) trailLength);
                 // 距离两格外才渲染，只在前 5 tick 判定
                 double bulletDistance = bulletPosition.distanceTo(shooter.getEyePosition());
-                if (bullet.tickCount >= 5 || bulletDistance > 2) {
+                if (bullet.tickCount >= 5 || bulletDistance > 2 || isFirstPerson) {
                     RenderType type = RenderType.energySwirl(InternalAssetLoader.DEFAULT_BULLET_TEXTURE, 15, 15);
                     model.render(poseStack, ItemDisplayContext.NONE, type, packedLight, OverlayTexture.NO_OVERLAY,
                             tracerColor[0], tracerColor[1], tracerColor[2], 1);
