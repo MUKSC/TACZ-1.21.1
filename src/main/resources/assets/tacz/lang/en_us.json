@@ -262,5 +262,6 @@
   "death.attack.tacz.bullet.item": "%1$s was shot by %2$s using %3$s",
   "tacz.resources.modresources": "TACZ Gunpacks Resources",
   "config.tacz.client.render.enable_tooltip_id": "Display TACZ ID",
-  "config.tacz.client.render.enable_tooltip_id.desc": "Display the gun/ammo/attachment id in item tooltip when advanced tooltip(F3+H) is on."
+  "config.tacz.client.render.enable_tooltip_id.desc": "Display the gun/ammo/attachment id in item tooltip when advanced tooltip(F3+H) is on.",
+  "tooltip.tacz.attachment.laser.color": "Laser Color: %s"
 }

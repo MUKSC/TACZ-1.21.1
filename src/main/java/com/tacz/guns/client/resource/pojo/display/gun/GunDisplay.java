@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.resource.pojo.display.IDisplay;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -88,6 +89,8 @@ public class GunDisplay implements IDisplay {
     private boolean showCrosshair = false;
     @SerializedName("controllable")
     private EnumMap<FireMode, ControllableData> controllableData = Maps.newEnumMap(FireMode.class);
+    @SerializedName("laser")
+    private LaserConfig laserConfig;
 
     public String getModelType() {
         return modelType;
@@ -218,6 +221,10 @@ public class GunDisplay implements IDisplay {
         return damageStyle;
     }
 
+    @Nullable
+    public LaserConfig getLaserConfig() {
+        return laserConfig;
+    }
 
     @Override
     public void init() {

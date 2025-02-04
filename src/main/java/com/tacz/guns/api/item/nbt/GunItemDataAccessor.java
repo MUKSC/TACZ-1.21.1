@@ -36,6 +36,7 @@ public interface GunItemDataAccessor extends IGun {
     String GUN_ATTACHMENT_LOCK = "AttachmentLock";
     String GUN_DISPLAY_ID_TAG = "GunDisplayId";
     String GUN_HEAT_COUNT = "GunHeatCount";
+    String LASER_COLOR_TAG = "LaserColor";
 
     @Override
     default boolean useDummyAmmo(ItemStack gun) {
@@ -412,5 +413,26 @@ public interface GunItemDataAccessor extends IGun {
         if (isUseHeat(gun, player)) {
             nbt.putInt(GUN_HEAT_COUNT, heatCount);
         }
+    }
+
+    @Override
+    default boolean hasCustomLaserColor(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        return nbt.contains(LASER_COLOR_TAG, Tag.TAG_INT);
+    }
+
+    @Override
+    default int getLaserColor(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        if (!hasCustomLaserColor(gun)) {
+            return 0xFF0000;
+        }
+        return nbt.getInt(LASER_COLOR_TAG);
+    }
+
+    @Override
+    default void setLaserColor(ItemStack gun, int color) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        nbt.putInt(LASER_COLOR_TAG, color);
     }
 }

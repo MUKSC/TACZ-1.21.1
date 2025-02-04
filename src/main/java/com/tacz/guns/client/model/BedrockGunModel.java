@@ -104,6 +104,8 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         this.setFunctionalRenderer(HANDGUARD_DEFAULT_NODE, this::handguardDefaultRender);
         // 战术护木渲染
         this.setFunctionalRenderer(HANDGUARD_TACTICAL_NODE, this::handguardTacticalRender);
+        // 镭射源渲染
+        this.setFunctionalRenderer("laser_beam", bedrockPart -> new BeamRenderer(()->currentGunItem));
         // 缓存其他定位组
         this.cacheOtherPath();
         // 缓存改装 UI 下各个配件的特写视角定位组

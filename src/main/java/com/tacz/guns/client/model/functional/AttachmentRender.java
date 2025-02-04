@@ -49,7 +49,7 @@ public class AttachmentRender implements IFunctionalRenderer {
                         texture = lodModel.getRight();
                     }
                     RenderType renderType = RenderType.entityCutout(texture);
-                    model.render(gunItem, poseStack, transformType, renderType, light, overlay);
+                    model.render(attachmentItem, gunItem, poseStack, transformType, renderType, light, overlay);
                 }
             }, () -> {
                 // 没有对应的 attachmentIndex，渲染黑紫材质以提醒

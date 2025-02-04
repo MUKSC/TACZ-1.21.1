@@ -75,7 +75,7 @@ public class AttachmentItemRenderer extends BlockEntityWithoutLevelRenderer {
                 texture = lodModel.getRight();
             }
             RenderType renderType = RenderType.entityCutout(texture);
-            model.render(null, poseStack, transformType, renderType, pPackedLight, pPackedOverlay);
+            model.render(null, null, poseStack, transformType, renderType, pPackedLight, pPackedOverlay);
         }
         // 否则，以 GUI 形式渲染
         else {

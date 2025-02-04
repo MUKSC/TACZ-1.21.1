@@ -11426,7 +11426,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [1.462, 9.55, -13.025],
+					"pivot": [1.462, 11.55, -13.025],
 					"rotation": [0, 0, 90]
 				},
 				{
@@ -12453,6 +12453,11 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "laser_beam",
+					"parent": "m4a1",
+					"pivot": [0, 7, -17.425]
 				},
 				{
 					"name": "righthand",

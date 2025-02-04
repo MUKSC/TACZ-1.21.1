@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.model.bedrock.ModelRendererWrapper;
+import com.tacz.guns.client.model.functional.BeamRenderer;
 import com.tacz.guns.client.model.functional.TextShowRender;
 import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
@@ -47,6 +48,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     protected List<List<BedrockPart>> divisionNodePaths;
 
     private @Nullable ItemStack currentGunItem;
+    private @Nullable ItemStack attachmentItem;
 
     private boolean isScope = false;
     private boolean isSight = false;
@@ -99,6 +101,8 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
 
         scopeBodyPath = getPath(modelMap.get(SCOPE_BODY_NODE));
         ocularRingPath = getPath(modelMap.get(OCULAR_RING_NODE));
+
+        this.setFunctionalRenderer("laser_beam", bedrockPart -> new BeamRenderer(()->attachmentItem));
     }
 
     @Nullable
@@ -140,8 +144,9 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                 bedrockPart -> new TextShowRender(this, textShow, currentGunItem)));
     }
 
-    public void render(ItemStack currentGunItem, PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+    public void render(@Nullable ItemStack attachmentItem, ItemStack currentGunItem, PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
         this.currentGunItem = currentGunItem;
+        this.attachmentItem = attachmentItem;
         if (transformType.firstPerson()) {
             if (isScope && isSight) {
                 renderBoth(matrixStack, transformType, renderType, light, overlay);

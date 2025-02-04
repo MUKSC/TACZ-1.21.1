@@ -228,5 +228,6 @@
 
   "tacz.block.gun_smith_table": "TaCZ Gun Smith Table",
   "config.tacz.client.render.enable_tooltip_id": "Display Ids in Tooltip",
-  "config.tacz.client.render.enable_tooltip_id.desc": "Display the gun/ammo/attachment id in item tooltip when advanced tooltip is on."
+  "config.tacz.client.render.enable_tooltip_id.desc": "Display the gun/ammo/attachment id in item tooltip when advanced tooltip is on.",
+  "tooltip.tacz.attachment.laser.color": "Laser Color: %s"
 }

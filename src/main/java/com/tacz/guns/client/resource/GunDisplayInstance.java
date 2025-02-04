@@ -17,6 +17,7 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.resource.pojo.animation.bedrock.BedrockAnimationFile;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import com.tacz.guns.client.resource.pojo.display.ammo.AmmoParticle;
 import com.tacz.guns.client.resource.pojo.display.gun.*;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
@@ -71,6 +72,7 @@ public class GunDisplayInstance {
     private EnumMap<FireMode, ControllableData> controllableData;
     private AmmoCountStyle ammoCountStyle = AmmoCountStyle.NORMAL;
     private DamageStyle damageStyle = DamageStyle.PER_PROJECTILE;
+    private @Nullable LaserConfig laserConfig;
 
     GunDisplayInstance(GunDisplay display) {
         checkTextureAndModel(display);
@@ -91,6 +93,7 @@ public class GunDisplayInstance {
         controllableData = display.getControllableData();
         ammoCountStyle = display.getAmmoCountStyle();
         damageStyle = display.getDamageStyle();
+        laserConfig = display.getLaserConfig();
     }
 
     public static GunDisplayInstance create(GunDisplay display)  throws IllegalArgumentException {
@@ -446,5 +449,9 @@ public class GunDisplayInstance {
 
     public DamageStyle getDamageStyle() {
         return damageStyle;
+    }
+
+    public @Nullable LaserConfig getLaserConfig() {
+        return laserConfig;
     }
 }

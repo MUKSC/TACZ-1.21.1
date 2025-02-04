@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.builder.AttachmentItemBuilder;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.StringUtils;
@@ -40,9 +42,11 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
     private final MutableComponent support = Component.translatable("tooltip.tacz.attachment.yaw.support");
     private @Nullable MutableComponent packInfo;
     private List<ItemStack> showGuns = Lists.newArrayList();
+    private ItemStack attachment;
 
     public ClientAttachmentItemTooltip(AttachmentItemTooltip tooltip) {
         this.attachmentId = tooltip.getAttachmentId();
+        this.attachment = tooltip.getAttachmentItem();
         this.addText(tooltip.getType());
         this.getShowGuns();
         this.addPackInfo();
@@ -141,6 +145,13 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
         }
     }
 
+    public static String rgbToHex(int rgb) {
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+        return String.format("#%02X%02X%02X", r, g, b);
+    }
+
     private void addText(AttachmentType type) {
         TimelessAPI.getClientAttachmentIndex(attachmentId).ifPresent(index -> {
             AttachmentData data = index.getData();
@@ -150,6 +161,18 @@ public class ClientAttachmentItemTooltip implements ClientTooltipComponent {
                 String text = I18n.get(tooltipKey);
                 String[] split = text.split("\n");
                 Arrays.stream(split).forEach(s -> components.add(Component.literal(s).withStyle(ChatFormatting.GRAY)));
+            }
+
+            if (attachment.getItem() instanceof IAttachment iAttachment) {
+                TimelessAPI.getClientAttachmentIndex(attachmentId).ifPresent(attachmentIndex -> {
+                    if (iAttachment.hasCustomLaserColor(attachment)) {
+                        int color = iAttachment.getLaserColor(attachment);
+                        components.add(Component.translatable("tooltip.tacz.attachment.laser.color", rgbToHex(color)).withStyle(Style.EMPTY.withColor(color)));
+                    } else if (attachmentIndex.getLaserConfig() != null) {
+                        int color = attachmentIndex.getLaserConfig().getDefaultColor();
+                        components.add(Component.translatable("tooltip.tacz.attachment.laser.color", rgbToHex(color)).withStyle(Style.EMPTY.withColor(color)));
+                    }
+                });
             }
 
             if (type == AttachmentType.SCOPE) {
