@@ -42,8 +42,8 @@ public class RefitKey {
                     }
                     Minecraft.getInstance().setScreen(new GunRefitScreen());
                 }
-            } else if (Minecraft.getInstance().screen instanceof GunRefitScreen) {
-                Minecraft.getInstance().setScreen(null);
+            } else if (Minecraft.getInstance().screen instanceof GunRefitScreen refitScreen) {
+                refitScreen.onClose();
             }
         }
     }

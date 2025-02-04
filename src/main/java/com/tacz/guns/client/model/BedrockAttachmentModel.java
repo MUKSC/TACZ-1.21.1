@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.model.bedrock.ModelRendererWrapper;
+import com.tacz.guns.client.model.functional.BeamRenderer;
 import com.tacz.guns.client.model.functional.TextShowRender;
 import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
@@ -38,6 +39,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     private static final String OCULAR_NODE = "ocular";
     private static final String OCULAR_SIGHT_NODE = "ocular_sight";
     private static final String OCULAR_SCOPE_NODE = "ocular_scope";
+    private static final Pattern LASER_BEAM_PATTERN = Pattern.compile("^laser_beam(_(\\d+))?$");
 
     protected List<List<BedrockPart>> scopeViewPaths;
     protected @Nullable List<BedrockPart> scopeBodyPath;
@@ -47,6 +49,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     protected List<List<BedrockPart>> divisionNodePaths;
 
     private @Nullable ItemStack currentGunItem;
+    private @Nullable ItemStack attachmentItem;
 
     private boolean isScope = false;
     private boolean isSight = false;
@@ -80,6 +83,9 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                 String type = matcher.group(1);
                 boolean isScope = OCULAR_SCOPE_NODE.equals(type);
                 map.put(num, new OcularWrapper(entry.getValue(), isScope));
+            }
+            if (LASER_BEAM_PATTERN.matcher(entry.getKey()).find()) {
+                setFunctionalRenderer(entry.getKey(), bedrockPart -> new BeamRenderer(() -> attachmentItem));
             }
         }
         for (OcularWrapper wrapper : map.values()) {
@@ -140,8 +146,9 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                 bedrockPart -> new TextShowRender(this, textShow, currentGunItem)));
     }
 
-    public void render(ItemStack currentGunItem, PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+    public void render(@Nullable ItemStack attachmentItem, ItemStack currentGunItem, PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
         this.currentGunItem = currentGunItem;
+        this.attachmentItem = attachmentItem;
         if (transformType.firstPerson()) {
             if (isScope && isSight) {
                 renderBoth(matrixStack, transformType, renderType, light, overlay);

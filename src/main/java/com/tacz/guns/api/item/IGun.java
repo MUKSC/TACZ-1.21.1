@@ -387,4 +387,10 @@ public interface IGun {
      * 获取是否可以趴下
      */
     boolean isCanCrawl(ItemStack gun);
+
+    boolean hasCustomLaserColor(ItemStack gun);
+
+    int getLaserColor(ItemStack gun);
+
+    void setLaserColor(ItemStack gun, int color);
 }

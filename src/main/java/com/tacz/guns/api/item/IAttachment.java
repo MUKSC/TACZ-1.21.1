@@ -59,4 +59,14 @@ public interface IAttachment {
      */
     @Nonnull
     AttachmentType getType(ItemStack attachmentStack);
+
+    boolean hasCustomLaserColor(ItemStack attachmentStack);
+
+    /**
+     * 获取镭射配件的激光颜色
+     * @return 镭射颜色，RGB
+     */
+    int getLaserColor(ItemStack attachmentStack);
+
+    void setLaserColor(ItemStack attachmentStack, int color);
 }

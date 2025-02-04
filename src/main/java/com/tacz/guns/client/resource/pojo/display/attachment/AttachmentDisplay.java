@@ -3,6 +3,7 @@ package com.tacz.guns.client.resource.pojo.display.attachment;
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.client.resource.pojo.display.IDisplay;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import net.minecraft.resources.ResourceLocation;
 
@@ -10,6 +11,9 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public class AttachmentDisplay implements IDisplay {
+    @SerializedName("laser")
+    private LaserConfig laserConfig;
+
     @SerializedName("slot")
     private ResourceLocation slotTextureLocation;
 
@@ -116,6 +120,11 @@ public class AttachmentDisplay implements IDisplay {
 
     public Map<String, ResourceLocation> getSounds() {
         return sounds;
+    }
+
+    @Nullable
+    public LaserConfig getLaserConfig() {
+        return laserConfig;
     }
 
     @Override

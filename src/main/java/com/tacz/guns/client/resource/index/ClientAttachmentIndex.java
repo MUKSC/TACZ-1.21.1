@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.resource.ClientAssetsManager;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentDisplay;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentLod;
 import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
@@ -40,6 +41,7 @@ public class ClientAttachmentIndex {
     private @Nullable String adapterNodeName;
     private @Nullable String tooltipKey;
     private Map<String, ResourceLocation> sounds;
+    private @Nullable LaserConfig laserConfig;
 
     private ClientAttachmentIndex() {
     }
@@ -101,6 +103,7 @@ public class ClientAttachmentIndex {
         index.isSight = display.isSight();
         index.adapterNodeName = display.getAdapterNodeName();
         index.showMuzzle = display.isShowMuzzle();
+        index.laserConfig = display.getLaserConfig();
         return display;
     }
 
@@ -280,5 +283,9 @@ public class ClientAttachmentIndex {
 
     public Map<String, ResourceLocation> getSounds() {
         return sounds;
+    }
+
+    public @Nullable LaserConfig getLaserConfig() {
+        return laserConfig;
     }
 }

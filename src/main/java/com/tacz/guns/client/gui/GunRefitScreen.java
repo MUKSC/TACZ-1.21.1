@@ -1,6 +1,7 @@
 package com.tacz.guns.client.gui;
 
 import com.tacz.guns.GunMod;
+import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
@@ -8,8 +9,11 @@ import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.client.animation.screen.RefitTransform;
 import com.tacz.guns.client.gui.components.FlatColorButton;
 import com.tacz.guns.client.gui.components.refit.*;
+import com.tacz.guns.client.resource.GunDisplayInstance;
+import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.client.sound.SoundPlayManager;
 import com.tacz.guns.network.NetworkHandler;
+import com.tacz.guns.network.message.ClientMessageLaserColor;
 import com.tacz.guns.network.message.ClientMessageRefitGun;
 import com.tacz.guns.network.message.ClientMessageUnloadAttachment;
 import com.tacz.guns.sound.SoundManager;
@@ -192,11 +196,22 @@ public class GunRefitScreen extends Screen {
         }
         int startX = this.width - 30;
         int startY = 10;
+        Inventory inventory = player.getInventory();
         for (AttachmentType type : AttachmentType.values()) {
             if (type == AttachmentType.NONE) {
+                if (RefitTransform.getCurrentTransformType() == AttachmentType.NONE) {
+                    TimelessAPI.getGunDisplay(player.getMainHandItem())
+                            .map(GunDisplayInstance::getLaserConfig)
+                            .ifPresent(laserConfig -> {
+                                if (laserConfig.canEdit()) {
+                                    // 添加镭射颜色选择器
+                                    HSVSliderGroup hsvSliderGroup = new HSVSliderGroup(width-140, height-64, 120, 16, inventory, inventory.selected, AttachmentType.NONE);
+                                    this.addRenderableWidget(hsvSliderGroup.getHueSlider());
+                                    this.addRenderableWidget(hsvSliderGroup.getSaturationSlider());
+                                }});
+                }
                 continue;
             }
-            Inventory inventory = player.getInventory();
             GunAttachmentSlot button = new GunAttachmentSlot(startX, startY, type, inventory.selected, inventory, b -> {
                 AttachmentType buttonType = ((GunAttachmentSlot) b).getType();
                 // 如果这个槽位不允许安装配件，则默认退回概览，不选中槽位。
@@ -236,11 +251,37 @@ public class GunRefitScreen extends Screen {
                 });
                 if (!button.getAttachmentItem().isEmpty()) {
                     this.addRenderableWidget(unloadButton);
+
+                    if (button.getAttachmentItem().getItem() instanceof IAttachment iAttachment) {
+                        TimelessAPI.getClientAttachmentIndex(iAttachment.getAttachmentId(button.getAttachmentItem()))
+                                .map(ClientAttachmentIndex::getLaserConfig)
+                                .ifPresent(laserConfig -> {
+                                    if (laserConfig.canEdit()) {
+                                        // 添加镭射颜色选择器
+                                        HSVSliderGroup hsvSliderGroup = new HSVSliderGroup(width-140, height-64, 120, 16, inventory, inventory.selected, type);
+                                        this.addRenderableWidget(hsvSliderGroup.getHueSlider());
+                                        this.addRenderableWidget(hsvSliderGroup.getSaturationSlider());
+                                    }});
+                    }
                 }
             }
             this.addRenderableWidget(button);
             startX = startX - SLOT_SIZE;
         }
+    }
+
+    @Override
+    public void onClose() {
+        // 关闭界面时，一次性上传所有的染色数据
+        LocalPlayer player = getMinecraft().player;
+        if (player != null) {
+            ItemStack gun = player.getMainHandItem();
+            if (player.getMainHandItem().getItem() instanceof IGun) {
+                ClientMessageLaserColor message = new ClientMessageLaserColor(gun, player.getInventory().selected);
+                NetworkHandler.CHANNEL.sendToServer(message);
+            }
+        }
+        super.onClose();
     }
 
     private void switchHideButton() {
