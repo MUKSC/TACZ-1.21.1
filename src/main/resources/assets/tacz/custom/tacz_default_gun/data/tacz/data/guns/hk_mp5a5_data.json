@@ -29,6 +29,21 @@
     50,
     60
   ],
+  "script": "tacz:hk_mp5a5_gun_logic",
+  "script_param": {
+    "reload_feed": 1.33,
+    "reload_cooldown": 1.87,
+    "empty_feed": 2.7,
+    "empty_cooldown": 3.03,
+    "reload_xmag2_feed": 1.7,
+    "reload_xmag2_cooldown": 2.13,
+    "empty_xmag2_feed": 3.03,
+    "empty_xmag2_cooldown": 3.4,
+    "reload_xmag3_feed": 1.7,
+    "reload_xmag3_cooldown": 2.13,
+    "empty_xmag3_feed": 3.03,
+    "empty_xmag3_cooldown": 3.4
+  },
   "bolt": "closed_bolt",
   "reload": {
     "type": "magazine",
