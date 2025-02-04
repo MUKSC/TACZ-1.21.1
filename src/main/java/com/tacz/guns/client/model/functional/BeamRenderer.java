@@ -56,7 +56,7 @@ public class BeamRenderer implements IFunctionalRenderer {
                     .orElse(25);
         }
 
-        if (itemProvider.get().getItem() instanceof IGun gun) {
+        if (itemProvider.get().getItem() instanceof IGun) {
             return TimelessAPI.getGunDisplay(itemProvider.get())
                     .map(GunDisplayInstance::getLaserConfig)
                     .map(LaserConfig::getLength)

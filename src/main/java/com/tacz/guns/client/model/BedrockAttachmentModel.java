@@ -39,6 +39,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     private static final String OCULAR_NODE = "ocular";
     private static final String OCULAR_SIGHT_NODE = "ocular_sight";
     private static final String OCULAR_SCOPE_NODE = "ocular_scope";
+    private static final Pattern LASER_BEAM_PATTERN = Pattern.compile("^laser_beam(_(\\d+))?$");
 
     protected List<List<BedrockPart>> scopeViewPaths;
     protected @Nullable List<BedrockPart> scopeBodyPath;
@@ -83,6 +84,9 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                 boolean isScope = OCULAR_SCOPE_NODE.equals(type);
                 map.put(num, new OcularWrapper(entry.getValue(), isScope));
             }
+            if (LASER_BEAM_PATTERN.matcher(entry.getKey()).find()) {
+                setFunctionalRenderer(entry.getKey(), bedrockPart -> new BeamRenderer(() -> attachmentItem));
+            }
         }
         for (OcularWrapper wrapper : map.values()) {
             ocularNodePaths.add(getPath(wrapper.renderer));
@@ -101,8 +105,6 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
 
         scopeBodyPath = getPath(modelMap.get(SCOPE_BODY_NODE));
         ocularRingPath = getPath(modelMap.get(OCULAR_RING_NODE));
-
-        this.setFunctionalRenderer("laser_beam", bedrockPart -> new BeamRenderer(()->attachmentItem));
     }
 
     @Nullable

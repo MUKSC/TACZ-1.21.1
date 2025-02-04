@@ -17,7 +17,7 @@ public class LaserConfig {
     private int length = 25;
 
     @Expose
-    @SerializedName("canEdit")
+    @SerializedName("can_edit")
     private boolean canEdit = true;
 
     public int getDefaultColor() {
