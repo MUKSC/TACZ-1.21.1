@@ -125,7 +125,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     private Vec3 startPos;
     // 曳光弹
     private boolean isTracerAmmo;
-    // 只对客户端有用的曳光弹数据
+    // 以下几个是只对客户端有用的曳光弹数据
     private float cameraXRot;
     private float cameraYRot;
     private Vector3f firstPersonRenderOffset;

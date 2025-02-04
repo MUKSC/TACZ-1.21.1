@@ -100,11 +100,13 @@ public class EntityBulletRenderer extends EntityRenderer<EntityKineticBullet> {
                         bullet.setCameraYRot(camera.getYRot());
                         bullet.setFirstPersonRenderOffset(offset);
                     }
+                    // 按照生存时间减少曳光弹的偏移，避免渲染位置距离落点太远
+                    double offsetReducer = Math.max(0, (50 - disToEye)) / 50;
                     // 摄像机旋转
                     poseStack.mulPose(Axis.YN.rotationDegrees(bullet.getCameraYRot() + 180f));
                     poseStack.mulPose(Axis.XN.rotationDegrees(bullet.getCameraXRot()));
                     // 应用偏移
-                    poseStack.translate(offset.x, offset.y, offset.z);
+                    poseStack.translate(offset.x * offsetReducer, offset.y * offsetReducer, offset.z * offsetReducer);
                     // 逆转摄像机旋转
                     poseStack.mulPose(Axis.XP.rotationDegrees(bullet.getCameraXRot()));
                     poseStack.mulPose(Axis.YP.rotationDegrees(bullet.getCameraYRot() + 180f));
@@ -119,7 +121,7 @@ public class EntityBulletRenderer extends EntityRenderer<EntityKineticBullet> {
                 poseStack.scale(width, width, (float) trailLength);
                 // 距离两格外才渲染，只在前 5 tick 判定
                 double bulletDistance = bulletPosition.distanceTo(shooter.getEyePosition());
-                if (bullet.tickCount >= 5 || bulletDistance > 2 || isFirstPerson) {
+                if (bullet.tickCount >= 5 || bulletDistance > 2) {
                     RenderType type = RenderType.energySwirl(InternalAssetLoader.DEFAULT_BULLET_TEXTURE, 15, 15);
                     model.render(poseStack, ItemDisplayContext.NONE, type, packedLight, OverlayTexture.NO_OVERLAY,
                             tracerColor[0], tracerColor[1], tracerColor[2], 1);
