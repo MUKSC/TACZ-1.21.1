@@ -43,7 +43,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8, -1.75]
+					"pivot": [0, 8, -2.875]
 				},
 				{
 					"name": "shell",
@@ -4558,7 +4558,8 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "view",
-					"pivot": [8, 7, -3]
+					"pivot": [8, 7.5, -10],
+					"rotation": [0, 120, 0]
 				},
 				{
 					"name": "camera",

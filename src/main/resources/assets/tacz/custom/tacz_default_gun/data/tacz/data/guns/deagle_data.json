@@ -65,7 +65,8 @@
   "allow_attachment_types": [
     "scope",
     "muzzle",
-    "extended_mag"
+    "extended_mag",
+    "laser"
   ],
   "recoil": {
     "pitch": [

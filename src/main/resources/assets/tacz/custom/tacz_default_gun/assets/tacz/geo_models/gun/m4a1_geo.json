@@ -11426,7 +11426,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [1.462, 11.55, -13.025],
+					"pivot": [1.46875, 9.5, -15],
 					"rotation": [0, 0, 90]
 				},
 				{
@@ -12455,11 +12455,6 @@
 					]
 				},
 				{
-					"name": "laser_beam",
-					"parent": "m4a1",
-					"pivot": [0, 7, -17.425]
-				},
-				{
 					"name": "righthand",
 					"parent": "gun_and_righthand",
 					"pivot": [6, 19, 0]
@@ -12554,8 +12549,8 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "view",
-					"pivot": [7, 10, -11],
-					"rotation": [0, 70, 0]
+					"pivot": [8, 13, -23],
+					"rotation": [15, 135, 0]
 				},
 				{
 					"name": "refit_grip_view",

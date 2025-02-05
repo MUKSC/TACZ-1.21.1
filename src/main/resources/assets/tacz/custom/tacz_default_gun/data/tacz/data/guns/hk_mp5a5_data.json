@@ -83,7 +83,8 @@
     "stock",
     "grip",
     "muzzle",
-    "extended_mag"
+    "extended_mag",
+    "laser"
   ],
   "recoil": {
     "pitch": [
@@ -99,7 +100,7 @@
     ]
   },
   "inaccuracy": {
-    "stand": 3.2,
+    "stand": 3.5,
     "move": 4.5,
     "sneak": 2.5,
     "lie": 1.8,
