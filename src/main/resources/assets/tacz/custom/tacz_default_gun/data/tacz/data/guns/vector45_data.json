@@ -1,6 +1,6 @@
 {
   "ammo": "tacz:45acp",
-  "rpm": 1100,
+  "rpm": 1200,
   "script": "tacz:vector45_gun_logic",
   "script_param": {
     "reload_feed": 1.67,
@@ -83,6 +83,7 @@
     "stock",
     "grip",
     "muzzle",
+    "laser",
     "extended_mag"
   ],
   "recoil": {

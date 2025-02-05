@@ -75,7 +75,7 @@
     ]
   },
   "inaccuracy": {
-    "stand": 3.875,
+    "stand": 3.75,
     "move": 4.5,
     "sneak": 3.25,
     "lie": 1,
