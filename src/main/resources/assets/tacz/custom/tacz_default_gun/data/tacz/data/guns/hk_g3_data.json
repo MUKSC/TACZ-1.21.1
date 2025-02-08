@@ -117,7 +117,8 @@
     "stock",
     "grip",
     "muzzle",
-    "extended_mag"
+    "extended_mag",
+    "laser"
   ],
   "exclusive_attachments": {
   }

@@ -3,5 +3,6 @@
   "display": "tacz:laser_peq15_display",
   "data": "tacz:laser_peq15_data",
   "type": "laser",
-  "sort": 10
+  "sort": 10,
+  "hidden": true
 }

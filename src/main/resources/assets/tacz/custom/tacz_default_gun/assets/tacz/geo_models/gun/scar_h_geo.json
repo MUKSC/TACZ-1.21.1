@@ -9706,12 +9706,6 @@
 					"rotation": [0, 90, 0]
 				},
 				{
-					"name": "refit_laser_view",
-					"parent": "view",
-					"pivot": [7, 10, -11],
-					"rotation": [0, 125, 0]
-				},
-				{
 					"name": "refit_extended_mag_view",
 					"parent": "view",
 					"pivot": [10, 4, 3],
@@ -9728,6 +9722,12 @@
 					"parent": "view",
 					"pivot": [8, 13.1, 12.3],
 					"rotation": [0, 50, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [14, 14, -16],
+					"rotation": [15, 135, 0]
 				},
 				{
 					"name": "positioning",

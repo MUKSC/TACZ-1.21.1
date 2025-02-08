@@ -30,8 +30,8 @@
 				{
 					"name": "refit_view",
 					"parent": "views",
-					"pivot": [32, 2, 0],
-					"rotation": [0, 90, 0]
+					"pivot": [32, 20, -32],
+					"rotation": [15, 135, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

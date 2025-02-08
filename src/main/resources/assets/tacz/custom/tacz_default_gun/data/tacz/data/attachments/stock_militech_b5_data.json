@@ -8,7 +8,7 @@
   },
   "recoil": {
     "pitch": {
-      "multiplier": 0.7
+      "multiplier": 0.68
     },
     "yaw": {
       "multiplier": 0.6

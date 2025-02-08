@@ -31,14 +31,14 @@
         {"distance": "infinite", "damage": 3.5}
       ]
     },
-    "speed": 150,
+    "speed": 180,
     "gravity": 0.15,
     "knockback": 0,
     "friction": 0.02,
     "ignite": false,
     "pierce": 1
   },
-  "ammo_amount": 19,
+  "ammo_amount": 20,
   "extended_mag_ammo_amount": [
     30,
     40,
@@ -88,8 +88,8 @@
   ],
   "recoil": {
     "pitch": [
-      {"time": 0, "value": [0.15, 0.15]},
-      {"time": 0.12, "value": [0.15, 0.15]},
+      {"time": 0, "value": [0.2, 0.2]},
+      {"time": 0.1, "value": [0.2, 0.2]},
       {"time": 0.3, "value": [-0.2, -0.2]},
       {"time": 0.45, "value": [0, 0]}
     ],

@@ -109,6 +109,11 @@
 					"pivot": [0, 5.38125, -4.3625]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "attachment_positioning",
+					"pivot": [0, 10.125, -7]
+				},
+				{
 					"name": "grip2",
 					"parent": "m249_default",
 					"pivot": [0, 4.37334, 5.52725],
@@ -8442,6 +8447,12 @@
 					"parent": "view",
 					"pivot": [8.8, 3.4, -4],
 					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [12, 16, -24],
+					"rotation": [15, 135, 0]
 				}
 			]
 		}

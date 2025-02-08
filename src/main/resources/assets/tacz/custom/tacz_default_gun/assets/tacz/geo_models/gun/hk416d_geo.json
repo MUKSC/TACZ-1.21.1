@@ -11258,16 +11258,16 @@
 					"rotation": [0, 117.5, 0]
 				},
 				{
-					"name": "refit_laser_view",
-					"parent": "view",
-					"pivot": [7, 10, -3],
-					"rotation": [0, 70, 0]
-				},
-				{
 					"name": "refit_grip_view",
 					"parent": "view",
 					"pivot": [5.8, 5.4, -4.6],
 					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [12, 13, -24],
+					"rotation": [15, 135, 0]
 				}
 			]
 		}

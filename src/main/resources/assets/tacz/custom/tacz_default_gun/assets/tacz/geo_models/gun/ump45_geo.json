@@ -769,7 +769,7 @@
 					"name": "laser_pos",
 					"parent": "positioning2",
 					"pivot": [1.25, 10.3, -7.4],
-					"rotation": [0, 0, -90]
+					"rotation": [0, 0, 90]
 				},
 				{
 					"name": "grip_pos",

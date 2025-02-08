@@ -13,12 +13,12 @@
 			"bones": [
 				{
 					"name": "positioning",
-					"pivot": [0, 0, -8]
+					"pivot": [0, 0, 0]
 				},
 				{
 					"name": "thirdperson_hand",
 					"parent": "positioning",
-					"pivot": [0, 5.875, -2.65]
+					"pivot": [0, 6.875, 7.35]
 				},
 				{
 					"name": "ground",

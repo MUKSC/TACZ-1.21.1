@@ -2480,7 +2480,7 @@
 				{
 					"name": "constraint",
 					"parent": "Victor45",
-					"pivot": [0, 15.025, 1.35]
+					"pivot": [0, 15.025, 2.35]
 				},
 				{
 					"name": "positioning2",
@@ -2511,7 +2511,7 @@
 					"name": "laser_pos",
 					"parent": "positioning2",
 					"pivot": [1.25, 11, -9.125],
-					"rotation": [0, 0, -90]
+					"rotation": [0, 0, 90]
 				},
 				{
 					"name": "grip_pos",
@@ -2521,7 +2521,7 @@
 				{
 					"name": "scope_pos",
 					"parent": "positioning2",
-					"pivot": [0, 13.8125, 0.725]
+					"pivot": [0, 13.8125, 1.725]
 				},
 				{
 					"name": "attachment_adapter",
@@ -8784,7 +8784,7 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 15, 8.275]
+					"pivot": [0, 15, 7.5]
 				},
 				{
 					"name": "refit_view",

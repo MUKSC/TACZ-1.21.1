@@ -13,7 +13,8 @@
 			"bones": [
 				{
 					"name": "laser_compact",
-					"pivot": [0, 0.0625, 0]
+					"pivot": [0, 0.0625, 0],
+					"rotation": [0, 0, -180]
 				},
 				{
 					"name": "base",
@@ -636,7 +637,7 @@
 				},
 				{
 					"name": "laser_beam",
-					"pivot": [0, -0.79687, -1]
+					"pivot": [0, 0.92188, -1]
 				}
 			]
 		}
