@@ -836,7 +836,10 @@
 				"bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.95": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.95": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"camera": {
@@ -1277,7 +1280,10 @@
 					},
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.25": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.25": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -1344,7 +1350,10 @@
 					},
 					"scale": {
 						"0.0": [1, 1, 1],
-						"2.0": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"2.0": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
 						"2.625": [0, 0, 0]
 					}
 				},
@@ -1453,19 +1462,19 @@
 				}
 			},
 			"sound_effects": {
-				"0.3333": {
+				"0.0417": {
 					"effect": "tacz:ak47/ak47_reload_raise_shoulder"
 				},
-				"0.5417": {
+				"0.5833": {
 					"effect": "tacz:ak47/ak47_reload_magout"
 				},
 				"0.9167": {
 					"effect": "tacz:ak47/ak47_reload_mvt"
 				},
-				"1.2917": {
+				"1.375": {
 					"effect": "tacz:ak47/ak47_reload_magin"
 				},
-				"1.5": {
+				"1.5417": {
 					"effect": "tacz:ak47/ak47_reload_mvt2"
 				},
 				"2.2917": {
@@ -1809,7 +1818,10 @@
 					},
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.25": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.25": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -1876,7 +1888,10 @@
 					},
 					"scale": {
 						"0.0": [1, 1, 1],
-						"2.0": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"2.0": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
 						"2.625": [0, 0, 0]
 					}
 				},
@@ -1985,19 +2000,19 @@
 				}
 			},
 			"sound_effects": {
-				"0.3333": {
+				"0.0417": {
 					"effect": "tacz:ak47/ak47_reload_raise_shoulder"
 				},
-				"0.5417": {
+				"0.5833": {
 					"effect": "tacz:ak47/ak47_reload_magout"
 				},
 				"0.9167": {
 					"effect": "tacz:ak47/ak47_reload_mvt"
 				},
-				"1.2917": {
+				"1.375": {
 					"effect": "tacz:ak47/ak47_reload_magin"
 				},
-				"1.5": {
+				"1.5417": {
 					"effect": "tacz:ak47/ak47_reload_mvt2"
 				},
 				"2.2917": {
@@ -2608,7 +2623,10 @@
 					},
 					"scale": {
 						"0.45": [1, 1, 1],
-						"1.15": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"1.15": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
 						"1.2": [0, 0, 0]
 					}
 				},
@@ -3424,7 +3442,10 @@
 					},
 					"scale": {
 						"0.0": [1, 1, 1],
-						"1.15": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"1.15": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
 						"3.0": [0, 0, 0]
 					}
 				},
@@ -3591,19 +3612,19 @@
 				"0.0": {
 					"effect": "tacz:ak47/ak47_reload_empty_up"
 				},
-				"0.4": {
+				"0.5": {
 					"effect": "tacz:ak47/ak47_reload_empty_maghit"
 				},
-				"0.5": {
+				"0.6": {
 					"effect": "tacz:ak47/ak47_reload_empty_magout"
 				},
-				"1.0": {
+				"1.1": {
 					"effect": "tacz:ak47/ak47_reload_empty_magbump"
 				},
-				"1.45": {
+				"1.5": {
 					"effect": "tacz:ak47/ak47_reload_empty_magin"
 				},
-				"1.55": {
+				"1.65": {
 					"effect": "tacz:ak47/ak47_reload_empty_mag_drop"
 				},
 				"1.9": {
@@ -4244,7 +4265,10 @@
 					},
 					"scale": {
 						"0.0": [1, 1, 1],
-						"1.15": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"1.15": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
 						"3.0": [0, 0, 0]
 					}
 				},
@@ -4411,19 +4435,19 @@
 				"0.0": {
 					"effect": "tacz:ak47/ak47_reload_empty_up"
 				},
-				"0.4": {
+				"0.5": {
 					"effect": "tacz:ak47/ak47_reload_empty_maghit"
 				},
-				"0.5": {
+				"0.6": {
 					"effect": "tacz:ak47/ak47_reload_empty_magout"
 				},
-				"1.0": {
+				"1.1": {
 					"effect": "tacz:ak47/ak47_reload_empty_magbump"
 				},
-				"1.45": {
+				"1.5": {
 					"effect": "tacz:ak47/ak47_reload_empty_magin"
 				},
-				"1.55": {
+				"1.65": {
 					"effect": "tacz:ak47/ak47_reload_empty_mag_drop"
 				},
 				"1.9": {
@@ -4999,7 +5023,10 @@
 				},
 				"additional_magazine": {
 					"scale": {
-						"7.65": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.65": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand_and_mag": {
@@ -5206,7 +5233,10 @@
 				"bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"7.35": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.35": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"camera": {
@@ -6020,7 +6050,10 @@
 				},
 				"additional_magazine": {
 					"scale": {
-						"7.65": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.65": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand_and_mag": {
@@ -6227,7 +6260,10 @@
 				"bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"7.35": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.35": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"camera": {
@@ -6435,19 +6471,19 @@
 				"0.0": {
 					"effect": "tacz:ak47/ak47_inspect_up"
 				},
-				"1.65": {
+				"1.8": {
 					"effect": "tacz:ak47/ak47_inspect_raise_grab"
 				},
-				"1.75": {
+				"1.9": {
 					"effect": "tacz:ak47/ak47_inspect_magout"
 				},
 				"2.6": {
 					"effect": "tacz:ak47/ak47_inspect_mvt"
 				},
-				"4.0": {
+				"4.1": {
 					"effect": "tacz:ak47/ak47_inspect_magbump"
 				},
-				"4.6": {
+				"4.7": {
 					"effect": "tacz:ak47/ak47_inspect_magin"
 				},
 				"4.95": {
@@ -7045,7 +7081,10 @@
 				},
 				"additional_magazine": {
 					"scale": {
-						"7.65": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.65": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand_and_mag": {
@@ -7252,7 +7291,10 @@
 				"bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"7.35": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.35": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"camera": {
@@ -7460,19 +7502,19 @@
 				"0.0": {
 					"effect": "tacz:ak47/ak47_inspect_up"
 				},
-				"1.65": {
+				"1.9": {
 					"effect": "tacz:ak47/ak47_inspect_raise_grab"
 				},
-				"1.75": {
+				"2.0": {
 					"effect": "tacz:ak47/ak47_inspect_magout"
 				},
 				"2.6": {
 					"effect": "tacz:ak47/ak47_inspect_mvt"
 				},
-				"4.0": {
+				"4.1": {
 					"effect": "tacz:ak47/ak47_inspect_magbump"
 				},
-				"4.6": {
+				"4.7": {
 					"effect": "tacz:ak47/ak47_inspect_magin"
 				},
 				"4.95": {
@@ -8110,7 +8152,10 @@
 						"0.0": [0, 0, 0],
 						"2.2": [0, 0, 0],
 						"7.3": [0, 0, 0],
-						"8.05": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"8.05": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand_and_mag": {
@@ -8513,7 +8558,10 @@
 				"bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"7.8": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.8": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				}
 			},
@@ -9177,7 +9225,10 @@
 					"scale": {
 						"0.0": [0, 0, 0],
 						"5.5": [0, 0, 0],
-						"8.3": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"8.3": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand_and_mag": {
@@ -9356,7 +9407,10 @@
 				"bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"7.35": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"7.35": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"camera": {
@@ -9592,19 +9646,19 @@
 				"0.0": {
 					"effect": "tacz:ak47/ak47_inspect_up"
 				},
-				"1.65": {
+				"1.8": {
 					"effect": "tacz:ak47/ak47_inspect_raise_grab"
 				},
-				"1.75": {
+				"1.9": {
 					"effect": "tacz:ak47/ak47_inspect_magout"
 				},
 				"2.6": {
 					"effect": "tacz:ak47/ak47_inspect_mvt"
 				},
-				"4.0": {
+				"4.1": {
 					"effect": "tacz:ak47/ak47_inspect_magbump"
 				},
-				"4.6": {
+				"4.7": {
 					"effect": "tacz:ak47/ak47_inspect_magin"
 				},
 				"4.95": {
@@ -10663,19 +10717,19 @@
 				"0.0": {
 					"effect": "tacz:ak47/ak47_inspect_up"
 				},
-				"1.65": {
+				"1.8": {
 					"effect": "tacz:ak47/ak47_inspect_raise_grab"
 				},
-				"1.75": {
+				"1.9": {
 					"effect": "tacz:ak47/ak47_inspect_magout"
 				},
 				"2.6": {
 					"effect": "tacz:ak47/ak47_inspect_mvt"
 				},
-				"4.0": {
+				"4.1": {
 					"effect": "tacz:ak47/ak47_inspect_magbump"
 				},
-				"4.6": {
+				"4.7": {
 					"effect": "tacz:ak47/ak47_inspect_magin"
 				},
 				"4.95": {
