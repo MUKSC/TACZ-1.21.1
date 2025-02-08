@@ -74,9 +74,9 @@
     ]
   },
   "inaccuracy": {
-    "stand": 4.75,
-    "move": 6.5,
-    "sneak": 4,
+    "stand": 4.25,
+    "move": 5,
+    "sneak": 3.75,
     "lie": 2,
     "aim": 0.15
   },
@@ -107,7 +107,8 @@
     "muzzle",
     "extended_mag",
     "scope",
-    "grip"
+    "grip",
+    "laser"
   ],
   "exclusive_attachments": {
   }

@@ -1264,15 +1264,15 @@
 				},
 				{
 					"name": "division",
-					"pivot": [0, 0, -26.25]
+					"pivot": [0, 0, -72]
 				},
 				{
 					"name": "division_illuminated",
 					"parent": "division",
-					"pivot": [0, 2.12625, -57.55],
+					"pivot": [0, 2.12625, -103.3],
 					"cubes": [
 						{
-							"origin": [-1.5, 0.62625, -60.25],
+							"origin": [-1.5, 0.62625, -106],
 							"size": [3, 3, 0.3],
 							"uv": {
 								"south": {"uv": [57.125, 60], "uv_size": [64, 64]}
@@ -1295,7 +1295,7 @@
 				},
 				{
 					"name": "scope_view",
-					"pivot": [0, 2.1375, 7.75]
+					"pivot": [0, 2.1375, 16]
 				}
 			]
 		}

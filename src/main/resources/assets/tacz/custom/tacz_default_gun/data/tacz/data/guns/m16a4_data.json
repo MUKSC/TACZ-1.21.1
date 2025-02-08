@@ -109,7 +109,8 @@
     "extended_mag",
     "scope",
     "grip",
-    "stock"
+    "stock",
+    "laser"
   ],
   "exclusive_attachments": {
   }

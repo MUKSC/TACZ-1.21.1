@@ -12549,7 +12549,7 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "view",
-					"pivot": [8, 13, -23],
+					"pivot": [12, 13, -24],
 					"rotation": [15, 135, 0]
 				},
 				{

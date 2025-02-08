@@ -17,7 +17,7 @@
         {"distance": "infinite", "damage": 6}
       ]
     },
-    "speed": 340,
+    "speed": 300,
     "gravity": 0.15,
     "knockback": 0.1,
     "friction": 0.025,
@@ -47,7 +47,7 @@
   "draw_time": 1.4,
   "put_away_time": 0.85,
   "aim_time": 0.25,
-  "sprint_time": 0.35,
+  "sprint_time": 0.44,
   "weight": 15.5,
   "movement_speed": {
     "base": 0.0,

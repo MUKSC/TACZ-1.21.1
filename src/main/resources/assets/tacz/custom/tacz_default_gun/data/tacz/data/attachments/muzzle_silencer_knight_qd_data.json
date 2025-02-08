@@ -10,9 +10,6 @@
   "recoil": {
     "pitch": {
       "multiplier": 0.85
-    },
-    "yaw": {
-      "multiplier": 0.8
     }
   },
   "effective_range": {

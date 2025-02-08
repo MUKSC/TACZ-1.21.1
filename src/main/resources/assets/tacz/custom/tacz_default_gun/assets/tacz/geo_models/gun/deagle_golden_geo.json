@@ -1291,7 +1291,8 @@
 				{
 					"name": "laser_pos",
 					"parent": "Deagle_golden",
-					"pivot": [0, 4, -0.14375]
+					"pivot": [0, 4, 0.60625],
+					"rotation": [0, 0, -180]
 				},
 				{
 					"name": "muzzle_pos",

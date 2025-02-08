@@ -9481,6 +9481,12 @@
 					"parent": "view",
 					"pivot": [13.8, 3.4, 0],
 					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [12, 13, -20],
+					"rotation": [15, 135, 0]
 				}
 			]
 		}

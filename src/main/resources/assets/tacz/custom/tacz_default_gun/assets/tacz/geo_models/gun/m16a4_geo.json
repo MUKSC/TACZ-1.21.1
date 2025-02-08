@@ -12641,6 +12641,12 @@
 					"pivot": [0, 8.1875, -4.125]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "positioning2",
+					"pivot": [1.46875, 9.5, -9],
+					"rotation": [0, 0, 90]
+				},
+				{
 					"name": "righthand",
 					"parent": "gun_and_righthand",
 					"pivot": [6, 19, 0]
@@ -12721,12 +12727,6 @@
 					"rotation": [0, 90, 0]
 				},
 				{
-					"name": "refit_laser_view",
-					"parent": "view",
-					"pivot": [7, 10, -11],
-					"rotation": [0, 125, 0]
-				},
-				{
 					"name": "refit_extended_mag_view",
 					"parent": "view",
 					"pivot": [10, 4, 3],
@@ -12743,6 +12743,12 @@
 					"parent": "view",
 					"pivot": [6.8, 5.4, -4],
 					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [12, 13, -24],
+					"rotation": [15, 135, 0]
 				}
 			]
 		}
