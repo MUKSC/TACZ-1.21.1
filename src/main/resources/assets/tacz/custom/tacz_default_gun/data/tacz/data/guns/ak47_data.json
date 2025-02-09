@@ -50,8 +50,8 @@
       "head_shot_multiplier": 1.5,
       // 距离-伤害分段常函数
       "damage_adjust": [
-        {"distance": 25, "damage": 9},
-        {"distance": 55, "damage": 7.5},
+        {"distance": 30, "damage": 9},
+        {"distance": 60, "damage": 7.5},
         // 如果你忘记写这个无穷，那么超过上述距离，我就认为是 0
         {"distance": "infinite", "damage": 6}
       ]
@@ -224,14 +224,14 @@
   // 后坐力
   "recoil": {
     "pitch": [
-      {"time": 0, "value": [0.7, 0.7]},
-      {"time": 0.25, "value": [0.7, 0.7]},
+      {"time": 0, "value": [0.66, 0.66]},
+      {"time": 0.1, "value": [0.66, 0.66]},
       {"time": 0.45, "value": [-0.175, -0.175]},
       {"time": 0.6, "value": [0, 0]}
     ],
     "yaw": [
-      {"time": 0, "value": [-0.35, 0.25]},
-      {"time": 0.45, "value": [0, 0]}
+      {"time": 0, "value": [-0.23, 0.18]},
+      {"time": 0.35, "value": [0, 0]}
     ]
   },
   // 受伤晃动幅度修改，乘数，1 为原版晃动程度，0 为完全不晃动，默认为 0.05
@@ -239,9 +239,9 @@
   // 不准确度
   "inaccuracy": {
     // 站立射击散布
-    "stand": 5,
+    "stand": 4.5,
     // 移动射击散布
-    "move": 5.75,
+    "move": 5,
     // 潜行射击散布
     "sneak": 3.5,
     // 趴下射击散布
