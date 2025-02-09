@@ -155,9 +155,10 @@
   "tacz.attachment.scope_hamr.name": "§5HAMR 3x Scope",
   "tacz.attachment.scope_mk5hd.name": "§6Mark 5 HD 5-25x Scope",
   "tacz.attachment.scope_1873_6x.name":"§5Vintage Springfield Scope",
-  "tacz.attachment.laser_compact": "Militech Compact Laser",
-  "tacz.attachment.laser_lopro":"Lopro Tactical Laser",
-  "tacz.attachment.laser_nightstick":"Nightstick Compact laser",
+  "tacz.attachment.laser_compact": "§aMilitech Compact Laser",
+  "tacz.attachment.laser_lopro":"§5Lopro Tactical Laser",
+  "tacz.attachment.laser_nightstick":"§aNightstick Compact laser",
+  "tacz.attachment.scope_contender.name":"§9Contender 4x Scope",
 
 
   "tacz.attachment.extended_mag_1.name": "Heavy Ammo Extended Mag",
