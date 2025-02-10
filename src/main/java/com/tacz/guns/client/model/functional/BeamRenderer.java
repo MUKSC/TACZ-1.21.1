@@ -13,6 +13,7 @@ import com.tacz.guns.client.model.IFunctionalRenderer;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.client.resource.pojo.display.LaserConfig;
+import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.util.LaserColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -46,7 +47,7 @@ public class BeamRenderer implements IFunctionalRenderer {
             int b = color & 0xFF;
 
             LaserConfig laserConfig = getLaserConfig();
-            stringVertex(-getLaserConfig().getLength(), laserConfig.getWidth(), builder, poseStack.last(), r, g, b);
+            stringVertex(-getLaserConfig().getLength(), laserConfig.getWidth(), builder, poseStack.last(), r, g, b, RenderConfig.ENABLE_LASER_FADE_OUT.get());
         }
         poseStack.popPose();
     }
@@ -71,27 +72,28 @@ public class BeamRenderer implements IFunctionalRenderer {
         return DEFAULT_LASER_CONFIG;
     }
 
-    private static void stringVertex(float z, float width, VertexConsumer pConsumer, PoseStack.Pose pPose, int r, int g, int b) {
+    private static void stringVertex(float z, float width, VertexConsumer pConsumer, PoseStack.Pose pPose, int r, int g, int b, boolean fadeOut) {
         float halfWidth = width / 2;
+        int endAlpha = fadeOut ? 0 : 255;
     	pConsumer.vertex(pPose.pose(), -halfWidth, -halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(),-1, 0, 0).endVertex();
         pConsumer.vertex(pPose.pose(), -halfWidth, halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), -1, 0, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), -halfWidth, halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), -1, 0, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), -halfWidth, -halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), -1, 0, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), -halfWidth, halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), -1, 0, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), -halfWidth, -halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), -1, 0, 0).endVertex();
 
         pConsumer.vertex(pPose.pose(), -halfWidth, halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), 0, 1, 0).endVertex();
         pConsumer.vertex(pPose.pose(), halfWidth, halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), 0, 1, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), halfWidth, halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), 0, 1, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), -halfWidth, halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), 0, 1, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), halfWidth, halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 0, 1, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), -halfWidth, halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 0, 1, 0).endVertex();
 
         pConsumer.vertex(pPose.pose(), halfWidth, halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), 1, 0, 0).endVertex();
         pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), 1, 0, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), 1, 0, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), halfWidth, halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), 1, 0, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 1, 0, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), halfWidth, halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 1, 0, 0).endVertex();
 
         pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), 0, -1, 0).endVertex();
         pConsumer.vertex(pPose.pose(), -halfWidth, -halfWidth, 0).color(r, g, b, 255).normal(pPose.normal(), 0, -1, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), -halfWidth, -halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), 0, -1, 0).endVertex();
-        pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, z).color(r, g, b, 0).normal(pPose.normal(), 0, -1, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), -halfWidth, -halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 0, -1, 0).endVertex();
+        pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 0, -1, 0).endVertex();
     }
 
     private static class LaserBeamRenderState extends RenderStateShard {

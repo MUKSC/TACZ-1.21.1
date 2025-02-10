@@ -15,6 +15,8 @@
   "config.tacz.client.key.hold_to_crawl": "长按爬行",
   "config.tacz.client.key.hold_to_crawl.desc": "当设置为 true 时，玩家需要按住按键才能维持爬行状态",
   "config.tacz.client.render": "渲染",
+  "config.tacz.client.render.laser_fadeout": "镭射渐隐效果",
+  "config.tacz.client.render.laser_fadeout.desc": "是否启用镭射激光束的渐隐效果。关闭该项可能有助于改善部分光影下的表现效果。",
   "config.tacz.client.render.bullet_hole_particle_fade_threshold": "弹孔粒子淡出阈值",
   "config.tacz.client.render.bullet_hole_particle_fade_threshold.desc": "渲染弹孔粒子时，淡出的阈值",
   "config.tacz.client.render.bullet_hole_particle_life": "弹孔持续时间",
