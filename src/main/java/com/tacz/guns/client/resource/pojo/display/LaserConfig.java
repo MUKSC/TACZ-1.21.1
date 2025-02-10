@@ -20,6 +20,10 @@ public class LaserConfig {
     @SerializedName("can_edit")
     private boolean canEdit = true;
 
+    @Expose
+    @SerializedName("width")
+    private float width = 0.008f;
+
     public int getDefaultColor() {
         if (defaultColor == null) {
             try {
@@ -37,5 +41,9 @@ public class LaserConfig {
 
     public boolean canEdit() {
         return canEdit;
+    }
+
+    public float getWidth() {
+        return width;
     }
 }
