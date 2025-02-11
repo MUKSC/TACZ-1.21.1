@@ -713,6 +713,12 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "lod",
+					"pivot": [1.112, 9.375, -5.4],
+					"rotation": [0, 0, 90]
 				}
 			]
 		}

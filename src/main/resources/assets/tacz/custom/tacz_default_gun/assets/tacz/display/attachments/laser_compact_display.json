@@ -2,6 +2,11 @@
   "slot": "tacz:attachment/slot/laser_compact_slot",
   "model": "tacz:attachment/laser_compact_geo",
   "texture": "tacz:attachment/uv/laser_compact",
+  "lod": {
+        "model": "tacz:attachment/lod/laser_compact",
+        "texture": "tacz:attachment/lod/laser_compact"
+  },
+
   "adapter": "laser_adapter",
   "sounds": {
     "install": "tacz:attachments/attachment_general_b",

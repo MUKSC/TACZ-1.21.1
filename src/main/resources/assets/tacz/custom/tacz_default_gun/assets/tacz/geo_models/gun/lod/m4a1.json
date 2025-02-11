@@ -1173,6 +1173,12 @@
 					"name": "muzzle_flash",
 					"parent": "positioning",
 					"pivot": [0, 9.5, -27]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "positioning",
+					"pivot": [1.46875, 9.5, -15],
+					"rotation": [0, 0, 90]
 				}
 			]
 		}
