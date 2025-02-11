@@ -2,6 +2,10 @@
   "slot": "tacz:attachment/slot/laser_lopro_slot",
   "model": "tacz:attachment/laser_lopro_geo",
   "texture": "tacz:attachment/uv/laser_lopro",
+   "lod": {
+          "model": "tacz:attachment/lod/laser_lopro",
+          "texture": "tacz:attachment/lod/laser_lopro"
+  },
   "sounds": {
     "install": "tacz:attachments/attachment_general_b",
     "uninstall": "tacz:attachments/attachment_general_uninstall"

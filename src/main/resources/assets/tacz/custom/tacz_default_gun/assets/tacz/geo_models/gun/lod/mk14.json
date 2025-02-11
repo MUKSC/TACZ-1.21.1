@@ -810,14 +810,15 @@
 					"pivot": [0, -5, 0]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "positioning2",
+					"pivot": [1.25, 6.61875, -9.75],
+					"rotation": [0, 0, 90]
+				},
+				{
 					"name": "muzzle_flash",
 					"parent": "positioning2",
 					"pivot": [0, 7.30625, -22.35]
-				},
-				{
-					"name": "laser_pos",
-					"parent": "positioning2",
-					"pivot": [0, 8.30625, -9.25]
 				},
 				{
 					"name": "grip_pos",

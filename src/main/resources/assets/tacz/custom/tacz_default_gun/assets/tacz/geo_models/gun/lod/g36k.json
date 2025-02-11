@@ -47,6 +47,12 @@
 					"pivot": [-0.575, 8.125, -0.8375]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "positioning",
+					"pivot": [1.5625, 8.125, -14.75],
+					"rotation": [0, 0, 90]
+				},
+				{
 					"name": "lod",
 					"pivot": [-0.02321, 7.81696, -1.39265],
 					"cubes": [
