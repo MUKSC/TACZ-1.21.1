@@ -13,16 +13,24 @@ public class LaserConfig {
     private String color = "#FF0000";
 
     @Expose
-    @SerializedName("length")
-    private int length = 25;
-
-    @Expose
     @SerializedName("can_edit")
     private boolean canEdit = true;
 
     @Expose
+    @SerializedName("length")
+    private int length = 25;
+
+    @Expose
     @SerializedName("width")
     private float width = 0.008f;
+
+    @Expose
+    @SerializedName("third_person_length")
+    private float third_person_length = 2f;
+
+    @Expose
+    @SerializedName("third_person_width")
+    private float third_person_width = 0.008f;
 
     public int getDefaultColor() {
         if (defaultColor == null) {
@@ -35,15 +43,23 @@ public class LaserConfig {
         return defaultColor;
     }
 
-    public int getLength() {
-        return length;
-    }
-
     public boolean canEdit() {
         return canEdit;
     }
 
+    public int getLength() {
+        return length;
+    }
+
     public float getWidth() {
         return width;
+    }
+
+    public float getLengthThird() {
+        return third_person_length;
+    }
+
+    public float getWidthThird() {
+        return third_person_width;
     }
 }

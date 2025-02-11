@@ -41,13 +41,16 @@ public class BeamRenderer implements IFunctionalRenderer {
         VertexConsumer builder = bufferSource.getBuffer(LaserBeamRenderState.getLaserBeam());
         poseStack.pushPose();
         {
-            int color = LaserColorUtil.getLaserColor(itemProvider.get());
+            LaserConfig laserConfig = getLaserConfig();
+
+            int color = LaserColorUtil.getLaserColor(itemProvider.get(), laserConfig);
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
             int b = color & 0xFF;
 
-            LaserConfig laserConfig = getLaserConfig();
-            stringVertex(-getLaserConfig().getLength(), laserConfig.getWidth(), builder, poseStack.last(), r, g, b, RenderConfig.ENABLE_LASER_FADE_OUT.get());
+            stringVertex(transformType.firstPerson() ? -getLaserConfig().getLength() : -laserConfig.getLengthThird(),
+                    transformType.firstPerson() ? laserConfig.getWidth() : laserConfig.getWidthThird(),
+                    builder, poseStack.last(), r, g, b, RenderConfig.ENABLE_LASER_FADE_OUT.get());
         }
         poseStack.popPose();
     }
