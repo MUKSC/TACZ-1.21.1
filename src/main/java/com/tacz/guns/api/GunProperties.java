@@ -2,6 +2,7 @@ package com.tacz.guns.api;
 
 import com.google.common.reflect.TypeToken;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.pojo.data.gun.*;
 import it.unimi.dsi.fastutil.Pair;
 
@@ -13,7 +14,14 @@ import java.util.Map;
  */
 public class GunProperties {
     public static final GunProperty<Float>                                      ADS_TIME            = GunProperty.of("ads", Float.class);
-    public static final GunProperty<Map<InaccuracyType, Float>>                 AIM_INACCURACY      = GunProperty.of("aim_inaccuracy", new TypeToken<>() {});
+    /**@deprecated
+     * 此类是一个意外和设计失误，其功能和{@link InaccuracyModifier}完全重复<br/>
+     * 已不再使用，内部的所有方法实际不会执行，请使用 {@link InaccuracyModifier} <br/>
+     *
+     * 同时，此Modifier的id也已经被重定向到 {@link InaccuracyModifier} <br/>
+     * */
+    @Deprecated
+    public static final GunProperty<Map<InaccuracyType, Float>>                 AIM_INACCURACY      = GunProperty.of("inaccuracy", new TypeToken<>() {});
     public static final GunProperty<Float>                                      AMMO_SPEED          = GunProperty.of("ammo_speed", Float.class);
     public static final GunProperty<Float>                                      ARMOR_IGNORE        = GunProperty.of("armor_ignore", Float.class);
     public static final GunProperty<LinkedList<ExtraDamage.DistanceDamagePair>> DAMAGE              = GunProperty.of("damage", new TypeToken<>() {});

@@ -18,7 +18,6 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunFire;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.modifier.custom.AimInaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.AmmoSpeedModifier;
 import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
@@ -89,11 +88,7 @@ public class ModernKineticGunScriptAPI {
 
         // 散射影响
         InaccuracyType inaccuracyType = InaccuracyType.getInaccuracyType(shooter);
-        float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType));
-        if (inaccuracyType == InaccuracyType.AIM) {
-            inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(AimInaccuracyModifier.ID).get(inaccuracyType));
-        }
-        final float finalInaccuracy = inaccuracy;
+        final float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType));
 
         // 消音器影响
         Pair<Integer, Boolean> silence = cacheProperty.getCache(SilenceModifier.ID);
@@ -141,7 +136,7 @@ public class ModernKineticGunScriptAPI {
                     boolean isTracer = bulletData.hasTracerAmmo() && gunOperator.nextBulletIsTracer(bulletData.getTracerCountInterval());
                     EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId, isTracer, gunData, bulletData);
                     abstractGunItem.doBulletSpread(dataHolder, itemStack, shooter, bullet, i, processedSpeed,
-                            finalInaccuracy, pitch, yaw);
+                            inaccuracy, pitch, yaw);
                     world.addFreshEntity(bullet);
                 }
                 // 播放枪声

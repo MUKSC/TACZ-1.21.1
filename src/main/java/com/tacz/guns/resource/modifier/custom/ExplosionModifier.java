@@ -6,7 +6,7 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
@@ -28,7 +28,7 @@ public class ExplosionModifier implements IAttachmentModifier<ExplosionModifier.
 
     @Override
     public JsonProperty<ExplosionModifierValue> readJson(String json) {
-        ExplosionModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, ExplosionModifier.Data.class);
+        ExplosionModifier.Data data = CommonAssetsManager.GSON.fromJson(json, ExplosionModifier.Data.class);
         return new ExplosionModifier.ExplosionJsonProperty(data.getExplosion());
     }
 

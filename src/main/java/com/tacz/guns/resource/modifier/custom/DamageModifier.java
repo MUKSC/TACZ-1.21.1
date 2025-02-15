@@ -9,7 +9,7 @@ import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
 import com.tacz.guns.config.sync.SyncConfig;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -40,7 +40,7 @@ public class DamageModifier implements IAttachmentModifier<Modifier, LinkedList<
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        Data data = CommonGunPackLoader.GSON.fromJson(json, Data.class);
+        Data data = CommonAssetsManager.GSON.fromJson(json, Data.class);
         return new DamageJsonProperty(data.getDamage());
     }
 
@@ -108,15 +108,16 @@ public class DamageModifier implements IAttachmentModifier<Modifier, LinkedList<
             finalBase += rawDamage;
         }
         finalBase *= SyncConfig.DAMAGE_BASE_MULTIPLIER.get();
-        float modifier = damagePairModifier.get(0).getDamage() - finalBase;
+        float modifiedValue = damagePairModifier.get(0).getDamage();
+        float modifier = modifiedValue - finalBase;
 
-        double percent = Math.min(finalBase / 100.0, 1);
-        double modifierPercent = Math.min(modifier / 100.0, 1);
+        double percent = Math.min(finalBase / 50.0, 1);
+        double modifierPercent = Math.min(modifier / 50.0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.damage";
-        String positivelyString = String.format("%.2f §a(+%.2f)", finalBase, modifier);
-        String negativelyString = String.format("%.2f §c(%.2f)", finalBase, modifier);
-        String defaultString = String.format("%.2f", finalBase);
+        String positivelyString = String.format("%.2f §a(+%.2f)", modifiedValue, modifier);
+        String negativelyString = String.format("%.2f §c(%.2f)", modifiedValue, modifier);
+        String defaultString = String.format("%.2f", modifiedValue);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

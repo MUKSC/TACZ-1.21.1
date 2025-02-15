@@ -5,11 +5,11 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -50,15 +50,16 @@ public class PierceModifier implements IAttachmentModifier<Modifier, Integer> {
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
         int pierce = gunData.getBulletData().getPierce();
-        int pierceModifier = cacheProperty.<Integer>getCache(PierceModifier.ID) - pierce;
+        int modifiedValue = cacheProperty.<Integer>getCache(PierceModifier.ID);
+        int pierceModifier = modifiedValue - pierce;
 
-        double piercePercent = Math.min(pierce / 10.0, 1);
-        double pierceModifierPercent = Math.min(pierceModifier / 10.0, 1);
+        double piercePercent = Math.min(pierce / 5.0, 1);
+        double pierceModifierPercent = Math.min(pierceModifier / 5.0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.pierce";
-        String positivelyString = String.format("%d §a(+%d)", pierce, pierceModifier);
-        String negativelyString = String.format("%d §c(%d)", pierce, pierceModifier);
-        String defaultString = String.format("%d", pierce);
+        String positivelyString = String.format("%d §a(+%d)", modifiedValue, pierceModifier);
+        String negativelyString = String.format("%d §c(%d)", modifiedValue, pierceModifier);
+        String defaultString = String.format("%d", modifiedValue);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(piercePercent, pierceModifierPercent, pierceModifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

@@ -7,13 +7,13 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
+import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -74,15 +74,17 @@ public class KnockbackModifier implements IAttachmentModifier<Modifier, Float> {
         // 最终的 base
         float finalBase = bulletData.getKnockback();
         finalBase = fireModeAdjustData != null ? finalBase + fireModeAdjustData.getKnockback() : finalBase;
-        float modifier = cacheProperty.<Float>getCache(KnockbackModifier.ID) - finalBase;
+
+        float modifiedValue = cacheProperty.<Float>getCache(KnockbackModifier.ID);
+        float modifier = modifiedValue - finalBase;
 
         double percent = Mth.clamp(finalBase, 0, 1);
         double modifierPercent = Mth.clamp(modifier, 0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.knockback";
-        String positivelyString = String.format("%.2f §a(+%.2f)", finalBase, modifier);
-        String negativelyString = String.format("%.2f §c(%.2f)", finalBase, modifier);
-        String defaultString = String.format("%.2f", finalBase);
+        String positivelyString = String.format("%.2f §a(+%.2f)", modifiedValue, modifier);
+        String negativelyString = String.format("%.2f §c(%.2f)", modifiedValue, modifier);
+        String defaultString = String.format("%.2f", modifiedValue);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

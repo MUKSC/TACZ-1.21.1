@@ -5,12 +5,12 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +61,7 @@ public class EffectiveRangeModifier implements IAttachmentModifier<Modifier, Flo
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
         // 必要数据获取
-        float distanceModifier = cacheProperty.getCache(EffectiveRangeModifier.ID);
+        float modifiedDistance = cacheProperty.getCache(EffectiveRangeModifier.ID);
         LinkedList<DistanceDamagePair> damageAdjust = null;
         if (gunData.getBulletData().getExtraDamage() != null) {
             damageAdjust = gunData.getBulletData().getExtraDamage().getDamageAdjust();
@@ -72,7 +72,11 @@ public class EffectiveRangeModifier implements IAttachmentModifier<Modifier, Flo
         } else {
             effectiveRange = 0;
         }
-        float modifier = distanceModifier - effectiveRange;
+
+        modifiedDistance = Math.min(modifiedDistance, 1024);
+        effectiveRange = Math.min(effectiveRange, 1024);
+
+        float modifier = modifiedDistance - effectiveRange;
 
         double percent = Math.min(effectiveRange / 100.0, 1);
         double modifierPercent = Math.min(modifier / 100.0, 1);

@@ -9,8 +9,8 @@ import com.tacz.guns.api.event.common.AttachmentPropertyEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.event.ChangeGunPropertyEvent;
-import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.modifier.custom.*;
+import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +30,6 @@ public class AttachmentPropertyManager {
 
     public static void registerModifier() {
         MODIFIERS.put(AdsModifier.ID, new AdsModifier());
-        MODIFIERS.put(AimInaccuracyModifier.ID, new AimInaccuracyModifier());
         MODIFIERS.put(AmmoSpeedModifier.ID, new AmmoSpeedModifier());
         MODIFIERS.put(ArmorIgnoreModifier.ID, new ArmorIgnoreModifier());
         MODIFIERS.put(DamageModifier.ID, new DamageModifier());

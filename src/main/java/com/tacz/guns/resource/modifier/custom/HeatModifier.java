@@ -6,12 +6,12 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.HeatData;
 import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,7 @@ public class HeatModifier implements IAttachmentModifier<HeatModifier.HeatModifi
 
     @Override
     public JsonProperty<HeatModifierValue> readJson(String json) {
-        HeatModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, HeatModifier.Data.class);
+        HeatModifier.Data data = CommonAssetsManager.GSON.fromJson(json, HeatModifier.Data.class);
         return new HeatModifier.HeatJsonProperty(data.getHeat());
     }
 

@@ -7,7 +7,7 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -33,7 +33,7 @@ public class RpmModifier implements IAttachmentModifier<Modifier, Integer> {
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        RpmModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, RpmModifier.Data.class);
+        RpmModifier.Data data = CommonAssetsManager.GSON.fromJson(json, RpmModifier.Data.class);
         return new RpmModifier.RpmJsonProperty(data.getRpm());
     }
 
@@ -58,15 +58,16 @@ public class RpmModifier implements IAttachmentModifier<Modifier, Integer> {
         FireMode fireMode = iGun.getFireMode(gunItem);
 
         int rpm = gunData.getRoundsPerMinute(fireMode);
-        int rpmModifier = cacheProperty.<Integer>getCache(RpmModifier.ID) - rpm;
+        int modifiedValue = cacheProperty.<Integer>getCache(RpmModifier.ID);
+        int rpmModifier = modifiedValue - rpm;
 
         double rpmPercent = Math.min(rpm / 1200.0, 1);
         double rpmModifierPercent = Math.min(rpmModifier / 1200.0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.rpm";
-        String positivelyString = String.format("%drpm §a(+%d)", rpm, rpmModifier);
-        String negativelyString = String.format("%drpm §c(%d)", rpm, rpmModifier);
-        String defaultString = String.format("%drpm", rpm);
+        String positivelyString = String.format("%drpm §a(+%d)", modifiedValue, rpmModifier);
+        String negativelyString = String.format("%drpm §c(%d)", modifiedValue, rpmModifier);
+        String defaultString = String.format("%drpm", modifiedValue);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(rpmPercent, rpmModifierPercent, rpmModifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

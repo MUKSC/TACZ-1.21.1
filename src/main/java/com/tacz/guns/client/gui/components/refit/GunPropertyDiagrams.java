@@ -118,9 +118,8 @@ public final class GunPropertyDiagrams {
 
 
             // 跑射延迟
-            float aimTime = gunData.getAimTime();
             float sprintTime = gunData.getSprintTime();
-            double sprintTimePercent = Mth.clamp(aimTime, 0, 1);
+            double sprintTimePercent = Mth.clamp(sprintTime / 0.5, 0, 1);
             int sprintLength = (int) (barStartX + barMaxWidth * sprintTimePercent);
             String sprintValueText = String.format("%.2fs", sprintTime);
 

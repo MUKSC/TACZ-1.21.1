@@ -8,7 +8,6 @@ import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
 import com.tacz.guns.config.sync.SyncConfig;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -16,6 +15,7 @@ import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
+import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -82,15 +82,17 @@ public class HeadShotModifier implements IAttachmentModifier<Modifier, Float> {
         float finalBase = extraDamage != null ? extraDamage.getHeadShotMultiplier() : 0;
         finalBase = fireModeAdjustData != null ? finalBase + fireModeAdjustData.getHeadShotMultiplier() : finalBase;
         finalBase *= SyncConfig.HEAD_SHOT_BASE_MULTIPLIER.get();
-        float modifier = cacheProperty.<Float>getCache(HeadShotModifier.ID) - finalBase;
 
-        double percent = Mth.clamp(finalBase / 10.0, 0, 1);
-        double modifierPercent = Mth.clamp(modifier / 10.0, 0, 1);
+        float modifiedValue = cacheProperty.<Float>getCache(HeadShotModifier.ID);
+        float modifier = modifiedValue - finalBase;
+
+        double percent = Mth.clamp(finalBase / 5.0, 0, 1);
+        double modifierPercent = Mth.clamp(modifier / 5.0, 0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.head_shot";
-        String positivelyString = String.format("x%.1f §a(+%.1f)", finalBase, modifier);
-        String negativelyString = String.format("x%.1f §c(%.1f)", finalBase, modifier);
-        String defaultString = String.format("x%.1f", finalBase);
+        String positivelyString = String.format("x%.1f §a(+%.1f)", modifiedValue, modifier);
+        String negativelyString = String.format("x%.1f §c(%.1f)", modifiedValue, modifier);
+        String defaultString = String.format("x%.1f", modifiedValue);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

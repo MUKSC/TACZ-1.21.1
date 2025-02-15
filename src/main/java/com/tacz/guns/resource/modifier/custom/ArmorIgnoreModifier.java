@@ -8,7 +8,7 @@ import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
 import com.tacz.guns.config.sync.SyncConfig;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -38,7 +38,7 @@ public class ArmorIgnoreModifier implements IAttachmentModifier<Modifier, Float>
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        Data data = CommonGunPackLoader.GSON.fromJson(json, Data.class);
+        Data data = CommonAssetsManager.GSON.fromJson(json, Data.class);
         return new ArmorIgnoreJsonProperty(data.getArmorIgnore());
     }
 
@@ -82,17 +82,17 @@ public class ArmorIgnoreModifier implements IAttachmentModifier<Modifier, Float>
         float finalBase = extraDamage != null ? extraDamage.getArmorIgnore() : 0;
         finalBase = fireModeAdjustData != null ? finalBase + fireModeAdjustData.getArmorIgnore() : finalBase;
         finalBase *= SyncConfig.ARMOR_IGNORE_BASE_MULTIPLIER.get();
-        float modifier = cacheProperty.<Float>getCache(ArmorIgnoreModifier.ID) - finalBase;
+
+        float modifiedValue = cacheProperty.<Float>getCache(ArmorIgnoreModifier.ID);
+        float modifier = modifiedValue - finalBase;
 
         double percent = Mth.clamp(finalBase, 0, 1);
         double modifierPercent = Mth.clamp(modifier, 0, 1);
-        finalBase *= 100;
-        modifier *= 100;
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.armor_ignore";
-        String positivelyString = String.format("%.1f%% §a(+%.1f%%)", finalBase, modifier);
-        String negativelyString = String.format("%.1f%% §c(%.1f%%)", finalBase, modifier);
-        String defaultString = String.format("%.1f%%", finalBase);
+        String positivelyString = String.format("%.1f%% §a(+%.1f%%)", modifiedValue * 100, modifier * 100);
+        String negativelyString = String.format("%.1f%% §c(%.1f%%)", modifiedValue * 100, modifier * 100);
+        String defaultString = String.format("%.1f%%", modifiedValue * 100);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);
