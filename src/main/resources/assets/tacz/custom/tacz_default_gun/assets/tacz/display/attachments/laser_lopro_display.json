@@ -16,6 +16,6 @@
     // 是否允许在改装界面自定义该镭射的颜色 can be customized
     "can_edit": true,
     // 激光的长度（因为是渐变，末端可能实际完全看不见）laser length
-    "length": 2.5
+    "length": 75
   }
 }

@@ -5,7 +5,10 @@
     "multiplier": 1.05
   },
   "inaccuracy": {
-    "multiplier": 0.65
+    "multiplier": 0.7
+  },
+  "sneak_inaccuracy": {
+    "multiplier": 0.75
   },
   "recoil": {
     "pitch": {

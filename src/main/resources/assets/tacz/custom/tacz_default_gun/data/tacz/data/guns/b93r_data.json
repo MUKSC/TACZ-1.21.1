@@ -90,8 +90,8 @@
   "inaccuracy": {
     "stand": 2.65,
     "move": 2.95,
-    "sneak": 2,
-    "lie": 0.7,
+    "sneak": 1.5,
+    "lie": 1,
     "aim": 0.17
   }
 }

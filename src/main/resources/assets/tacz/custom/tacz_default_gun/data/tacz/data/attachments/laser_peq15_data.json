@@ -6,7 +6,7 @@
   "aim_inaccuracy": {
     "multiplier": 0.88
   },
-  "inaccuracy": {
-    "multiplier": 0.88
+  "sneak_inaccuracy": {
+    "multiplier": 0.5
   }
 }

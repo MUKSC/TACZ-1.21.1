@@ -102,8 +102,8 @@
   "inaccuracy": {
     "stand": 3.5,
     "move": 4.5,
-    "sneak": 2.5,
-    "lie": 2,
+    "sneak": 2,
+    "lie": 1,
     "aim": 0.175
   },
   "melee": {

@@ -102,10 +102,10 @@
   },
   "inaccuracy": {
     "stand": 5,
-    "move": 6,
-    "sneak": 4.5,
-    "lie": 4,
-    "aim": 0.1
+    "move": 5.5,
+    "sneak": 2.5,
+    "lie": 1.5,
+    "aim": 0.125
   },
   // 近战相关
   "melee": {

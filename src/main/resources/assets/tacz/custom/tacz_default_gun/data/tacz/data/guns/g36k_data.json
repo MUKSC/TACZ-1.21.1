@@ -89,8 +89,8 @@
   "inaccuracy": {
     "stand": 3.75,
     "move": 4.25,
-    "sneak": 3.25,
-    "lie": 3.75,
+    "sneak": 2.5,
+    "lie": 1.5,
     "aim": 0.11
   },
   // 近战相关

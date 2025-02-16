@@ -83,10 +83,10 @@
     ]
   },
   "inaccuracy": {
-    "stand": 8.5,
-    "move": 11,
-    "sneak": 6.5,
-    "lie": 4.5,
+    "stand": 5,
+    "move": 5.5,
+    "sneak": 3,
+    "lie": 2.5,
     "aim": 0.05
   },
   // 近战相关
