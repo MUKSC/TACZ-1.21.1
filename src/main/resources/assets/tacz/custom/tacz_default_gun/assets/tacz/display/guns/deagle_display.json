@@ -29,10 +29,6 @@
     "scale": 0.7
   },
   "sounds": {
-    "reload_empty": "tacz:deagle/deagle_reload_empty",
-    "reload_tactical": "tacz:deagle/deagle_reload_tactical",
-    "inspect": "tacz:deagle/deagle_inspect",
-    "inspect_empty": "tacz:deagle/deagle_inspect_empty",
     "draw": "tacz:deagle/deagle_draw",
     "put_away": "tacz:deagle/deagle_put_away",
     "shoot": "tacz:deagle/deagle_shoot",

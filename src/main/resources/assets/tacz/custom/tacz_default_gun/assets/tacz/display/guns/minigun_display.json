@@ -96,6 +96,7 @@
     "shoot_3p": "tacz:minigun/minigun_shoot_3p",
     "silence": "tacz:minigun/minigun_silence",
     "silence_3p": "tacz:minigun/minigun_silence_3p",
+    "put_away": "tacz:minigun/minigun_put_away",
     // 下面四个音效可以不写，模组会自动添加默认音效
     "dry_fire": "tacz:dry_fire",
     "fire_select": "tacz:fire_select",

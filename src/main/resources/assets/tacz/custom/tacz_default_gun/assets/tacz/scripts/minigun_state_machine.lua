@@ -187,6 +187,7 @@ function main_track_states.idle.transition(this, context, input)
     -- 玩家从枪切到其他物品的时候会自动输入丢枪的信号,不用手动触发,只要检测就好了
     if (input == INPUT_PUT_AWAY) then
         runPutAwayAnimation(context)
+        context:trigger(this.INPUT_STOP_SPIN)
         -- 丢枪后转到最终态
         return this.main_track_states.final
     end
@@ -209,7 +210,7 @@ function main_track_states.idle.transition(this, context, input)
         return this.main_track_states.idle
     end
     -- 玩家按下检视键后会输入检视信号
-    if (input == INPUT_INSPECT) then
+    if (input == INPUT_INSPECT and not isOverHeat(context)) then
         runInspectAnimation(context)
         -- 检视需要转到检视态,因为检视过程中屏幕中央准星是隐藏的,因此需要一个检视态来调控准星
         return this.main_track_states.inspect
@@ -239,6 +240,7 @@ end
 
 -- 进入检视态
 function main_track_states.inspect.entry(this, context)
+    context:trigger(this.INPUT_STOP_SPIN)
     -- 检视是需要隐藏屏幕中央准星
     context:setShouldHideCrossHair(true)
 end
@@ -455,11 +457,20 @@ end
 -- 过热部分的内容完全参照空挂部分
 
 local over_heat_states = {
+    static = {},
     -- normal 是不过热的正常状态
     normal = {},
     -- over_heat 是过热时的状态
     over_heat = {}
 }
+
+local holdTime = 0
+
+function over_heat_states.static.transition(this, context, input)
+    if (context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+        return this.over_heat_states.normal
+    end
+end
 
 -- 更新"不过热"状态
 function over_heat_states.normal.update(this, context)
@@ -484,13 +495,15 @@ function over_heat_states.normal.transition(this, context, input)
     if (input == this.INPUT_OVER_HEAT) then
         return this.over_heat_states.over_heat
     end
+    if (input == this.INPUT_STOP_SPIN) then
+        context:stopAnimation(context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK))
+        return this.over_heat_states.static
+    end
 end
 
-local holdTime = 0
 -- 进入"过热"状态
 function over_heat_states.over_heat.entry(this, context)
     -- 进入过热时在主轨道行的过热轨道播放过热的动画
-    context:runAnimation("spin_low", context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK), true, PLAY_ONCE_HOLD, 0.2)
     holdTime = context:getCurrentTimestamp()
     -- 仅播放一次的过热时触发的动画,比如大量冒烟和警报声
     context:runAnimation("over_heat", context:getTrack(BLENDING_TRACK_LINE, OVER_HEAT_TRACK), true, PLAY_ONCE_STOP, 0.2)
@@ -500,13 +513,9 @@ end
 
 -- 更新"过热"状态
 function over_heat_states.over_heat.update(this, context)
-    local track = context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK)
-    if (context:isHolding(track)) then
-        if (isOverHeat(context)) then
-            if (context:getCurrentTimestamp() - holdTime > 2300) then
-                context:runAnimation("spin", context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK), true, PLAY_ONCE_HOLD, 0)
-            end
-        else
+    if (context:isStopped(context:getTrack(BLENDING_TRACK_LINE, OVER_HEAT_TRACK)) and context:isHolding(context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK))) then
+        context:runAnimation("spin", context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK), true, PLAY_ONCE_HOLD, 0)
+        if (not isOverHeat(context)) then
             context:trigger(this.INPUT_COOLING_HEAT)
         end
     end
@@ -527,11 +536,19 @@ end
 -- 旋转部分的内容完全参照空挂部分
 
 local spin_states = {
+    -- static 是静止不动的状态
+    static = {},
     -- normal 是默认旋转的状态
     normal = {},
     -- fire 是开火旋转的状态
     fire = {}
 }
+
+function spin_states.static.transition(this, context, input)
+    if (context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+        return this.spin_states.normal
+    end
+end
 
 -- 进入"默认旋转"状态
 function spin_states.normal.entry(this, context)
@@ -542,6 +559,10 @@ function spin_states.normal.transition(this, context, input)
     -- 如果收到了"开火"的输入,那么直接转到"开火旋转"状态
     if (input == INPUT_SHOOT) then
         return this.spin_states.fire
+    end
+    if (input == this.INPUT_STOP_SPIN) then
+        context:stopAnimation(context:getTrack(BLENDING_TRACK_LINE, SPIN_NORMAL_TRACK))
+        return this.spin_states.static
     end
 end
 
@@ -613,6 +634,7 @@ local M = {
     INPUT_BOLT_CAUGHT = "bolt_caught",
     INPUT_BOLT_NORMAL = "bolt_normal",
     INPUT_STOP_SHOOT = "input_stop_shoot",
+    INPUT_STOP_SPIN = "stop_spin",
     INPUT_OVER_HEAT = "over_heat",
     INPUT_COOLING_HEAT = "cooling_heat",
     INPUT_INSPECT_RETREAT = "inspect_retreat"
@@ -636,8 +658,8 @@ function M:states()
     return {
         self.base_track_state,
         self.bolt_caught_states.normal,
-        self.over_heat_states.normal,
-        self.spin_states.normal,
+        self.over_heat_states.static,
+        self.spin_states.static,
         self.main_track_states.start,
         self.gun_kick_state,
         self.movement_track_states.idle

@@ -1374,6 +1374,9 @@
 				"0.2": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magout"
 				},
+				"0.8667": {
+					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_empty_fast_rotate"
+				},
 				"1.5667": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magin"
 				},
@@ -1801,6 +1804,9 @@
 				},
 				"0.2": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magout"
+				},
+				"0.8667": {
+					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_empty_fast_rotate"
 				},
 				"1.5667": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magin"
@@ -5144,6 +5150,9 @@
 				"2.8667": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magout"
 				},
+				"3.9667": {
+					"effect": "tacz:hk_mp5a5/hk_mp5a5_inspect_empty_fast_pin"
+				},
 				"4.2333": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magin"
 				},
@@ -8191,6 +8200,9 @@
 				},
 				"2.8667": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magout"
+				},
+				"3.9667": {
+					"effect": "tacz:hk_mp5a5/hk_mp5a5_inspect_empty_fast_pin"
 				},
 				"4.2333": {
 					"effect": "tacz:hk_mp5a5/hk_mp5a5_reload_magin"
