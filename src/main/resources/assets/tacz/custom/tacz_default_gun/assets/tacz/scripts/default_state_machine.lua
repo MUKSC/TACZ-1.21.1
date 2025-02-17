@@ -475,7 +475,7 @@ local slide_states = {
 }
 
 function slide_states.normal.transition(this, context, input)
-    if(context:isCrouching() and context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)) and not context:isAiming()) then
+    if(context:shouldSlide() and context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)) and not context:isAiming()) then
         return this.slide_states.slide
     end
 end
@@ -491,7 +491,7 @@ function slide_states.slide.update(this, context)
 end
 
 function slide_states.slide.transition(this, context, input)
-    if(not context:isCrouching() or not context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)) or context:isAiming()) then
+    if(not context:shouldSlide() or not context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)) or context:isAiming()) then
         return this.slide_states.normal
     end
 end

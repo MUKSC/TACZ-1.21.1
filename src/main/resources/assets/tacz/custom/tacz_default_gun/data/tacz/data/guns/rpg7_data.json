@@ -48,6 +48,7 @@
     "reload": -0.2
   },
   "crawl_recoil_multiplier": 0.5,
+  "can_slide": false,
   "fire_mode": [
     "semi"
   ],

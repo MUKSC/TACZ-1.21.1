@@ -33,6 +33,9 @@ public class GunData {
     @SerializedName("can_crawl")
     private boolean canCrawl = true;
 
+    @SerializedName("can_slide")
+    private boolean canSlide = true;
+
     @SerializedName("bolt")
     private Bolt bolt = Bolt.OPEN_BOLT;
 
@@ -128,6 +131,10 @@ public class GunData {
 
     public boolean isCanCrawl() {
         return canCrawl;
+    }
+
+    public boolean canSlide() {
+        return canSlide;
     }
 
     public Bolt getBolt() {

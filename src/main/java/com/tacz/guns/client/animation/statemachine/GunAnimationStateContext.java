@@ -324,6 +324,15 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     }
 
     /**
+     * 获取 玩家当前是否应该斜握枪械
+     * 需要同时满足蹲伏和枪械允许斜握
+     * @return 玩家当前是否应该斜握枪械
+     */
+    public boolean shouldSlide() {
+        return processCameraEntity(e -> e.isCrouching() && gunData.canSlide()).orElse(false);
+    }
+
+    /**
      * 在玩家当前的行走距离打上锚点。此后，getWalkDist() 将返回与此锚点的相对值
      */
     public void anchorWalkDist() {
