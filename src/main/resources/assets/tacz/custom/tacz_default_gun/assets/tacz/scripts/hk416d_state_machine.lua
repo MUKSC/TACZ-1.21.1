@@ -35,9 +35,11 @@ local function runReloadAnimation(context)
         if (ext == 0) then
             context:runAnimation("reload_empty", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
-            context:runAnimation("reload_empty_xmag", track, false, PLAY_ONCE_STOP, 0.2)
-        elseif (ext == 2 or ext == 3) then
-            context:runAnimation("reload_empty_xmag", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("reload_empty_xmag_1", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 2) then
+            context:runAnimation("reload_empty_xmag_2", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 3) then
+            context:runAnimation("reload_empty_xmag_3", track, false, PLAY_ONCE_STOP, 0.2)
         else
             context:runAnimation("reload_empty", track, false, PLAY_ONCE_STOP, 0.2)
         end
@@ -45,9 +47,11 @@ local function runReloadAnimation(context)
         if (ext == 0) then
             context:runAnimation("reload_tactical", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
-            context:runAnimation("reload_tactical_xmag", track, false, PLAY_ONCE_STOP, 0.2)
-        elseif (ext == 2 or ext == 3) then
-            context:runAnimation("reload_tactical_xmag", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("reload_tactical_xmag_1", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 2) then
+            context:runAnimation("reload_tactical_xmag_2", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 3) then
+            context:runAnimation("reload_tactical_xmag_3", track, false, PLAY_ONCE_STOP, 0.2)
         else
             context:runAnimation("reload_tactical", track, false, PLAY_ONCE_STOP, 0.2)
         end
@@ -64,9 +68,11 @@ local function runInspectAnimation(context)
         if (ext == 0) then
             context:runAnimation("inspect_empty", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
-            context:runAnimation("inspect_empty_xmag", track, false, PLAY_ONCE_STOP, 0.2)
-        elseif (ext == 2 or ext == 3) then
-            context:runAnimation("inspect_empty_xmag", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("inspect_empty", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 2) then
+            context:runAnimation("inspect_empty", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 3) then
+            context:runAnimation("inspect_empty_xmag_3", track, false, PLAY_ONCE_STOP, 0.2)
         else
             context:runAnimation("inspect_empty", track, false, PLAY_ONCE_STOP, 0.2)
         end
@@ -74,9 +80,11 @@ local function runInspectAnimation(context)
         if (ext == 0) then
             context:runAnimation("inspect", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
-            context:runAnimation("inspect_xmag", track, false, PLAY_ONCE_STOP, 0.2)
-        elseif (ext == 2 or ext == 3) then
-            context:runAnimation("inspect_xmag", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("inspect_xmag_12", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 2) then
+            context:runAnimation("inspect_xmag_12", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 3) then
+            context:runAnimation("inspect_xmag_3", track, false, PLAY_ONCE_STOP, 0.2)
         else
             context:runAnimation("inspect", track, false, PLAY_ONCE_STOP, 0.2)
         end
@@ -113,8 +121,6 @@ end
 local fire_mode_state = {
     -- 半自动状态
     semi = {},
-    -- 连射状态
-    burst = {},
     -- 全自动状态
     auto = {},
     -- 掏枪状态
@@ -130,9 +136,6 @@ function fire_mode_state.draw.transition(this, context,input)
         if (context:getFireMode() == SEMI) then
             context:runAnimation("static_semi", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
             return fire_mode_state.semi
-        elseif (context:getFireMode() == BURST) then
-            context:runAnimation("static_burst", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
-            return fire_mode_state.burst
         elseif (context:getFireMode() == AUTO) then
             context:runAnimation("static_auto", context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK), true, PLAY_ONCE_HOLD, 0)
             return fire_mode_state.auto
@@ -169,47 +172,20 @@ function fire_mode_state.semi.transition(this, context,input)
     end
 end
 -- 和上面同理
-function fire_mode_state.burst.update(this, context)
+function fire_mode_state.auto.update(this, context)
     local track = context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK)
     if (context:isHolding(track)) then
-        context:runAnimation("static_burst", track, true, PLAY_ONCE_HOLD, 0)
+        context:runAnimation("static_auto", track, true, PLAY_ONCE_HOLD, 0)
     end
     if (context:getFireMode() == SEMI) then
         context:trigger(this.INPUT_MODE_SEMI)
     end
 end
 
-function fire_mode_state.burst.transition(this, context,input)
+function fire_mode_state.auto.transition(this, context,input)
     if(input == this.INPUT_MODE_SEMI)then
         context:runAnimation("switch_semi", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
         return fire_mode_state.semi
-    end
-
-    if(input == INPUT_SHOOT)then
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
-    end
-    if(input == INPUT_RELOAD)then
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
-    end
-    if(input == INPUT_INSPECT)then
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
-    end
-end
-
-function fire_mode_state.auto.update(this, context)
-    local track = context:getTrack(STATIC_TRACK_LINE, FIRE_MODE_TRACK)
-    if (context:isHolding(track)) then
-        context:runAnimation("static_auto", track, true, PLAY_ONCE_HOLD, 0)
-    end
-    if (context:getFireMode() == BURST) then
-        context:trigger(this.INPUT_MODE_BURST)
-    end
-end
-
-function fire_mode_state.auto.transition(this, context,input)
-    if(input == this.INPUT_MODE_BURST)then
-        context:runAnimation("switch_burst", context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK), false, PLAY_ONCE_STOP, 0)
-        return fire_mode_state.burst
     end
     if(input == INPUT_SHOOT)then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, SWITCH_MODE_TRACK))
@@ -226,7 +202,7 @@ end
 function inspect_state.transition(this, context, input)
     if (input == INPUT_FIRE_SELECT) then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
-        return main_track_states.idle
+        return this.main_track_states.idle
     end
     return main_track_states.inspect.transition(this, context, input)
 end

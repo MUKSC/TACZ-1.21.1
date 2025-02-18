@@ -1,20 +1,24 @@
 {
   "ammo": "tacz:45acp",
   "rpm": 1200,
-  "script": "tacz:vector45_gun_logic",
+  "script": "tacz:xmag_reload_logic",
   "script_param": {
     "reload_feed": 1.67,
     "reload_cooldown": 2.53,
     "empty_feed": 2.03,
     "empty_cooldown": 2.76,
-    "reload_xmag2_feed": 1.9,
-    "reload_xmag2_cooldown": 2.7,
-    "empty_xmag2_feed": 2.47,
-    "empty_xmag2_cooldown": 3.2,
-    "reload_xmag3_feed": 2.07,
-    "reload_xmag3_cooldown": 3,
-    "empty_xmag3_feed": 2.63,
-    "empty_xmag3_cooldown": 3.6
+    "reload_xmag_1_feed": 1.9,
+    "reload_xmag_1_cooldown": 2.7,
+    "empty_xmag_1_feed": 2.47,
+    "empty_xmag_1_cooldown": 3.2,
+    "reload_xmag_2_feed": 2.07,
+    "reload_xmag_2_cooldown": 3,
+    "empty_xmag_2_feed": 2.63,
+    "empty_xmag_2_cooldown": 3.6,
+    "reload_xmag_3_feed": 2.07,
+    "reload_xmag_3_cooldown": 3,
+    "empty_xmag_3_feed": 2.63,
+    "empty_xmag_3_cooldown": 3.6
   },
   "bullet": {
     "life": 0.8,

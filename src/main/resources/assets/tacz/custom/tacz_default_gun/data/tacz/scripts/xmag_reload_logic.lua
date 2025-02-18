@@ -25,26 +25,33 @@ local function getReloadTimingFromParam(param)
     local reload_cooldown = param.reload_cooldown * 1000
     local empty_feed = param.empty_feed * 1000
     local empty_cooldown = param.empty_cooldown * 1000
-    local reload_xmag2_feed = param.reload_xmag2_feed * 1000
-    local reload_xmag2_cooldown = param.reload_xmag2_cooldown * 1000
-    local empty_xmag2_feed = param.empty_xmag2_feed * 1000
-    local empty_xmag2_cooldown = param.empty_xmag2_cooldown * 1000
-    local reload_xmag3_feed = param.reload_xmag3_feed * 1000
-    local reload_xmag3_cooldown = param.reload_xmag3_cooldown * 1000
-    local empty_xmag3_feed = param.empty_xmag3_feed * 1000
-    local empty_xmag3_cooldown = param.empty_xmag3_cooldown * 1000
+    local reload_xmag_1_feed = param.reload_xmag_1_feed * 1000
+    local reload_xmag_1_cooldown = param.reload_xmag_1_cooldown * 1000
+    local empty_xmag_1_feed = param.empty_xmag_1_feed * 1000
+    local empty_xmag_1_cooldown = param.empty_xmag_1_cooldown * 1000
+    local reload_xmag_2_feed = param.reload_xmag_2_feed * 1000
+    local reload_xmag_2_cooldown = param.reload_xmag_2_cooldown * 1000
+    local empty_xmag_2_feed = param.empty_xmag_2_feed * 1000
+    local empty_xmag_2_cooldown = param.empty_xmag_2_cooldown * 1000
+    local reload_xmag_3_feed = param.reload_xmag_3_feed * 1000
+    local reload_xmag_3_cooldown = param.reload_xmag_3_cooldown * 1000
+    local empty_xmag_3_feed = param.empty_xmag_3_feed * 1000
+    local empty_xmag_3_cooldown = param.empty_xmag_3_cooldown * 1000
     -- 这两个判断是用来检查以上 12 个参数是否有缺失的，若有缺失则不获取任何参数。其实是可以写进一个判断语句的，但是这样的话整个句子会过长影响阅读所以我就拆成 3 个了
     if (reload_feed == nil or reload_cooldown == nil or empty_feed == nil or empty_cooldown == nil) then
         return nil
     end
-    if (reload_xmag2_feed == nil or reload_xmag2_cooldown == nil or empty_xmag2_feed == nil or empty_xmag2_cooldown == nil) then
+    if (reload_xmag_1_feed == nil or reload_xmag_1_cooldown == nil or empty_xmag_1_feed == nil or empty_xmag_1_cooldown == nil) then
         return nil
     end
-    if (reload_xmag3_feed == nil or reload_xmag3_cooldown == nil or empty_xmag3_feed == nil or empty_xmag3_cooldown == nil) then
+    if (reload_xmag_2_feed == nil or reload_xmag_2_cooldown == nil or empty_xmag_2_feed == nil or empty_xmag_2_cooldown == nil) then
+        return nil
+    end
+    if (reload_xmag_3_feed == nil or reload_xmag_3_cooldown == nil or empty_xmag_3_feed == nil or empty_xmag_3_cooldown == nil) then
         return nil
     end
     -- 顺序返回获取到的这 12 个参数
-    return reload_feed, reload_cooldown, empty_feed, empty_cooldown, reload_xmag2_feed, reload_xmag2_cooldown, empty_xmag2_feed, empty_xmag2_cooldown, reload_xmag3_feed, reload_xmag3_cooldown, empty_xmag3_feed, empty_xmag3_cooldown
+    return reload_feed, reload_cooldown, empty_feed, empty_cooldown, reload_xmag_1_feed, reload_xmag_1_cooldown, empty_xmag_1_feed, empty_xmag_1_cooldown, reload_xmag_2_feed, reload_xmag_2_cooldown, empty_xmag_2_feed, empty_xmag_2_cooldown, reload_xmag_3_feed, reload_xmag_3_cooldown, empty_xmag_3_feed, empty_xmag_3_cooldown
 end
 
 -- 在换弹过程中每一帧都会执行的事，注意这里的帧不是 mc 的 tick ，这个运行起来可比一秒跑 20 次的 tick 快太多了
@@ -52,7 +59,7 @@ function M.tick_reload(api)
     -- 从枪 data 文件中获取所有需要传入逻辑机的参数，注意此时的 param 是个列表，还不能直接拿来用
     local param = api:getScriptParams();
     -- 调用刚才的 lua 函数，把 param 里包含的八个参数依次赋值给我们新定义的变量
-    local reload_feed, reload_cooldown, empty_feed, empty_cooldown, reload_xmag2_feed, reload_xmag2_cooldown, empty_xmag2_feed, empty_xmag2_cooldown, reload_xmag3_feed, reload_xmag3_cooldown, empty_xmag3_feed, empty_xmag3_cooldown = getReloadTimingFromParam(param)
+    local reload_feed, reload_cooldown, empty_feed, empty_cooldown, reload_xmag_1_feed, reload_xmag_1_cooldown, empty_xmag_1_feed, empty_xmag_1_cooldown, reload_xmag_2_feed, reload_xmag_2_cooldown, empty_xmag_2_feed, empty_xmag_2_cooldown, reload_xmag_3_feed, reload_xmag_3_cooldown, empty_xmag_3_feed, empty_xmag_3_cooldown = getReloadTimingFromParam(param)
     -- 获取换弹时间，在玩家按下 R 的一瞬间作为零点，单位是毫秒。假设玩家在一秒前按下了 R ，那么此时这个时间就是 1000
     local reload_time = api:getReloadTime()
     -- 从玩家身上获取脚本开头缓存的数据
@@ -61,10 +68,13 @@ function M.tick_reload(api)
     if (reload_feed == nil or reload_cooldown == nil or empty_feed == nil or empty_cooldown == nil) then
         return NOT_RELOADING, -1
     end
-    if (reload_xmag2_feed == nil or reload_xmag2_cooldown == nil or empty_xmag2_feed == nil or empty_xmag2_cooldown == nil) then
+    if (reload_xmag_1_feed == nil or reload_xmag_1_cooldown == nil or empty_xmag_1_feed == nil or empty_xmag_1_cooldown == nil) then
         return NOT_RELOADING, -1
     end
-    if (reload_xmag3_feed == nil or reload_xmag3_cooldown == nil or empty_xmag3_feed == nil or empty_xmag3_cooldown == nil) then
+    if (reload_xmag_2_feed == nil or reload_xmag_2_cooldown == nil or empty_xmag_2_feed == nil or empty_xmag_2_cooldown == nil) then
+        return NOT_RELOADING, -1
+    end
+    if (reload_xmag_3_feed == nil or reload_xmag_3_cooldown == nil or empty_xmag_3_feed == nil or empty_xmag_3_cooldown == nil) then
         return NOT_RELOADING, -1
     end
 
@@ -135,9 +145,9 @@ function M.tick_reload(api)
 
     elseif (api:getMagExtentLevel() == 1) then
         if (cache.is_tactical) then
-            if (reload_time < reload_xmag2_feed) then
-                return TACTICAL_RELOAD_FEEDING, reload_xmag2_feed - reload_time
-            elseif (reload_time >= reload_xmag2_feed and reload_time < reload_xmag2_cooldown) then
+            if (reload_time < reload_xmag_1_feed) then
+                return TACTICAL_RELOAD_FEEDING, reload_xmag_1_feed - reload_time
+            elseif (reload_time >= reload_xmag_1_feed and reload_time < reload_xmag_1_cooldown) then
                 if (cache.reloaded ~= 1) then
                     if (api:isReloadingNeedConsumeAmmo()) then
                         api:putAmmoInMagazine(api:consumeAmmoFromPlayer(cache.needed_count))
@@ -146,15 +156,15 @@ function M.tick_reload(api)
                     end
                     cache.reloaded = 1
                 end
-                return TACTICAL_RELOAD_FINISHING, reload_xmag2_cooldown - reload_time
+                return TACTICAL_RELOAD_FINISHING, reload_xmag_1_cooldown - reload_time
             else
                 return NOT_RELOADING, -1
             end
 
         else
-            if (reload_time < empty_xmag2_feed) then
-                return EMPTY_RELOAD_FEEDING, empty_xmag2_feed - reload_time
-            elseif (reload_time >= empty_xmag2_feed and reload_time < empty_xmag2_cooldown) then
+            if (reload_time < empty_xmag_1_feed) then
+                return EMPTY_RELOAD_FEEDING, empty_xmag_1_feed - reload_time
+            elseif (reload_time >= empty_xmag_1_feed and reload_time < empty_xmag_1_cooldown) then
                 if (cache.reloaded ~= 1) then
                     if (api:isReloadingNeedConsumeAmmo()) then
                         api:putAmmoInMagazine(api:consumeAmmoFromPlayer(cache.needed_count) - 1)
@@ -164,17 +174,17 @@ function M.tick_reload(api)
                     api:setAmmoInBarrel(true)
                     cache.reloaded = 1
                 end
-                return EMPTY_RELOAD_FINISHING, empty_xmag2_cooldown - reload_time
+                return EMPTY_RELOAD_FINISHING, empty_xmag_1_cooldown - reload_time
             else
                 return NOT_RELOADING, -1
             end
         end
 
-    elseif ((api:getMagExtentLevel() == 2 or api:getMagExtentLevel() == 3)) then
+    elseif (api:getMagExtentLevel() == 2) then
         if (cache.is_tactical) then
-            if (reload_time < reload_xmag3_feed) then
-                return TACTICAL_RELOAD_FEEDING, reload_xmag3_feed - reload_time
-            elseif (reload_time >= reload_xmag3_feed and reload_time < reload_xmag3_cooldown) then
+            if (reload_time < reload_xmag_2_feed) then
+                return TACTICAL_RELOAD_FEEDING, reload_xmag_2_feed - reload_time
+            elseif (reload_time >= reload_xmag_2_feed and reload_time < reload_xmag_2_cooldown) then
                 if (cache.reloaded ~= 1) then
                     if (api:isReloadingNeedConsumeAmmo()) then
                         api:putAmmoInMagazine(api:consumeAmmoFromPlayer(cache.needed_count))
@@ -183,15 +193,15 @@ function M.tick_reload(api)
                     end
                     cache.reloaded = 1
                 end
-                return TACTICAL_RELOAD_FINISHING, reload_xmag3_cooldown - reload_time
+                return TACTICAL_RELOAD_FINISHING, reload_xmag_2_cooldown - reload_time
             else
                 return NOT_RELOADING, -1
             end
 
         else
-            if (reload_time < empty_xmag3_feed) then
-                return EMPTY_RELOAD_FEEDING, empty_xmag3_feed - reload_time
-            elseif (reload_time >= empty_xmag3_feed and reload_time < empty_xmag3_cooldown) then
+            if (reload_time < empty_xmag_2_feed) then
+                return EMPTY_RELOAD_FEEDING, empty_xmag_2_feed - reload_time
+            elseif (reload_time >= empty_xmag_2_feed and reload_time < empty_xmag_2_cooldown) then
                 if (cache.reloaded ~= 1) then
                     if (api:isReloadingNeedConsumeAmmo()) then
                         api:putAmmoInMagazine(api:consumeAmmoFromPlayer(cache.needed_count) - 1)
@@ -201,12 +211,48 @@ function M.tick_reload(api)
                     api:setAmmoInBarrel(true)
                     cache.reloaded = 1
                 end
-                return EMPTY_RELOAD_FINISHING, empty_xmag3_cooldown - reload_time
+                return EMPTY_RELOAD_FINISHING, empty_xmag_2_cooldown - reload_time
             else
                 return NOT_RELOADING, -1
             end
         end
-    end
+
+        elseif (api:getMagExtentLevel() == 3) then
+            if (cache.is_tactical) then
+                if (reload_time < reload_xmag_3_feed) then
+                    return TACTICAL_RELOAD_FEEDING, reload_xmag_3_feed - reload_time
+                elseif (reload_time >= reload_xmag_3_feed and reload_time < reload_xmag_3_cooldown) then
+                    if (cache.reloaded ~= 1) then
+                        if (api:isReloadingNeedConsumeAmmo()) then
+                            api:putAmmoInMagazine(api:consumeAmmoFromPlayer(cache.needed_count))
+                        else
+                            api:putAmmoInMagazine(cache.needed_count)
+                        end
+                        cache.reloaded = 1
+                    end
+                    return TACTICAL_RELOAD_FINISHING, reload_xmag_3_cooldown - reload_time
+                else
+                    return NOT_RELOADING, -1
+                end
+            else
+                if (reload_time < empty_xmag_3_feed) then
+                    return EMPTY_RELOAD_FEEDING, empty_xmag_3_feed - reload_time
+                elseif (reload_time >= empty_xmag_3_feed and reload_time < empty_xmag_3_cooldown) then
+                    if (cache.reloaded ~= 1) then
+                        if (api:isReloadingNeedConsumeAmmo()) then
+                            api:putAmmoInMagazine(api:consumeAmmoFromPlayer(cache.needed_count) - 1)
+                        else
+                            api:putAmmoInMagazine(cache.needed_count - 1)
+                        end
+                        api:setAmmoInBarrel(true)
+                        cache.reloaded = 1
+                    end
+                    return EMPTY_RELOAD_FINISHING, empty_xmag_3_cooldown - reload_time
+                else
+                    return NOT_RELOADING, -1
+                end
+            end
+        end
 end
 
 -- 向模组返回整个逻辑机，定式

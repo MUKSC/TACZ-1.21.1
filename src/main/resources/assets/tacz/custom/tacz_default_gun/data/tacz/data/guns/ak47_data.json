@@ -10,20 +10,24 @@
     40
   ],
   // 指定逻辑机及相关数值的修改
-  "script": "tacz:ak47_gun_logic",
+  "script": "tacz:xmag_reload_logic",
   "script_param": {
     "reload_feed": 1.55,
     "reload_cooldown": 2.0,
     "empty_feed": 2.25,
     "empty_cooldown": 2.6,
-    "reload_xmag2_feed": 1.54,
-    "reload_xmag2_cooldown": 2.29,
-    "empty_xmag2_feed": 2.5,
-    "empty_xmag2_cooldown": 2.85,
-    "reload_xmag3_feed": 1.54,
-    "reload_xmag3_cooldown": 2.29,
-    "empty_xmag3_feed": 2.5,
-    "empty_xmag3_cooldown": 2.85
+    "reload_xmag_1_feed": 1.54,
+    "reload_xmag_1_cooldown": 2.29,
+    "empty_xmag_1_feed": 2.5,
+    "empty_xmag_1_cooldown": 2.85,
+    "reload_xmag_2_feed": 1.54,
+    "reload_xmag_2_cooldown": 2.29,
+    "empty_xmag_2_feed": 2.5,
+    "empty_xmag_2_cooldown": 2.85,
+    "reload_xmag_3_feed": 1.54,
+    "reload_xmag_3_cooldown": 2.29,
+    "empty_xmag_3_feed": 2.5,
+    "empty_xmag_3_cooldown": 2.85
   },
   // 是否允许趴下
   "can_crawl": true,

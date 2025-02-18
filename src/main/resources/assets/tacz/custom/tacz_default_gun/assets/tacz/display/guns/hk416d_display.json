@@ -10,6 +10,7 @@
   "animation": "tacz:hk416d",
   "use_default_animation": "rifle",
   "third_person_animation": "default",
+  "state_machine": "tacz:hk416d_state_machine",
   "transform": {
     "scale": {
       "thirdperson": [0.6, 0.6, 0.6],
