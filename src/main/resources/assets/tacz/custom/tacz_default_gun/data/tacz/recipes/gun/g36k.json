@@ -21,10 +21,7 @@
   ],
   "result": {
     "type": "gun",
-    "id": "tacz:hk416d",
-    "attachments": {
-      "stock": "tacz:stock_hk_slim_line"
-    }
+    "id": "tacz:g36k"
   },
   "type": "tacz:gun_smith_table_crafting"
 }

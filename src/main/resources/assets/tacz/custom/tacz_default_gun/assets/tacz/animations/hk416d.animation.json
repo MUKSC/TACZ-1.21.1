@@ -546,7 +546,10 @@
 				"magazine_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.3": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.3": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -667,19 +670,19 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "m4a1_raise_v2"
+					"effect": "tacz:hk416d/hk416d_raise"
 				},
 				"0.8": {
-					"effect": "m4a1_reload_fast_magout_v2"
+					"effect": "tacz:hk416d/hk416d_reload_fast_magout"
 				},
 				"0.9333": {
-					"effect": "m4a1_reload_magin_01"
+					"effect": "tacz:hk416d/hk416d_reload_magin_01"
 				},
 				"1.2333": {
-					"effect": "m4a1_reload_magin_v2_01"
+					"effect": "tacz:hk416d/hk416d_reload_magin_v2_01"
 				},
 				"1.8667": {
-					"effect": "m4a1_reload_gl_end_v1"
+					"effect": "tacz:hk416d/hk416d_reload_end"
 				}
 			}
 		},
@@ -1047,7 +1050,10 @@
 				"magazine_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.3": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.3": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -1093,14 +1099,14 @@
 					"rotation": {
 						"0.0": [0.1, 0.1, 0.1],
 						"0.2": [0.03, 0.03, 0.03],
-						"1.9": [0.03, 0.03, 0.03],
-						"2.2667": [0.1, 0.1, 0.1]
+						"1.7333": [0.03, 0.03, 0.03],
+						"2.0333": [0.1, 0.1, 0.1]
 					},
 					"position": {
 						"0.0": [0.1, 0.1, 0.4],
 						"0.2": [0.03, 0.03, 0.03],
-						"1.9": [0.03, 0.03, 0.03],
-						"2.2667": [0.1, 0.1, 0.4]
+						"1.7333": [0.03, 0.03, 0.03],
+						"2.0333": [0.1, 0.1, 0.4]
 					}
 				},
 				"camera": {
@@ -1186,19 +1192,22 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "m4a1_raise_v2"
+					"effect": "tacz:hk416d/hk416d_raise"
 				},
 				"0.8": {
-					"effect": "m4a1_reload_fast_magout_v2"
+					"effect": "tacz:hk416d/hk416d_reload_fast_magout"
 				},
-				"0.9333": {
-					"effect": "m4a1_reload_magin_01"
+				"1.0": {
+					"effect": "tacz:hk416d/hk416d_reload_magin_01"
 				},
-				"1.2333": {
-					"effect": "m4a1_reload_magin_v2_01"
+				"1.3333": {
+					"effect": "tacz:hk416d/hk416d_reload_magin_v2_01"
 				},
-				"1.8667": {
-					"effect": "m4a1_reload_gl_end_v1"
+				"1.7667": {
+					"effect": "tacz:hk416d/hk416d_reload_xmag_maghit"
+				},
+				"2.0667": {
+					"effect": "tacz:hk416d/hk416d_reload_end"
 				}
 			}
 		},
@@ -1589,7 +1598,10 @@
 				"magazine_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.3": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.3": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -1641,14 +1653,14 @@
 					"rotation": {
 						"0.0": [0.1, 0.1, 0.1],
 						"0.2": [0.03, 0.03, 0.03],
-						"2.1667": [0.03, 0.03, 0.03],
-						"2.6": [0.1, 0.1, 0.1]
+						"1.7333": [0.03, 0.03, 0.03],
+						"2.0333": [0.1, 0.1, 0.1]
 					},
 					"position": {
 						"0.0": [0.1, 0.1, 0.4],
 						"0.2": [0.03, 0.03, 0.03],
-						"2.1667": [0.03, 0.03, 0.03],
-						"2.6": [0.1, 0.1, 0.4]
+						"1.7333": [0.03, 0.03, 0.03],
+						"2.0333": [0.1, 0.1, 0.4]
 					}
 				},
 				"camera": {
@@ -1746,19 +1758,25 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "m4a1_raise_v2"
+					"effect": "tacz:hk416d/hk416d_raise"
 				},
-				"0.8": {
-					"effect": "m4a1_reload_fast_magout_v2"
+				"0.8667": {
+					"effect": "tacz:hk416d/hk416d_reload_fast_magout"
 				},
-				"0.9333": {
-					"effect": "m4a1_reload_magin_01"
+				"1.1667": {
+					"effect": "tacz:hk416d/hk416d_reload_maghit"
 				},
 				"1.2333": {
-					"effect": "m4a1_reload_magin_v2_01"
+					"effect": "tacz:hk416d/hk416d_reload_magin_01"
 				},
-				"1.8667": {
-					"effect": "m4a1_reload_gl_end_v1"
+				"1.6333": {
+					"effect": "tacz:hk416d/hk416d_reload_magin_v2_01"
+				},
+				"2.1": {
+					"effect": "tacz:hk416d/hk416d_reload_xmag_maghit"
+				},
+				"2.4667": {
+					"effect": "tacz:hk416d/hk416d_reload_end"
 				}
 			}
 		},
@@ -1800,18 +1818,8 @@
 					"scale": [1, 1.5, 1]
 				},
 				"constraint": {
-					"rotation": {
-						"0.0": [0.1, 0.1, 0.1],
-						"0.2917": [0.03, 0.03, 0.03],
-						"3.0833": [0.03, 0.03, 0.03],
-						"3.5": [0.1, 0.1, 0.1]
-					},
-					"position": {
-						"0.0": [0.1, 0.1, 0.4],
-						"0.2917": [0.03, 0.03, 0.03],
-						"3.0833": [0.03, 0.03, 0.03],
-						"3.5": [0.1, 0.1, 0.4]
-					}
+					"rotation": [0.1, 0.1, 0.1],
+					"position": [0.1, 0.1, 0.4]
 				},
 				"root": {
 					"rotation": {
@@ -2191,9 +2199,6 @@
 						"2.5833": [0, 0, 0]
 					}
 				},
-				"additional_magazine": {
-					"scale": 0
-				},
 				"camera": {
 					"rotation": {
 						"0.0": {
@@ -2309,6 +2314,32 @@
 							"lerp_mode": "catmullrom"
 						}
 					}
+				},
+				"additional_magazine": {
+					"scale": 0
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:hk416d/hk416d_raise"
+				},
+				"0.625": {
+					"effect": "tacz:hk416d/hk416d_reload_xmaglrg_magout"
+				},
+				"1.25": {
+					"effect": "tacz:hk416d/hk416d_reload_xmaglrg_lift"
+				},
+				"1.875": {
+					"effect": "tacz:hk416d/hk416d_reload_xmaglrg_maghit"
+				},
+				"2.3333": {
+					"effect": "tacz:hk416d/hk416d_reload_xmaglrg_magin"
+				},
+				"2.75": {
+					"effect": "tacz:hk416d/hk416d_reload_xmag_maghit"
+				},
+				"3.25": {
+					"effect": "tacz:hk416d/hk416d_reload_end"
 				}
 			}
 		},
@@ -2603,7 +2634,10 @@
 				"magazine_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.8667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.8667": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -2773,22 +2807,25 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "m4a1_gl_reload_fast_raise"
+					"effect": "tacz:hk416d/hk416d_reload_fast_raise"
 				},
 				"0.3333": {
-					"effect": "m4a1_reload_empty_xmag_magout_01"
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_magout"
 				},
 				"0.5": {
-					"effect": "m4a1_reload_empty_fast_magout_v2"
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_magout"
+				},
+				"0.8333": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_mag_drop"
 				},
 				"1.2667": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+					"effect": "tacz:hk416d/hk416d_reload_empty_magin_02"
 				},
 				"1.6667": {
-					"effect": "m4a1_reload_empty_fast_chamber_v2"
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_chamber"
 				},
 				"2.1333": {
-					"effect": "m4a1_reload_empty_fast_end_v2"
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_end"
 				}
 			}
 		},
@@ -3107,7 +3144,10 @@
 				"magazine_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.9667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.9667": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -3277,22 +3317,28 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "m4a1_gl_reload_fast_raise"
+					"effect": "tacz:hk416d/hk416d_reload_fast_raise"
 				},
 				"0.3333": {
-					"effect": "m4a1_reload_empty_xmag_magout_01"
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_magout"
 				},
 				"0.5": {
-					"effect": "m4a1_reload_empty_fast_magout_v2"
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_magout"
 				},
-				"1.2": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+				"0.8333": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_mag_drop"
+				},
+				"1.3667": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_arm"
 				},
 				"1.6": {
-					"effect": "m4a1_reload_empty_fast_chamber_v2"
+					"effect": "tacz:hk416d/hk416d_reload_empty_magin_02"
 				},
-				"2.0667": {
-					"effect": "m4a1_reload_empty_fast_end_v2"
+				"2.0": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_chamber"
+				},
+				"2.4667": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_end"
 				}
 			}
 		},
@@ -3644,7 +3690,10 @@
 				"magazine_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.9667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"0.9667": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"additional_magazine": {
@@ -3705,14 +3754,14 @@
 					"rotation": {
 						"0.0": [0.1, 0.1, 0.1],
 						"0.2": [0.03, 0.03, 0.03],
-						"2.0667": [0.03, 0.03, 0.03],
-						"2.3333": [0.1, 0.1, 0.1]
+						"1.8333": [0.03, 0.03, 0.03],
+						"2.1333": [0.1, 0.1, 0.1]
 					},
 					"position": {
 						"0.0": [0.1, 0.1, 0.4],
 						"0.2": [0.03, 0.03, 0.03],
-						"2.0667": [0.03, 0.03, 0.03],
-						"2.3333": [0.1, 0.1, 0.4]
+						"1.8333": [0.03, 0.03, 0.03],
+						"2.1333": [0.1, 0.1, 0.4]
 					}
 				},
 				"camera": {
@@ -3818,22 +3867,28 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "m4a1_gl_reload_fast_raise"
+					"effect": "tacz:hk416d/hk416d_reload_fast_raise"
 				},
 				"0.3333": {
-					"effect": "m4a1_reload_empty_xmag_magout_01"
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_magout"
 				},
 				"0.5": {
-					"effect": "m4a1_reload_empty_fast_magout_v2"
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_magout"
 				},
-				"1.2": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+				"0.8333": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_mag_drop"
 				},
-				"1.6": {
-					"effect": "m4a1_reload_empty_fast_chamber_v2"
+				"1.3333": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_maghit"
 				},
-				"2.0667": {
-					"effect": "m4a1_reload_empty_fast_end_v2"
+				"1.8333": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_magin"
+				},
+				"2.1667": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_chamber"
+				},
+				"2.6333": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_end"
 				}
 			}
 		},
@@ -3893,18 +3948,8 @@
 					"scale": [1, 1.5, 1]
 				},
 				"constraint": {
-					"rotation": {
-						"0.0": [0.1, 0.1, 0.1],
-						"0.2083": [0.03, 0.03, 0.03],
-						"3.5417": [0.03, 0.03, 0.03],
-						"3.7917": [0.1, 0.1, 0.1]
-					},
-					"position": {
-						"0.0": [0.1, 0.1, 0.4],
-						"0.2083": [0.03, 0.03, 0.03],
-						"3.5417": [0.03, 0.03, 0.03],
-						"3.7917": [0.1, 0.1, 0.4]
-					}
+					"rotation": [0.1, 0.1, 0.1],
+					"position": [0.1, 0.1, 0.4]
 				},
 				"root": {
 					"rotation": {
@@ -4239,7 +4284,10 @@
 					"position": [0, 0, 0],
 					"scale": {
 						"0.0": [0, 0, 0],
-						"1.1667": {"pre": [0, 0, 0], "post": [1, 1, 1]},
+						"1.1667": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						},
 						"1.2083": [1, 1, 1]
 					}
 				},
@@ -4255,39 +4303,6 @@
 						"0.0": [0, 0, 17.5],
 						"3.125": [0, 0, 17.5],
 						"3.1667": [0, 0, 0]
-					}
-				},
-				"additional_magazine": {
-					"rotation": {
-						"0.4583": [0, 0, 0],
-						"0.5833": [0, 0, 0],
-						"0.75": [-25, 0, 0],
-						"0.875": [-25, 0, 0],
-						"1.0": [-25, 0, 0]
-					},
-					"position": {
-						"0.4583": [0, 0, 0],
-						"0.5833": [0, -4.4, 0],
-						"0.75": [-0.41841, -14.78768, 2.56978],
-						"0.875": [-2.82004, -28.65714, 8.3081],
-						"1.0": [-2.82004, -28.65714, 8.3081]
-					},
-					"scale": {
-						"0.0": [1, 1, 1],
-						"1.0": {"pre": [1, 1, 1], "post": [0, 0, 0]},
-						"1.0417": [0, 0, 0]
-					}
-				},
-				"MagazineCatch": {
-					"position": {
-						"0.3333": [0, 0, 0],
-						"0.4167": [0.125, 0, 0],
-						"0.5833": [0.125, 0, 0],
-						"0.6667": [0, 0, 0],
-						"2.0417": [0, 0, 0],
-						"2.0833": [0.125, 0, 0],
-						"2.1667": [0.125, 0, 0],
-						"2.2083": [0, 0, 0]
 					}
 				},
 				"camera": {
@@ -4421,6 +4436,56 @@
 							"lerp_mode": "catmullrom"
 						}
 					}
+				},
+				"additional_magazine": {
+					"rotation": {
+						"0.4583": [0, 0, 0],
+						"0.5833": [0, 0, 0],
+						"0.75": [-25, 0, 0],
+						"0.875": [-25, 0, 0],
+						"1.0": [-25, 0, 0]
+					},
+					"position": {
+						"0.4583": [0, 0, 0],
+						"0.5833": [0, -4.4, 0],
+						"0.75": [-0.41841, -14.78768, 2.56978],
+						"0.875": [-2.82004, -28.65714, 8.3081],
+						"1.0": [-2.82004, -28.65714, 8.3081]
+					},
+					"scale": {
+						"0.0": [1, 1, 1],
+						"1.0": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
+						"1.0417": [0, 0, 0]
+					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_xmaglrg_lift"
+				},
+				"0.5": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_xmaglrg_magout"
+				},
+				"0.9167": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_mag_drop_large_drum"
+				},
+				"1.5417": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_xmaglrg_maghit"
+				},
+				"2.0": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_xmaglrg_magin"
+				},
+				"2.5417": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_magin"
+				},
+				"3.0": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_chamber"
+				},
+				"3.5417": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_end"
 				}
 			}
 		},
@@ -5337,46 +5402,46 @@
 			},
 			"sound_effects": {
 				"0.1667": {
-					"effect": "m4a1_inspect_01"
+					"effect": "tacz:hk416d/hk416d_inspect_01"
 				},
 				"0.9": {
-					"effect": "m4a1_inspect_02"
+					"effect": "tacz:hk416d/hk416d_inspect_02"
 				},
 				"1.9333": {
-					"effect": "weap_mike4_deadtrigger_plr_02"
+					"effect": "tacz:hk416d/hk416d_deadtrigger"
 				},
 				"2.1": {
-					"effect": "m4a1_inspect_03"
+					"effect": "tacz:hk416d/hk416d_inspect_03"
 				},
-				"2.8": {
-					"effect": "m4a1_reload_fast_magout_v2"
+				"2.8333": {
+					"effect": "tacz:hk416d/hk416d_reload_fast_magout"
 				},
 				"4.5333": {
-					"effect": "m4a1_reload_fast_magin_v2_01"
+					"effect": "tacz:hk416d/hk416d_reload_fast_magin_01"
 				},
 				"4.8": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+					"effect": "tacz:hk416d/hk416d_reload_empty_magin_02"
 				},
 				"5.1": {
-					"effect": "m4a1_reload_fast_lift_v2"
+					"effect": "tacz:hk416d/hk416d_reload_fast_lift"
 				},
 				"5.5333": {
-					"effect": "p01_dm_msecho_inspect_bolt"
+					"effect": "tacz:hk416d/hk416d_inspect_bolt"
 				},
 				"5.6": {
-					"effect": "p01_dm_msecho_inspect_finger"
+					"effect": "tacz:hk416d/hk416d_inspect_finger"
 				},
 				"6.0333": {
-					"effect": "p01_dm_msecho_inspect_boltrelease"
+					"effect": "tacz:hk416d/hk416d_inspect_boltrelease"
 				},
 				"6.2667": {
-					"effect": "p01_dm_msecho_inspect_maginmvt"
+					"effect": "tacz:hk416d/hk416d_inspect_maginmvt"
 				},
 				"6.7": {
-					"effect": "p01_dm_msecho_inspect_boltclick"
+					"effect": "tacz:hk416d/hk416d_inspect_boltclick"
 				},
 				"7.1": {
-					"effect": "m4a1_inspect_05"
+					"effect": "tacz:hk416d/hk416d_inspect_05"
 				}
 			}
 		},
@@ -6295,46 +6360,46 @@
 			},
 			"sound_effects": {
 				"0.1667": {
-					"effect": "m4a1_inspect_01"
+					"effect": "tacz:hk416d/hk416d_inspect_01"
 				},
 				"0.9": {
-					"effect": "m4a1_inspect_02"
+					"effect": "tacz:hk416d/hk416d_inspect_02"
 				},
 				"1.9333": {
-					"effect": "weap_mike4_deadtrigger_plr_02"
+					"effect": "tacz:hk416d/hk416d_deadtrigger"
 				},
 				"2.1": {
-					"effect": "m4a1_inspect_03"
+					"effect": "tacz:hk416d/hk416d_inspect_03"
 				},
-				"2.8": {
-					"effect": "m4a1_reload_fast_magout_v2"
+				"2.8333": {
+					"effect": "tacz:hk416d/hk416d_reload_fast_magout"
 				},
-				"4.5333": {
-					"effect": "m4a1_reload_fast_magin_v2_01"
+				"4.6333": {
+					"effect": "tacz:hk416d/hk416d_reload_fast_magin_01"
 				},
-				"4.8": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+				"4.9": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_magin_02"
 				},
-				"5.1": {
-					"effect": "m4a1_reload_fast_lift_v2"
+				"5.2": {
+					"effect": "tacz:hk416d/hk416d_reload_fast_lift"
 				},
-				"5.5333": {
-					"effect": "p01_dm_msecho_inspect_bolt"
+				"5.6333": {
+					"effect": "tacz:hk416d/hk416d_inspect_bolt"
 				},
-				"5.6": {
-					"effect": "p01_dm_msecho_inspect_finger"
+				"5.7": {
+					"effect": "tacz:hk416d/hk416d_inspect_finger"
 				},
-				"6.0333": {
-					"effect": "p01_dm_msecho_inspect_boltrelease"
+				"6.1333": {
+					"effect": "tacz:hk416d/hk416d_inspect_boltrelease"
 				},
-				"6.2667": {
-					"effect": "p01_dm_msecho_inspect_maginmvt"
+				"6.3667": {
+					"effect": "tacz:hk416d/hk416d_inspect_maginmvt"
 				},
-				"6.7": {
-					"effect": "p01_dm_msecho_inspect_boltclick"
+				"6.8": {
+					"effect": "tacz:hk416d/hk416d_inspect_boltclick"
 				},
-				"7.1": {
-					"effect": "m4a1_inspect_05"
+				"7.2": {
+					"effect": "tacz:hk416d/hk416d_inspect_05"
 				}
 			}
 		},
@@ -6793,6 +6858,26 @@
 							"lerp_mode": "catmullrom"
 						}
 					}
+				}
+			},
+			"sound_effects": {
+				"0.1667": {
+					"effect": "tacz:hk416d/hk416d_inspect_01"
+				},
+				"1.4583": {
+					"effect": "tacz:hk416d/hk416d_inspect_02"
+				},
+				"2.3333": {
+					"effect": "tacz:hk416d/hk416d_inspect_03"
+				},
+				"3.0": {
+					"effect": "tacz:hk416d/hk416d_inspect_xmag_rotate"
+				},
+				"3.9167": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_lift"
+				},
+				"5.5833": {
+					"effect": "tacz:hk416d/hk416d_inspect_05"
 				}
 			}
 		},
@@ -7588,9 +7673,15 @@
 				"magazine_bullet": {
 					"scale": {
 						"3.6": [1, 1, 1],
-						"3.6333": {"pre": [1, 1, 1], "post": [0, 0, 0]},
+						"3.6333": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
 						"5.7333": [0, 0, 0],
-						"5.8": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"5.8": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"416d_bolt": {
@@ -7856,40 +7947,40 @@
 			},
 			"sound_effects": {
 				"0.1667": {
-					"effect": "m4a1_inspect_01"
+					"effect": "tacz:hk416d/hk416d_inspect_01"
 				},
 				"0.9": {
-					"effect": "m4a1_inspect_02"
+					"effect": "tacz:hk416d/hk416d_inspect_02"
 				},
-				"2.2": {
-					"effect": "m4a1_reload_fast_magout_v2"
+				"2.1667": {
+					"effect": "tacz:hk416d/hk416d_reload_fast_magout"
 				},
 				"3.4667": {
-					"effect": "p01_ar_mike4_hybrid01_off_arm"
+					"effect": "tacz:hk416d/hk416d_hybrid01_off_arm"
 				},
 				"3.8333": {
-					"effect": "p01_ar_mike4_reload_empty_rattle"
+					"effect": "tacz:hk416d/hk416d_reload_empty_rattle"
 				},
 				"4.4333": {
-					"effect": "p01_ar_mike4_inspect_empty_rack"
+					"effect": "tacz:hk416d/hk416d_inspect_empty_rack"
 				},
 				"5.3333": {
-					"effect": "m4a1_inspect_03"
+					"effect": "tacz:hk416d/hk416d_inspect_03"
 				},
 				"6.2": {
-					"effect": "m4a1_reload_fast_magin_v2_01"
+					"effect": "tacz:hk416d/hk416d_reload_fast_magin_01"
 				},
 				"6.4667": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+					"effect": "tacz:hk416d/hk416d_reload_empty_magin_02"
 				},
 				"7.1": {
-					"effect": "p01_ar_mike4_inspect_empty_charge"
+					"effect": "tacz:hk416d/hk416d_inspect_empty_charge"
 				},
 				"7.2333": {
-					"effect": "p01_ar_mike4_inspect_empty_handle"
+					"effect": "tacz:hk416d/hk416d_inspect_empty_handle"
 				},
 				"7.6": {
-					"effect": "m4a1_inspect_05"
+					"effect": "tacz:hk416d/hk416d_inspect_05"
 				}
 			}
 		},
@@ -8957,40 +9048,40 @@
 			},
 			"sound_effects": {
 				"0.1667": {
-					"effect": "m4a1_inspect_01"
+					"effect": "tacz:hk416d/hk416d_inspect_01"
 				},
 				"0.9": {
-					"effect": "m4a1_inspect_02"
+					"effect": "tacz:hk416d/hk416d_inspect_02"
 				},
-				"2.2": {
-					"effect": "m4a1_reload_fast_magout_v2"
+				"2.1667": {
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_xmaglrg_magout"
 				},
 				"3.4667": {
-					"effect": "p01_ar_mike4_hybrid01_off_arm"
+					"effect": "tacz:hk416d/hk416d_hybrid01_off_arm"
 				},
 				"3.8333": {
-					"effect": "p01_ar_mike4_reload_empty_rattle"
+					"effect": "tacz:hk416d/hk416d_reload_empty_rattle"
 				},
 				"4.4333": {
-					"effect": "p01_ar_mike4_inspect_empty_rack"
+					"effect": "tacz:hk416d/hk416d_inspect_empty_rack"
 				},
 				"5.3333": {
-					"effect": "m4a1_inspect_03"
+					"effect": "tacz:hk416d/hk416d_inspect_03"
 				},
 				"6.2": {
-					"effect": "m4a1_reload_fast_magin_v2_01"
+					"effect": "tacz:hk416d/hk416d_reload_empty_xmag_maghit"
 				},
 				"6.4667": {
-					"effect": "m4a1_reload_empty_magin_v2_02"
+					"effect": "tacz:hk416d/hk416d_reload_empty_fast_xmaglrg_magin"
 				},
 				"7.1": {
-					"effect": "p01_ar_mike4_inspect_empty_charge"
+					"effect": "tacz:hk416d/hk416d_inspect_empty_charge"
 				},
 				"7.2333": {
-					"effect": "p01_ar_mike4_inspect_empty_handle"
+					"effect": "tacz:hk416d/hk416d_inspect_empty_handle"
 				},
 				"7.6": {
-					"effect": "m4a1_inspect_05"
+					"effect": "tacz:hk416d/hk416d_inspect_05"
 				}
 			}
 		},

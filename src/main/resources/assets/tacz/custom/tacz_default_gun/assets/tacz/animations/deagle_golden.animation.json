@@ -1196,7 +1196,10 @@
 				"bullet_in_barrel": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"2.0667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"2.0667": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand": {
@@ -2775,7 +2778,10 @@
 						}
 					},
 					"scale": {
-						"0.4667": {"pre": [1, 1, 1], "post": [0, 0, 0]}
+						"0.4667": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						}
 					}
 				},
 				"slide2": {
@@ -3613,7 +3619,10 @@
 				"mag_and_bullet": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"1.7333": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"1.7333": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"gun_and_righthand": {
@@ -3754,8 +3763,14 @@
 				},
 				"additional_magazine": {
 					"scale": {
-						"1.7333": {"pre": [1, 1, 1], "post": [0, 0, 0]},
-						"8.7": {"pre": [0, 0, 0], "post": [1, 1, 1]}
+						"1.7333": {
+							"pre": [1, 1, 1],
+							"post": [0, 0, 0]
+						},
+						"8.7": {
+							"pre": [0, 0, 0],
+							"post": [1, 1, 1]
+						}
 					}
 				},
 				"lefthand": {
@@ -5149,61 +5164,64 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "p25_pi_decho_inspect_raise"
+					"effect": "tacz:deagle/deagle_inspect_raise"
 				},
 				"0.3": {
-					"effect": "p25_pi_decho_inspect_pivot"
+					"effect": "tacz:deagle/deagle_inspect_pivot"
+				},
+				"0.3333": {
+					"effect": "tacz:deagle/deagle_inspect_selectburst_off_switch"
 				},
 				"0.8667": {
-					"effect": "p25_pi_decho_raise_up"
+					"effect": "tacz:deagle/deagle_inspect_raise_up"
 				},
 				"0.9": {
-					"effect": "p25_pi_decho_inspect_rotate"
+					"effect": "tacz:deagle/deagle_inspect_rotate"
 				},
 				"1.2": {
-					"effect": "p25_pi_decho_akimbo_l_raise_rattle"
+					"effect": "tacz:deagle/deagle_inspect_raise_rattle"
 				},
-				"2.0333": {
-					"effect": "p25_pi_decho_akimbo_l_drop_quick_rattle"
+				"2.0": {
+					"effect": "tacz:deagle/deagle_inspect_drop_quick_rattle"
 				},
 				"2.4": {
-					"effect": "p25_pi_decho_inspect_magrelease"
+					"effect": "tacz:deagle/deagle_inspect_magrelease"
 				},
 				"2.4333": {
-					"effect": "p25_pi_decho_inspect_magout"
+					"effect": "tacz:deagle/deagle_inspect_magout"
 				},
 				"3.4": {
-					"effect": "p25_pi_decho_inspect_magfindwell"
+					"effect": "tacz:deagle/deagle_inspect_magfindwell"
 				},
 				"3.5667": {
-					"effect": "p25_pi_decho_inspect_magin"
+					"effect": "tacz:deagle/deagle_inspect_magin"
 				},
 				"3.9": {
-					"effect": "p25_pi_decho_inspect_rotate"
+					"effect": "tacz:deagle/deagle_inspect_rotate"
 				},
 				"4.2667": {
-					"effect": "p25_pi_decho_inspect_slideback"
+					"effect": "tacz:deagle/deagle_inspect_slideback"
 				},
 				"5.0": {
-					"effect": "p25_pi_decho_inspect_slideclose"
+					"effect": "tacz:deagle/deagle_inspect_slideclose"
 				},
 				"5.1": {
-					"effect": "p25_pi_decho_inspect_end"
+					"effect": "tacz:deagle/deagle_inspect_end"
 				},
 				"6.1333": {
-					"effect": "p25_pi_decho_inspect_rotate"
+					"effect": "tacz:deagle/deagle_inspect_rotate"
 				},
 				"6.8333": {
-					"effect": "p25_pi_decho_akimbo_r_inspect_rattle"
+					"effect": "tacz:deagle/deagle_inspect_rattle"
 				},
 				"7.6333": {
-					"effect": "p25_pi_decho_akimbo_r_reload_rattle"
+					"effect": "tacz:deagle/deagle_inspect_reload_rattle"
 				},
 				"8.1": {
-					"effect": "p07_sm_papa90_selectburst_on_switch"
+					"effect": "tacz:deagle/deagle_inspect_selectburst_on_switch"
 				},
 				"8.4667": {
-					"effect": "p25_pi_decho_akimbo_r_reload_rattle"
+					"effect": "tacz:deagle/deagle_inspect_empty_end"
 				}
 			}
 		},
@@ -6257,49 +6275,49 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "p25_pi_decho_inspect_raise"
+					"effect": "tacz:deagle/deagle_inspect_raise"
 				},
 				"0.5": {
-					"effect": "p25_pi_decho_inspect_empty_turn"
+					"effect": "tacz:deagle/deagle_inspect_empty_turn"
 				},
 				"0.9333": {
-					"effect": "p25_pi_decho_inspect_magrelease"
+					"effect": "tacz:deagle/deagle_inspect_magrelease"
 				},
 				"1.0": {
-					"effect": "p25_pi_decho_inspect_magout"
+					"effect": "tacz:deagle/deagle_inspect_magout"
 				},
 				"1.6667": {
-					"effect": "p25_pi_decho_inspect_pivot"
+					"effect": "tacz:deagle/deagle_inspect_pivot"
 				},
 				"2.1667": {
-					"effect": "p25_pi_decho_inspect_empty_slidegrab"
+					"effect": "tacz:deagle/deagle_inspect_empty_slidegrab"
 				},
 				"2.2333": {
-					"effect": "p25_pi_decho_inspect_empty_slidecheck1"
+					"effect": "tacz:deagle/deagle_inspect_empty_slidecheck1"
 				},
 				"2.6667": {
-					"effect": "p25_pi_decho_inspect_empty_slidecheck2"
+					"effect": "tacz:deagle/deagle_inspect_empty_slidecheck2"
 				},
 				"3.1": {
-					"effect": "p25_pi_decho_inspect_empty_slidecheck2"
+					"effect": "tacz:deagle/deagle_inspect_empty_slidecheck2"
 				},
 				"3.4": {
-					"effect": "p25_pi_decho_inspect_empty_tilt"
+					"effect": "tacz:deagle/deagle_inspect_empty_tilt"
 				},
 				"3.8333": {
-					"effect": "p25_pi_decho_inspect_empty_magfindwell"
+					"effect": "tacz:deagle/deagle_inspect_empty_magfindwell"
 				},
 				"4.0667": {
-					"effect": "p25_pi_decho_inspect_empty_magin"
+					"effect": "tacz:deagle/deagle_inspect_empty_magin"
 				},
 				"4.4667": {
-					"effect": "p25_pi_decho_inspect_empty_lift"
+					"effect": "tacz:deagle/deagle_inspect_empty_lift"
 				},
 				"4.8": {
-					"effect": "p25_pi_decho_inspect_empty_slidegrab2"
+					"effect": "tacz:deagle/deagle_inspect_empty_slidelock"
 				},
 				"4.9333": {
-					"effect": "p25_pi_decho_inspect_empty_end"
+					"effect": "tacz:deagle/deagle_inspect_empty_end"
 				}
 			}
 		}
