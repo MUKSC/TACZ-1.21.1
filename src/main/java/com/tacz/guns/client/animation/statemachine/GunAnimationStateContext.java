@@ -38,7 +38,6 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     private IGun iGun;
     private GunDisplayInstance display;
     private GunData gunData;
-    private float partialTicks;
     private float walkDistAnchor = 0f;
     private LuaNbtAccessor nbtUtil;
 
@@ -426,20 +425,5 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
         if (currentGunItem.hasTag()) {
             nbtUtil = new LuaNbtAccessor(currentGunItem.getTag());
         }
-    }
-
-    /**
-     * 获取最后一次更新时的 partialTicks
-     * @return 状态机最后一次更新的 partialTicks.
-     */
-    public float getPartialTicks() {
-        return partialTicks;
-    }
-
-    /**
-     * 状态机脚本请不要调用此方法。此方法用于状态机更新时设置 partialTicks。
-     */
-    public void setPartialTicks(float partialTicks) {
-        this.partialTicks = partialTicks;
     }
 }

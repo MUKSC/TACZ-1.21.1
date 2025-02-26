@@ -20,6 +20,7 @@ import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.model.functional.MuzzleFlashRender;
 import com.tacz.guns.client.model.functional.ShellRender;
+import com.tacz.guns.client.renderer.item.AnimateGeoItemRendererWrapper;
 import com.tacz.guns.client.renderer.item.GunItemRenderer;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.entity.EntityKineticBullet;
@@ -41,6 +42,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
@@ -99,9 +101,6 @@ public class FirstPersonRenderGunEvent {
             return;
         }
         ItemStack stack = event.getItemStack();
-        if (!(stack.getItem() instanceof IGun iGun)) {
-            return;
-        }
 
         // 获取 TransformType
         ItemDisplayContext transformType;
@@ -109,6 +108,15 @@ public class FirstPersonRenderGunEvent {
             transformType = FIRST_PERSON_RIGHT_HAND;
         } else {
             transformType = FIRST_PERSON_LEFT_HAND;
+        }
+
+        if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRendererWrapper wrapper){
+            wrapper.renderFirstPerson(stack, transformType, event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), event.getPartialTick());
+            event.setCanceled(true);
+        }
+
+        if (!(stack.getItem() instanceof IGun iGun)) {
+            return;
         }
 
         TimelessAPI.getGunDisplay(stack).ifPresent(display -> {
