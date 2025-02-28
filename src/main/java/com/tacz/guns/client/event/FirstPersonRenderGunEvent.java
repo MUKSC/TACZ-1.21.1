@@ -13,15 +13,11 @@ import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.nbt.AttachmentItemDataAccessor;
 import com.tacz.guns.client.animation.screen.RefitTransform;
-import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
-import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.model.functional.MuzzleFlashRender;
-import com.tacz.guns.client.model.functional.ShellRender;
-import com.tacz.guns.client.renderer.item.AnimateGeoItemRendererWrapper;
-import com.tacz.guns.client.renderer.item.GunItemRenderer;
+import com.tacz.guns.client.renderer.item.GunItemRendererWrapper;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.math.Easing;
@@ -30,19 +26,13 @@ import com.tacz.guns.util.math.PerlinNoise;
 import com.tacz.guns.util.math.SecondOrderDynamics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
@@ -53,11 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
-import static net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
-
 /**
- * 负责第一人称的枪械模型渲染。其他人称参见 {@link GunItemRenderer}
+ * 负责第一人称的枪械模型额外效果的渲染。其他部分参见 {@link GunItemRendererWrapper}
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class FirstPersonRenderGunEvent {
@@ -84,142 +71,6 @@ public class FirstPersonRenderGunEvent {
     private static Matrix4f oldAimingViewMatrix;
     private static float oldViewIndex;
     private static int currentViewIndex = -1;
-
-    public static final Vector3f muzzleRenderOffset = new Vector3f();
-
-    @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
-        if (event.getHand() == InteractionHand.OFF_HAND) {
-            ItemStack stack = KeepingItemRenderer.getRenderer().getCurrentItem();
-            if (stack.getItem() instanceof IGun) {
-                event.setCanceled(true);
-            }
-            return;
-        }
-        ItemStack stack = event.getItemStack();
-
-        // 获取 TransformType
-        ItemDisplayContext transformType;
-        if (event.getHand() == InteractionHand.MAIN_HAND) {
-            transformType = FIRST_PERSON_RIGHT_HAND;
-        } else {
-            transformType = FIRST_PERSON_LEFT_HAND;
-        }
-
-        if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRendererWrapper wrapper){
-            wrapper.renderFirstPerson(stack, transformType, event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), event.getPartialTick());
-            event.setCanceled(true);
-        }
-
-        if (!(stack.getItem() instanceof IGun iGun)) {
-            return;
-        }
-
-        TimelessAPI.getGunDisplay(stack).ifPresent(display -> {
-            BedrockGunModel gunModel = display.getGunModel();
-            var animationStateMachine = display.getAnimationStateMachine();
-            if (gunModel == null) {
-                return;
-            }
-
-            var p = IClientPlayerGunOperator.fromLocalPlayer(player);
-            if (p.isReadyToDraw()) {
-                if (stack == player.getMainHandItem()) {
-                    if (animationStateMachine.isInitialized()) {
-                        animationStateMachine.exit();
-                    }
-
-                    GunAnimationStateContext context = new GunAnimationStateContext();
-                    context.setCurrentGunItem(stack);
-                    animationStateMachine.setContext(context);
-                    animationStateMachine.initialize();
-
-                    animationStateMachine.trigger(GunAnimationConstant.INPUT_DRAW);
-                    p.resetDraw();
-                }
-            }
-
-            // 在渲染之前，先更新动画，让动画数据写入模型
-            animationStateMachine.processContextIfExist(context -> {
-                context.setCurrentGunItem(stack);
-                context.setPartialTicks(event.getPartialTick());
-            });
-            animationStateMachine.update();
-
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            // 逆转原版施加在手上的延滞效果，改为写入模型动画数据中
-            float xRotOffset = Mth.lerp(event.getPartialTick(), player.xBobO, player.xBob);
-            float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
-            float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
-            float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-            poseStack.mulPose(Axis.XP.rotationDegrees(xRot * -0.1F));
-            poseStack.mulPose(Axis.YP.rotationDegrees(yRot * -0.1F));
-            BedrockPart rootNode = gunModel.getRootNode();
-            if (rootNode != null) {
-                xRot = (float) Math.tanh(xRot / 25) * 25;
-                yRot = (float) Math.tanh(yRot / 25) * 25;
-                rootNode.offsetX += yRot * 0.1F / 16F / 3F;
-                rootNode.offsetY += -xRot * 0.1F / 16F / 3F;
-                rootNode.additionalQuaternion.mul(Axis.XP.rotationDegrees(xRot * 0.05F));
-                rootNode.additionalQuaternion.mul(Axis.YP.rotationDegrees(yRot * 0.05F));
-            }
-            // 从渲染原点 (0, 24, 0) 移动到模型原点 (0, 0, 0)
-            poseStack.translate(0, 1.5f, 0);
-            // 基岩版模型是上下颠倒的，需要翻转过来。
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
-            // 应用持枪姿态变换，如第一人称摄像机定位
-            applyFirstPersonGunTransform(player, stack, poseStack, gunModel, event.getPartialTick());
-
-            // 开启第一人称弹壳和火焰渲染
-            MuzzleFlashRender.isSelf = true;
-            ShellRender.isSelf = true;
-            // 如果正在打开改装界面，则取消手臂渲染
-            boolean renderHand = gunModel.getRenderHand();
-            if (RefitTransform.getOpeningProgress() != 0) {
-                gunModel.setRenderHand(false);
-            }
-            // 调用枪械模型渲染
-            RenderType renderType = RenderType.entityCutout(display.getModelTexture());
-            gunModel.render(poseStack, stack, transformType, renderType, event.getPackedLight(), OverlayTexture.NO_OVERLAY);
-            // 缓存枪口位置，为第一人称曳光弹渲染作准备
-            cacheMuzzlePosition(poseStack, gunModel);
-            // 恢复手臂渲染
-            gunModel.setRenderHand(renderHand);
-            // 渲染完成后，将动画数据从模型中清除，不对其他视角下的模型渲染产生影响
-            poseStack.popPose();
-            gunModel.cleanAnimationTransform();
-            // 关闭第一人称弹壳和火焰渲染
-            MuzzleFlashRender.isSelf = false;
-            ShellRender.isSelf = false;
-            // 放这里，只有渲染了枪械，才取消后续（虽然一般来说也没有什么后续了）
-            event.setCanceled(true);
-        });
-    }
-
-    private static void cacheMuzzlePosition(PoseStack poseStack, BedrockGunModel gunModel) {
-        if (gunModel.getMuzzleFlashPosPath() != null) {
-            // 计算出枪口相对于摄像机中心的坐标
-            poseStack.pushPose();
-            for (BedrockPart bedrockPart : gunModel.getMuzzleFlashPosPath()) {
-                bedrockPart.translateAndRotateAndScale(poseStack);
-            }
-            Matrix4f pose = poseStack.last().pose();
-            double itemRenderFov = CameraSetupEvent.ITEM_MODEL_FOV_DYNAMICS.get();
-            double levelRenderFov = CameraSetupEvent.WORLD_FOV_DYNAMICS.get();
-            poseStack.popPose();
-            // 缓存转换后的偏移坐标
-            muzzleRenderOffset.set(
-                    pose.m30(),
-                    pose.m31(),
-                    pose.m32() * Math.tan(itemRenderFov / 2 * Math.PI / 180) / Math.tan(levelRenderFov / 2 * Math.PI / 180)
-            );
-        }
-    }
 
     /**
      * 当主手拿着枪械物品的时候，取消应用在它上面的 viewBobbing，以便应用自定义的跑步/走路动画。
@@ -265,7 +116,7 @@ public class FirstPersonRenderGunEvent {
         return false;
     }
 
-    private static void applyFirstPersonGunTransform(LocalPlayer player, ItemStack gunItemStack, PoseStack poseStack, BedrockGunModel model, float partialTicks) {
+    public static void applyFirstPersonGunTransform(LocalPlayer player, ItemStack gunItemStack, PoseStack poseStack, BedrockGunModel model, float partialTicks) {
         // 配合运动曲线，计算改装枪口的打开进度
         float refitScreenOpeningProgress = REFIT_OPENING_DYNAMICS.update(RefitTransform.getOpeningProgress());
         // 配合运动曲线，计算瞄准进度

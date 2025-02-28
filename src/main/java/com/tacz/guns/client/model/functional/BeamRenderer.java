@@ -99,7 +99,7 @@ public class BeamRenderer implements IFunctionalRenderer {
         pConsumer.vertex(pPose.pose(), halfWidth, -halfWidth, z).color(r, g, b, endAlpha).normal(pPose.normal(), 0, -1, 0).endVertex();
     }
 
-    private static class LaserBeamRenderState extends RenderStateShard {
+    public static class LaserBeamRenderState extends RenderStateShard {
     	
         public LaserBeamRenderState(String pName, Runnable pSetupState, Runnable pClearState) {
 			super(pName, pSetupState, pClearState);

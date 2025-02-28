@@ -40,8 +40,14 @@ function main_track_states.start.update(this, context)
 end
 
 function main_track_states.start.transition(this, context, input)
-    context:runAnimation("draw", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_STOP, 0)
-    return this.main_track_states.idle
+    if (input == INPUT_DRAW) then
+        context:runAnimation("draw", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_STOP, 0)
+        return this.main_track_states.idle
+    end
+end
+
+function main_track_states.idle.entry(this, context)
+    print("idle entry")
 end
 
 function main_track_states.idle.update(this, context)
@@ -51,47 +57,47 @@ function main_track_states.idle.update(this, context)
 end
 
 function main_track_states.idle.transition(this, context, input)
-    print("idle transition - " .. input)
+    print("idle entry - " .. input)
     if (input == "start_use") then
-        context:runAnimation("unlock_safe", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_STOP, 0)
+        context:runAnimation("unlock_safe", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_HOLD, 0)
         return this.main_track_states.using
     end
 end
 
+function main_track_states.using.entry(this, context)
+    print("using entry")
+end
+
 function main_track_states.using.update(this, context)
-    print("using update")
     if not context:isUsing() then
         context:trigger("idle")
-    elseif context:getUsingTick() >= 10 then
+    elseif context:getUsingTick() >= 22 then
         context:trigger("using_hold")
     end
 end
 
 function main_track_states.using.transition(this, context, input)
-    print("using transition - " .. input)
     if (input == "idle") then
-        -- 立刻停止动画
-        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
+        context:pauseAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
+        context:setAnimationProgress(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), 0, true)
         return this.main_track_states.idle
     elseif (input == "using_hold") then
-        context:runAnimation("unlock_safe_loop", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, LOOP, 0)
+        context:runAnimation("unlock_safe_loop", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, LOOP, 0.1)
         return this.main_track_states.using_hold
     end
 end
 
 function main_track_states.using_hold.update(this, context)
-    print("using_hold update")
     if not context:isUsing() then
         context:trigger("throw")
     end
 end
 
 function main_track_states.using_hold.transition(this, context, input)
-    print("using_hold transition " .. input)
     if (input == "throw") then
         local track = context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)
         context:stopAnimation(track)
-        context:runAnimation("throw", track, false, PLAY_ONCE_STOP, 0.01)
+        context:runAnimation("throw", track, false, PLAY_ONCE_HOLD, 0.01)
         return this.main_track_states.idle
     end
 end
@@ -119,7 +125,7 @@ end
 function M:states()
     return {
         self.base_track_state,
-        self.main_track_states.idle
+        self.main_track_states.start
     }
 end
 

@@ -1,6 +1,5 @@
 package com.tacz.guns.client.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
@@ -14,7 +13,7 @@ import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.nbt.AttachmentItemDataAccessor;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
-import com.tacz.guns.client.model.BedrockGunModel;
+import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.config.client.RenderConfig;
@@ -35,11 +34,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
-import org.joml.Quaternionf;
 
 import java.util.Optional;
 
@@ -55,7 +54,6 @@ public class CameraSetupEvent {
     private static long shootTimeStamp = -1L;
     private static double xRotO = 0;
     private static double yRotO = 0;
-    private static BedrockGunModel lastModel = null;
 
     @SubscribeEvent
     public static void applyLevelCameraAnimation(ViewportEvent.ComputeCameraAngles event) {
@@ -67,32 +65,11 @@ public class CameraSetupEvent {
             return;
         }
         ItemStack stack = KeepingItemRenderer.getRenderer().getCurrentItem();
-        if (!(stack.getItem() instanceof IGun iGun)) {
-            return;
+        // 尝试调用物品的自定义相机动画
+        if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRenderer<?, ?> renderer) {
+            renderer.applyLevelCameraAnimation(event, stack, player);
         }
-        TimelessAPI.getGunDisplay(stack).ifPresent(display -> {
-            BedrockGunModel gunModel = display.getGunModel();
-            if (lastModel != gunModel) {
-                // 切换枪械模型的时候清理一下摄像机动画数据，以避免上一次播放到一半的摄像机动画影响观感。
-                gunModel.cleanCameraAnimationTransform();
-                lastModel = gunModel;
-            }
-            IClientPlayerGunOperator clientPlayerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            float partialTicks = Minecraft.getInstance().getFrameTime();
-            float aimingProgress = clientPlayerGunOperator.getClientAimingProgress(partialTicks);
-            float zoom = iGun.getAimingZoom(stack);
-            float multiplier = 1 - aimingProgress + aimingProgress / (float) Math.sqrt(zoom);
-            Quaternionf q = MathUtil.multiplyQuaternion(gunModel.getCameraAnimationObject().rotationQuaternion, multiplier);
-            double yaw = Math.asin(2 * (q.w() * q.y() - q.x() * q.z()));
-            double pitch = Math.atan2(2 * (q.w() * q.x() + q.y() * q.z()), 1 - 2 * (q.x() * q.x() + q.y() * q.y()));
-            double roll = Math.atan2(2 * (q.w() * q.z() + q.x() * q.y()), 1 - 2 * (q.y() * q.y() + q.z() * q.z()));
-            yaw = Math.toDegrees(yaw);
-            pitch = Math.toDegrees(pitch);
-            roll = Math.toDegrees(roll);
-            event.setYaw((float) yaw + event.getYaw());
-            event.setPitch((float) pitch + event.getPitch());
-            event.setRoll((float) roll + event.getRoll());
-        });
+
     }
 
     @SubscribeEvent
@@ -105,23 +82,10 @@ public class CameraSetupEvent {
             return;
         }
         ItemStack stack = KeepingItemRenderer.getRenderer().getCurrentItem();
-        if (!(stack.getItem() instanceof IGun iGun)) {
-            return;
+        // 尝试调用物品的自定义相机动画
+        if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRenderer<?, ?> renderer) {
+            renderer.applyItemInHandCameraAnimation(event, stack, player);
         }
-        TimelessAPI.getGunDisplay(stack).ifPresent(gunIndex -> {
-            BedrockGunModel gunModel = gunIndex.getGunModel();
-            PoseStack poseStack = event.getPoseStack();
-            IClientPlayerGunOperator clientPlayerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            float partialTicks = Minecraft.getInstance().getFrameTime();
-            float aimingProgress = clientPlayerGunOperator.getClientAimingProgress(partialTicks);
-            float zoom = iGun.getAimingZoom(stack);
-            float multiplier = 1 - aimingProgress + aimingProgress / (float) Math.sqrt(zoom);
-            Quaternionf quaternion = MathUtil.multiplyQuaternion(gunModel.getCameraAnimationObject().rotationQuaternion, multiplier);
-            poseStack.mulPose(quaternion);
-            // 截至目前，摄像机动画数据已消费完毕。是否有更好的清理动画数据的方法？
-            gunModel.cleanCameraAnimationTransform();
-        });
-
     }
 
     @SubscribeEvent

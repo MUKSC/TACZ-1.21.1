@@ -8,7 +8,7 @@ import com.tacz.guns.api.item.*;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.builder.GunItemBuilder;
-import com.tacz.guns.client.renderer.item.GunItemRenderer;
+import com.tacz.guns.client.renderer.item.GunItemRendererWrapper;
 import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.inventory.tooltip.GunTooltip;
@@ -21,7 +21,6 @@ import com.tacz.guns.resource.pojo.data.gun.HeatData;
 import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import com.tacz.guns.util.AttachmentDataUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -366,8 +365,7 @@ public abstract class AbstractGunItem extends Item implements IGun {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft minecraft = Minecraft.getInstance();
-                return new GunItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                return new GunItemRendererWrapper();
             }
         });
     }

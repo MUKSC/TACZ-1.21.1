@@ -73,10 +73,8 @@ public class LocalPlayerDraw {
             if (data.drawFuture != null) {
                 data.drawFuture.cancel(false);
             }
-            // 根据 put away time 预定 draw 行为
+            // 根据 put away time 预定 draw 行为（仅播放音效，状态机的初始化为了保证一致性已经移动）
             data.drawFuture = LocalPlayerDataHolder.SCHEDULED_EXECUTOR_SERVICE.schedule(() -> {
-                this.readyToDraw = true;
-
                 Minecraft.getInstance().submitAsync(() -> {
                     SoundPlayManager.stopPlayGunSound();
                     SoundPlayManager.playDrawSound(player, display);
@@ -108,6 +106,7 @@ public class LocalPlayerDraw {
                 // 退出状态机
                 if (animationStateMachine.isInitialized()) {
                     animationStateMachine.exit();
+                    animationStateMachine.setExitingTime(putAwayTime);
                 }
             }
         });

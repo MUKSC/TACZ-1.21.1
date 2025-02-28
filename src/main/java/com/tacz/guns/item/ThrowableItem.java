@@ -1,8 +1,10 @@
 package com.tacz.guns.item;
 
-import com.tacz.guns.client.renderer.item.AnimateGeoItemRendererWrapper;
+import com.tacz.guns.client.renderer.item.ThrowableItemRendererWrapper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -14,7 +16,7 @@ import java.util.function.Consumer;
 
 public class ThrowableItem extends Item {
     public ThrowableItem() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(6));
     }
 
     @Override
@@ -30,12 +32,12 @@ public class ThrowableItem extends Item {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private AnimateGeoItemRendererWrapper renderer = null;
+            private ThrowableItemRendererWrapper renderer = null;
 
             @Override
-            public AnimateGeoItemRendererWrapper getCustomRenderer() {
+            public ThrowableItemRendererWrapper getCustomRenderer() {
                 if (this.renderer == null) {
-                    this.renderer = new AnimateGeoItemRendererWrapper();
+                    this.renderer = new ThrowableItemRendererWrapper();
                     this.renderer.init();
                 }
                 return renderer;
@@ -46,10 +48,6 @@ public class ThrowableItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         pPlayer.startUsingItem(pUsedHand);
-        if (pLevel.isClientSide()) {
-            ((AnimateGeoItemRendererWrapper)IClientItemExtensions.of(pPlayer.getItemInHand(pUsedHand).getItem()).getCustomRenderer()).startThrowing();
-        }
-
         return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
     }
 
@@ -61,7 +59,15 @@ public class ThrowableItem extends Item {
 
     @Override
     public void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int timeLeft) {
-        ((AnimateGeoItemRendererWrapper)IClientItemExtensions.of(stack.getItem()).getCustomRenderer()).throwItem();
+        if (entity.getTicksUsingItem() >= 22) {
+            if (world.isClientSide()) {
+                ((ThrowableItemRendererWrapper)IClientItemExtensions.of(stack.getItem()).getCustomRenderer())
+                        .triggerAnimation(stack, "throw");
+            } else {
+                entity.sendSystemMessage(Component.literal("Throw!"));
+                stack.shrink(1);
+            }
+        }
     }
 
     @Override
@@ -71,6 +77,11 @@ public class ThrowableItem extends Item {
 
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+
+    }
+
+    @Override
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
 
     }
 }

@@ -3,9 +3,9 @@ package com.tacz.guns.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.tacz.guns.api.TimelessAPI;
-import com.tacz.guns.client.event.FirstPersonRenderGunEvent;
 import com.tacz.guns.client.model.BedrockAmmoModel;
 import com.tacz.guns.client.model.bedrock.BedrockModel;
+import com.tacz.guns.client.renderer.item.GunItemRendererWrapper;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.InternalAssetLoader;
 import com.tacz.guns.config.client.RenderConfig;
@@ -95,7 +95,7 @@ public class EntityBulletRenderer extends EntityRenderer<EntityKineticBullet> {
                     Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
                     Vector3f offset = bullet.getFirstPersonRenderOffset();
                     if (offset == null) {
-                        offset = new Vector3f(FirstPersonRenderGunEvent.muzzleRenderOffset);
+                        offset = new Vector3f(GunItemRendererWrapper.muzzleRenderOffset);
                         bullet.setCameraXRot(camera.getXRot());
                         bullet.setCameraYRot(camera.getYRot());
                         bullet.setFirstPersonRenderOffset(offset);

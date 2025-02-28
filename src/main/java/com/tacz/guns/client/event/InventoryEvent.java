@@ -21,7 +21,7 @@ public class InventoryEvent {
     private static ItemStack oldHotbarSelectItem = ItemStack.EMPTY;
 
     @SubscribeEvent
-    public static void onPlayerChangeSelect(TickEvent.ClientTickEvent event) {
+    public static void onPlayerChangeSelect(TickEvent.RenderTickEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
