@@ -23,7 +23,7 @@
     "type": "gun",
     "id": "tacz:m700",
     "attachments": {
-      "stock": "tacz:scope_contender"
+      "scope": "tacz:scope_contender"
     }
   },
   "type": "tacz:gun_smith_table_crafting"

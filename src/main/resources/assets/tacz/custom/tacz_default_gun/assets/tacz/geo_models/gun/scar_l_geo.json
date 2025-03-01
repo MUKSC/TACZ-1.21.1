@@ -5249,7 +5249,7 @@
 				{
 					"name": "switch",
 					"parent": "buttons",
-					"pivot": [0, 8, 0],
+					"pivot": [0, 8.0625, 7.74375],
 					"cubes": [
 						{
 							"origin": [-0.875, 13.00553, 6.23308],
