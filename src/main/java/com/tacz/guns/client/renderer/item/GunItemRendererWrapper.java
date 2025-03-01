@@ -7,8 +7,10 @@ import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.event.BeforeRenderHandEvent;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
+import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.animation.screen.RefitTransform;
+import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.event.CameraSetupEvent;
 import com.tacz.guns.client.event.FirstPersonRenderGunEvent;
@@ -57,29 +59,6 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         super();
     }
 
-    private static void applyPositioningNodeTransform(List<BedrockPart> nodePath, PoseStack poseStack, Vector3f scale) {
-        if (nodePath == null) {
-            return;
-        }
-        if (scale == null) {
-            scale = new Vector3f(1, 1, 1);
-        }
-        // 应用定位组的反向位移、旋转，使定位组的位置就是渲染中心
-        poseStack.translate(0, 1.5, 0);
-        for (int i = nodePath.size() - 1; i >= 0; i--) {
-            BedrockPart t = nodePath.get(i);
-            poseStack.mulPose(Axis.XN.rotation(t.xRot));
-            poseStack.mulPose(Axis.YN.rotation(t.yRot));
-            poseStack.mulPose(Axis.ZN.rotation(t.zRot));
-            if (t.getParent() != null) {
-                poseStack.translate(-t.x * scale.x() / 16.0F, -t.y * scale.y() / 16.0F, -t.z * scale.z() / 16.0F);
-            } else {
-                poseStack.translate(-t.x * scale.x() / 16.0F, (1.5F - t.y / 16.0F) * scale.y(), -t.z * scale.z() / 16.0F);
-            }
-        }
-        poseStack.translate(0, -1.5, 0);
-    }
-
     @Override
     public GunAnimationStateContext initContext(ItemStack stack, Player player, float partialTick) {
         GunAnimationStateContext context = new GunAnimationStateContext();
@@ -99,7 +78,31 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
     }
 
     @Override
-    public void tryExit(ItemStack stack) {
+    public void tryExit(ItemStack stack, long putAwayTime) {
+        var stateMachine = getStateMachine(stack);
+        if (stateMachine == null) {
+            return;
+        }
+        stateMachine.processContextIfExist(context -> {
+            context.setPutAwayTime(putAwayTime / 1000F);
+            context.setCurrentGunItem(stack);
+        });
+        if(stateMachine.isInitialized()) {
+            stateMachine.trigger(GunAnimationConstant.INPUT_PUT_AWAY);
+            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
+            stateMachine.exit();
+            stateMachine.setExitingTime(putAwayTime + 25);
+        }
+    }
+
+    @Override
+    public long getPutAwayTime(ItemStack stack) {
+        if (stack.getItem() instanceof IGun iGun) {
+            return TimelessAPI.getCommonGunIndex(iGun.getGunId(stack))
+                    .map(index -> (long) (index.getGunData().getPutAwayTime() * 1000L))
+                    .orElse(0L);
+        }
+        return 0;
     }
 
     @Nullable
@@ -302,7 +305,8 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         poseStack.popPose();
     }
 
-    private void applyPositioningTransform(ItemDisplayContext transformType, TransformScale scale, BedrockGunModel model, PoseStack poseStack) {
+    private static void applyPositioningTransform(ItemDisplayContext transformType, TransformScale scale, BedrockGunModel model,
+                                                  PoseStack poseStack) {
         switch (transformType) {
             case FIXED -> applyPositioningNodeTransform(model.getFixedOriginPath(), poseStack, scale.getFixed());
             case GROUND -> applyPositioningNodeTransform(model.getGroundOriginPath(), poseStack, scale.getGround());
@@ -310,7 +314,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         }
     }
 
-    private void applyScaleTransform(ItemDisplayContext transformType, TransformScale scale, PoseStack poseStack) {
+    private static void applyScaleTransform(ItemDisplayContext transformType, TransformScale scale, PoseStack poseStack) {
         if (scale == null) {
             return;
         }
@@ -325,5 +329,28 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             poseStack.scale(vector3f.x(), vector3f.y(), vector3f.z());
             poseStack.translate(0, -1.5, 0);
         }
+    }
+
+    private static void applyPositioningNodeTransform(List<BedrockPart> nodePath, PoseStack poseStack, Vector3f scale) {
+        if (nodePath == null) {
+            return;
+        }
+        if (scale == null) {
+            scale = new Vector3f(1, 1, 1);
+        }
+        // 应用定位组的反向位移、旋转，使定位组的位置就是渲染中心
+        poseStack.translate(0, 1.5, 0);
+        for (int i = nodePath.size() - 1; i >= 0; i--) {
+            BedrockPart t = nodePath.get(i);
+            poseStack.mulPose(Axis.XN.rotation(t.xRot));
+            poseStack.mulPose(Axis.YN.rotation(t.yRot));
+            poseStack.mulPose(Axis.ZN.rotation(t.zRot));
+            if (t.getParent() != null) {
+                poseStack.translate(-t.x * scale.x() / 16.0F, -t.y * scale.y() / 16.0F, -t.z * scale.z() / 16.0F);
+            } else {
+                poseStack.translate(-t.x * scale.x() / 16.0F, (1.5F - t.y / 16.0F) * scale.y(), -t.z * scale.z() / 16.0F);
+            }
+        }
+        poseStack.translate(0, -1.5, 0);
     }
 }

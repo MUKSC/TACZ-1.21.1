@@ -59,6 +59,11 @@ public class ThrowableItemRendererWrapper extends AnimateGeoItemRenderer<Bedrock
     }
 
     @Override
+    public long getPutAwayTime(ItemStack stack) {
+        return 380;
+    }
+
+    @Override
     public ResourceLocation getTextureLocation(ItemStack stack) {
         return new ResourceLocation(GunMod.MOD_ID, "textures/throwable/m67_uv.png");
     }

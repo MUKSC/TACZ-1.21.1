@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.event.BeforeRenderHandEvent;
+import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import com.tacz.guns.client.animation.statemachine.ItemAnimationStateContext;
 import com.tacz.guns.client.model.BedrockAnimatedModel;
@@ -78,6 +79,16 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
 
     public abstract void updateContext(CTX context, ItemStack stack, Player player, float partialTick);
 
+    /** 计算并返回切出动画的时长，单位ms
+     * @return 保持时间
+     */
+    public long getPutAwayTime(ItemStack stack) {
+        return 0;
+    }
+
+    /**
+     * 尝试初始化状态机并触发切入信号
+     */
     public void tryInit(ItemStack stack, Player player, float partialTick) {
         var stateMachine = getStateMachine(stack);
         if (stateMachine == null) {
@@ -94,22 +105,28 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
     }
 
     /**
-     * 尝试退出状态机
+     * 尝试退出状态机并触发切出信号
      */
-    public void tryExit(ItemStack stack) {
+    public void tryExit(ItemStack stack, long putAwayTime) {
         var stateMachine = getStateMachine(stack);
         if (stateMachine == null) {
             return;
         }
+        stateMachine.processContextIfExist(context -> {
+            context.setPutAwayTime(putAwayTime / 1000F);
+        });
         if(stateMachine.isInitialized()) {
             stateMachine.trigger(GunAnimationConstant.INPUT_PUT_AWAY);
+            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
             stateMachine.exit();
+            // 需要设置的比动画稍长些，避免意外的重初始化（可能是丢精度了）
+            stateMachine.setExitingTime(putAwayTime + 25);
         }
     }
 
     /**
      * 尝试触发状态机转移
-     * @param input 输入
+     * @param input 输入信号
      */
     public void triggerAnimation(ItemStack stack, String input) {
         var stateMachine = getStateMachine(stack);
@@ -117,6 +134,17 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
             return;
         }
         stateMachine.trigger(input);
+    }
+
+    /**
+     * 更新状态机但是不进行模型写入
+     */
+    public void visualUpdate(ItemStack stack) {
+        var stateMachine = getStateMachine(stack);
+        if (stateMachine == null) {
+            return;
+        }
+        stateMachine.visualUpdate();
     }
 
     /**
@@ -160,7 +188,7 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
     }
 
     /**
-     * 渲染第一人称，暂时只用于玩家
+     * 渲染第一人称，暂时只用于玩家，入口参见 {@link com.tacz.guns.client.event.FirstPersonRenderEvent}
      */
     public void renderFirstPerson(LocalPlayer player, ItemStack stack, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource bufferSource,
                                   int light, float partialTick) {

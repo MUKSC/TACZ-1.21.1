@@ -15,6 +15,19 @@ local STATIC_TRACK_LINE = increment(track_line_top)
 local BASE_TRACK = increment(static_track_top)
 local MAIN_TRACK = increment(static_track_top)
 
+-- 播放丢枪动画的方法
+local function runPutAwayAnimation(context)
+    local put_away_time = context:getPutAwayTime()
+    -- 此处获取的轨道是位于主轨道行上的主轨道
+    local track = context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)
+    -- 播放 put_away 动画,并且将其过渡时长设为从上下文里传入的 put_away_time * 0.75
+    context:runAnimation("put_away", track, false, PLAY_ONCE_HOLD, put_away_time * 0.75)
+    -- 设定动画进度为最后一帧
+    context:setAnimationProgress(track, 1, true)
+    -- 将动画进度向前拨动 {put_away_time}
+    context:adjustAnimationProgress(track, -put_away_time, false)
+end
+
 local main_track_states = {
     -- 起始
     start = {},
@@ -24,6 +37,8 @@ local main_track_states = {
     using = {},
     -- loop
     using_hold = {},
+    -- 检视
+    inspect = {},
     -- 最终态
     final = {}
 }
@@ -58,7 +73,14 @@ end
 
 function main_track_states.idle.transition(this, context, input)
     print("idle entry - " .. input)
-    if (input == "start_use") then
+    if (input == INPUT_PUT_AWAY) then
+        runPutAwayAnimation(context)
+        -- 丢枪后转到最终态
+        return this.main_track_states.final
+    elseif (input == INPUT_INSPECT) then
+        context:runAnimation("inspect", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_STOP, 0.2)
+        return this.main_track_states.idle
+    elseif (input == "start_use") then
         context:runAnimation("unlock_safe", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_HOLD, 0)
         return this.main_track_states.using
     end
@@ -77,7 +99,11 @@ function main_track_states.using.update(this, context)
 end
 
 function main_track_states.using.transition(this, context, input)
-    if (input == "idle") then
+    if (input == INPUT_PUT_AWAY) then
+        runPutAwayAnimation(context)
+        -- 丢枪后转到最终态
+        return this.main_track_states.final
+    elseif (input == "idle") then
         context:pauseAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
         context:setAnimationProgress(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), 0, true)
         return this.main_track_states.idle
@@ -94,7 +120,11 @@ function main_track_states.using_hold.update(this, context)
 end
 
 function main_track_states.using_hold.transition(this, context, input)
-    if (input == "throw") then
+    if (input == INPUT_PUT_AWAY) then
+        runPutAwayAnimation(context)
+        -- 丢枪后转到最终态
+        return this.main_track_states.final
+    elseif (input == "throw") then
         local track = context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)
         context:stopAnimation(track)
         context:runAnimation("throw", track, false, PLAY_ONCE_HOLD, 0.01)
