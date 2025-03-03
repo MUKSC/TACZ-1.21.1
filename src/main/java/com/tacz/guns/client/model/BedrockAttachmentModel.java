@@ -167,12 +167,17 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                 renderTempPart(matrixStack, transformType, renderType, light, overlay, ocularRingPath);
             }
         }
-        if (laserBeamPaths != null) {
+        if (!isScope && !isSight && laserBeamPaths != null) {
             for (var entry : laserBeamPaths) {
                 BeamRenderer.renderLaserBeam(attachmentItem, matrixStack, transformType, entry);
             }
         }
         super.render(matrixStack, transformType, renderType, light, overlay);
+        if ((isScope || isSight) && laserBeamPaths != null) {
+            for (var entry : laserBeamPaths) {
+                BeamRenderer.renderLaserBeam(attachmentItem, matrixStack, transformType, entry);
+            }
+        }
     }
 
     private Vector3f getBedrockPartCenter(PoseStack poseStack, @Nonnull List<BedrockPart> path) {
