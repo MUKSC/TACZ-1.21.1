@@ -59,6 +59,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
     protected @Nullable BedrockPart magazineNode;
     // 换弹时第二个弹匣定位组
     protected @Nullable BedrockPart additionalMagazineNode;
+    protected @Nullable List<BedrockPart> laserBeamPaths;
 
     private boolean renderHand = true;
     private ItemStack currentGunItem;
@@ -104,8 +105,6 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         this.setFunctionalRenderer(HANDGUARD_DEFAULT_NODE, this::handguardDefaultRender);
         // 战术护木渲染
         this.setFunctionalRenderer(HANDGUARD_TACTICAL_NODE, this::handguardTacticalRender);
-        // 镭射源渲染
-        this.setFunctionalRenderer("laser_beam", bedrockPart -> new BeamRenderer(()->currentGunItem));
         // 缓存其他定位组
         this.cacheOtherPath();
         // 缓存改装 UI 下各个配件的特写视角定位组
@@ -126,6 +125,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         groundOriginPath = getPath(modelMap.get(GROUND_ORIGIN_NODE));
         muzzleFlashPosPath = getPath(modelMap.get(MUZZLE_FLASH_ORIGIN_NODE));
         scopePosPath = getPath(modelMap.get(AttachmentType.SCOPE.name().toLowerCase() + ATTACHMENT_POS_SUFFIX));
+        laserBeamPaths = getPath(modelMap.get("laser_beam"));
         root = Optional.ofNullable(modelMap.get(ROOT_NODE)).map(ModelRendererWrapper::getModelRenderer).orElse(null);
     }
 
@@ -272,6 +272,9 @@ public class BedrockGunModel extends BedrockAnimatedModel {
                     }
                 });
             }
+        }
+        if (laserBeamPaths != null) {
+            BeamRenderer.renderLaserBeam(gunItem, matrixStack, transformType, laserBeamPaths);
         }
         // 镜子需要先渲染，写入模板值
         ItemStack attachmentItem = currentAttachmentItem.get(AttachmentType.SCOPE);

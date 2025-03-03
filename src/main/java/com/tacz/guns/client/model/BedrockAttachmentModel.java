@@ -47,6 +47,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     protected List<List<BedrockPart>> ocularNodePaths;
     protected List<Boolean> isScopeOcular;
     protected List<List<BedrockPart>> divisionNodePaths;
+    protected @Nullable List<List<BedrockPart>> laserBeamPaths;
 
     private @Nullable ItemStack currentGunItem;
     private @Nullable ItemStack attachmentItem;
@@ -61,6 +62,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         ocularNodePaths = new ArrayList<>();
         isScopeOcular = new ArrayList<>();
         divisionNodePaths = new ArrayList<>();
+        laserBeamPaths = new ArrayList<>();
         // 初始化 view 的 node path
         List<BedrockPart> path = getPath(modelMap.get(SCOPE_VIEW_NODE));
         int i = 2;
@@ -85,7 +87,7 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                 map.put(num, new OcularWrapper(entry.getValue(), isScope));
             }
             if (LASER_BEAM_PATTERN.matcher(entry.getKey()).find()) {
-                setFunctionalRenderer(entry.getKey(), bedrockPart -> new BeamRenderer(() -> attachmentItem));
+                laserBeamPaths.add(getPath(entry.getValue()));
             }
         }
         for (OcularWrapper wrapper : map.values()) {
@@ -163,6 +165,11 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
             }
             if (ocularRingPath != null) {
                 renderTempPart(matrixStack, transformType, renderType, light, overlay, ocularRingPath);
+            }
+        }
+        if (laserBeamPaths != null) {
+            for (var entry : laserBeamPaths) {
+                BeamRenderer.renderLaserBeam(attachmentItem, matrixStack, transformType, entry);
             }
         }
         super.render(matrixStack, transformType, renderType, light, overlay);

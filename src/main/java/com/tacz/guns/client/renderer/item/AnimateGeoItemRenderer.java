@@ -120,7 +120,8 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
             KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
             stateMachine.exit();
             // 需要设置的比动画稍长些，避免意外的重初始化（可能是丢精度了）
-            stateMachine.setExitingTime(putAwayTime + 25);
+            // 延后一tick应该基本没有感知）
+            stateMachine.setExitingTime(putAwayTime + 50);
         }
     }
 
@@ -137,7 +138,7 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
     }
 
     /**
-     * 更新状态机但是不进行模型写入
+     * 更新状态机但是不进行模型写入，用于播放音效
      */
     public void visualUpdate(ItemStack stack) {
         var stateMachine = getStateMachine(stack);

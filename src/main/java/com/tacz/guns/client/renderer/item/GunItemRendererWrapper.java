@@ -48,7 +48,7 @@ import java.util.Optional;
 import static net.minecraft.world.item.ItemDisplayContext.*;
 
 /**
- * 负责第一人称以外的枪械模型渲染。第一人称渲染参见 {@link com.tacz.guns.client.event.FirstPersonRenderGunEvent}
+ * 负责主要的枪械动画模型渲染。额外的效果见 {@link com.tacz.guns.client.event.FirstPersonRenderGunEvent}
  */
 public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunModel, GunAnimationStateContext> {
     private static final SlotModel SLOT_GUN_MODEL = new SlotModel();
@@ -91,7 +91,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             stateMachine.trigger(GunAnimationConstant.INPUT_PUT_AWAY);
             KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
             stateMachine.exit();
-            stateMachine.setExitingTime(putAwayTime + 25);
+            stateMachine.setExitingTime(putAwayTime + 50);
         }
     }
 
@@ -126,7 +126,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         if (!(stack.getItem() instanceof IGun iGun)) {
             return;
         }
-        Optional.of(getModel(stack)).ifPresent(model -> {
+        Optional.ofNullable(getModel(stack)).ifPresent(model -> {
             if (lastModel != model) {
                 // 切换枪械模型的时候清理一下摄像机动画数据，以避免上一次播放到一半的摄像机动画影响观感。
                 model.cleanCameraAnimationTransform();
@@ -146,7 +146,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         if (!(stack.getItem() instanceof IGun iGun)) {
             return;
         }
-        Optional.of(getModel(stack)).ifPresent(model -> {
+        Optional.ofNullable(getModel(stack)).ifPresent(model -> {
             PoseStack poseStack = event.getPoseStack();
             IClientPlayerGunOperator clientPlayerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
             float partialTicks = Minecraft.getInstance().getFrameTime();
