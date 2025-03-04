@@ -13,27 +13,35 @@ public class GunSmithTableResult {
     public static final String CUSTOM = "custom";
 
     private ItemStack result = ItemStack.EMPTY;
-    private ResourceLocation group = TabConfig.TAB_MISC;
+    private ResourceLocation group = null;
 
     @Nullable
     private RawGunTableResult raw = null;
 
+    public GunSmithTableResult(ItemStack result, @Nullable ResourceLocation group) {
+        this.result = result;
+        this.group = group==null ? TabConfig.TAB_EMPTY : group;
+    }
+
+
     public GunSmithTableResult(@NotNull RawGunTableResult raw) {
         this.raw = raw;
+    }
+
+    public GunSmithTableResult(@NotNull RawGunTableResult raw, @Nullable ResourceLocation group) {
+        this.raw = raw;
+        this.group = group==null ? TabConfig.TAB_EMPTY : group;
     }
 
     public void init() {
         if (raw != null) {
             GunSmithTableResult result = RawGunTableResult.init(raw);
             this.result = result.getResult();
-            this.group = result.getGroup();
+            if (group == null || group.equals(TabConfig.TAB_EMPTY)) {
+                this.group = result.getGroup();
+            }
             this.raw = null;
         }
-    }
-
-    public GunSmithTableResult(ItemStack result, ResourceLocation group) {
-        this.result = result;
-        this.group = group;
     }
 
     public ItemStack getResult() {

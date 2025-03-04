@@ -81,4 +81,8 @@ public class GunSmithTableRecipe implements Recipe<Inventory> {
     public void init() {
         result.init();
     }
+
+    public ResourceLocation getTab() {
+        return result.getGroup();
+    }
 }

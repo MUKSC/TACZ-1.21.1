@@ -7,6 +7,7 @@ import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.item.gun.GunItemManager;
+import com.tacz.guns.init.ModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
@@ -61,6 +62,25 @@ public final class GunItemBuilder {
     public GunItemBuilder putAllAttachment(EnumMap<AttachmentType, ResourceLocation> attachments) {
         this.attachments = attachments;
         return this;
+    }
+
+    /**
+     * 强行以默认的枪支Item构建一个物品，不进行index检查<br/>
+     * 可能会返回功能不完整的物品
+     */
+    public ItemStack forceBuild() {
+        ItemStack gun = new ItemStack(ModItems.MODERN_KINETIC_GUN.get(), this.count);
+        if (gun.getItem() instanceof IGun iGun) {
+            iGun.setGunId(gun, this.gunId);
+            iGun.setFireMode(gun, this.fireMode);
+            iGun.setCurrentAmmoCount(gun, this.ammoCount);
+            iGun.setBulletInBarrel(gun, this.bulletInBarrel);
+            this.attachments.forEach((type, id) -> {
+                ItemStack attachmentStack = AttachmentItemBuilder.create().setId(id).build();
+                iGun.installAttachment(gun, attachmentStack);
+            });
+        }
+        return gun;
     }
 
     public ItemStack build() {

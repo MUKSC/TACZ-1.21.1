@@ -3,14 +3,15 @@
   // 如果没有指定，将使用默认过滤器 tacz:default
   "filter": "tacz:default",
   // gui内包含的tab
-  // 注意，服务端并不会实际校验客户端请求的配方id是否包含在tab列表中
-  // 因此不在列表中的配方id仍可能被客户端通过非正常手段请求到
-  // 如果你想彻底阻止某个配方的使用，仍然需要填写 filter
   // 如果没有填写此字段或者tabs为空，将使用内置的默认tab列表
+  // 你可以使用自定义的tab id来实现另外一种配方限制
   "tabs": [
     {
+      // tab的id，在配方的result中指定
       "id": "tacz:pistol",
+      // tab的名称，将会显示在gui中
       "name": "tacz.type.pistol.name",
+      // tab的图标，可以指定任意一个物品作为图标
       "icon": {
         "item": "tacz:modern_kinetic_gun",
         "nbt": {

@@ -89,9 +89,6 @@ public class RawGunTableResult {
                 raw = GunMod.MOD_ID + ":" + raw;
             }
             ResourceLocation group = ResourceLocation.tryParse(raw);
-            if (group == null) {
-                group = TabConfig.TAB_MISC;
-            }
             return new GunSmithTableResult(itemStack, group);
         }).orElse(new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY));
     }
@@ -108,9 +105,6 @@ public class RawGunTableResult {
                 raw = GunMod.MOD_ID + ":" + raw;
             }
             ResourceLocation group = ResourceLocation.tryParse(raw);
-            if (group == null) {
-                group = TabConfig.TAB_MISC;
-            }
             return new GunSmithTableResult(itemStack, group);
         }).orElse(new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY));
     }

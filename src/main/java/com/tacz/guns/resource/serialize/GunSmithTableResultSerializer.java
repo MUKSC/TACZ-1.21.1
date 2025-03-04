@@ -8,12 +8,10 @@ import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.pojo.data.block.TabConfig;
 import com.tacz.guns.resource.pojo.data.recipe.GunResult;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
 
@@ -27,16 +25,24 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
             String typeName = GsonHelper.getAsString(jsonObject, "type");
             int count = 1;
             CompoundTag extraTag = null;
+            ResourceLocation tabOverride = null;
             if (jsonObject.has("count")) {
                 count = Math.max(GsonHelper.getAsInt(jsonObject, "count"), 1);
             }
             if (jsonObject.has("nbt")) {
                 extraTag = CraftingHelper.getNBT(jsonObject.get("nbt"));
             }
+            if (jsonObject.has("group")) {
+                String raw = GsonHelper.getAsString(jsonObject, "group");
+                if (!raw.contains(":")) {
+                    raw = GunMod.MOD_ID + ":" + raw;
+                }
+                tabOverride = ResourceLocation.tryParse(raw);
+            }
 
             GunSmithTableResult result;
             switch (typeName) {
-                case GunSmithTableResult.GUN,GunSmithTableResult.AMMO,GunSmithTableResult.ATTACHMENT -> {
+                case GunSmithTableResult.GUN, GunSmithTableResult.AMMO, GunSmithTableResult.ATTACHMENT -> {
                     RawGunTableResult raw = new RawGunTableResult(typeName, getId(jsonObject), count);
                     if (extraTag != null) {
                         raw.setNbt(extraTag);
@@ -47,30 +53,13 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
                             raw.setExtraData(gunResult);
                         }
                     }
-                    result = new GunSmithTableResult(raw);
+
+                    result = new GunSmithTableResult(raw, tabOverride);
                 }
                 case GunSmithTableResult.CUSTOM -> {
                     JsonObject resultObject = GsonHelper.getAsJsonObject(jsonObject, "item");
-                    String raw = GsonHelper.getAsString(jsonObject, "group", StringUtils.EMPTY);
                     ItemStack itemStack = CraftingHelper.getItemStack(resultObject, true);
-                    if (!raw.contains(":")) {
-                        raw = GunMod.MOD_ID + ":" + raw;
-                    }
-                    ResourceLocation group = ResourceLocation.tryParse(raw);
-                    if (group == null) {
-                        group = TabConfig.TAB_MISC;
-                    }
-                    result = new GunSmithTableResult(itemStack, group);
-
-                    if (extraTag != null) {
-                        CompoundTag itemTag = result.getResult().getOrCreateTag();
-                        for (String key : extraTag.getAllKeys()) {
-                            Tag tag = extraTag.get(key);
-                            if (tag != null) {
-                                itemTag.put(key, tag);
-                            }
-                        }
-                    }
+                    result = new GunSmithTableResult(itemStack, tabOverride);
                 }
                 default -> {
                     return new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY);

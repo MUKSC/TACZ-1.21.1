@@ -60,8 +60,14 @@ public class GunSmithTableMenu extends AbstractContainerMenu {
             return null;
         }
         Recipe<?> recipe = recipeManager.byKey(recipeId).orElse(null);
-        if (recipe instanceof GunSmithTableRecipe) {
-            return (GunSmithTableRecipe) recipe;
+        if (recipe instanceof GunSmithTableRecipe gunSmithTableRecipe) {
+            boolean flag = TimelessAPI.getCommonBlockIndex(getBlockId()).map(blockIndex -> {
+                return blockIndex.getData().getTabs().stream().noneMatch(tab -> tab.id().equals(gunSmithTableRecipe.getTab()));
+            }).orElse(true);
+            if (flag) {
+                return null;
+            }
+            return gunSmithTableRecipe;
         }
         return null;
     }

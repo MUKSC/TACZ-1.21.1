@@ -27,6 +27,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @JeiPlugin
 public class GunModPlugin implements IModPlugin {
@@ -57,6 +58,9 @@ public class GunModPlugin implements IModPlugin {
         for (var entry : recipeTypeMap.entrySet()) {
             TimelessAPI.getCommonBlockIndex(entry.getKey()).ifPresent(blockIndex -> {
                 List<GunSmithTableRecipe> recipeList = blockIndex.getFilter().filter(recipes, GunSmithTableRecipe::getId);
+                recipeList.removeIf(recipe -> {
+                    return blockIndex.getData().getTabs().stream().noneMatch(tab -> Objects.equals(tab.id(), recipe.getId()));
+                });
                 registration.addRecipes(entry.getValue(), recipeList);
             });
         }
