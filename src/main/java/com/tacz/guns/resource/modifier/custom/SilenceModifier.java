@@ -1,12 +1,13 @@
 package com.tacz.guns.resource.modifier.custom;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
 import com.tacz.guns.config.common.GunConfig;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
@@ -14,7 +15,6 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +30,7 @@ public class SilenceModifier implements IAttachmentModifier<Pair<Modifier, Boole
     @Override
     @SuppressWarnings("deprecation")
     public SilenceJsonProperty readJson(String json) {
-        SilenceModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, SilenceModifier.Data.class);
+        SilenceModifier.Data data = CommonAssetsManager.GSON.fromJson(json, SilenceModifier.Data.class);
         Silence silence = data.getSilence();
         if (silence == null) {
             return new SilenceJsonProperty(Pair.of(new Modifier(), false));

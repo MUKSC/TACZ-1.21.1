@@ -5,14 +5,13 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class ExtraMovementModifier implements IAttachmentModifier<MoveSpeed, Mov
     @Override
     @SuppressWarnings("deprecation")
     public JsonProperty<MoveSpeed> readJson(String json) {
-        ExtraMovementModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, ExtraMovementModifier.Data.class);
+        ExtraMovementModifier.Data data = CommonAssetsManager.GSON.fromJson(json, ExtraMovementModifier.Data.class);
         MoveSpeed moveSpeed = data.getMoveSpeed();
         return  new ExtraSpeedJsonProperty(moveSpeed);
     }

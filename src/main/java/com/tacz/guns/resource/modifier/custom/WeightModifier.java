@@ -5,11 +5,11 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +31,7 @@ public class WeightModifier implements IAttachmentModifier<Modifier, Float> {
     @Override
     @SuppressWarnings("deprecation")
     public JsonProperty<Modifier> readJson(String json) {
-        WeightModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, WeightModifier.Data.class);
+        WeightModifier.Data data = CommonAssetsManager.GSON.fromJson(json, WeightModifier.Data.class);
         Modifier weightModifier = data.getWeightModifier();
         // 兼容旧版本写法
         if (weightModifier == null) {

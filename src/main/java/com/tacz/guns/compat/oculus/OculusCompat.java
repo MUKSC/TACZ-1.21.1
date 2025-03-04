@@ -21,11 +21,9 @@ public final class OculusCompat {
             if (mod.getModInfo().getVersion().compareTo(VERSION) >= 0) {
                 END_BATCH_FUNCTION = OculusCompatNewly::endBatch;
                 IS_RENDER_SHADOW_SUPPER = OculusCompatNewly::isRenderShadow;
-                OculusCompatNewly.registerPBRLoader();
             } else {
                 END_BATCH_FUNCTION = OculusCompatLegacy::endBatch;
                 IS_RENDER_SHADOW_SUPPER = OculusCompatLegacy::isRenderShadow;
-                OculusCompatLegacy.registerPBRLoader();
             }
         });
     }

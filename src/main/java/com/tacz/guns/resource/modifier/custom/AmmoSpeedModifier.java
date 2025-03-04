@@ -7,12 +7,12 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ public class AmmoSpeedModifier implements IAttachmentModifier<Modifier, Float> {
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        AmmoSpeedModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, AmmoSpeedModifier.Data.class);
+        AmmoSpeedModifier.Data data = CommonAssetsManager.GSON.fromJson(json, AmmoSpeedModifier.Data.class);
         return new AmmoSpeedModifier.BulletSpeedJsonProperty(data.getAmmoSpeed());
     }
 

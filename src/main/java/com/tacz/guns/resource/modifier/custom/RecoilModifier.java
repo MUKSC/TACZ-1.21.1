@@ -7,13 +7,13 @@ import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -44,7 +44,7 @@ public class RecoilModifier implements IAttachmentModifier<Pair<Modifier, Modifi
     @Override
     @SuppressWarnings("deprecation")
     public JsonProperty<Pair<Modifier, Modifier>> readJson(String json) {
-        RecoilModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, RecoilModifier.Data.class);
+        RecoilModifier.Data data = CommonAssetsManager.GSON.fromJson(json, RecoilModifier.Data.class);
         NewRecoilData newRecoilData = data.newRecoilData;
         OldRecoilData oldRecoilData = data.oldRecoilData;
         // 兼容旧版本写法

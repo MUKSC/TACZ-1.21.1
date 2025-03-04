@@ -7,13 +7,13 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -36,7 +36,7 @@ public class KnockbackModifier implements IAttachmentModifier<Modifier, Float> {
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        Data data = CommonGunPackLoader.GSON.fromJson(json, Data.class);
+        Data data = CommonAssetsManager.GSON.fromJson(json, Data.class);
         return new KnockbackJsonProperty(data.getKnockback());
     }
 
