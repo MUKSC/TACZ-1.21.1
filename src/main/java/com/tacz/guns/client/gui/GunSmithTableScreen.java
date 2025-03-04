@@ -19,13 +19,13 @@ import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.resource.pojo.PackInfo;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
-import com.tacz.guns.crafting.result.GunSmithTableResult;
 import com.tacz.guns.init.ModCreativeTabs;
 import com.tacz.guns.init.ModRecipe;
 import com.tacz.guns.inventory.GunSmithTableMenu;
 import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.ClientMessageCraft;
 import com.tacz.guns.resource.filter.RecipeFilter;
+import com.tacz.guns.resource.pojo.data.block.TabConfig;
 import com.tacz.guns.util.RenderDistance;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
@@ -41,36 +41,32 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(GunMod.MOD_ID, "textures/gui/gun_smith_table.png");
     private static final ResourceLocation SIDE = new ResourceLocation(GunMod.MOD_ID, "textures/gui/gun_smith_table_side.png");
 
-    private final List<String> recipeKeys = Lists.newArrayList();
-    private final Map<String, List<ResourceLocation>> recipes = Maps.newHashMap();
+    private final LinkedHashMap<ResourceLocation, TabConfig> recipeKeys = Maps.newLinkedHashMap();
+    private final Map<ResourceLocation, List<ResourceLocation>> recipes = Maps.newHashMap();
 
     private int typePage;
-    private String selectedType;
-    private List<ResourceLocation> selectedRecipeList;
+    private ResourceLocation selectedType = null;
+    private List<ResourceLocation> selectedRecipeList = new ArrayList<>();
 
     private int indexPage;
     private @Nullable GunSmithTableRecipe selectedRecipe;
@@ -83,11 +79,7 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         this.imageWidth = 344;
         this.imageHeight = 186;
         this.classifyRecipes();
-
         this.typePage = 0;
-        this.selectedType = GunSmithTableResult.AMMO;
-        this.selectedRecipeList = recipes.get(selectedType);
-
         this.indexPage = 0;
         this.selectedRecipe = this.getSelectedRecipe(!this.selectedRecipeList.isEmpty() ? this.selectedRecipeList.get(0) : null);
         this.getPlayerIngredientCount(this.selectedRecipe);
@@ -98,34 +90,54 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         gui.drawString(font, text, pX - font.width(text) / 2, pY, color, false);
     }
 
-    private void classifyRecipes() {
-        // 排序
-        // 子弹
-        putRecipeType(ModCreativeTabs.AMMO_TAB);
-        // 配件
-        putRecipeType(ModCreativeTabs.ATTACHMENT_EXTENDED_MAG_TAB);
-        putRecipeType(ModCreativeTabs.ATTACHMENT_SCOPE_TAB);
-        putRecipeType(ModCreativeTabs.ATTACHMENT_MUZZLE_TAB);
-        putRecipeType(ModCreativeTabs.ATTACHMENT_STOCK_TAB);
-        putRecipeType(ModCreativeTabs.ATTACHMENT_GRIP_TAB);
-        // 枪械
-        putRecipeType(ModCreativeTabs.GUN_PISTOL_TAB);
-        putRecipeType(ModCreativeTabs.GUN_SNIPER_TAB);
-        putRecipeType(ModCreativeTabs.GUN_RIFLE_TAB);
-        putRecipeType(ModCreativeTabs.GUN_SHOTGUN_TAB);
-        putRecipeType(ModCreativeTabs.GUN_SMG_TAB);
-        putRecipeType(ModCreativeTabs.GUN_RPG_TAB);
-        putRecipeType(ModCreativeTabs.GUN_MG_TAB);
+    public static final List<TabConfig> DEFAULT_TABS = Lists.newArrayList(
+            new TabConfig(TabConfig.TAB_AMMO, "tacz.type.ammo.name", ModCreativeTabs.AMMO_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_PISTOL, "tacz.type.pistol.name", ModCreativeTabs.GUN_PISTOL_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_SNIPER, "tacz.type.sniper.name", ModCreativeTabs.GUN_SNIPER_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_RIFLE, "tacz.type.rifle.name", ModCreativeTabs.GUN_RIFLE_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_SHOTGUN, "tacz.type.rifle.name", ModCreativeTabs.GUN_SHOTGUN_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_SMG, "tacz.type.smg.name", ModCreativeTabs.GUN_SMG_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_RPG, "tacz.type.rpg.name", ModCreativeTabs.GUN_RPG_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_MG, "tacz.type.mg.name", ModCreativeTabs.GUN_MG_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_SCOPE, "tacz.type.scope.name",  ModCreativeTabs.ATTACHMENT_SCOPE_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_MUZZLE, "tacz.type.muzzle.name", ModCreativeTabs.ATTACHMENT_MUZZLE_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_STOCK, "tacz.type.stock.name", ModCreativeTabs.ATTACHMENT_STOCK_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_GRIP, "tacz.type.grip.name", ModCreativeTabs.ATTACHMENT_GRIP_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_EXTENDED_MAG, "tacz.type.extended_mag.name", ModCreativeTabs.ATTACHMENT_EXTENDED_MAG_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_LASER, "tacz.type.laser.name", ModCreativeTabs.ATTACHMENT_LASER_TAB.get().getIconItem()),
+            new TabConfig(TabConfig.TAB_MISC, "tacz.type.misc.name", ModCreativeTabs.OTHER_TAB.get().getIconItem())
+    );
 
-        List<Pair<String, ResourceLocation>> recipeIds = Lists.newArrayList();
+    private void classifyRecipes() {
+        ResourceLocation blockId = menu.getBlockId();
+        if (blockId == null) {
+            return;
+        }
+        TimelessAPI.getCommonBlockIndex(blockId).ifPresent(blockIndex -> {
+            var tabs = blockIndex.getData().getTabs();
+            if (tabs.isEmpty()) {
+                tabs = DEFAULT_TABS;
+            }
+            for (TabConfig tab : tabs) {
+                this.recipes.put(tab.id(), Lists.newArrayList());
+                this.recipeKeys.put(tab.id(), tab);
+            }
+        });
+
+        if (!this.recipeKeys.keySet().isEmpty()) {
+            selectedType = recipeKeys.keySet().iterator().next();
+            selectedRecipeList = recipes.get(selectedType);
+        }
+
+        List<Pair<ResourceLocation, ResourceLocation>> recipeIds = Lists.newArrayList();
 
         if (Minecraft.getInstance().level != null) {
             RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
             List<GunSmithTableRecipe> recipeList = recipeManager.getAllRecipesFor(ModRecipe.GUN_SMITH_TABLE_CRAFTING.get());
             for (GunSmithTableRecipe recipe : recipeList) {
                 ResourceLocation id = recipe.getId();
-                String groupName = recipe.getResult().getGroup();
-                if (this.recipeKeys.contains(groupName)) {
+                ResourceLocation groupName = recipe.getResult().getGroup();
+                if (this.recipeKeys.containsKey(groupName)) {
                     recipeIds.add(Pair.of(groupName, id));
                 }
             }
@@ -138,18 +150,12 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
             }
             return null;
         }).orElse(recipeIds).forEach(entry -> {
-            String groupName = entry.key();
-            if (this.recipeKeys.contains(groupName)) {
+            ResourceLocation groupName = entry.key();
+            if (this.recipeKeys.containsKey(groupName)) {
                 recipes.computeIfAbsent(groupName, g -> Lists.newArrayList()).add(entry.value());
             }
         });
 
-    }
-
-    private void putRecipeType(RegistryObject<CreativeModeTab> tab) {
-        String name = tab.getId().getPath();
-        this.recipes.put(name, Lists.newArrayList());
-        this.recipeKeys.add(name);
     }
 
     @Nullable
@@ -217,8 +223,9 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
                     }
                     int hasCount = playerIngredientCount.get(i);
                     int needCount = inputs.get(i).getCount();
+                    boolean isCreative = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
                     // 拥有数量小于需求数量，不发包
-                    if (hasCount < needCount) {
+                    if (hasCount < needCount && !isCreative) {
                         return;
                     }
                 }
@@ -287,23 +294,17 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
     }
 
     private void addTypeButtons() {
+        var list = Arrays.asList(recipeKeys.values().toArray(new TabConfig[0]));
         for (int i = 0; i < 7; i++) {
             int typeIndex = typePage * 7 + i;
             if (typeIndex >= recipes.size()) {
                 return;
             }
-            String type = recipeKeys.get(typeIndex);
+            ResourceLocation type = list.get(typeIndex).id();
             int xOffset = leftPos + 157 + 24 * i;
-//            List<ResourceLocation> recipeIdGroups = recipes.get(type);
-//            if (recipeIdGroups.isEmpty()) {
-//                continue;
-//            }
-            ItemStack icon = ItemStack.EMPTY;
-            ResourceLocation tabId = new ResourceLocation(GunMod.MOD_ID, type);
-            CreativeModeTab modTab = BuiltInRegistries.CREATIVE_MODE_TAB.get(tabId);
-            if (modTab != null) {
-                icon = modTab.getIconItem();
-            }
+
+            ItemStack icon = list.get(typeIndex).icon();
+
             TypeButton typeButton = new TypeButton(xOffset, topPos + 2, icon, b -> {
                 this.selectedType = type;
                 this.selectedRecipeList = recipes.get(type);
@@ -369,7 +370,12 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         drawModCenteredString(graphics, font, Component.translatable("gui.tacz.gun_smith_table.preview"), leftPos + 108, topPos + 5, 0x555555);
-        graphics.drawString(font, Component.translatable(String.format("tacz.type.%s.name", selectedType)), leftPos + 150, topPos + 32, 0x555555, false);
+        if (selectedType != null) {
+            var config = recipeKeys.get(selectedType);
+            if (config != null) {
+                graphics.drawString(font, config.getName(), leftPos + 150, topPos + 32, 0x555555, false);
+            }
+        }
         graphics.drawString(font, Component.translatable("gui.tacz.gun_smith_table.ingredient"), leftPos + 254, topPos + 50, 0x555555, false);
         drawModCenteredString(graphics, font, Component.translatable("gui.tacz.gun_smith_table.craft"), leftPos + 312, topPos + 167, 0xFFFFFF);
         if (this.selectedRecipe != null) {
@@ -487,12 +493,17 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
                 poseStack.translate(0, 0, 200);
                 poseStack.scale(0.5f, 0.5f, 1);
                 int count = smithTableIngredient.getCount();
-                int hasCount = 0;
-                if (playerIngredientCount != null && index < playerIngredientCount.size()) {
-                    hasCount = playerIngredientCount.get(index);
+                if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative()){
+                    gui.drawString(font, String.format("%d/∞", count), (offsetX + 17) * 2, (offsetY + 10) * 2, 0xFFFFFF, false);
+                } else {
+                    int hasCount = 0;
+                    if (playerIngredientCount != null && index < playerIngredientCount.size()) {
+                        hasCount = playerIngredientCount.get(index);
+                    }
+                    int color = count <= hasCount ? 0xFFFFFF : 0xFF0000;
+                    gui.drawString(font, String.format("%d/%d", count, hasCount), (offsetX + 17) * 2, (offsetY + 10) * 2, color, false);
                 }
-                int color = count <= hasCount ? 0xFFFFFF : 0xFF0000;
-                gui.drawString(font, String.format("%d/%d", count, hasCount), (offsetX + 17) * 2, (offsetY + 10) * 2, color, false);
+
 
                 poseStack.popPose();
             }

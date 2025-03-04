@@ -17,7 +17,8 @@
   "tacz.type.grip.name": "Grip",
   "tacz.type.extended_mag.name": "Extended Mag",
   "tacz.type.laser.name": "Laser",
-
+  "tacz.type.misc.name": "Misc",
+  "tacz.type.unknown.name": "Unnamed",
   
   "tacz.gun.ak47.name": "AKM",
   "tacz.gun.deagle.name": "Deagle 50",

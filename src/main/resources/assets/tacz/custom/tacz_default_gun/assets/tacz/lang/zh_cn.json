@@ -17,6 +17,8 @@
   "tacz.type.grip.name": "握把",
   "tacz.type.extended_mag.name": "扩容弹匣",
   "tacz.type.laser.name": "激光指示器",
+  "tacz.type.misc.name": "杂项",
+  "tacz.type.unknown.name": "未命名分类",
 
 
   "tacz.gun.ak47.name": "AKM 突击步枪",

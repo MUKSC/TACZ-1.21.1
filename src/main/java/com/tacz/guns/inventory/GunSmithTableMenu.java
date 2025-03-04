@@ -72,37 +72,40 @@ public class GunSmithTableMenu extends AbstractContainerMenu {
             return;
         }
         player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(handler -> {
-            Int2IntArrayMap recordCount = new Int2IntArrayMap();
-            List<GunSmithTableIngredient> ingredients = recipe.getInputs();
+            // 是创造模式，就不扣材料
+            if (!player.isCreative()) {
+                Int2IntArrayMap recordCount = new Int2IntArrayMap();
+                List<GunSmithTableIngredient> ingredients = recipe.getInputs();
 
-            for (GunSmithTableIngredient ingredient : ingredients) {
-                int count = 0;
-                for (int slotIndex = 0; slotIndex < handler.getSlots(); slotIndex++) {
-                    ItemStack stack = handler.getStackInSlot(slotIndex);
-                    int stackCount = stack.getCount();
-                    if (!stack.isEmpty() && ingredient.getIngredient().test(stack)) {
-                        count = count + stackCount;
-                        // 记录扣除的 slot 和数量
-                        if (count <= ingredient.getCount()) {
-                            // 如果数量不足，全扣
-                            recordCount.put(slotIndex, stackCount);
-                        } else {
-                            //  数量够了，只扣需要的数量
-                            int remaining = count - ingredient.getCount();
-                            recordCount.put(slotIndex, stackCount - remaining);
-                            break;
+                for (GunSmithTableIngredient ingredient : ingredients) {
+                    int count = 0;
+                    for (int slotIndex = 0; slotIndex < handler.getSlots(); slotIndex++) {
+                        ItemStack stack = handler.getStackInSlot(slotIndex);
+                        int stackCount = stack.getCount();
+                        if (!stack.isEmpty() && ingredient.getIngredient().test(stack)) {
+                            count = count + stackCount;
+                            // 记录扣除的 slot 和数量
+                            if (count <= ingredient.getCount()) {
+                                // 如果数量不足，全扣
+                                recordCount.put(slotIndex, stackCount);
+                            } else {
+                                //  数量够了，只扣需要的数量
+                                int remaining = count - ingredient.getCount();
+                                recordCount.put(slotIndex, stackCount - remaining);
+                                break;
+                            }
                         }
                     }
+                    // 数量不够，不执行后续逻辑，合成失败
+                    if (count < ingredient.getCount()) {
+                        return;
+                    }
                 }
-                // 数量不够，不执行后续逻辑，合成失败
-                if (count < ingredient.getCount()) {
-                    return;
-                }
-            }
 
-            // 开始扣材料
-            for (int slotIndex : recordCount.keySet()) {
-                handler.extractItem(slotIndex, recordCount.get(slotIndex), false);
+                // 开始扣材料
+                for (int slotIndex : recordCount.keySet()) {
+                    handler.extractItem(slotIndex, recordCount.get(slotIndex), false);
+                }
             }
 
             // 给玩家对应的物品

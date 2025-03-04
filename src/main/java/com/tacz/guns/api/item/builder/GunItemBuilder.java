@@ -1,6 +1,5 @@
 package com.tacz.guns.api.item.builder;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
@@ -66,10 +65,14 @@ public final class GunItemBuilder {
 
     public ItemStack build() {
         String itemType = TimelessAPI.getCommonGunIndex(gunId).map(index -> index.getPojo().getItemType()).orElse(null);
-        Preconditions.checkArgument(itemType != null, "Could not found gun id: " + gunId);
+        if (itemType == null) {
+            return ItemStack.EMPTY;
+        }
 
         RegistryObject<? extends AbstractGunItem> gunItemRegistryObject = GunItemManager.getGunItemRegistryObject(itemType);
-        Preconditions.checkArgument(gunItemRegistryObject != null, "Could not found gun item type: " + itemType);
+        if (gunItemRegistryObject == null) {
+            return ItemStack.EMPTY;
+        }
 
         ItemStack gun = new ItemStack(gunItemRegistryObject.get(), this.count);
         if (gun.getItem() instanceof IGun iGun) {

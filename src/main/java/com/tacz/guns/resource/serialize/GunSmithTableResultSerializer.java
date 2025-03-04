@@ -1,9 +1,11 @@
 package com.tacz.guns.resource.serialize;
 
 import com.google.gson.*;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.crafting.result.GunSmithTableResult;
 import com.tacz.guns.crafting.result.RawGunTableResult;
 import com.tacz.guns.resource.CommonAssetsManager;
+import com.tacz.guns.resource.pojo.data.block.TabConfig;
 import com.tacz.guns.resource.pojo.data.recipe.GunResult;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -49,9 +51,17 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
                 }
                 case GunSmithTableResult.CUSTOM -> {
                     JsonObject resultObject = GsonHelper.getAsJsonObject(jsonObject, "item");
-                    String group = GsonHelper.getAsString(jsonObject, "group", StringUtils.EMPTY);
+                    String raw = GsonHelper.getAsString(jsonObject, "group", StringUtils.EMPTY);
                     ItemStack itemStack = CraftingHelper.getItemStack(resultObject, true);
+                    if (!raw.contains(":")) {
+                        raw = GunMod.MOD_ID + ":" + raw;
+                    }
+                    ResourceLocation group = ResourceLocation.tryParse(raw);
+                    if (group == null) {
+                        group = TabConfig.TAB_MISC;
+                    }
                     result = new GunSmithTableResult(itemStack, group);
+
                     if (extraTag != null) {
                         CompoundTag itemTag = result.getResult().getOrCreateTag();
                         for (String key : extraTag.getAllKeys()) {
@@ -63,12 +73,12 @@ public class GunSmithTableResultSerializer implements JsonDeserializer<GunSmithT
                     }
                 }
                 default -> {
-                    return new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY);
+                    return new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY);
                 }
             }
             return result;
         }
-        return new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY);
+        return new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY);
     }
 
     private ResourceLocation getId(JsonObject jsonObject) {

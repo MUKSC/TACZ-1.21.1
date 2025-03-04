@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 此类为数据包侧载枪械工作台的实现<br>
- * 枪包的序列化不在此处
+ * 工作台配方序列化器
  */
 public class GunSmithTableSerializer implements RecipeSerializer<GunSmithTableRecipe> {
     @Override
@@ -38,7 +37,7 @@ public class GunSmithTableSerializer implements RecipeSerializer<GunSmithTableRe
             ingredients.add(new GunSmithTableIngredient(Ingredient.fromNetwork(buffer), buffer.readInt()));
         }
         ItemStack resultItem = buffer.readItem();
-        String group = buffer.readUtf();
+        ResourceLocation group = buffer.readResourceLocation();
         GunSmithTableResult result = new GunSmithTableResult(resultItem, group);
         return new GunSmithTableRecipe(recipeId, result, ingredients);
     }
@@ -51,6 +50,6 @@ public class GunSmithTableSerializer implements RecipeSerializer<GunSmithTableRe
             buffer.writeInt(ingredient.getCount());
         }
         buffer.writeItem(recipe.getResult().getResult());
-        buffer.writeUtf(recipe.getResult().getGroup());
+        buffer.writeResourceLocation(recipe.getResult().getGroup());
     }
 }
