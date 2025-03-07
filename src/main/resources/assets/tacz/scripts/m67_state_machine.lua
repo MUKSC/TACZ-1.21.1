@@ -37,10 +37,13 @@ local main_track_states = {
     using = {},
     -- loop
     using_hold = {},
+    -- 衔接
+    after_use = {},
     -- 检视
     inspect = {},
     -- 最终态
-    final = {}
+    final = {},
+    lastCount = -1
 }
 
 local base_track_state = {}
@@ -51,7 +54,7 @@ function base_track_state.entry(this, context)
 end
 
 function main_track_states.start.update(this, context)
-    context:trigger("draw")
+    context:trigger(INPUT_DRAW)
 end
 
 function main_track_states.start.transition(this, context, input)
@@ -128,10 +131,30 @@ function main_track_states.using_hold.transition(this, context, input)
         local track = context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)
         context:stopAnimation(track)
         context:runAnimation("throw", track, false, PLAY_ONCE_HOLD, 0.01)
-        return this.main_track_states.idle
+        return this.main_track_states.after_use
     end
 end
 
+function main_track_states.after_use.update(this, context)
+    local track = context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)
+    if (context:isHolding(track)) then
+        context:trigger("end_throw")
+    end
+end
+
+function main_track_states.after_use.transition(this, context, input)
+    if (input == INPUT_PUT_AWAY) then
+        runPutAwayAnimation(context)
+        -- 丢枪后转到最终态
+        return this.main_track_states.final
+    elseif (input == "end_throw") then
+        -- 还有剩余物品，触发重新切入动画并返回idle
+        if context:getStackCount() > 0 then
+            context:runAnimation("re_draw", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_STOP, 0)
+            return this.main_track_states.idle
+        end
+    end
+end
 
 local M = {
     track_line_top = track_line_top,
@@ -145,11 +168,12 @@ local M = {
 function M:initialize(context)
     context:ensureTrackLineSize(track_line_top.value)
     context:ensureTracksAmount(STATIC_TRACK_LINE, static_track_top.value)
+    main_track_states.lastCount = context:getStackCount()
 end
 
 -- 状态机退出函数，在切出物品的时候调用
 function M:exit(context)
-    -- do some cleaning up things
+    main_track_states.lastCount = -1
 end
 
 function M:states()

@@ -1,5 +1,6 @@
 package com.tacz.guns.item;
 
+import com.tacz.guns.api.item.IAnimationItem;
 import com.tacz.guns.client.renderer.item.ThrowableItemRendererWrapper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -15,7 +16,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
-public class ThrowableItem extends Item {
+public class ThrowableItem extends Item implements IAnimationItem {
     public ThrowableItem() {
         super(new Properties().stacksTo(6));
     }
@@ -89,5 +90,10 @@ public class ThrowableItem extends Item {
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
 
+    }
+
+    @Override
+    public boolean isSame(ItemStack stack1, ItemStack stack2) {
+        return IAnimationItem.matchesIgnoreCount(stack1, stack2);
     }
 }

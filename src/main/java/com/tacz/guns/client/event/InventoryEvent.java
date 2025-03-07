@@ -3,6 +3,7 @@ package com.tacz.guns.client.event;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.event.SwapItemWithOffHand;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
+import com.tacz.guns.api.item.IAnimationItem;
 import com.tacz.guns.api.item.IGun;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -40,10 +41,11 @@ public class InventoryEvent {
         }
         // 玩家选中的物品改变的情况
         ItemStack currentItem = inventory.getItem(inventory.selected);
+        if (!(currentItem.getItem() instanceof IAnimationItem item) || !item.isSame(oldHotbarSelectItem, currentItem)) {
+            IClientPlayerGunOperator.fromLocalPlayer(player).draw(oldHotbarSelectItem);
+        }
+
         if (!ItemStack.matches(oldHotbarSelectItem, currentItem)) {
-            if (!isSame(oldHotbarSelectItem, currentItem)) {
-                IClientPlayerGunOperator.fromLocalPlayer(player).draw(oldHotbarSelectItem);
-            }
             oldHotbarSelectItem = currentItem.copy();
         }
     }

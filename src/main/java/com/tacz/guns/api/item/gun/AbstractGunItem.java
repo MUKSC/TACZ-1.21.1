@@ -44,7 +44,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class AbstractGunItem extends Item implements IGun {
+public abstract class AbstractGunItem extends Item implements IGun, IAnimationItem {
     protected AbstractGunItem(Properties pProperties) {
         super(pProperties);
     }
@@ -779,5 +779,18 @@ public abstract class AbstractGunItem extends Item implements IGun {
             return gunIndex.getGunData().isCanCrawl();
         }
         return false;
+    }
+
+    @Override
+    public boolean isSame(ItemStack i, ItemStack j) {
+        IGun iGun1 = IGun.getIGunOrNull(i);
+        IGun iGun2 = IGun.getIGunOrNull(j);
+        if (iGun1 != null && iGun2 != null) {
+            return iGun1.getGunId(i).equals(iGun2.getGunId(j));
+        }
+        if (i.isEmpty() || j.isEmpty()) {
+            return i.isEmpty() && j.isEmpty();
+        }
+        return ItemStack.matches(i, j);
     }
 }

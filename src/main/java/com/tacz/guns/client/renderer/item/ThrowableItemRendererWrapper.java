@@ -36,6 +36,7 @@ public class ThrowableItemRendererWrapper extends AnimateGeoItemRenderer<Bedrock
         context.setUsing(player.isUsingItem());
         context.setUsingTick(player.getTicksUsingItem());
         context.setPartialTicks(partialTick);
+        context.setCurrentItem(stack);
     }
 
     public void init() {

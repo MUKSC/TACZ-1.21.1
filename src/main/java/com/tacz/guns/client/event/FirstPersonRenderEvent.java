@@ -2,6 +2,7 @@ package com.tacz.guns.client.event;
 
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.KeepingItemRenderer;
+import com.tacz.guns.api.item.IAnimationItem;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
 import net.minecraft.client.Minecraft;
@@ -44,12 +45,13 @@ public class FirstPersonRenderEvent {
             transformType = ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
         }
 
-        boolean flag = !ItemStack.matches(prevStack, stack) && !isSame(prevStack, stack);
+        boolean flag = !ItemStack.matches(prevStack, stack);
+        boolean isDifferent = !(stack.getItem() instanceof IAnimationItem item) || !item.isSame(prevStack, stack);
 
         // 渲染相关内容整理到物品的IClientItemExtensions了，这个接口有待进一步抽象
         if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRenderer<?, ?> renderer) {
             // 如果物品不一样了，先尝试初始化状态机
-            if (flag || renderer.needReInit(stack)) {
+            if ((flag && isDifferent) || renderer.needReInit(stack)) {
                 renderer.tryInit(stack, player, event.getPartialTick());
             }
 
@@ -61,17 +63,5 @@ public class FirstPersonRenderEvent {
         if (flag) {
             prevStack = stack.copy();
         }
-    }
-
-    private static boolean isSame(ItemStack i, ItemStack j) {
-        IGun iGun1 = IGun.getIGunOrNull(i);
-        IGun iGun2 = IGun.getIGunOrNull(j);
-        if (iGun1 != null && iGun2 != null) {
-            return iGun1.getGunId(i).equals(iGun2.getGunId(j));
-        }
-        if (i.isEmpty() || j.isEmpty()) {
-            return i.isEmpty() && j.isEmpty();
-        }
-        return ItemStack.matches(i, j);
     }
 }
