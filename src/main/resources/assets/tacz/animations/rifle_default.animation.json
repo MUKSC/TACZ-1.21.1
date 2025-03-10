@@ -2,7 +2,7 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"idle": {
-			"animation_length": 7.26667,
+			"animation_length": 7.2667,
 			"bones": {
 				"root": {
 					"rotation": {
@@ -479,17 +479,11 @@
 			"loop": true,
 			"animation_length": 0.75,
 			"bones": {
-				"mag3": {
-					"position": [-6, -23, 6]
-				},
 				"constraint": {
 					"rotation": [0.01, 0.01, 0.01],
 					"position": [0.01, 0.01, 0.01]
 				},
 				"root": {
-					"relative_to": {
-						"rotation": "entity"
-					},
 					"rotation": {
 						"0.0": [0, 0, 0.01],
 						"0.1333": {
@@ -517,9 +511,6 @@
 			"loop": true,
 			"animation_length": 0.9333,
 			"bones": {
-				"mag3": {
-					"position": [-6, -23, 6]
-				},
 				"constraint": {
 					"rotation": [0.01, 0.01, 0.01],
 					"position": [0.01, 0.01, 0.01]
@@ -542,9 +533,6 @@
 			"loop": true,
 			"animation_length": 0.85,
 			"bones": {
-				"mag3": {
-					"position": [-6, -23, 6]
-				},
 				"constraint": {
 					"rotation": {
 						"0.0": [0.01, 0.01, 0.01],
@@ -632,7 +620,7 @@
 			}
 		},
 		"run_hold": {
-			"animation_length": 0.29167,
+			"animation_length": 0.2917,
 			"bones": {
 				"root": {
 					"rotation": [-34.73, -50.52, 30.11],
@@ -1073,7 +1061,7 @@
 		},
 		"put_away": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.46667,
+			"animation_length": 0.4667,
 			"bones": {
 				"root": {
 					"rotation": {
@@ -1147,7 +1135,7 @@
 			}
 		},
 		"ADS_up": {
-			"animation_length": 0.63333,
+			"animation_length": 0.6333,
 			"bones": {
 				"root": {
 					"rotation": {
@@ -1243,8 +1231,7 @@
 						"0.6": [0, 0, 0]
 					}
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"melee_bayonet_1": {
 			"animation_length": 0.8,
