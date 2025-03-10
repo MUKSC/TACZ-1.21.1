@@ -156,7 +156,11 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
     }
 
     public void applyLevelCameraAnimation(ViewportEvent.ComputeCameraAngles event, ItemStack stack, float multiplier) {
-        Quaternionf q = MathUtil.multiplyQuaternion(getModel(stack).getCameraAnimationObject().rotationQuaternion, multiplier);
+        var model = getModel(stack);
+        if (model == null) {
+            return;
+        }
+        Quaternionf q = MathUtil.multiplyQuaternion(model.getCameraAnimationObject().rotationQuaternion, multiplier);
         double yaw = Math.asin(2 * (q.w() * q.y() - q.x() * q.z()));
         double pitch = Math.atan2(2 * (q.w() * q.x() + q.y() * q.z()), 1 - 2 * (q.x() * q.x() + q.y() * q.y()));
         double roll = Math.atan2(2 * (q.w() * q.z() + q.x() * q.y()), 1 - 2 * (q.y() * q.y() + q.z() * q.z()));
@@ -176,7 +180,11 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
     }
 
     public void applyItemInHandCameraAnimation(BeforeRenderHandEvent event, ItemStack stack, float multiplier) {
-        Quaternionf quaternion = MathUtil.multiplyQuaternion(getModel(stack).getCameraAnimationObject().rotationQuaternion, multiplier);
+        var model = getModel(stack);
+        if (model == null) {
+            return;
+        }
+        Quaternionf quaternion = MathUtil.multiplyQuaternion(model.getCameraAnimationObject().rotationQuaternion, multiplier);
         PoseStack poseStack = event.getPoseStack();
         poseStack.mulPose(quaternion);
     }
