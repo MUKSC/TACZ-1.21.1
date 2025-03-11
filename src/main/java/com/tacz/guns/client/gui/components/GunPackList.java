@@ -9,7 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -25,6 +27,7 @@ public class GunPackList extends ContainerObjectSelectionList<GunPackList.Entry>
     private final List<Checkbox> gunPackList = new ArrayList<>();
     private final Set<String> selectedNamespaces = new HashSet<>();
     private final Checkbox byHandCheckbox;
+    private final EditBox byName;
 
     public GunPackList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pY1, int pItemHeight,
                        Map<ResourceLocation, List<ResourceLocation>> recipes, GunSmithTableScreen parent) {
@@ -36,6 +39,14 @@ public class GunPackList extends ContainerObjectSelectionList<GunPackList.Entry>
         for (List<ResourceLocation> entry : recipes.values()) {
             entry.forEach((resourceLocation) -> namespaces.add(resourceLocation.getNamespace()));
         }
+
+        this.byName = new EditBox(pMinecraft.font, 3, 0, 94, 10, Component.empty());
+        this.byName.setHint(Component.translatable("gui.tacz.gun_smith_table.filter.search"));
+        this.byName.setResponder((pText) -> {
+            parent.init();
+            parent.setIndexPage(0);
+        });
+        this.addEntry(new GunPackList.Entry(byName));
 
         this.byHandCheckbox = new Checkbox(0, 0, 10, 10, Component.translatable("gui.tacz.gun_smith_table.filter.handgun"), false) {
             @Override
@@ -73,6 +84,10 @@ public class GunPackList extends ContainerObjectSelectionList<GunPackList.Entry>
             selectedNamespaces.add(namespace);
             this.addEntry(new GunPackList.Entry(checkbox));
         }
+    }
+
+    public String getSearchText() {
+        return byName.getValue();
     }
 
     public boolean isByHandSelected() {
@@ -134,27 +149,27 @@ public class GunPackList extends ContainerObjectSelectionList<GunPackList.Entry>
     }
 
     public static class Entry extends ContainerObjectSelectionList.Entry<GunPackList.Entry> {
-        private final Checkbox checkbox;
+        private final AbstractWidget widget;
 
-        public Entry(Checkbox checkbox) {
-            this.checkbox = checkbox;
+        public Entry(AbstractWidget widget) {
+            this.widget = widget;
         }
 
         @Override
         public List<? extends NarratableEntry> narratables() {
-             return ImmutableList.of(checkbox);
+             return ImmutableList.of(widget);
         }
 
         @Override
         public void render(GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
-            this.checkbox.setX(pLeft);
-            this.checkbox.setY(pTop);
-            this.checkbox.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+            this.widget.setX(pLeft);
+            this.widget.setY(pTop);
+            this.widget.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         }
 
         @Override
         public List<? extends GuiEventListener> children() {
-            return ImmutableList.of(checkbox);
+            return ImmutableList.of(widget);
         }
     }
 

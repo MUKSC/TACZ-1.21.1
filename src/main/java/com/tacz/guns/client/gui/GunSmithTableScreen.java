@@ -85,7 +85,7 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         this.classifyRecipes();
         this.typePage = 0;
         this.indexPage = 0;
-        this.selectedRecipe = this.getSelectedRecipe(!this.selectedRecipeList.isEmpty() ? this.selectedRecipeList.get(0) : null);
+        this.selectedRecipe = this.getSelectedRecipe(selectedRecipeList != null && !this.selectedRecipeList.isEmpty() ? this.selectedRecipeList.get(0) : null);
         this.getPlayerIngredientCount(this.selectedRecipe);
     }
 
@@ -124,6 +124,9 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
                     continue;
                 }
                 if (!isSuitableForMainHand(recipe)) {
+                    continue;
+                }
+                if (!isNameMatch(recipe)) {
                     continue;
                 }
 
@@ -168,6 +171,15 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         if (selectedType != null) {
             selectedRecipeList = this.recipes.get(selectedType);
         }
+    }
+
+    private boolean isNameMatch(GunSmithTableRecipe recipe) {
+        if (filterList != null && StringUtils.isNotBlank(filterList.getSearchText())) {
+            String searchText = filterList.getSearchText().toLowerCase();
+            Component name = recipe.getResult().getResult().getHoverName();
+            return name.getString().toLowerCase().contains(searchText);
+        }
+        return true;
     }
 
     private boolean isSuitableForMainHand(GunSmithTableRecipe recipe) {
@@ -429,6 +441,21 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         this.addRenderableWidget(new ImageButton(leftPos + 29, topPos + 5, 10, 10, 212, 173, 10, TEXTURE, b -> {
             this.scale = 70;
         }));
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        if (pMouseX > leftPos + 143 && pMouseX < leftPos + 143 + 94 && pMouseY > topPos + 66 && pMouseY < topPos + 66 + 85) {
+            if (pDelta > 0) {
+                this.indexPage = Math.max(0, this.indexPage - 1);
+            } else {
+                int maxIndexPage = (selectedRecipeList.size() - 1) / 6;
+                this.indexPage = Math.min(maxIndexPage, this.indexPage + 1);
+            }
+            this.init();
+            return true;
+        }
+        return super.mouseScrolled(pMouseX, pMouseY, pDelta);
     }
 
     @Override
