@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.network.IContainerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -27,7 +28,11 @@ import java.util.Optional;
 
 public class GunSmithTableMenu extends AbstractContainerMenu {
     public static final MenuType<GunSmithTableMenu> TYPE = new MenuType<>(
-        (id, inventory) -> new GunSmithTableMenu(id, inventory, null),
+        (IContainerFactory<GunSmithTableMenu>) (id, inventory, buf) -> {
+            ResourceLocation resourceLocation = null;
+            if (buf != null) resourceLocation = buf.readResourceLocation();
+            return new GunSmithTableMenu(id, inventory, resourceLocation);
+        },
         FeatureFlags.DEFAULT_FLAGS
     );
 
