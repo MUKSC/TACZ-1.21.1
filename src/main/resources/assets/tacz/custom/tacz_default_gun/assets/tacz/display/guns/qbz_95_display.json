@@ -25,7 +25,7 @@
   "zoom_model_fov": 60,
   "shell": {
     // 抛壳的初速度
-    "initial_velocity": [6, 2, -6],
+    "initial_velocity": [6, 2, -4.5],
     // 抛壳随机变化的运动速度
     "random_velocity": [2, 1.5, 0.5],
     // 抛壳的加速度
