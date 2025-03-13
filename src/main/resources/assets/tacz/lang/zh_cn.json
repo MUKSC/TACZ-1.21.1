@@ -85,6 +85,8 @@
   "config.tacz.common.other.default_pack_debug.desc": "启用后，重载命令（reload）将不会覆盖配置文件夹下的默认模型文件",
   "config.tacz.common.other.target_sound_distance": "标靶声音范围",
   "config.tacz.common.other.target_sound_distance.desc": "标靶最远声音范围（格），包括标靶车",
+  "config.tacz.common.other.enable_table_filter": "默认枪械工作台配方限制",
+  "config.tacz.common.other.enable_table_filter.desc": "是否启用对默认枪械工作台的配方限制，关闭后，默认工作台将可制造所有枪械工作台配方",
   "custom.tacz.error.no_name": "错误：没有名字",
   "death.attack.tacz.bullet": "%1$s 被 %2$s 击倒了",
   "death.attack.tacz.bullet.item": "%2$s 使用 %3$s 击倒了 %1$s",

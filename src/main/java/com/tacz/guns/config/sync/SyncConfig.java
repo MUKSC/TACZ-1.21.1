@@ -11,6 +11,7 @@ public class SyncConfig {
     public static ForgeConfigSpec.ConfigValue<List<String>> INTERACT_KEY_WHITELIST_ENTITIES;
     public static ForgeConfigSpec.ConfigValue<List<String>> INTERACT_KEY_BLACKLIST_BLOCKS;
     public static ForgeConfigSpec.ConfigValue<List<String>> INTERACT_KEY_BLACKLIST_ENTITIES;
+    public static ForgeConfigSpec.BooleanValue ENABLE_TABLE_FILTER;
 
     // 三个全局系数，用于客户端枪械文本提示，需要同步
     public static ForgeConfigSpec.DoubleValue DAMAGE_BASE_MULTIPLIER;
@@ -84,6 +85,9 @@ public class SyncConfig {
 
         builder.comment("Whether or not players are allowed to use the crawl feature");
         ENABLE_CRAWL = builder.define("EnableCrawl", true);
+
+        builder.comment("Enable the recipe limit of default gunsmith table or not");
+        ENABLE_TABLE_FILTER = builder.define("EnableDefaultGunSmithTableFilter", true);
 
         builder.pop();
     }

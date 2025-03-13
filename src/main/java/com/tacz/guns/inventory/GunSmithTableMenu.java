@@ -1,6 +1,8 @@
 package com.tacz.guns.inventory;
 
+import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
 import com.tacz.guns.network.NetworkHandler;
@@ -56,14 +58,20 @@ public class GunSmithTableMenu extends AbstractContainerMenu {
 
     @Nullable
     private GunSmithTableRecipe getRecipe(ResourceLocation recipeId, RecipeManager recipeManager) {
-        if (filter != null && !filter.contains(recipeId)) {
-            return null;
+        if (!DefaultAssets.DEFAULT_BLOCK_ID.equals(getBlockId()) || SyncConfig.ENABLE_TABLE_FILTER.get()) {
+            if (filter != null && !filter.contains(recipeId)) {
+                return null;
+            }
         }
+
         Recipe<?> recipe = recipeManager.byKey(recipeId).orElse(null);
         if (recipe instanceof GunSmithTableRecipe gunSmithTableRecipe) {
             boolean flag = TimelessAPI.getCommonBlockIndex(getBlockId()).map(blockIndex -> {
                 return blockIndex.getData().getTabs().stream().noneMatch(tab -> tab.id().equals(gunSmithTableRecipe.getTab()));
             }).orElse(true);
+            if (DefaultAssets.DEFAULT_BLOCK_ID.equals(getBlockId()) && !SyncConfig.ENABLE_TABLE_FILTER.get()) {
+                flag = false;
+            }
             if (flag) {
                 return null;
             }

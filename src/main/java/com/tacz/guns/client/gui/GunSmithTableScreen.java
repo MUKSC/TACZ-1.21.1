@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.tacz.guns.GunMod;
+import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IAmmo;
 import com.tacz.guns.api.item.IAttachment;
@@ -19,6 +20,7 @@ import com.tacz.guns.client.gui.components.smith.ResultButton;
 import com.tacz.guns.client.gui.components.smith.TypeButton;
 import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.resource.pojo.PackInfo;
+import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
 import com.tacz.guns.init.ModRecipe;
@@ -106,6 +108,9 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
 
         TimelessAPI.getCommonBlockIndex(blockId).ifPresent(blockIndex -> {
             var tabs = blockIndex.getData().getTabs();
+            if (DefaultAssets.DEFAULT_BLOCK_ID.equals(blockId) && !SyncConfig.ENABLE_TABLE_FILTER.get()) {
+                tabs = TabConfig.DEFAULT_TABS;
+            }
             for (TabConfig tab : tabs) {
                 recipes.put(tab.id(), Lists.newArrayList());
                 recipeKeys.put(tab.id(), tab);
@@ -138,6 +143,9 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         }
 
         TimelessAPI.getCommonBlockIndex(menu.getBlockId()).map(blockIndex -> {
+            if (menu.getBlockId().equals(DefaultAssets.DEFAULT_BLOCK_ID) && !SyncConfig.ENABLE_TABLE_FILTER.get()) {
+                return null;
+            }
             RecipeFilter filter = blockIndex.getFilter();
             if (filter != null) {
                 return filter.filter(recipeIds, Pair::value);

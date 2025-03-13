@@ -268,6 +268,8 @@
   "config.tacz.common.other.default_pack_debug.desc": "When enabled, the reload command will not overwrite the default model file under config",
   "config.tacz.common.other.target_sound_distance": "Target Sound Distance",
   "config.tacz.common.other.target_sound_distance.desc": "The farthest sound distance of the target, including minecarts type",
+  "config.tacz.common.other.enable_table_filter": "Default Gunsmith Table Recipe Limit",
+  "config.tacz.common.other.enable_table_filter.desc": "Enable the recipe limit of default gunsmith table or not",
   "death.attack.tacz.bullet": "%1$s was shot by %2$s",
   "death.attack.tacz.bullet.item": "%1$s was shot by %2$s using %3$s",
   "tacz.resources.modresources": "TACZ Gunpacks Resources",
