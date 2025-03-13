@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class GunSmithTableResult {
     public static final Codec<GunSmithTableResult> CODEC = Codec.of(GunSmithTableResult::encode, GunSmithTableResult::decode);
     public static final StreamCodec<RegistryFriendlyByteBuf, GunSmithTableResult> STREAM_CODEC = StreamCodec.composite(
-        ItemStack.STREAM_CODEC, GunSmithTableResult::getResult,
+        ItemStack.OPTIONAL_STREAM_CODEC, GunSmithTableResult::getResult,
         ByteBufCodecs.STRING_UTF8, GunSmithTableResult::getGroup,
         GunSmithTableResult::new
     );
@@ -54,7 +54,7 @@ public class GunSmithTableResult {
                     result = new GunSmithTableResult(raw);
                 }
                 case GunSmithTableResult.CUSTOM -> {
-                    ItemStack itemStack = ItemStack.CODEC.fieldOf("item").decode(ops, map).getOrThrow();
+                    ItemStack itemStack = ItemStack.OPTIONAL_CODEC.fieldOf("item").decode(ops, map).getOrThrow();
                     String group = Codec.STRING.optionalFieldOf("group", StringUtils.EMPTY).decode(ops, map).getOrThrow();
                     result = new GunSmithTableResult(itemStack, group);
                     if (extraTag != null) {

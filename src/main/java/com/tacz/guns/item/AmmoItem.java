@@ -37,8 +37,9 @@ public class AmmoItem extends Item implements AmmoItemDataAccessor {
 
     @Override
     public void verifyComponentsAfterLoad(@NotNull ItemStack stack) {
-        int maxStackSize = TimelessAPI.getCommonAmmoIndex(this.getAmmoId(stack)).map(CommonAmmoIndex::getStackSize).orElse(1);
-        stack.set(DataComponents.MAX_STACK_SIZE, maxStackSize);
+        TimelessAPI.getCommonAmmoIndex(this.getAmmoId(stack)).map(CommonAmmoIndex::getStackSize).ifPresent(maxStackSize ->
+            stack.set(DataComponents.MAX_STACK_SIZE, maxStackSize)
+        );
     }
 
     @Override
