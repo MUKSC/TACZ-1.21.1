@@ -66,9 +66,6 @@ public class GunData {
     @SerializedName("fire_sound")
     private FireSound fireSound = new FireSound();
 
-    @SerializedName("heat")
-    private @Nullable HeatData heatData;
-
     @SerializedName("reload")
     private GunReloadData reloadData = new GunReloadData();
 
@@ -189,11 +186,6 @@ public class GunData {
 
     public FireSound getFireSound() {
         return fireSound;
-    }
-
-    @Nullable
-    public HeatData getHeatData() {
-        return heatData;
     }
 
     public GunReloadData getReloadData() {

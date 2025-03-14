@@ -4,7 +4,6 @@ import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
-import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -221,29 +220,9 @@ public interface IGun {
     void setCurrentAmmoCount(ItemStack gun, int ammoCount);
 
     /**
-     * 获取原始枪械弹药数
-     */
-    int getOriginalAmmoCount(ItemStack gun);
-
-    /**
-     * 设置原始枪械弹药数
-     */
-    void setOriginalAmmoCount(ItemStack gun, int ammoCount);
-
-    /**
-     * 获取原始枪械膛内子弹
-     */
-    boolean hasOriginalBulletInBarrel(ItemStack gun);
-
-    /**
-     * 设置原始枪械膛内子弹
-     */
-    void setOriginalBulletInBarrel(ItemStack gun, boolean bulletInBarrel);
-
-    /**
      * 减少一个当前枪械弹药数
      */
-    void reduceCurrentAmmoCount(ItemStack gun, LivingEntity entity);
+    void reduceCurrentAmmoCount(ItemStack gun);
 
     /**
      * 取下枪内所有子弹。玩家的特殊方法，默认卸载弹药时使用
@@ -319,69 +298,9 @@ public interface IGun {
     boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo);
 
     /**
-     * 弹匣检查
-     */
-    void magazineCheck(Player player, ItemStack gun);
-
-    /**
      * 获取 RPM
      */
     int getRPM(ItemStack gun);
-
-    /**
-     * 是否使用过热机制
-     */
-    boolean isUseHeat(ItemStack gun, LivingEntity player);
-
-    /**
-     * 在使用过热机制的时候是否具有无限的弹匣弹药
-     */
-    boolean isInfiniteAmmo(ItemStack gun, LivingEntity player);
-
-    /**
-     * 获取过热机制中的弹匣锁类型
-     */
-    MagazineLockType getMagazineLockType(ItemStack gun, LivingEntity player);
-
-    /**
-     * 是否过热 (过热锁状态)
-     */
-    boolean isOverHeat(ItemStack gun, LivingEntity player);
-
-    /**
-     * 获取过热计数器
-     */
-    int getHeatCount(ItemStack gun, LivingEntity player);
-
-    /**
-     * 设置过热计数器
-     */
-    void setHeatCount(ItemStack gun, int heatCount, LivingEntity player);
-
-    /**
-     * 获取过热上限
-     */
-    int getUpperLimit(ItemStack gun, LivingEntity player);
-
-    /**
-     * 获取过热速度
-     */
-    int getHeatRate(ItemStack gun, LivingEntity player);
-
-    /**
-     * 获取过热恢复速度
-     */
-    int getCoolingRate(ItemStack gun, LivingEntity player);
-
-    /**
-     * 获取过热恢复延迟
-     */
-    int getCoolingDelay(ItemStack gun, LivingEntity player);
-
-    /**
-     * 获取过热惩罚时间
-     */
-    int getOverHeatTime(ItemStack gun, LivingEntity player);
 
     /**
      * 获取是否可以趴下

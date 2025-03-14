@@ -127,7 +127,6 @@ function M:states()
     return {
         self.base_track_state,
         self.bolt_caught_states.normal,
-        self.over_heat_states.normal,
         self.main_track_states.start,
         self.gun_kick_state,
         self.movement_track_states.idle,

@@ -64,10 +64,6 @@ public class LivingEntityShoot {
         if (alpha < -300 || alpha > 300 + tickTime * 2) { // 允许 +- 300ms 的网络波动、窗口下限再扩大 2 个 tick time 时间(最坏情况射击会延迟2个 tick)
             return ShootResult.NETWORK_FAIL;
         }
-        // 检查是否过热
-        if (iGun.isUseHeat(currentGunItem, shooter) && iGun.isOverHeat(currentGunItem, shooter)) {
-            return ShootResult.OVER_HEAT;
-        }
         // 检查是否正在换弹
         if (data.reloadStateType.isReloading()) {
             return ShootResult.IS_RELOADING;
@@ -94,9 +90,10 @@ public class LivingEntityShoot {
         // 是否还有子弹 (创造模式是否消耗背包备弹)
         boolean hasInventoryAmmo = iGun.hasInventoryAmmo(shooter, currentGunItem, gunOperator.needCheckAmmo()) || hasAmmoInBarrel;
         int ammoCount = iGun.getCurrentAmmoCount(currentGunItem) + (hasAmmoInBarrel ? 1 : 0);
-        // 判断有子弹的条件 (背包直读且包内有子弹 / 总子弹数 > 0 / 过热模式且无限子弹)
-        boolean hasAmmo = hasInventoryAmmo || ammoCount > 0 || iGun.isInfiniteAmmo(currentGunItem, shooter);
-        if (!hasAmmo) {
+        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且总子弹数 < 1)
+        boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
+                !useInventoryAmmo && ammoCount < 1;
+        if (noAmmo) {
             return ShootResult.NO_AMMO;
         }
         // 检查膛内子弹
@@ -109,7 +106,7 @@ public class LivingEntityShoot {
             if (useInventoryAmmo) {
                 consumeAmmoFromPlayer(1, currentGunItem, gunOperator.needCheckAmmo());
             } else {
-                iGun.reduceCurrentAmmoCount(currentGunItem, shooter);
+                iGun.reduceCurrentAmmoCount(currentGunItem);
             }
             iGun.setBulletInBarrel(currentGunItem, true);
         }

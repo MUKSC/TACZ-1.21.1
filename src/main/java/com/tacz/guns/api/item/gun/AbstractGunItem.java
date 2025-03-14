@@ -2,7 +2,6 @@ package com.tacz.guns.api.item.gun;
 
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
-import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ReloadState;
 import com.tacz.guns.api.item.*;
 import com.tacz.guns.api.item.attachment.AttachmentType;
@@ -13,19 +12,14 @@ import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.inventory.tooltip.GunTooltip;
 import com.tacz.guns.resource.index.CommonGunIndex;
-import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.modifier.custom.HeatModifier;
 import com.tacz.guns.resource.pojo.data.gun.FeedType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.HeatData;
-import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -126,17 +120,18 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
             return false;
         }
 
-        // 背包直读，且没有换弹冷却机制时不进行换弹
-        if (useInventoryAmmo(gunItem) && getMagazineLockType(gunItem, shooter) == MagazineLockType.DISABLED) {
-            return false;
-        } else if (useInventoryAmmo(gunItem)) {
-            return true;
-        }
-
         int currentAmmoCount = getCurrentAmmoCount(gunItem);
         int maxAmmoCount = AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunIndex.getGunData());
         if (currentAmmoCount >= maxAmmoCount) {
             return false;
+        }
+        // 背包直读不进行换弹
+        if (useInventoryAmmo(gunItem)) {
+            return false;
+        }
+        // 无限备弹不需要消耗实际子弹
+        if (gunIndex.getGunData().getReloadData().isInfinite()) {
+            return true;
         }
         // 虚拟备弹处理
         if (useDummyAmmo(gunItem)) {
@@ -168,10 +163,6 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
     public void dropAllAmmo(Player player, ItemStack gunItem) {
         // 背包直读时不调用退弹
         if (useInventoryAmmo(gunItem)) {
-            return;
-        }
-        // 过热无限弹药时不调用退弹
-        if (isInfiniteAmmo(gunItem, player)) {
             return;
         }
         //TODO 这里操作的对象不应该是 Player 而是 LivingEntity。此外枪膛内的子弹也要退
@@ -442,26 +433,6 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
     }
 
     /**
-     * 检查枪械弹匣内的子弹数目是否符合当前的弹匣容量上限
-     * @param player
-     * @param gun
-     */
-    public void magazineCheck(Player player, ItemStack gun) {
-        ResourceLocation gunId = this.getGunId(gun);
-        CommonGunIndex gunIndex = TimelessAPI.getCommonGunIndex(gunId).orElse(null);
-        if (gunIndex == null) {
-            return;
-        }
-
-        int currentAmmoCount = getCurrentAmmoCount(gun);
-        int maxAmmoCount = AttachmentDataUtils.getAmmoCountWithAttachment(gun, gunIndex.getGunData());
-        if (currentAmmoCount > maxAmmoCount) {
-            // 如果子弹数目超过弹匣容量上限，则触发退弹机制
-            dropAllAmmo(player, gun);
-        }
-    }
-
-    /**
      * 获取 RPM
      * @param gun 枪械
      * @return RPM 数值
@@ -477,291 +448,6 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
             return gunIndex.getGunData().getRoundsPerMinute(fireMode);
         }
         return 300;
-    }
-
-    /**
-     * 是否使用过热机制检查
-     * @param gun 枪械
-     * @return 是否使用过热机制
-     */
-    public boolean isUseHeat(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return false;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return gunIndex.getGunData().getHeatData().isUseHeat();
-                }
-                return false;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return heatData.isUseHeat();
-            }
-        }
-        return false;
-    }
-
-    // 用于储存当前是否为无限弹药的标记，用于进行枪械弹药相关的设置
-    private boolean infiniteAmmoCheck = false;
-    /**
-     * 在使用过热机制的时候是否具有无限的弹匣弹药
-     * @param gun 枪械
-     * @return 是否具有无限的弹匣弹药
-     */
-    public boolean isInfiniteAmmo(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return infiniteAmmoCheck(gun, false, player);
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    if (gunIndex.getGunData().getHeatData().isInfiniteAmmo()) {
-                        return infiniteAmmoCheck(gun, true, player);
-                    }
-                }
-                return infiniteAmmoCheck(gun, false, player);
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                if (heatData.isInfiniteAmmo()) {
-                    return infiniteAmmoCheck(gun, true, player);
-                }
-            }
-        }
-        return infiniteAmmoCheck(gun, false, player);
-    }
-
-    /**
-     * 该检测仅用于在进入/退出无限弹药模式时，刷新枪械的子弹数据
-     * @param gun 枪械
-     * @param infiniteAmmo 当前是否为无限弹药
-     * @param player 玩家
-     * @return 输入的 infiniteAmmo（即当前是否为无限弹药）
-     */
-    private boolean infiniteAmmoCheck(ItemStack gun, boolean infiniteAmmo, LivingEntity player) {
-        if (!(player instanceof ServerPlayer)) {
-            return infiniteAmmo;
-        }
-        // 进入无限弹药模式触发一次
-        if (!infiniteAmmoCheck && infiniteAmmo) {
-            infiniteAmmoCheck = true;
-            // 保存当前的子弹数据
-            setOriginalBulletInBarrel(gun, hasBulletInBarrel(gun));
-            setOriginalAmmoCount(gun, getCurrentAmmoCount(gun));
-            if (isOverHeat(gun, player)) {
-                setBulletInBarrel(gun, false);
-                setCurrentAmmoCount(gun, 0);
-            } else {
-                setBulletInBarrel(gun, true);
-                setCurrentAmmoCount(gun, 1);
-            }
-        }
-        // 退出无限弹药模式触发一次
-        if (infiniteAmmoCheck && !infiniteAmmo) {
-            infiniteAmmoCheck = false;
-            // 将保存的子弹数据重新应用
-            setBulletInBarrel(gun, hasOriginalBulletInBarrel(gun));
-            setCurrentAmmoCount(gun, getOriginalAmmoCount(gun));
-        }
-        return infiniteAmmo;
-    }
-
-    /**
-     * 获取过热机制中的弹匣锁类型
-     * @param gun 枪械
-     * @return 弹匣锁类型
-     */
-    public MagazineLockType getMagazineLockType(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return MagazineLockType.DISABLED;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return gunIndex.getGunData().getHeatData().getMagazineLockType();
-                }
-                return MagazineLockType.DISABLED;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return heatData.getMagazineLockType();
-            }
-        }
-        return MagazineLockType.DISABLED;
-    }
-
-    private boolean overHeatLock = false;
-    /**
-     * 是否过热 (过热锁状态)
-     * @param gun 枪械
-     * @return 是否过热 (过热锁状态)
-     */
-    public boolean isOverHeat(ItemStack gun, LivingEntity player) {
-        if (!isUseHeat(gun, player)) {
-            return false;
-        }
-        if (overHeatLock) {
-            if (getHeatCount(gun, player) <= 0) {
-                overHeatLock = false;
-            }
-            return overHeatLock;
-        }
-        overHeatLock = getHeatCount(gun, player) >= getUpperLimit(gun, player);
-        return overHeatLock;
-    }
-
-    /**
-     * 获取过热上限
-     * @param gun 枪械
-     * @return 过热上限数值
-     */
-    public int getUpperLimit(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return 0;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return gunIndex.getGunData().getHeatData().getUpperLimit();
-                }
-                return 0;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return heatData.getUpperLimit();
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * 获取过热速度
-     * @param gun 枪械
-     * @return 过热速度数值
-     */
-    public int getHeatRate(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return 0;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return gunIndex.getGunData().getHeatData().getHeatRate();
-                }
-                return 0;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return heatData.getHeatRate();
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * 获取过热恢复速度
-     * @param gun 枪械
-     * @return 过热恢复速度数值
-     */
-    public int getCoolingRate(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return 0;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return gunIndex.getGunData().getHeatData().getCoolingRate();
-                }
-                return 0;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return heatData.getCoolingRate();
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * 获取过热恢复延迟
-     * @param gun 枪械
-     * @return 过热恢复延迟数值
-     */
-    public int getCoolingDelay(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return 0;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return (int) (gunIndex.getGunData().getHeatData().getCoolingDelay() * 1000);
-                }
-                return 0;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return (int) (heatData.getCoolingDelay() * 1000);
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * 获取过热惩罚时间
-     * @param gun 枪械
-     * @return 过热惩罚时间数值
-     */
-    public int getOverHeatTime(ItemStack gun, LivingEntity player) {
-        if (gun.getItem() instanceof IGun) {
-            AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
-            // 在初始化世界的阶段是没有缓存的，因此需要先调用枪械 data 的内容进行初始化
-            if (cacheProperty == null) {
-                Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-                if (gunIndexOptional.isEmpty()) {
-                    return 0;
-                }
-                CommonGunIndex gunIndex = gunIndexOptional.get();
-                if (gunIndex.getGunData().getHeatData() != null) {
-                    return (int) (gunIndex.getGunData().getHeatData().getOverHeatTime() * 1000);
-                }
-                return 0;
-            }
-            HeatData heatData = cacheProperty.getCache(HeatModifier.ID);
-            if (heatData != null) {
-                return (int) (heatData.getOverHeatTime() * 1000);
-            }
-        }
-        return 0;
     }
 
     /**

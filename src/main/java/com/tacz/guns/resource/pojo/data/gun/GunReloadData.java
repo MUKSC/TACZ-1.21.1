@@ -6,6 +6,9 @@ public class GunReloadData {
     @SerializedName("type")
     private FeedType type = FeedType.MAGAZINE;
 
+    @SerializedName("infinite")
+    private boolean infinite = false;
+
     @SerializedName("feed")
     private GunReloadTime feed = new GunReloadTime();
 
@@ -22,5 +25,9 @@ public class GunReloadData {
 
     public GunReloadTime getCooldown() {
         return cooldown;
+    }
+
+    public boolean isInfinite() {
+        return infinite;
     }
 }

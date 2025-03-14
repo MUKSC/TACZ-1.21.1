@@ -29,7 +29,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -150,10 +149,6 @@ public class ClientGunTooltip implements ClientTooltipComponent {
             }
             if (iGun.useInventoryAmmo(gun)) {
                 this.ammoCountText = Component.translatable("tooltip.tacz.gun.inventory_mode").withStyle(ChatFormatting.YELLOW);
-            }
-            LivingEntity entity = Minecraft.getInstance().player;
-            if (entity != null && iGun.isInfiniteAmmo(gun, entity)) {
-                this.ammoCountText = Component.translatable("tooltip.tacz.gun.infinite_ammo").withStyle(ChatFormatting.YELLOW);
             }
             this.maxWidth = Math.max(font.width(this.ammoCountText) + 22, this.maxWidth);
         }
