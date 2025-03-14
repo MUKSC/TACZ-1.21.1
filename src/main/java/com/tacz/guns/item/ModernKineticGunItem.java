@@ -215,7 +215,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         }
         Optional.ofNullable(gunIndex.getScript())
                 .map(script -> checkFunction(script.get("calcSpread")))
-                .map(func -> func.call(CoerceJavaToLua.coerce(this) , LuaValue.valueOf(bulletCnt), LuaValue.valueOf(inaccuracy)))
+                .map(func -> func.call(CoerceJavaToLua.coerce(api) , LuaValue.valueOf(bulletCnt), LuaValue.valueOf(inaccuracy)))
                 .map(luaValue -> {
                     if (luaValue.istable()){
                         LuaTable table = luaValue.checktable();
