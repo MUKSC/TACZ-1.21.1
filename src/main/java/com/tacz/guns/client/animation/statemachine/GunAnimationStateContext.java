@@ -358,6 +358,22 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     }
 
     /**
+     * 获取枪械是否处于过热状态。此方法尚未实现，仅作为占位符
+     * @return false
+     */
+    public boolean isOverHeat() {
+        return false;
+    }
+
+    /**
+     * 获取枪械的过热进程。此方法尚未实现，仅作为占位符
+     * @return 0
+     */
+    public float getHeatProgress() {
+        return 0f;
+    }
+
+    /**
      * 获取在枪械 display 中声明的状态机参数
      *
      * @return 状态机参数表
