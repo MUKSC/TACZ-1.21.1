@@ -22,7 +22,7 @@ public class InventoryEvent {
     private static ItemStack oldHotbarSelectItem = ItemStack.EMPTY;
 
     @SubscribeEvent
-    public static void onPlayerChangeSelect(TickEvent.RenderTickEvent event) {
+    public static void onPlayerChangeSelect(TickEvent.ClientTickEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
@@ -41,8 +41,14 @@ public class InventoryEvent {
         }
         // 玩家选中的物品改变的情况
         ItemStack currentItem = inventory.getItem(inventory.selected);
-        if (!(currentItem.getItem() instanceof IAnimationItem item) || !item.isSame(oldHotbarSelectItem, currentItem)) {
-            IClientPlayerGunOperator.fromLocalPlayer(player).draw(oldHotbarSelectItem);
+        if (currentItem.getItem() instanceof IAnimationItem item ) {
+            if (!item.isSame(oldHotbarSelectItem, currentItem)) {
+                IClientPlayerGunOperator.fromLocalPlayer(player).draw(oldHotbarSelectItem);
+            }
+        } else {
+            if (!ItemStack.matches(oldHotbarSelectItem, currentItem)) {
+                IClientPlayerGunOperator.fromLocalPlayer(player).draw(oldHotbarSelectItem);
+            }
         }
 
         if (!ItemStack.matches(oldHotbarSelectItem, currentItem)) {
