@@ -312,4 +312,13 @@ public interface IGun {
     int getLaserColor(ItemStack gun);
 
     void setLaserColor(ItemStack gun, int color);
+
+    /**
+     * Heat Data
+     */
+    boolean hasHeatData(ItemStack gun);
+
+    void setHeatAmount(ItemStack gun, float amount);
+
+    float getHeatAmount(ItemStack gun);
 }

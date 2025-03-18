@@ -87,6 +87,9 @@
       {"time": 0.18, "value": [0, 0]}
     ]
   },
+  "heat": {
+    "max": 30
+  },
   "inaccuracy": {
     "stand": 2.65,
     "move": 2.95,

@@ -1,5 +1,6 @@
 package com.tacz.guns.entity.shooter;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ShootResult;
@@ -11,6 +12,7 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.LivingEntity;
@@ -96,6 +98,12 @@ public class LivingEntityShoot {
         if (noAmmo) {
             return ShootResult.NO_AMMO;
         }
+        //Handle Heat Data
+        if(gunIndex.getGunData().hasHeatData()) {
+            GunHeatData heatData = gunIndex.getGunData().getHeatData();
+            if(iGun.getHeatAmount(currentGunItem) >= heatData.getHeatMax())
+                return ShootResult.OVERHEAT;
+        }
         // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
             return ShootResult.NEED_BOLT;
@@ -114,6 +122,7 @@ public class LivingEntityShoot {
         if (MinecraftForge.EVENT_BUS.post(new GunShootEvent(shooter, currentGunItem, LogicalSide.SERVER))) {
             return ShootResult.FORGE_EVENT_CANCEL;
         }
+
         NetworkHandler.sendToTrackingEntity(new ServerMessageGunShoot(shooter.getId(), currentGunItem), shooter);
         data.lastShootTimestamp = data.shootTimestamp;
         data.shootTimestamp = timestamp;

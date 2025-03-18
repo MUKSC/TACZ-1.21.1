@@ -335,6 +335,7 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
                         .setId(entry.getKey())
                         .setFireMode(gunData.getFireModeSet().get(0))
                         .setAmmoCount(gunData.getAmmoAmount())
+                        .setHeatData(gunData.hasHeatData())
                         .setAmmoInBarrel(true)
                         .build();
                 stacks.add(itemStack);

@@ -1,8 +1,10 @@
 package com.tacz.guns.item;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
+import com.tacz.guns.api.entity.ShootResult;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IAmmo;
 import com.tacz.guns.api.item.IAmmoBox;
@@ -21,10 +23,7 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.AmmoSpeedModifier;
 import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
-import com.tacz.guns.resource.pojo.data.gun.Bolt;
-import com.tacz.guns.resource.pojo.data.gun.BulletData;
-import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
+import com.tacz.guns.resource.pojo.data.gun.*;
 import com.tacz.guns.sound.SoundManager;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.tacz.guns.util.CycleTaskHelper;
@@ -125,6 +124,15 @@ public class ModernKineticGunScriptAPI {
                     if (!this.reduceAmmoOnce()) {
                         return false;
                     }
+                }
+                //Handle Heat Data
+                if(gunIndex.getGunData().hasHeatData()) {
+                    GunMod.LOGGER.info("{} has Heat Data", itemStack);
+                    GunHeatData heatData = gunIndex.getGunData().getHeatData();
+                    if (abstractGunItem.getHeatAmount(itemStack) < heatData.getHeatMax())
+                        abstractGunItem.setHeatAmount(itemStack, abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot());
+                    else
+                        abstractGunItem.setHeatAmount(itemStack, heatData.getHeatMax());
                 }
                 // 获取射击方向（pitch 和 yaw）
                 float pitch = pitchSupplier != null ? pitchSupplier.get() : shooter.getXRot();

@@ -96,6 +96,10 @@ public class GunData {
     @SerializedName("melee")
     private GunMeleeData gunMeleeData = new GunMeleeData();
 
+    @SerializedName("heat")
+    @Nullable
+    private GunHeatData gunHeatData = null;
+
     @SerializedName("allow_attachment_types")
     private List<AttachmentType> allowAttachments = Lists.newArrayList();
 
@@ -246,6 +250,15 @@ public class GunData {
 
     public GunMeleeData getMeleeData() {
         return gunMeleeData;
+    }
+
+    @Nullable
+    public GunHeatData getHeatData() {
+        return gunHeatData;
+    }
+
+    public boolean hasHeatData() {
+        return getHeatData() != null;
     }
 
     @Nullable

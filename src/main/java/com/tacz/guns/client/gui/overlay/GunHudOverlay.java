@@ -37,6 +37,9 @@ public class GunHudOverlay implements IGuiOverlay {
     private static final ResourceLocation SEMI = new ResourceLocation(GunMod.MOD_ID, "textures/hud/fire_mode_semi.png");
     private static final ResourceLocation AUTO = new ResourceLocation(GunMod.MOD_ID, "textures/hud/fire_mode_auto.png");
     private static final ResourceLocation BURST = new ResourceLocation(GunMod.MOD_ID, "textures/hud/fire_mode_burst.png");
+    private static final ResourceLocation HEATBAR = new ResourceLocation(GunMod.MOD_ID, "textures/hud/heat_bar.png");
+    private static final ResourceLocation HEATBASE = new ResourceLocation(GunMod.MOD_ID, "textures/hud/heat_base.png");
+
     private static final DecimalFormat CURRENT_AMMO_FORMAT = new DecimalFormat("000");
     private static final DecimalFormat CURRENT_AMMO_FORMAT_PERCENT = new DecimalFormat("000%");
     private static final DecimalFormat INVENTORY_AMMO_FORMAT = new DecimalFormat("0000");
@@ -170,6 +173,9 @@ public class GunHudOverlay implements IGuiOverlay {
         };
         RenderSystem.setShaderColor(1, 1, 1, 1);
         graphics.blit(fireModeTexture, (int) (width - 68.5 + mc.font.width(currentAmmoCountText) * 1.5), height - 38, 0, 0, 10, 10, 10, 10);
+
+        if(iGun.hasHeatData(stack))
+            renderOverheat(iGun.getHeatAmount(stack), graphics, stack, partialTick);
     }
 
     private static void handleCacheCount(LocalPlayer player, ItemStack stack, GunData gunData, IGun iGun, boolean useInventoryAmmo) {
@@ -212,5 +218,10 @@ public class GunHudOverlay implements IGuiOverlay {
                 cacheInventoryAmmoCount += iAmmoBox.getAmmoCount(inventoryItem);
             }
         }
+    }
+
+    public static void renderOverheat(float heatAmount, GuiGraphics pGraphics, ItemStack gunStack, float pDelta) {
+        //TODO: Render heat bar AFTER heat system implemented
+
     }
 }

@@ -60,5 +60,7 @@ public enum ShootResult {
     /**
      * Forge 事件原因取消
      */
-    FORGE_EVENT_CANCEL
+    FORGE_EVENT_CANCEL,
+
+    OVERHEAT
 }
