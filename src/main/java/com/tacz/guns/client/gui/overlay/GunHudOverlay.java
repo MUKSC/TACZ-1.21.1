@@ -16,6 +16,7 @@ import com.tacz.guns.client.resource.pojo.display.gun.AmmoCountStyle;
 import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -24,6 +25,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -150,6 +153,13 @@ public class GunHudOverlay implements IGuiOverlay {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
+        if(iGun.hasHeatData(stack)) {
+            poseStack.pushPose();
+            poseStack.scale(1f, 1f, 0.5f);
+            renderOverheat(gunData.getHeatData(), iGun.getHeatAmount(stack), graphics, stack, partialTick, width, height);
+            poseStack.popPose();
+        }
+
         // 获取图标
         ResourceLocation hudTexture = display.getHUDTexture();
         @Nullable ResourceLocation hudEmptyTexture = display.getHudEmptyTexture();
@@ -173,9 +183,6 @@ public class GunHudOverlay implements IGuiOverlay {
         };
         RenderSystem.setShaderColor(1, 1, 1, 1);
         graphics.blit(fireModeTexture, (int) (width - 68.5 + mc.font.width(currentAmmoCountText) * 1.5), height - 38, 0, 0, 10, 10, 10, 10);
-
-        if(iGun.hasHeatData(stack))
-            renderOverheat(iGun.getHeatAmount(stack), graphics, stack, partialTick);
     }
 
     private static void handleCacheCount(LocalPlayer player, ItemStack stack, GunData gunData, IGun iGun, boolean useInventoryAmmo) {
@@ -220,8 +227,14 @@ public class GunHudOverlay implements IGuiOverlay {
         }
     }
 
-    public static void renderOverheat(float heatAmount, GuiGraphics pGraphics, ItemStack gunStack, float pDelta) {
-        //TODO: Render heat bar AFTER heat system implemented
+    public static void renderOverheat(GunHeatData heatData, float heatAmount, GuiGraphics pGraphics, ItemStack gunStack, float pDelta, int w, int h) {
+        int normalHeat = (int) ((heatAmount / heatData.getHeatMax()) * 60);
+        int heatPercentage = (int) ((heatAmount / heatData.getHeatMax()) * 100);
 
+        pGraphics.fill(w / 2 - 30, h / 2 + 30, w / 2 - 30 + (normalHeat), h / 2 + 34, FastColor.ARGB32.color(190, 45 + (normalHeat * 2), 100, 100));
+        pGraphics.blit(HEATBASE, w / 2 - 64, h / 2 - 44, 0, 0, 128, 128, 128, 128);
+        Font font = Minecraft.getInstance().font;
+        String percentString = String.valueOf(heatPercentage) + "%";
+        pGraphics.drawString(font, percentString, w / 2 - (font.width(percentString) / 2), h / 2 + 38, -1, true);
     }
 }

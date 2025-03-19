@@ -88,7 +88,9 @@
     ]
   },
   "heat": {
-    "max": 30
+    "max": 100,
+    "perShot": 5,
+    "decreaseMultiplier": 2
   },
   "inaccuracy": {
     "stand": 2.65,

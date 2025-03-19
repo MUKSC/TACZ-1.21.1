@@ -20,6 +20,7 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import com.tacz.guns.sound.SoundManager;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.Minecraft;
@@ -148,10 +149,21 @@ public class LocalPlayerShoot {
         final int maxCount = Math.min(ammoCount, fireMode == FireMode.BURST ? gunData.getBurstData().getCount() : 1);
         // 连发计数器
         AtomicInteger count = new AtomicInteger(0);
+
         LocalPlayerDataHolder.SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
+
             if (count.get() == 0) {
                 // 转换 isRecord 状态，允许下一个tick的开火检测。
                 data.isShootRecorded = true;
+            }
+            //Handle Heat Data
+            if(gunData.hasHeatData()) {
+                GunHeatData heatData = gunData.getHeatData();
+                if(iGun.getHeatAmount(mainHandItem) >= heatData.getHeatMax()) {
+                    ScheduledFuture<?> future = (ScheduledFuture<?>) Thread.currentThread();
+                    future.cancel(false); // 取消当前任务
+                    return;
+                }
             }
             // 如果达到最大连发次数，或者玩家已经死亡，取消任务
             if (count.get() >= maxCount || player.isDeadOrDying()) {
@@ -159,6 +171,7 @@ public class LocalPlayerShoot {
                 future.cancel(false); // 取消当前任务
                 return;
             }
+
             // 以下逻辑只需要执行一次
             if (count.get() == 0) {
                 // 如果状态锁正在准备锁定，且不是开火的状态锁，则不允许开火(主要用于防止切枪后开火动作覆盖切枪动作)

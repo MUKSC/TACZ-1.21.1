@@ -101,8 +101,12 @@ public class LivingEntityShoot {
         //Handle Heat Data
         if(gunIndex.getGunData().hasHeatData()) {
             GunHeatData heatData = gunIndex.getGunData().getHeatData();
-            if(iGun.getHeatAmount(currentGunItem) >= heatData.getHeatMax())
+            System.out.println(iGun.getHeatAmount(currentGunItem));
+
+            if(iGun.getHeatAmount(currentGunItem) >= heatData.getHeatMax()) {
+
                 return ShootResult.OVERHEAT;
+            }
         }
         // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
@@ -125,6 +129,7 @@ public class LivingEntityShoot {
 
         NetworkHandler.sendToTrackingEntity(new ServerMessageGunShoot(shooter.getId(), currentGunItem), shooter);
         data.lastShootTimestamp = data.shootTimestamp;
+        data.heatTimestamp = System.currentTimeMillis();
         data.shootTimestamp = timestamp;
         // 执行枪械射击逻辑
         if (iGun instanceof AbstractGunItem logicGun) {

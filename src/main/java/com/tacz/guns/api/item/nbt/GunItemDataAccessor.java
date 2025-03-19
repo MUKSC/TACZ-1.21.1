@@ -390,7 +390,17 @@ public interface GunItemDataAccessor extends IGun {
 
     @Override
     default void setHeatAmount(ItemStack gun, float amount) {
-        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, amount);
+        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, amount >= 0 ? amount : 0f);
+    }
+
+    @Override
+    default void decrementHeatAmount(ItemStack gun) {
+        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, getHeatAmount(gun) - 1);
+    }
+
+    @Override
+    default void incrementHeatAmount(ItemStack gun) {
+        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, getHeatAmount(gun) + 1);
     }
 
     @Override
