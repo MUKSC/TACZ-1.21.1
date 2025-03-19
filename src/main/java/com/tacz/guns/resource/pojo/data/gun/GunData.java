@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.api.entity.IGunOperator;
+import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
@@ -12,6 +13,7 @@ import com.tacz.guns.resource.pojo.data.attachment.AttachmentData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -287,12 +289,16 @@ public class GunData {
     /**
      * @return 枪械开火的间隔，单位为 ms 。
      */
-    public long getShootInterval(LivingEntity shooter, FireMode fireMode) {
+    public long getShootInterval(LivingEntity shooter, FireMode fireMode, ItemStack gunStack) {
         int rpm = this.getRoundsPerMinute(fireMode);
         AttachmentCacheProperty cacheProperty = IGunOperator.fromLivingEntity(shooter).getCacheProperty();
         if (cacheProperty != null) {
             rpm = Mth.clamp(cacheProperty.<Integer>getCache(RpmModifier.ID), 1, 1200);
         }
+        IGun iGun = IGun.getIGunOrNull(gunStack);
+        if(hasHeatData())
+            rpm = (int) (rpm * iGun.lerpRPM(gunStack));
+
         return 60_000L / rpm;
     }
 

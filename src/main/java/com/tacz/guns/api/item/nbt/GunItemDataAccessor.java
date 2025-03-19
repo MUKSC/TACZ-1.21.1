@@ -10,9 +10,11 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.resource.index.CommonGunIndex;
+import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -394,13 +396,18 @@ public interface GunItemDataAccessor extends IGun {
     }
 
     @Override
-    default void decrementHeatAmount(ItemStack gun) {
-        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, getHeatAmount(gun) - 1);
+    default float lerpRPM(ItemStack gun) {
+        GunHeatData heatData = TimelessAPI.getCommonGunIndex(getGunId(gun)).get().getGunData().getHeatData();
+        float heatPercentage = (getHeatAmount(gun) / heatData.getHeatMax());
+        return Mth.lerp(heatPercentage, heatData.getMinRpmMod(), heatData.getMaxRpmMod());
     }
 
     @Override
-    default void incrementHeatAmount(ItemStack gun) {
-        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, getHeatAmount(gun) + 1);
+    default float lerpInaccuracy(ItemStack gun) {
+        GunHeatData heatData = TimelessAPI.getCommonGunIndex(getGunId(gun)).get().getGunData().getHeatData();
+        float heatPercentage = (getHeatAmount(gun) / heatData.getHeatMax());
+
+        return Mth.lerp(heatPercentage, heatData.getMinInaccuracy(), heatData.getMaxInaccuracy());
     }
 
     @Override

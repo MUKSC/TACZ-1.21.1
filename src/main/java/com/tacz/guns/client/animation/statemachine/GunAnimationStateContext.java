@@ -96,7 +96,7 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
                     long coolDown = (long) (gunData.getBurstData().getMinInterval() * 1000f);
                     return Math.max(coolDown, 0L);
                 }
-                long coolDown = gunData.getShootInterval(livingEntity, fireMode);
+                long coolDown = gunData.getShootInterval(livingEntity, fireMode, currentGunItem);
                 return Math.max(coolDown, 0L);
             }
             return 0L;

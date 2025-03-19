@@ -227,7 +227,7 @@ public class LocalPlayerShoot {
         if (fireMode == FireMode.BURST) {
             coolDown = (long) (gunData.getBurstData().getMinInterval() * 1000f) - (System.currentTimeMillis() - data.clientShootTimestamp);
         } else {
-            coolDown = gunData.getShootInterval(this.player, fireMode) - (System.currentTimeMillis() - data.clientShootTimestamp);
+            coolDown = gunData.getShootInterval(this.player, fireMode, mainHandItem) - (System.currentTimeMillis() - data.clientShootTimestamp);
         }
         return Math.max(coolDown, 0);
     }

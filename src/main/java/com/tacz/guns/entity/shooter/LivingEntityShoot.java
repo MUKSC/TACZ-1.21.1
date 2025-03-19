@@ -101,10 +101,7 @@ public class LivingEntityShoot {
         //Handle Heat Data
         if(gunIndex.getGunData().hasHeatData()) {
             GunHeatData heatData = gunIndex.getGunData().getHeatData();
-            System.out.println(iGun.getHeatAmount(currentGunItem));
-
             if(iGun.getHeatAmount(currentGunItem) >= heatData.getHeatMax()) {
-
                 return ShootResult.OVERHEAT;
             }
         }
@@ -172,7 +169,7 @@ public class LivingEntityShoot {
             }).orElse(-1L);
         }
         return gunIndex.map(index -> {
-            long coolDown = index.getGunData().getShootInterval(this.shooter, fireMode) - interval;
+            long coolDown = index.getGunData().getShootInterval(this.shooter, fireMode, currentGunItem) - interval;
             // 给 5 ms 的窗口时间，以平衡延迟
             coolDown = coolDown - 5;
             return Math.max(coolDown, 0L);

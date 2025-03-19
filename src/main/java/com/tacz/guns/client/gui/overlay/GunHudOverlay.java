@@ -49,6 +49,7 @@ public class GunHudOverlay implements IGuiOverlay {
     private static long checkAmmoTimestamp = -1L;
     private static int cacheMaxAmmoCount = 0;
     private static int cacheInventoryAmmoCount = 0;
+    private static float heatScale = 0.25f;
 
     private static final int MAX_AMMO_COUNT = 9999;
 
@@ -153,13 +154,6 @@ public class GunHudOverlay implements IGuiOverlay {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        if(iGun.hasHeatData(stack)) {
-            poseStack.pushPose();
-            poseStack.scale(1f, 1f, 0.5f);
-            renderOverheat(gunData.getHeatData(), iGun.getHeatAmount(stack), graphics, stack, partialTick, width, height);
-            poseStack.popPose();
-        }
-
         // 获取图标
         ResourceLocation hudTexture = display.getHUDTexture();
         @Nullable ResourceLocation hudEmptyTexture = display.getHudEmptyTexture();
@@ -183,6 +177,21 @@ public class GunHudOverlay implements IGuiOverlay {
         };
         RenderSystem.setShaderColor(1, 1, 1, 1);
         graphics.blit(fireModeTexture, (int) (width - 68.5 + mc.font.width(currentAmmoCountText) * 1.5), height - 38, 0, 0, 10, 10, 10, 10);
+
+        if(iGun.hasHeatData(stack)) {
+            poseStack.pushPose();
+            int normalHeat = (int) ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) * 60);
+            int heatPercentage = (int) ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) * 100);
+            float scaleValue = ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) / 4f) + 0.5f;
+
+            if(heatScale < scaleValue) heatScale += 0.05f;
+            if(heatScale > scaleValue) heatScale -= 0.025f;
+            if(heatScale > scaleValue - 0.03 && heatScale < scaleValue + 0.055) heatScale = scaleValue;
+            poseStack.scale(heatScale, heatScale, 1);
+
+            renderOverheat(normalHeat, heatPercentage, graphics, stack, partialTick, (int) (width / heatScale), (int) (height / heatScale));
+            poseStack.popPose();
+        }
     }
 
     private static void handleCacheCount(LocalPlayer player, ItemStack stack, GunData gunData, IGun iGun, boolean useInventoryAmmo) {
@@ -227,13 +236,10 @@ public class GunHudOverlay implements IGuiOverlay {
         }
     }
 
-    public static void renderOverheat(GunHeatData heatData, float heatAmount, GuiGraphics pGraphics, ItemStack gunStack, float pDelta, int w, int h) {
-        int normalHeat = (int) ((heatAmount / heatData.getHeatMax()) * 60);
-        int heatPercentage = (int) ((heatAmount / heatData.getHeatMax()) * 100);
-
-        pGraphics.fill(w / 2 - 30, h / 2 + 30, w / 2 - 30 + (normalHeat), h / 2 + 34, FastColor.ARGB32.color(190, 45 + (normalHeat * 2), 100, 100));
+    public static void renderOverheat(int normalHeat, float heatPercentage, GuiGraphics pGraphics, ItemStack gunStack, float pDelta, int w, int h) {
+        pGraphics.fill(w / 2 - 30, h / 2 + 30, w / 2 - 30 + (normalHeat), h / 2 + 34, FastColor.ARGB32.color(190, (45 + (normalHeat * 2)), 100, 100));
         pGraphics.blit(HEATBASE, w / 2 - 64, h / 2 - 44, 0, 0, 128, 128, 128, 128);
-        Font font = Minecraft.getInstance().font;
+        Font font = Minecraft.getInstance().fontFilterFishy;
         String percentString = String.valueOf(heatPercentage) + "%";
         pGraphics.drawString(font, percentString, w / 2 - (font.width(percentString) / 2), h / 2 + 38, -1, true);
     }

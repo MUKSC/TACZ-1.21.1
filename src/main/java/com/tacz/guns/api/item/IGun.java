@@ -320,9 +320,9 @@ public interface IGun {
 
     void setHeatAmount(ItemStack gun, float amount);
 
-    void decrementHeatAmount(ItemStack gun);
+    float lerpRPM(ItemStack gun);
 
-    void incrementHeatAmount(ItemStack gun);
+    float lerpInaccuracy(ItemStack gun);
 
     float getHeatAmount(ItemStack gun);
 }
