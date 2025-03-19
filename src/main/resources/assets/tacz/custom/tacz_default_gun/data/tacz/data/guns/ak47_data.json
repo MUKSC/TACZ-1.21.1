@@ -105,28 +105,12 @@
     // 消音器射击声音传播距离修正乘数
     "silence_multiplier": 1.0
   },
-  "heat":  {
-    // 是否使用过热系统，默认为 false，禁用时下方的所有设置不生效
-    "use_heat": false,
-    // 是否使用无限弹匣内弹药，默认为 false，建议搭配下方弹匣锁一同使用
-    "infinite_ammo": false,
-    // 弹匣锁（弹药直读时无效），弹匣锁触发时不会冷却，直至换弹结束后完全冷却（disabled 禁用弹匣锁，over_heat 完全过热时上锁，all 不再自动冷却，assist 不会上锁，但是可以依靠换弹冷却）
-    "magazine_lock_type": "disabled",
-    // 过热计数器上限
-    "upper_limit": 100,
-    // 每次射击（每发子弹）增加的过热计数器值
-    "heat_rate": 2,
-    // 每 tick 降低的过热计数器值，在被弹匣锁时不会生效，默认在停止射击（且超出连射间隔）50ms（1 tick）后开始冷却，如果过热则需要额外加上过热惩罚时间
-    "cooling_rate": 1,
-    // 停止射击（且超出连射间隔）后开始冷却需要等待的延迟时间，单位秒
-    "cooling_delay": 0.05,
-    // 过热惩罚时间，单位秒，过热时射击会额外增加此时间作为冷却延迟
-    "over_heat_time": 2
-  },
   // 换弹相关
   "reload": {
     // magazine 是弹匣供弹，manual 是手动供弹，fuel 是类燃料罐供弹（消耗一个物品填满），inventory 是消耗背包内弹药供弹（背包直读）
     "type": "magazine",
+    // 无限备弹，注意，目前此项与“inventory”不兼容
+    "infinite": false,
     // 弹匣供弹换弹时长（秒），到达此时间点，服务端就更新枪内子弹数量
     "feed": {
       // 空仓换弹

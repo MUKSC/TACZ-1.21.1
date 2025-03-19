@@ -4,10 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.builder.AttachmentItemBuilder;
 import com.tacz.guns.api.item.builder.GunItemBuilder;
 import com.tacz.guns.crafting.result.GunSmithTableResult;
 import com.tacz.guns.resource.CommonAssetsManager;
+import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.recipe.GunResult;
 import dev.latvian.mods.kubejs.item.InputItem;
 import dev.latvian.mods.kubejs.item.OutputItem;
@@ -23,6 +25,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
 import java.util.EnumMap;
+import java.util.Locale;
 
 public class TimelessRecipeJS extends RecipeJS {
     String outputGroup = "";
@@ -68,6 +71,7 @@ public class TimelessRecipeJS extends RecipeJS {
     @Override
     public OutputItem readOutputItem(Object from) {
         if (from instanceof JsonObject jsonObject) {
+            String groupName = "";
             String typeName = GsonHelper.getAsString(jsonObject, "type");
             int count = 1;
             CompoundTag extraTag = null;
@@ -79,9 +83,18 @@ public class TimelessRecipeJS extends RecipeJS {
             }
             ItemStack resultItemStack = ItemStack.EMPTY;
             switch (typeName) {
-                case GunSmithTableResult.GUN -> resultItemStack = getGunItemFromJson(jsonObject);
-                case GunSmithTableResult.AMMO -> resultItemStack = getAmmoItemFromJson(jsonObject);
-                case GunSmithTableResult.ATTACHMENT -> resultItemStack = getAttachmentItemFromJson(jsonObject);
+                case GunSmithTableResult.GUN -> {
+                    groupName = getGunTypeFromJson(jsonObject);
+                    resultItemStack = getGunItemFromJson(jsonObject);
+                }
+                case GunSmithTableResult.AMMO -> {
+                    groupName = OutputGroupName.AMMO.getName();
+                    resultItemStack = getAmmoItemFromJson(jsonObject);
+                }
+                case GunSmithTableResult.ATTACHMENT -> {
+                    groupName = getAttachmentTypeFromJson(jsonObject);
+                    resultItemStack = getAttachmentItemFromJson(jsonObject);
+                }
                 case GunSmithTableResult.CUSTOM -> {
                     JsonObject resultObject = GsonHelper.getAsJsonObject(jsonObject, "item");
                     ItemStack itemStack = CraftingHelper.getItemStack(resultObject, true);
@@ -90,6 +103,12 @@ public class TimelessRecipeJS extends RecipeJS {
                     }
                     resultItemStack = itemStack;
                 }
+            }
+            if (jsonObject.has("group")) {
+                groupName = GsonHelper.getAsString(jsonObject, "group");
+            }
+            if (!groupName.isEmpty()) {
+                outputGroupName(groupName);
             }
             return OutputItem.of(resultItemStack).withCount(count);
         }
@@ -102,12 +121,11 @@ public class TimelessRecipeJS extends RecipeJS {
         JsonObject itemJson = new JsonObject();
         itemJson.addProperty("item", RegistryInfo.ITEM.getId(value.item.getItem()).toString());
         itemJson.addProperty("count", value.getCount());
+        if (JsonIO.of(value.getNbt()) != null) {
+            itemJson.addProperty("nbt", value.getNbt().toString());
+        }
         jsonObject.addProperty("type", "custom");
         jsonObject.add("item", itemJson);
-        jsonObject.addProperty("count", value.getCount());
-        if (JsonIO.of(value.getNbt()) != null) {
-            jsonObject.addProperty("nbt", value.getNbt().toString());
-        }
         if (!outputGroup.isEmpty()) {
             jsonObject.addProperty("group", outputGroup);
         }
@@ -116,6 +134,11 @@ public class TimelessRecipeJS extends RecipeJS {
 
     private ResourceLocation getIdFromJson(JsonObject jsonObject) {
         return new ResourceLocation(GsonHelper.getAsString(jsonObject, "id"));
+    }
+
+    private String getGunTypeFromJson(JsonObject jsonObject) {
+        ResourceLocation gunId = getIdFromJson(jsonObject);
+        return TimelessAPI.getCommonGunIndex(gunId).map(CommonGunIndex::getType).orElse("");
     }
 
     private ItemStack getGunItemFromJson(JsonObject jsonObject) {
@@ -141,14 +164,23 @@ public class TimelessRecipeJS extends RecipeJS {
         ).orElse(ItemStack.EMPTY);
     }
 
+    private String getAttachmentTypeFromJson(JsonObject jsonObject) {
+        ResourceLocation attachmentId = getIdFromJson(jsonObject);
+        return TimelessAPI.getCommonAttachmentIndex(attachmentId).map(attachmentIndex ->
+                attachmentIndex.getType()
+                        .name()
+                        .toLowerCase(Locale.US)
+        ).orElse("");
+    }
+
     private ItemStack getAttachmentItemFromJson(JsonObject jsonObject) {
-        ResourceLocation AttachmentId = getIdFromJson(jsonObject);
-        return AttachmentItemBuilder.create().setId(AttachmentId).build();
+        ResourceLocation attachmentId = getIdFromJson(jsonObject);
+        return AttachmentItemBuilder.create().setId(attachmentId).build();
     }
 
     private ItemStack getAmmoItemFromJson(JsonObject jsonObject) {
         ResourceLocation ammoId = getIdFromJson(jsonObject);
-        return AttachmentItemBuilder.create().setId(ammoId).build();
+        return AmmoItemBuilder.create().setId(ammoId).build();
     }
 
     public enum OutputGroupName {

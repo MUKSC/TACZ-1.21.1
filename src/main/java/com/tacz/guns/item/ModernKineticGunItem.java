@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.ReloadState;
-import com.tacz.guns.api.event.common.GunFinishReloadEvent;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
@@ -29,8 +28,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector2d;
 import org.luaj.vm2.*;
@@ -218,7 +215,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         }
         Optional.ofNullable(gunIndex.getScript())
                 .map(script -> checkFunction(script.get("calcSpread")))
-                .map(func -> func.call(CoerceJavaToLua.coerce(this) , LuaValue.valueOf(bulletCnt), LuaValue.valueOf(inaccuracy)))
+                .map(func -> func.call(CoerceJavaToLua.coerce(api) , LuaValue.valueOf(bulletCnt), LuaValue.valueOf(inaccuracy)))
                 .map(luaValue -> {
                     if (luaValue.istable()){
                         LuaTable table = luaValue.checktable();
@@ -311,6 +308,8 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         GunData data = api.getGunIndex().getGunData();
         int needAmmoCount = api.getNeededAmmoAmount();
         boolean needConsumeAmmo = api.isReloadingNeedConsumeAmmo();
+        boolean infinite = data.getReloadData().isInfinite();
+        needConsumeAmmo = needConsumeAmmo || infinite;
         switch (data.getReloadData().getType()) {
             case MAGAZINE -> {
                 if (needConsumeAmmo) {
@@ -339,23 +338,6 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
             if (i != 0) {
                 api.setAmmoInBarrel(true);
             }
-        }
-        // 发送枪械结束换弹事件
-        ItemStack gun = api.getItemStack();
-        LivingEntity shooter = api.getShooter();
-        if (shooter == null) {
-            return;
-        }
-        MinecraftForge.EVENT_BUS.post(new GunFinishReloadEvent(shooter, gun, LogicalSide.SERVER));
-        // 结束换弹时判断是否要对过热系统进行操作
-        if (isUseHeat(api.getItemStack(), api.getShooter())) {
-            MagazineLockType magazineLockType = getMagazineLockType(gun, shooter);
-            // 如果弹匣锁不启用则不处理
-            if (magazineLockType == MagazineLockType.DISABLED) {
-                return;
-            }
-            // 完全恢复冷却
-            setHeatCount(gun, 0, shooter);
         }
     }
 

@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class KeyConfig {
     public static ForgeConfigSpec.BooleanValue HOLD_TO_AIM;
     public static ForgeConfigSpec.BooleanValue HOLD_TO_CRAWL;
+    public static ForgeConfigSpec.BooleanValue AUTO_RELOAD;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("key");
@@ -14,6 +15,9 @@ public class KeyConfig {
 
         builder.comment("True if you want to hold the crawl button to crawl");
         HOLD_TO_CRAWL = builder.define("HoldToCrawl", true);
+
+        builder.comment("Try to reload automatically when the gun is empty");
+        AUTO_RELOAD = builder.define("HoldToCrawl", false);
 
         builder.pop();
     }

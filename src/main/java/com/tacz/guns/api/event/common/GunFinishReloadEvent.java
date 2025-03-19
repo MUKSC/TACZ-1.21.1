@@ -1,6 +1,5 @@
 package com.tacz.guns.api.event.common;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.LogicalSide;
@@ -9,12 +8,10 @@ import net.minecraftforge.fml.LogicalSide;
  * 生物结束更换枪械弹药时触发的事件。
  */
 public class GunFinishReloadEvent extends Event implements KubeJSGunEventPoster<GunFinishReloadEvent>{
-    private final LivingEntity entity;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
 
-    public GunFinishReloadEvent(LivingEntity entity, ItemStack gunItemStack, LogicalSide side) {
-        this.entity = entity;
+    public GunFinishReloadEvent(ItemStack gunItemStack, LogicalSide side) {
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
         postEventToKubeJS(this);
@@ -23,10 +20,6 @@ public class GunFinishReloadEvent extends Event implements KubeJSGunEventPoster<
     @Override
     public boolean isCancelable() {
         return true;
-    }
-
-    public LivingEntity getEntity() {
-        return entity;
     }
 
     public ItemStack getGunItemStack() {

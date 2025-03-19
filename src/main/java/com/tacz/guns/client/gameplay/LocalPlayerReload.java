@@ -15,7 +15,6 @@ import com.tacz.guns.network.message.ClientMessagePlayerCancelReload;
 import com.tacz.guns.network.message.ClientMessagePlayerReloadGun;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.MagazineLockType;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -63,8 +62,8 @@ public class LocalPlayerReload {
             return;
         }
         TimelessAPI.getGunDisplay(mainHandItem).ifPresent(display -> {
-            // 检查是否为背包直读，且没有换弹冷却机制
-            if (gunItem.useInventoryAmmo(mainHandItem) && gunItem.getMagazineLockType(mainHandItem, player) == MagazineLockType.DISABLED) {
+            // 检查是否为背包直读
+            if (gunItem.useInventoryAmmo(mainHandItem)) {
                 return;
             }
             // 检查状态锁
@@ -85,11 +84,11 @@ public class LocalPlayerReload {
             // 发包通知服务器
             NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerReloadGun());
             // 执行客户端 reload 相关内容
-            this.doReload(gunItem, display, gunData, mainHandItem, gunItem.useInventoryAmmo(mainHandItem));
+            this.doReload(gunItem, display, gunData, mainHandItem);
         });
     }
 
-    private void doReload(IGun iGun, GunDisplayInstance display, GunData gunData, ItemStack mainHandItem, boolean useInventoryAmmo) {
+    private void doReload(IGun iGun, GunDisplayInstance display, GunData gunData, ItemStack mainHandItem) {
         var animationStateMachine = display.getAnimationStateMachine();
         if (animationStateMachine != null) {
             Bolt boltType = gunData.getBolt();
@@ -101,7 +100,7 @@ public class LocalPlayerReload {
             }
             // 触发 reload，停止播放声音
             SoundPlayManager.stopPlayGunSound();
-            SoundPlayManager.playReloadSound(player, display, noAmmo && !useInventoryAmmo);
+            SoundPlayManager.playReloadSound(player, display, noAmmo);
             animationStateMachine.trigger(GunAnimationConstant.INPUT_RELOAD);
         }
     }

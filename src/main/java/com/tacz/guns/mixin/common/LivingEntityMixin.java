@@ -32,7 +32,6 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
     private final @Unique LivingEntityCrawl tacz$crawl = new LivingEntityCrawl(tacz$shooter, this.tacz$data);
     private final @Unique LivingEntityAmmoCheck tacz$ammoCheck = new LivingEntityAmmoCheck(tacz$shooter);
     private final @Unique LivingEntityFireSelect tacz$fireSelect = new LivingEntityFireSelect(tacz$shooter, this.tacz$data);
-    private final @Unique LivingEntityHeat tacz$heat = new LivingEntityHeat(tacz$shooter, this.tacz$data);
     private final @Unique LivingEntityMelee tacz$melee = new LivingEntityMelee(tacz$shooter, this.tacz$data, this.tacz$draw);
     private final @Unique LivingEntityShoot tacz$shoot = new LivingEntityShoot(tacz$shooter, this.tacz$data, this.tacz$draw);
     private final @Unique LivingEntityBolt tacz$bolt = new LivingEntityBolt(this.tacz$data, this.tacz$shooter, this.tacz$draw, this.tacz$shoot);
@@ -219,7 +218,6 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
             this.tacz$aim.tickSprint();
             this.tacz$crawl.tickCrawling();
             this.tacz$bolt.tickBolt();
-            this.tacz$heat.tickHeat();
             this.tacz$melee.scheduleTickMelee();
             this.tacz$speed.updateSpeedModifier();
             tacz$shooter.setSprinting(getProcessedSprintStatus(tacz$shooter.isSprinting()));

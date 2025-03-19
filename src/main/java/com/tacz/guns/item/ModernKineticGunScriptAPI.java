@@ -145,18 +145,6 @@ public class ModernKineticGunScriptAPI {
                     SoundManager.sendSoundToNearby(shooter, soundDistance, gunId, gunDisplayId, soundId, 0.8f, 0.9f + shooter.getRandom().nextFloat() * 0.125f);
                 }
             }
-            // 成功射击，设置当前开火时间戳
-            dataHolder.lastFireTimestamp = System.currentTimeMillis();
-            // 如果使用过热系统，进行过热相关操作
-            if (abstractGunItem.isUseHeat(itemStack, shooter)) {
-                // 过热计数
-                abstractGunItem.setHeatCount(itemStack, abstractGunItem.getHeatCount(itemStack, shooter) + abstractGunItem.getHeatRate(itemStack, shooter), shooter);
-                // 如果触发过热则清空无限弹药模式下所有位置的子弹
-                if (isOverHeat() && abstractGunItem.isInfiniteAmmo(itemStack, shooter)) {
-                    abstractGunItem.setBulletInBarrel(itemStack, false);
-                    abstractGunItem.setCurrentAmmoCount(itemStack, 0);
-                }
-            }
             return true;
         }, period, cycles);
     }
@@ -199,7 +187,7 @@ public class ModernKineticGunScriptAPI {
                     return consumeAmmoFromPlayer(1) == 1;
                 }
                 // 如果非背包直读则弹匣内子弹 - 1
-                abstractGunItem.reduceCurrentAmmoCount(itemStack, shooter);
+                abstractGunItem.reduceCurrentAmmoCount(itemStack);
                 return true;
             }
             // 没有膛内子弹无法射击
@@ -221,7 +209,7 @@ public class ModernKineticGunScriptAPI {
                 return consumeAmmoFromPlayer(1) == 1;
             }
             // 如果非背包直读则弹匣内子弹 - 1
-            abstractGunItem.reduceCurrentAmmoCount(itemStack, shooter);
+            abstractGunItem.reduceCurrentAmmoCount(itemStack);
             return true;
         }
         // 非三种已知 Bolt 类型 (目前不会出现)，默认返回 false
@@ -401,10 +389,6 @@ public class ModernKineticGunScriptAPI {
     public int consumeAmmoFromPlayer(int neededAmount) {
         // 如果处于背包直读并且创造模式不消耗的情况
         if (useInventoryAmmo() && !isReloadingNeedConsumeAmmo()) {
-            return neededAmount;
-        }
-        // 如果是过热系统无限弹药的情况
-        if (abstractGunItem.isInfiniteAmmo(itemStack, shooter)) {
             return neededAmount;
         }
         if (abstractGunItem.useDummyAmmo(itemStack)) {
@@ -646,14 +630,6 @@ public class ModernKineticGunScriptAPI {
 
     public Bolt getBolt() {
         return gunIndex.getGunData().getBolt();
-    }
-
-    public boolean isOverHeat() {
-        return abstractGunItem.isOverHeat(itemStack, shooter);
-    }
-
-    public float getHeatProgress() {
-        return Mth.clamp((float) abstractGunItem.getHeatCount(itemStack, shooter) / abstractGunItem.getUpperLimit(itemStack, shooter), 0f, 1f);
     }
 
     public void setDataHolder(ShooterDataHolder dataHolder) {

@@ -21,11 +21,6 @@ public class ShooterDataHolder {
     public long shootTimestamp = -1L;
     public long lastShootTimestamp = -1L;
     /**
-     * 开火时间戳，射击每发子弹时更新，单位 ms。
-     * 用于计算更精确的最后开火时间。
-     */
-    public long lastFireTimestamp = -1L;
-    /**
      * 近战时间戳，按下刺刀按键时更新，单位 ms
      * 用于计算射击的冷却时间
      */
