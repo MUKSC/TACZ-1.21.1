@@ -182,7 +182,7 @@ public class GunHudOverlay implements IGuiOverlay {
             poseStack.pushPose();
             int normalHeat = (int) ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) * 60);
             int heatPercentage = (int) ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) * 100);
-            float scaleValue = ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) / 4f) + 0.5f;
+            float scaleValue = ((iGun.getHeatAmount(stack) / gunData.getHeatData().getHeatMax()) / 8f) + 0.75f;
 
             if(heatScale < scaleValue) heatScale += 0.05f;
             if(heatScale > scaleValue) heatScale -= 0.025f;

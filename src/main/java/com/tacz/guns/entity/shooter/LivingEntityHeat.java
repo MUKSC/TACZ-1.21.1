@@ -21,6 +21,7 @@ public class LivingEntityHeat {
         if(iGun == null) return;
         var index = TimelessAPI.getCommonGunIndex(iGun.getGunId(gunStack));
         if(index.isEmpty()) return;
+        if(index.get().getGunData().getHeatData() == null) return;
         if(iGun.getHeatAmount(gunStack) <= 0) return;
         if(System.currentTimeMillis() - data.heatTimestamp >= index.get().getGunData().getHeatData().getHeatCooldown()) {
             float heatAmount = iGun.getHeatAmount(gunStack)
