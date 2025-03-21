@@ -1,5 +1,6 @@
 package com.tacz.guns.entity.shooter;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ShootResult;
@@ -11,6 +12,7 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.LivingEntity;
@@ -96,6 +98,13 @@ public class LivingEntityShoot {
         if (noAmmo) {
             return ShootResult.NO_AMMO;
         }
+        //Handle Heat Data
+        if(gunIndex.getGunData().hasHeatData()) {
+            GunHeatData heatData = gunIndex.getGunData().getHeatData();
+            if(iGun.getHeatAmount(currentGunItem) >= heatData.getHeatMax()) {
+                return ShootResult.OVERHEAT;
+            }
+        }
         // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
             return ShootResult.NEED_BOLT;
@@ -114,8 +123,10 @@ public class LivingEntityShoot {
         if (MinecraftForge.EVENT_BUS.post(new GunShootEvent(shooter, currentGunItem, LogicalSide.SERVER))) {
             return ShootResult.FORGE_EVENT_CANCEL;
         }
+
         NetworkHandler.sendToTrackingEntity(new ServerMessageGunShoot(shooter.getId(), currentGunItem), shooter);
         data.lastShootTimestamp = data.shootTimestamp;
+        data.heatTimestamp = System.currentTimeMillis();
         data.shootTimestamp = timestamp;
         // 执行枪械射击逻辑
         if (iGun instanceof AbstractGunItem logicGun) {
@@ -158,7 +169,7 @@ public class LivingEntityShoot {
             }).orElse(-1L);
         }
         return gunIndex.map(index -> {
-            long coolDown = index.getGunData().getShootInterval(this.shooter, fireMode) - interval;
+            long coolDown = index.getGunData().getShootInterval(this.shooter, fireMode, currentGunItem) - interval;
             // 给 5 ms 的窗口时间，以平衡延迟
             coolDown = coolDown - 5;
             return Math.max(coolDown, 0L);

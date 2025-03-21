@@ -1,11 +1,14 @@
 package com.tacz.guns.item;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
+import com.tacz.guns.api.entity.ShootResult;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IAmmo;
 import com.tacz.guns.api.item.IAmmoBox;
+import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
@@ -21,10 +24,7 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.AmmoSpeedModifier;
 import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
-import com.tacz.guns.resource.pojo.data.gun.Bolt;
-import com.tacz.guns.resource.pojo.data.gun.BulletData;
-import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
+import com.tacz.guns.resource.pojo.data.gun.*;
 import com.tacz.guns.sound.SoundManager;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.tacz.guns.util.CycleTaskHelper;
@@ -86,9 +86,17 @@ public class ModernKineticGunScriptAPI {
             return;
         }
 
+        //Handle Heat Data
+        float heatInaccuracy = 1f;
+        if(hasHeatData()) {
+            GunHeatData heatData = gunIndex.getGunData().getHeatData();
+            float heatPercentage = (getHeatAmount() / heatData.getHeatMax());
+            heatInaccuracy *= Mth.lerp(heatPercentage, heatData.getMinInaccuracy(), heatData.getMaxInaccuracy());
+        }
+
         // 散射影响
         InaccuracyType inaccuracyType = InaccuracyType.getInaccuracyType(shooter);
-        final float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType));
+        final float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType) * heatInaccuracy);
 
         // 消音器影响
         Pair<Integer, Boolean> silence = cacheProperty.getCache(SilenceModifier.ID);
@@ -125,6 +133,14 @@ public class ModernKineticGunScriptAPI {
                     if (!this.reduceAmmoOnce()) {
                         return false;
                     }
+                }
+                //Handle Heat Data
+                if(gunIndex.getGunData().hasHeatData()) {
+                    GunHeatData heatData = gunIndex.getGunData().getHeatData();
+                    if (abstractGunItem.getHeatAmount(itemStack) < heatData.getHeatMax())
+                        abstractGunItem.setHeatAmount(itemStack, abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot());
+                    else
+                        abstractGunItem.setHeatAmount(itemStack, heatData.getHeatMax());
                 }
                 // 获取射击方向（pitch 和 yaw）
                 float pitch = pitchSupplier != null ? pitchSupplier.get() : shooter.getXRot();
@@ -253,7 +269,7 @@ public class ModernKineticGunScriptAPI {
             coolDown = coolDown - 5;
             return Math.max(coolDown, 0L);
         }
-        long coolDown = gunIndex.getGunData().getShootInterval(this.shooter, fireMode);
+        long coolDown = gunIndex.getGunData().getShootInterval(this.shooter, fireMode, itemStack);
         // 给 5 ms 的窗口时间，以平衡延迟
         coolDown = coolDown - 5;
         return Math.max(coolDown, 0L);
@@ -611,6 +627,48 @@ public class ModernKineticGunScriptAPI {
 
     public CommonGunIndex getGunIndex() {
         return gunIndex;
+    }
+
+    public void setHeatAmount(float amount) {
+        IGun.getIGunOrNull(itemStack).setHeatAmount(itemStack, amount);
+    }
+
+    public float getHeatAmount() {
+        return IGun.getIGunOrNull(itemStack).getHeatAmount(itemStack);
+    }
+
+    public boolean hasHeatData() {
+        return TimelessAPI.getCommonGunIndex(IGun.getIGunOrNull(itemStack).getGunId(itemStack)).get().getGunData().getHeatData() != null;
+    }
+
+    public float getHeatMinRpm() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMinRpmMod();
+        return 0f;
+    }
+
+    public float getHeatMaxRpm() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMaxRpmMod();
+        return 0f;
+    }
+
+    public float getHeatMinInaccuracy() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMinInaccuracy();
+        return 0f;
+    }
+
+    public float getHeatMaxInaccuracy() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMaxInaccuracy();
+        return 0f;
+    }
+
+    public float getHeatMax() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getHeatMax();
+        return 0f;
+    }
+
+    public float getHeatPerShot() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getHeatPerShot();
+        return 0f;
     }
 
     // TODO: 测试检查 enum 值是否可以直接在 lua 中调用，以简化这个功能为下面那个方法

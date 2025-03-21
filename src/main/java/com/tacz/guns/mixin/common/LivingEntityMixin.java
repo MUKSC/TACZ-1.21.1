@@ -38,6 +38,7 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
     private final @Unique LivingEntityReload tacz$reload = new LivingEntityReload(tacz$shooter, this.tacz$data, this.tacz$draw, this.tacz$shoot);
     private final @Unique LivingEntitySpeedModifier tacz$speed = new LivingEntitySpeedModifier(tacz$shooter, tacz$data);
     private final @Unique LivingEntitySprint tacz$sprint = new LivingEntitySprint(tacz$shooter, this.tacz$data);
+    private final @Unique LivingEntityHeat tacz$heat = new LivingEntityHeat(tacz$shooter, this.tacz$data);
 
 
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
@@ -220,6 +221,7 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
             this.tacz$bolt.tickBolt();
             this.tacz$melee.scheduleTickMelee();
             this.tacz$speed.updateSpeedModifier();
+            this.tacz$heat.tickHeatTimestamp();
             tacz$shooter.setSprinting(getProcessedSprintStatus(tacz$shooter.isSprinting()));
             // 从服务端同步数据
             ModSyncedEntityData.SHOOT_COOL_DOWN_KEY.setValue(tacz$shooter, this.tacz$shoot.getShootCoolDown());

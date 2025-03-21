@@ -103,6 +103,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         if (gunIndex == null) {
             return;
         }
+
         Optional.ofNullable(gunIndex.getScript())
                 .map(script -> checkFunction(script.get("shoot")))
                 .ifPresentOrElse(

@@ -20,6 +20,7 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -84,6 +85,15 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
         }).orElse(false);
     }
 
+    public boolean isOverHeat() {
+        return gunData.getHeatData() != null && iGun.getHeatAmount(currentGunItem) >= gunData.getHeatData().getHeatMax();
+    }
+
+    public float getHeatPercent() {
+        return gunData.getHeatData() != null ?
+                Mth.clamp(iGun.getHeatAmount(currentGunItem) / gunData.getHeatData().getHeatMax(), 0f, 1f) : 0f;
+    }
+
     /**
      * 获取枪械的射击间隔，单位毫秒
      * @return 射击间隔
@@ -96,7 +106,7 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
                     long coolDown = (long) (gunData.getBurstData().getMinInterval() * 1000f);
                     return Math.max(coolDown, 0L);
                 }
-                long coolDown = gunData.getShootInterval(livingEntity, fireMode);
+                long coolDown = gunData.getShootInterval(livingEntity, fireMode, currentGunItem);
                 return Math.max(coolDown, 0L);
             }
             return 0L;
@@ -355,22 +365,6 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
                 }
             }
         }
-    }
-
-    /**
-     * 获取枪械是否处于过热状态。此方法尚未实现，仅作为占位符
-     * @return false
-     */
-    public boolean isOverHeat() {
-        return false;
-    }
-
-    /**
-     * 获取枪械的过热进程。此方法尚未实现，仅作为占位符
-     * @return 0
-     */
-    public float getHeatProgress() {
-        return 0f;
     }
 
     /**

@@ -17,6 +17,7 @@ import java.util.EnumMap;
 public final class GunItemBuilder {
     private int count = 1;
     private int ammoCount = 0;
+    private boolean heatData = false;
     private ResourceLocation gunId;
     private FireMode fireMode = FireMode.UNKNOWN;
     private boolean bulletInBarrel = false;
@@ -64,6 +65,11 @@ public final class GunItemBuilder {
         return this;
     }
 
+    public GunItemBuilder setHeatData(boolean heatData) {
+        this.heatData = heatData;
+        return this;
+    }
+
     /**
      * 强行以默认的枪支Item构建一个物品，不进行index检查<br/>
      * 可能会返回功能不完整的物品
@@ -75,6 +81,7 @@ public final class GunItemBuilder {
             iGun.setFireMode(gun, this.fireMode);
             iGun.setCurrentAmmoCount(gun, this.ammoCount);
             iGun.setBulletInBarrel(gun, this.bulletInBarrel);
+            if(heatData) iGun.setHeatAmount(gun, 0f);
             this.attachments.forEach((type, id) -> {
                 ItemStack attachmentStack = AttachmentItemBuilder.create().setId(id).build();
                 iGun.installAttachment(gun, attachmentStack);

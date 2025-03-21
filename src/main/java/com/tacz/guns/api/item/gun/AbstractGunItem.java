@@ -335,6 +335,7 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
                         .setId(entry.getKey())
                         .setFireMode(gunData.getFireModeSet().get(0))
                         .setAmmoCount(gunData.getAmmoAmount())
+                        .setHeatData(gunData.hasHeatData())
                         .setAmmoInBarrel(true)
                         .build();
                 stacks.add(itemStack);
@@ -445,7 +446,14 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
             }
             CommonGunIndex gunIndex = gunIndexOptional.get();
             FireMode fireMode = getFireMode(gun);
-            return gunIndex.getGunData().getRoundsPerMinute(fireMode);
+            int rpm = gunIndex.getGunData().getRoundsPerMinute(fireMode);
+            System.out.println(rpm);
+            if(((IGun) gun.getItem()).hasHeatData(gun)) {
+                rpm *= (int) IGun.getIGunOrNull(gun).lerpRPM(gun);
+            }
+
+            System.out.println("Modified RPM = " + rpm);
+            return rpm;
         }
         return 300;
     }
