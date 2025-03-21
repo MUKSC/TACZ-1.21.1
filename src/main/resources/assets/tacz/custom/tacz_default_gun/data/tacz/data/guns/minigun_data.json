@@ -24,14 +24,25 @@
     "pierce": 2
   },
   "heat":  {
-    "max": 480,
+    // 过热上限
+    "max": 360,
+    // 每发子弹过热值
     "per_shot": 2,
-    "cooling_multiplier": 2,
+    // 冷却倍率，过热值的减少速度会随着时间增加
+    // t时间(秒)内可以冷却的过热值可以参考: max = cooling_multiplier * t^2
+    "cooling_multiplier": 5,
+    // 冷却延迟，ms
     "cooling_delay": 500,
-    "over_heat_time": 4000,
+    // 完全过热后，开始过热的延迟时间，ms
+    "over_heat_time": 3000,
+    // 以下将在使用过热进度(0-1)在最小值和最大值之间线性插值，然后与原始数值相乘
+    // 最小不准确度影响
     "min_inaccuracy": 1,
+    // 最大不准确度影响
     "max_inaccuracy": 1.2,
+    // 最小射速影响
     "min_rpm_mod": 1,
+    // 最大射速影响
     "max_rpm_mod": 1.2
   },
   "reload": {
