@@ -7,27 +7,33 @@ public class GunHeatData {
     @SerializedName("max")
     private float heatMax = 100f;
 
-    @SerializedName("perShot")
-    private float heatPerShot = 1f;
+    @SerializedName("per_shot")
+    private float heatPerShot = 3f;
 
-    @SerializedName("decreaseMultiplier")
+    @SerializedName("decrease_multiplier")
     private float decreaseMultiplier = 1f;
 
     @SerializedName("cooldown")
-    private long heatCooldown = 1000L; //ms
+    private long heatCooldown = 3000L; //ms
 
-    @SerializedName("minInaccuracy")
+    @SerializedName("delay")
+    private long delay = 1000L; //ms
+
+    @SerializedName("min_inaccuracy")
     private float minInaccuracy = 1f;
 
-    @SerializedName("maxInaccuracy")
+    @SerializedName("max_inaccuracy")
     private float maxInaccuracy = 1f;
 
-    @SerializedName("minRpmMod")
+    @SerializedName("min_rpm_mod")
     private float minRpmMod = 1f;
 
-    @SerializedName("maxRpmMod")
+    @SerializedName("max_rpm_mod")
     private float maxRpmMod = 1f;
 
+    public long getDelay() {
+        return delay;
+    }
 
     public float getHeatMax() {
         return heatMax;

@@ -96,9 +96,10 @@ public class ShooterDataHolder {
     /**
      * 用于缓存 lua 脚本的数据
      */
-    public long heatTimestamp = -1;
     @Nullable
     public LuaValue scriptData = null;
+
+    public long heatTimestamp = -1;
     /**
      * 配件修改过的各种属性缓存
      */

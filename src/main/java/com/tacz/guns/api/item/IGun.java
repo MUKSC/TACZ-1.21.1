@@ -318,6 +318,16 @@ public interface IGun {
      */
     boolean hasHeatData(ItemStack gun);
 
+    /**
+     * 是否完全过热
+     */
+    boolean isOverheatLocked(ItemStack gun);
+
+    void setOverheatLocked(ItemStack gun, boolean locked);
+
+    /**
+     * 设置当前过热值
+     */
     void setHeatAmount(ItemStack gun, float amount);
 
     float lerpRPM(ItemStack gun);

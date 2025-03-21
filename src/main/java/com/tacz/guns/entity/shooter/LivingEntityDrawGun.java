@@ -33,6 +33,9 @@ public class LivingEntityDrawGun {
         if (data.drawTimestamp == -1) {
             data.drawTimestamp = System.currentTimeMillis();
         }
+        if (data.heatTimestamp == -1) {
+            data.heatTimestamp = System.currentTimeMillis();
+        }
         long drawTime = System.currentTimeMillis() - data.drawTimestamp;
         if (drawTime >= 0) {
             // 如果不处于收枪状态，则需要计算收枪时长

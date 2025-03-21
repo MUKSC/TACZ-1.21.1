@@ -439,21 +439,17 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
      * @return RPM 数值
      */
     public int getRPM(ItemStack gun) {
-        if (gun.getItem() instanceof IGun) {
-            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-            if (gunIndexOptional.isEmpty()) {
-                return 300;
-            }
-            CommonGunIndex gunIndex = gunIndexOptional.get();
-            FireMode fireMode = getFireMode(gun);
-            int rpm = gunIndex.getGunData().getRoundsPerMinute(fireMode);
-            System.out.println(rpm);
-            if(((IGun) gun.getItem()).hasHeatData(gun)) {
-                rpm *= (int) IGun.getIGunOrNull(gun).lerpRPM(gun);
-            }
-
-            System.out.println("Modified RPM = " + rpm);
-            return rpm;
+        if (gun.getItem() instanceof IGun iGun) {
+            return TimelessAPI.getCommonGunIndex(this.getGunId(gun))
+                    .map(CommonGunIndex::getGunData)
+                    .map(gunData -> {
+                        FireMode fireMode = getFireMode(gun);
+                        int rpm = gunData.getRoundsPerMinute(fireMode);
+                        if (iGun.hasHeatData(gun)) {
+                            rpm *= (int) iGun.lerpRPM(gun);
+                        }
+                        return rpm;
+                    }).orElse(300);
         }
         return 300;
     }
@@ -465,12 +461,10 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
      */
     public boolean isCanCrawl(ItemStack gun) {
         if (gun.getItem() instanceof IGun) {
-            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
-            if (gunIndexOptional.isEmpty()) {
-                return false;
-            }
-            CommonGunIndex gunIndex = gunIndexOptional.get();
-            return gunIndex.getGunData().isCanCrawl();
+            return TimelessAPI.getCommonGunIndex(this.getGunId(gun))
+                    .map(CommonGunIndex::getGunData)
+                    .map(GunData::isCanCrawl)
+                    .orElse(false);
         }
         return false;
     }

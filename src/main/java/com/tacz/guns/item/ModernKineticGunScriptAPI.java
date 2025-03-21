@@ -1,14 +1,11 @@
 package com.tacz.guns.item;
 
-import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
-import com.tacz.guns.api.entity.ShootResult;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IAmmo;
 import com.tacz.guns.api.item.IAmmoBox;
-import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
@@ -137,10 +134,11 @@ public class ModernKineticGunScriptAPI {
                 //Handle Heat Data
                 if(gunIndex.getGunData().hasHeatData()) {
                     GunHeatData heatData = gunIndex.getGunData().getHeatData();
-                    if (abstractGunItem.getHeatAmount(itemStack) < heatData.getHeatMax())
-                        abstractGunItem.setHeatAmount(itemStack, abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot());
-                    else
-                        abstractGunItem.setHeatAmount(itemStack, heatData.getHeatMax());
+                    float newHeat = Math.min(abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot(), heatData.getHeatMax());
+                    abstractGunItem.setHeatAmount(itemStack, newHeat);
+                    if (newHeat >= heatData.getHeatMax()) {
+                        abstractGunItem.setOverheatLocked(itemStack, true);
+                    }
                 }
                 // 获取射击方向（pitch 和 yaw）
                 float pitch = pitchSupplier != null ? pitchSupplier.get() : shooter.getXRot();
@@ -630,15 +628,15 @@ public class ModernKineticGunScriptAPI {
     }
 
     public void setHeatAmount(float amount) {
-        IGun.getIGunOrNull(itemStack).setHeatAmount(itemStack, amount);
+        abstractGunItem.setHeatAmount(itemStack, amount);
     }
 
     public float getHeatAmount() {
-        return IGun.getIGunOrNull(itemStack).getHeatAmount(itemStack);
+        return abstractGunItem.getHeatAmount(itemStack);
     }
 
     public boolean hasHeatData() {
-        return TimelessAPI.getCommonGunIndex(IGun.getIGunOrNull(itemStack).getGunId(itemStack)).get().getGunData().getHeatData() != null;
+        return gunIndex.getGunData().getHeatData() != null;
     }
 
     public float getHeatMinRpm() {

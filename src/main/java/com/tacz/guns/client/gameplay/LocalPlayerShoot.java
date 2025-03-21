@@ -20,7 +20,6 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import com.tacz.guns.sound.SoundManager;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.Minecraft;
@@ -115,6 +114,13 @@ public class LocalPlayerShoot {
             SoundPlayManager.playDryFireSound(player, display);
             return ShootResult.NO_AMMO;
         }
+        //Handle Heat Data
+        if(gunData.hasHeatData()) {
+            if(iGun.isOverheatLocked(mainHandItem)) {
+                SoundPlayManager.playDryFireSound(player, display);
+                return ShootResult.OVERHEATED;
+            }
+        }
         // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
             IClientPlayerGunOperator.fromLocalPlayer(player).bolt();
@@ -158,8 +164,7 @@ public class LocalPlayerShoot {
             }
             //Handle Heat Data
             if(gunData.hasHeatData()) {
-                GunHeatData heatData = gunData.getHeatData();
-                if(iGun.getHeatAmount(mainHandItem) >= heatData.getHeatMax()) {
+                if(iGun.isOverheatLocked(mainHandItem)) {
                     ScheduledFuture<?> future = (ScheduledFuture<?>) Thread.currentThread();
                     future.cancel(false); // 取消当前任务
                     return;

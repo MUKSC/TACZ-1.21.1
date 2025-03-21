@@ -86,10 +86,10 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     }
 
     public boolean isOverHeat() {
-        return gunData.getHeatData() != null && iGun.getHeatAmount(currentGunItem) >= gunData.getHeatData().getHeatMax();
+        return gunData.getHeatData() != null && iGun.isOverheatLocked(currentGunItem);
     }
 
-    public float getHeatPercent() {
+    public float getHeatProgress() {
         return gunData.getHeatData() != null ?
                 Mth.clamp(iGun.getHeatAmount(currentGunItem) / gunData.getHeatData().getHeatMax(), 0f, 1f) : 0f;
     }

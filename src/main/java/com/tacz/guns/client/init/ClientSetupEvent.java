@@ -3,6 +3,7 @@ package com.tacz.guns.client.init;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.ThirdPersonManager;
 import com.tacz.guns.client.gui.overlay.GunHudOverlay;
+import com.tacz.guns.client.gui.overlay.HeatBarOverlay;
 import com.tacz.guns.client.gui.overlay.InteractKeyTextOverlay;
 import com.tacz.guns.client.gui.overlay.KillAmountOverlay;
 import com.tacz.guns.client.input.*;
@@ -64,6 +65,7 @@ public class ClientSetupEvent {
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         // 注册 HUD
         event.registerAboveAll("tac_gun_hud_overlay", new GunHudOverlay());
+        event.registerAboveAll("tac_heat_bar", new HeatBarOverlay());
         event.registerAboveAll("tac_kill_amount_overlay", new KillAmountOverlay());
         event.registerAbove(CROSSHAIR.id(), "tac_interact_key_overlay", new InteractKeyTextOverlay());
 

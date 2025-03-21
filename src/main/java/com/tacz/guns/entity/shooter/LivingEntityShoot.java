@@ -1,6 +1,5 @@
 package com.tacz.guns.entity.shooter;
 
-import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ShootResult;
@@ -12,7 +11,6 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
-import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.LivingEntity;
@@ -100,9 +98,8 @@ public class LivingEntityShoot {
         }
         //Handle Heat Data
         if(gunIndex.getGunData().hasHeatData()) {
-            GunHeatData heatData = gunIndex.getGunData().getHeatData();
-            if(iGun.getHeatAmount(currentGunItem) >= heatData.getHeatMax()) {
-                return ShootResult.OVERHEAT;
+            if(iGun.isOverheatLocked(currentGunItem)) {
+                return ShootResult.OVERHEATED;
             }
         }
         // 检查膛内子弹
