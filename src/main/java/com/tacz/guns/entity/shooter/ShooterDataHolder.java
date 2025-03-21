@@ -121,5 +121,6 @@ public class ShooterDataHolder {
         isBolting = false;
         shootCount = 0;
         scriptData = null;
+        heatTimestamp = -1;
     }
 }

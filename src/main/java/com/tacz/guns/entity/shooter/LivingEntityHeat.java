@@ -33,10 +33,10 @@ public class LivingEntityHeat {
     }
 
     public void tickLocked(IGun iGun, ItemStack gunStack, GunHeatData heatData) {
-        if(System.currentTimeMillis() - data.heatTimestamp >= heatData.getHeatCooldown()) {
+        if(System.currentTimeMillis() - data.heatTimestamp >= heatData.getOverHeatTime()) {
             float heatAmount = iGun.getHeatAmount(gunStack)
                     - ((float)(System.currentTimeMillis() - data.heatTimestamp) / 10000f)
-                    * heatData.getDecreaseMultiplier();
+                    * heatData.getCoolingMultiplier();
 
             iGun.setHeatAmount(gunStack, heatAmount);
             if (heatAmount <= 0) {
@@ -46,10 +46,10 @@ public class LivingEntityHeat {
     }
 
     public void tickNormal(IGun iGun, ItemStack gunStack, GunHeatData heatData) {
-        if(System.currentTimeMillis() - data.heatTimestamp >= heatData.getDelay()) {
+        if(System.currentTimeMillis() - data.heatTimestamp >= heatData.getCoolingDelay()) {
             float heatAmount = iGun.getHeatAmount(gunStack)
                     - ((float)(System.currentTimeMillis() - data.heatTimestamp) / 10000f)
-                    * heatData.getDecreaseMultiplier();
+                    * heatData.getCoolingMultiplier();
 
             iGun.setHeatAmount(gunStack, heatAmount);
         }

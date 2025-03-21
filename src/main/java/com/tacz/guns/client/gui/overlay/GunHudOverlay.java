@@ -76,7 +76,7 @@ public class GunHudOverlay implements IGuiOverlay {
         // 是否使用虚拟备弹
         boolean useDummyAmmo = iGun.useDummyAmmo(stack);
         // 是否完全过热
-        boolean overheatLocked = iGun.isOverheatLocked(stack);
+        boolean overheatLocked = gunData.hasHeatData() && iGun.isOverheatLocked(stack);
         // 当前枪械弹药数
         int ammoCount = useInventoryAmmo ? cacheInventoryAmmoCount + (iGun.hasBulletInBarrel(stack) && gunData.getBolt() != Bolt.OPEN_BOLT ? 1 : 0) :
                 iGun.getCurrentAmmoCount(stack) + (iGun.hasBulletInBarrel(stack) && gunData.getBolt() != Bolt.OPEN_BOLT ? 1 : 0);
