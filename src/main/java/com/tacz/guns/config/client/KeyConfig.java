@@ -17,7 +17,7 @@ public class KeyConfig {
         HOLD_TO_CRAWL = builder.define("HoldToCrawl", true);
 
         builder.comment("Try to reload automatically when the gun is empty");
-        AUTO_RELOAD = builder.define("HoldToCrawl", false);
+        AUTO_RELOAD = builder.define("AutoReload", false);
 
         builder.pop();
     }
