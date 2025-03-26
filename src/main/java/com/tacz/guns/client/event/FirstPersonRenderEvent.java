@@ -1,8 +1,8 @@
 package com.tacz.guns.client.event;
 
 import com.tacz.guns.GunMod;
+import com.tacz.guns.api.client.animation.statemachine.AnimationStateMachine;
 import com.tacz.guns.api.client.other.KeepingItemRenderer;
-import com.tacz.guns.api.item.IAnimationItem;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
 import net.minecraft.client.Minecraft;
@@ -18,8 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class FirstPersonRenderEvent {
-    // 上一个渲染中的物品
-    private static ItemStack prevStack = ItemStack.EMPTY;
+    private static AnimationStateMachine<?> lastStateMachine = null;
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
@@ -35,7 +34,7 @@ public class FirstPersonRenderEvent {
             return;
         }
         // 事件事件给的是被延长渲染修改过后的物品，不是玩家实际手持的
-        ItemStack stack = KeepingItemRenderer.getRenderer().getCurrentItem();
+        ItemStack stack = event.getItemStack();
 
         // 获取 TransformType
         ItemDisplayContext transformType;
@@ -45,23 +44,25 @@ public class FirstPersonRenderEvent {
             transformType = ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
         }
 
-        boolean flag = !ItemStack.matches(prevStack, stack);
-        boolean isDifferent = !(stack.getItem() instanceof IAnimationItem item) || !item.isSame(prevStack, stack);
-
         // 渲染相关内容整理到物品的IClientItemExtensions了，这个接口有待进一步抽象
         if (IClientItemExtensions.of(stack.getItem()).getCustomRenderer() instanceof AnimateGeoItemRenderer<?, ?> renderer) {
-            // 如果物品不一样了，先尝试初始化状态机
-            if ((flag && isDifferent) || renderer.needReInit(stack)) {
+            // 如果旧的状态机已经不再使用且未正常退出，使其静默退出
+            AnimationStateMachine<?> machine = renderer.getStateMachine(stack);
+            if (machine != lastStateMachine) {
+                if (lastStateMachine != null && lastStateMachine.isInitialized()) {
+                    lastStateMachine.exit();
+                }
+                lastStateMachine = machine;
+            }
+            // 物品处于后台时，阻止状态机初始化
+            boolean flag = ItemStack.matches(player.getMainHandItem(), stack);
+            if (flag && renderer.needReInit(stack)) {
                 renderer.tryInit(stack, player, event.getPartialTick());
             }
 
             renderer.renderFirstPerson(player, stack, transformType, event.getPoseStack(), event.getMultiBufferSource(),
                     event.getPackedLight(), event.getPartialTick());
             event.setCanceled(true);
-        }
-
-        if (flag) {
-            prevStack = stack.copy();
         }
     }
 }
