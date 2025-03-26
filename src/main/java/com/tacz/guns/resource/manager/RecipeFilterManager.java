@@ -64,7 +64,7 @@ public class RecipeFilterManager extends SimplePreparableReloadListener<Map<Reso
                             return value;
                         }
                     });
-                } catch (JsonParseException e) {
+                } catch (JsonParseException | IllegalArgumentException e) {
                     GunMod.LOGGER.error(marker, "Failed to load data file {}", id, e);
                 }
             }

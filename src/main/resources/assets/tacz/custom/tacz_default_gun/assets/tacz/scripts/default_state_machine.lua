@@ -27,6 +27,8 @@ local GUN_KICK_TRACK_LINE = increment(track_line_top)
 local BLENDING_TRACK_LINE = increment(track_line_top)
 local MOVEMENT_TRACK = increment(blending_track_top)
 local SLIDE_TRACK = increment(blending_track_top)
+local OVER_HEAT_TRACK = increment(blending_track_top)
+local OVER_HEATING_TRACK = increment(blending_track_top)
 local LOOP_TRACK = increment(blending_track_top)
 
 -- 播放丢枪动画的方法
@@ -70,6 +72,11 @@ local function runInspectAnimation(context)
     else
         context:runAnimation("inspect", track, false, PLAY_ONCE_STOP, 0.2)
     end
+end
+
+-- 检查当前是否处于过热状态
+local function isOverHeat(context)
+    return context:isOverHeat()
 end
 
 -- 基础轨道上的状态,这个状态用于循环播放 static_idle 动画。
@@ -493,6 +500,60 @@ function slide_states.slide.exit(this, context)
     context:runAnimation("slide_back", context:getTrack(BLENDING_TRACK_LINE, SLIDE_TRACK), true, PLAY_ONCE_HOLD, 0.2)
 end
 
+-- 过热部分,该部分到 505 行结束
+-- 过热部分的内容完全参照空挂部分
+
+local over_heat_states = {
+    -- normal 是不过热的正常状态
+    normal = {},
+    -- over_heat 是过热时的状态
+    over_heat = {}
+}
+
+-- 进入"不过热"状态
+function over_heat_states.normal.entry(this, context)
+    this.over_heat_states.normal.update(this, context)
+end
+
+-- 更新"不过热"状态
+function over_heat_states.normal.update(this, context)
+    if (isOverHeat(context)) then
+        context:trigger(this.INPUT_OVER_HEAT)
+    end
+end
+
+-- 转出"不过热"状态
+function over_heat_states.normal.transition(this, context, input)
+    if (input == this.INPUT_OVER_HEAT) then
+        return this.over_heat_states.over_heat
+    end
+end
+
+-- 进入"过热"状态
+function over_heat_states.over_heat.entry(this, context)
+    -- 仅播放一次的过热时触发的动画,比如大量冒烟和警报声
+    context:runAnimation("over_heat", context:getTrack(BLENDING_TRACK_LINE, OVER_HEAT_TRACK), true, PLAY_ONCE_STOP, 0.2)
+    -- 一直循环执行的过热触发动画,比如缓慢的冒烟
+    context:runAnimation("static_over_heating", context:getTrack(BLENDING_TRACK_LINE, OVER_HEATING_TRACK), true, LOOP, 0)
+end
+
+-- 更新"过热"状态
+function over_heat_states.over_heat.update(this, context)
+    if (not isOverHeat(context)) then
+        context:trigger(this.INPUT_COOLING_HEAT)
+    end
+end
+
+-- 转出"过热"状态
+function over_heat_states.over_heat.transition(this, context, input)
+    -- 如果收到了来自上文 update 方法的输入,则转到"不过热"状态
+    if (input == this.INPUT_COOLING_HEAT) then
+        -- 由于并没有一个"不过热"的动画,因此必须在这里把过热动画停止了才能转到"不过热"状态
+        context:stopAnimation(context:getTrack(BLENDING_TRACK_LINE, OVER_HEATING_TRACK))
+        return this.over_heat_states.normal
+    end
+end
+-- 结束过热部分
 
 local ADS_states = {
     aiming_progress = 0,-- 记录瞄准进度
@@ -578,10 +639,13 @@ local M = {
     blending_track_top = blending_track_top,
     MOVEMENT_TRACK = MOVEMENT_TRACK,
     SLIDE_TRACK = SLIDE_TRACK,
+    OVER_HEAT_TRACK = OVER_HEAT_TRACK,
+    OVER_HEATING_TRACK = OVER_HEATING_TRACK,
     LOOP_TRACK = LOOP_TRACK,
     -- 状态
     base_track_state = base_track_state,
     bolt_caught_states = bolt_caught_states,
+    over_heat_states = over_heat_states,
     main_track_states = main_track_states,
     gun_kick_state = gun_kick_state,
     movement_track_states = movement_track_states,
@@ -590,10 +654,11 @@ local M = {
     -- 输入
     INPUT_BOLT_CAUGHT = "bolt_caught",
     INPUT_BOLT_NORMAL = "bolt_normal",
+    INPUT_OVER_HEAT = "over_heat",
+    INPUT_COOLING_HEAT = "cooling_heat",
     INPUT_INSPECT_RETREAT = "inspect_retreat",
     INPUT_AIM = "aim",
-    INPUT_AIM_RETREAT = "aim_retreat",
-    INPUT_INSPECT_RETREAT = "inspect_retreat"
+    INPUT_AIM_RETREAT = "aim_retreat"
 }
 
 -- 状态机初始化函数，在切枪的时候调用
@@ -614,6 +679,7 @@ function M:states()
     return {
         self.base_track_state,
         self.bolt_caught_states.normal,
+        self.over_heat_states.normal,
         self.main_track_states.start,
         self.gun_kick_state,
         self.movement_track_states.idle,
