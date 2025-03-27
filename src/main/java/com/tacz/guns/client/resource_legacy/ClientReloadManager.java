@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static com.tacz.guns.config.ServerConfig.SERVER_CONFIG_SPEC;
+import static com.tacz.guns.config.ServerConfig.spec;
 
 @Deprecated
 public class ClientReloadManager {
@@ -43,7 +43,7 @@ public class ClientReloadManager {
         }
         // 多人游戏，自己是客户端，则需要主动加载服务端缓存数据
         if (!mc.isLocalServer()) {
-            if (SERVER_CONFIG_SPEC != null && SERVER_CONFIG_SPEC.isLoaded() && !SyncConfig.CLIENT_GUN_PACK_DOWNLOAD_URLS.get().isEmpty()) {
+            if (spec != null && spec.isLoaded() && !SyncConfig.CLIENT_GUN_PACK_DOWNLOAD_URLS.get().isEmpty()) {
                 ClientGunPackDownloadManager.downloadClientGunPack();
             }
             if (!LOCALE_CACHE.isEmpty()) {

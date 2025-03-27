@@ -31,9 +31,9 @@ public class GunMod {
     public GunMod(IEventBus bus, net.neoforged.fml.ModContainer container) {
         GunMod.container = container;
         container.registerConfig(ModConfig.Type.COMMON, PreLoadConfig.spec, "tacz-pre.toml");
-        container.registerConfig(ModConfig.Type.COMMON, CommonConfig.init());
-        container.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
-        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
+        container.registerConfig(ModConfig.Type.COMMON, CommonConfig.spec);
+        container.registerConfig(ModConfig.Type.SERVER, ServerConfig.spec);
+        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.spec);
 
         Dist side = FMLLoader.getDist();
         GunPackLoader.INSTANCE.packType = side.isClient() ? PackType.CLIENT_RESOURCES : PackType.SERVER_DATA;

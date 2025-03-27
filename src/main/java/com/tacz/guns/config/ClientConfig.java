@@ -6,11 +6,13 @@ import com.tacz.guns.config.client.ZoomConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
-    public static ModConfigSpec init() {
+    public static ModConfigSpec spec;
+
+    static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         KeyConfig.init(builder);
         RenderConfig.init(builder);
         ZoomConfig.init(builder);
-        return builder.build();
+        spec = builder.build();
     }
 }
