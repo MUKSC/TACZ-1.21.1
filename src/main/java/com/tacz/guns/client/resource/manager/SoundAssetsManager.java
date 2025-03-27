@@ -43,6 +43,8 @@ public class SoundAssetsManager extends SimplePreparableReloadListener<Map<Resou
             } catch (IOException exception) {
                 GunMod.LOGGER.warn(MARKER, "Failed to read sound file: {}", resourcelocation);
                 exception.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return output;
