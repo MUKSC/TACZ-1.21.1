@@ -73,35 +73,35 @@ public class ModCreativeTabs {
     public static RegistryObject<CreativeModeTab> GUN_PISTOL_TAB = TABS.register("pistol", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.pistol.name")).withTabsBefore(ATTACHMENT_EXTENDED_MAG_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "glock_17")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.PISTOL))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.PISTOL, parameters.holders()))).build());
 
     public static RegistryObject<CreativeModeTab> GUN_SNIPER_TAB = TABS.register("sniper", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.sniper.name")).withTabsBefore(GUN_PISTOL_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "ai_awp")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.SNIPER))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.SNIPER, parameters.holders()))).build());
 
     public static RegistryObject<CreativeModeTab> GUN_RIFLE_TAB = TABS.register("rifle", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.rifle.name")).withTabsBefore(GUN_SNIPER_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "ak47")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.RIFLE))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.RIFLE, parameters.holders()))).build());
 
     public static RegistryObject<CreativeModeTab> GUN_SHOTGUN_TAB = TABS.register("shotgun", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.shotgun.name")).withTabsBefore(GUN_RIFLE_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "db_short")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.SHOTGUN))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.SHOTGUN, parameters.holders()))).build());
 
     public static RegistryObject<CreativeModeTab> GUN_SMG_TAB = TABS.register("smg", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.smg.name")).withTabsBefore(GUN_SHOTGUN_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "hk_mp5a5")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.SMG))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.SMG, parameters.holders()))).build());
 
     public static RegistryObject<CreativeModeTab> GUN_RPG_TAB = TABS.register("rpg", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.rpg.name")).withTabsBefore(GUN_SMG_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "rpg7")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.RPG))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.RPG, parameters.holders()))).build());
 
     public static RegistryObject<CreativeModeTab> GUN_MG_TAB = TABS.register("mg", () -> CreativeModeTab.builder()
             .title(Component.translatable("tacz.type.mg.name")).withTabsBefore(GUN_RPG_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "m249")).build(Minecraft.getInstance().level.registryAccess()))
-            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.MG))).build());
+            .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.MG, parameters.holders()))).build());
 }
