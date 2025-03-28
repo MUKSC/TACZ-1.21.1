@@ -230,5 +230,11 @@
   "tacz.attachment.stock_ripstock.name": "RS 超轻型枪托",
   "tacz.attachment.stock_m4ss.name": "M4SS 战术枪托",
 
-  "tacz.block.gun_smith_table": "TaCZ枪械工作台"
+  "tacz.block.gun_smith_table.name": "TaCZ枪械工作台",
+  "tacz.block.ammo_workbench.name": "TaCZ弹药装配台",
+  "tacz.block.attachment_workbench.name": "TaCZ配件工作台",
+
+  "tacz.block.gun_smith_table.desc": "一切开始的地方",
+  "tacz.block.ammo_workbench.desc": "子弹是笨蛋",
+  "tacz.block.attachment_workbench.desc": "锦上添花"
 }
