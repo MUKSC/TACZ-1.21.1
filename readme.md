@@ -1,6 +1,12 @@
 ## Unofficial TaCZ 1.21.1 Forge/NeoForge Port
-This is UNOFFICIAL; Support is not guaranteed and things may not work properly  
-Do not report issues with this to the original devs  
+> [!IMPORTANT]
+> This is UNOFFICIAL; Support is not guaranteed and things may not work properly  
+> Do not report issues with this to the original devs  
+
+> [!WARNING]
+> Don't try to open any worlds from older versions with this mod  
+> All the item data are incompatible and will likely to break things
+
 If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > Unofficial TaCZ 1.21.1 Forge/NeoForge Port](https://discord.com/channels/1243278348399022252/1329058172148645909) channel
 
 Recipes in other gun packs are broken by default  
