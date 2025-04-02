@@ -10,6 +10,11 @@
   "commands.tacz.reload.success": "§a§l[TACZ]§r 所有资源成功加载！耗时：%.3f ms",
   "commands.tacz.config.default_table_limit.enabled": "§a§l[TACZ]§r 默认枪械工作台的合成限制已启用",
   "commands.tacz.config.default_table_limit.disabled": "§a§l[TACZ]§r 默认枪械工作台的合成限制已关闭",
+  "commands.tacz.config.server_shoot_network_check.enabled": "§a§l[TACZ]§r 服务端射击网络检查已启用",
+  "commands.tacz.config.server_shoot_network_check.disabled": "§a§l[TACZ]§r 服务端射击网络检查已关闭",
+  "commands.tacz.config.server_shoot_cooldown_check.enabled": "§a§l[TACZ]§r 服务端射击冷却检查已启用",
+  "commands.tacz.config.server_shoot_cooldown_check.disabled": "§a§l[TACZ]§r 服务端射击冷却检查已关闭\n §6警告: 关闭此项会导致服务端完全不计算枪械开火冷却，这将导致潜在的作弊可能。你仅应该在经常完全无法开火的时候尝试关闭它。",
+
   "config.tacz.open_gunpack_folder": "打开枪包文件夹",
   "config.tacz.client.key": "按键",
   "config.tacz.client.key.hold_to_aim": "长按瞄准",

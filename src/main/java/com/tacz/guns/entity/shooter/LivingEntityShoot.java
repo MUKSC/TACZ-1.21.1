@@ -7,17 +7,21 @@ import com.tacz.guns.api.event.common.GunShootEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
+import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.network.NetworkHandler;
+import com.tacz.guns.network.message.ServerMessageSyncBaseTimestamp;
 import com.tacz.guns.network.message.event.ServerMessageGunShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -48,21 +52,28 @@ public class LivingEntityShoot {
             return ShootResult.ID_NOT_EXIST;
         }
         CommonGunIndex gunIndex = gunIndexOptional.get();
-        // 判断射击是否正在冷却
-        long coolDown = getShootCoolDown(timestamp);
-        if (coolDown == -1) {
-            // 一般来说不太可能为 -1，原因未知
-            return ShootResult.UNKNOWN_FAIL;
+        if (SyncConfig.SERVER_SHOOT_COOLDOWN_V.get()) {
+            // 判断射击是否正在冷却
+            long coolDown = getShootCoolDown(timestamp);
+            if (coolDown == -1) {
+                // 一般来说不太可能为 -1，原因未知
+                return ShootResult.UNKNOWN_FAIL;
+            }
+            if (coolDown > 0) {
+                return ShootResult.COOL_DOWN;
+            }
         }
-        if (coolDown > 0) {
-            return ShootResult.COOL_DOWN;
-        }
-        // 根据 tick time 和 允许的网络延迟波动 计算 时间戳的接受窗口
-        MinecraftServer server = Objects.requireNonNull(shooter.getServer());
-        double tickTime = Math.max(server.tickTimes[server.getTickCount() % 100] * 1.0E-6D, 50);
-        long alpha = System.currentTimeMillis() - data.baseTimestamp - timestamp;
-        if (alpha < -300 || alpha > 300 + tickTime * 2) { // 允许 +- 300ms 的网络波动、窗口下限再扩大 2 个 tick time 时间(最坏情况射击会延迟2个 tick)
-            return ShootResult.NETWORK_FAIL;
+        if (SyncConfig.SERVER_SHOOT_NETWORK_V.get()) {
+            // 根据 tick time 和 允许的网络延迟波动 计算 时间戳的接受窗口
+            MinecraftServer server = Objects.requireNonNull(shooter.getServer());
+            double tickTime = Math.max(server.tickTimes[server.getTickCount() % 100] * 1.0E-6D, 50);
+            long alpha = System.currentTimeMillis() - data.baseTimestamp - timestamp;
+            if (alpha < -300 || alpha > 300 + tickTime * 2) { // 允许 +- 300ms 的网络波动、窗口下限再扩大 2 个 tick time 时间(最坏情况射击会延迟2个 tick)
+                if (shooter instanceof ServerPlayer player) {
+                    NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new ServerMessageSyncBaseTimestamp());
+                }
+                return ShootResult.NETWORK_FAIL;
+            }
         }
         // 检查是否正在换弹
         if (data.reloadStateType.isReloading()) {

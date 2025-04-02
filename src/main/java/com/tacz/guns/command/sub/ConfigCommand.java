@@ -26,15 +26,28 @@ public class ConfigCommand {
         ConfigKey key = context.getArgument(KEY, ConfigKey.class);
         boolean state = BoolArgumentType.getBool(context, ENABLE);
 
-        if (ConfigKey.defaultTableLimit.equals(key)) {
-            SyncConfig.ENABLE_TABLE_FILTER.set(state);
-            context.getSource().sendSystemMessage(Component.translatable("commands.tacz.config.default_table_limit." + (state ? "enabled" : "disabled")));
+        if (key == null) {
+            return 0;
         }
+        switch (key) {
+            case defaultTableLimit -> SyncConfig.ENABLE_TABLE_FILTER.set(state);
+            case serverShootNetworkCheck -> SyncConfig.SERVER_SHOOT_NETWORK_V.set(state);
+            case serverShootCooldownCheck -> SyncConfig.SERVER_SHOOT_COOLDOWN_V.set(state);
+        }
+        context.getSource().sendSystemMessage(Component.translatable(key.lang + "." + (state ? "enabled" : "disabled")));
 
         return Command.SINGLE_SUCCESS;
     }
 
     public enum ConfigKey {
-        defaultTableLimit,
+        defaultTableLimit("commands.tacz.config.default_table_limit"),
+        serverShootNetworkCheck("commands.tacz.config.server_shoot_network_check"),
+        serverShootCooldownCheck("commands.tacz.config.server_shoot_cooldown_check"),
+        ;
+
+        public final String lang;
+        ConfigKey(String lang) {
+            this.lang = lang;
+        }
     }
 }

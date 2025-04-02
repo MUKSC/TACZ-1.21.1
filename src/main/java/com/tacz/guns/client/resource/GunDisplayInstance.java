@@ -236,7 +236,7 @@ public class GunDisplayInstance {
                     .setLuaScripts(script)
                     .build();
         } else {
-            throw new NullPointerException("statemachine not found: " + stateMachineLocation);
+            throw new IllegalArgumentException("statemachine not found: " + stateMachineLocation);
         }
         // 加载状态机参数
         Map<String, Object> params = display.getStateMachineParam();
