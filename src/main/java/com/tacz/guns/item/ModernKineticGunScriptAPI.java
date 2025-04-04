@@ -34,9 +34,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.LogicalSide;
+import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import java.util.Map;
 import java.util.Optional;
@@ -133,12 +135,12 @@ public class ModernKineticGunScriptAPI {
                 }
                 //Handle Heat Data
                 if(gunIndex.getGunData().hasHeatData()) {
-                    GunHeatData heatData = gunIndex.getGunData().getHeatData();
-                    float newHeat = Math.min(abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot(), heatData.getHeatMax());
-                    abstractGunItem.setHeatAmount(itemStack, newHeat);
-                    if (newHeat >= heatData.getHeatMax()) {
-                        abstractGunItem.setOverheatLocked(itemStack, true);
-                    }
+                    Optional.ofNullable(gunIndex.getScript())
+                            .map(script -> checkFunction(script.get("handle_shoot_heat")))
+                            .ifPresentOrElse(
+                                    func -> func.call(CoerceJavaToLua.coerce(this)),
+                                    this::handleShootHeat
+                            );
                 }
                 // 获取射击方向（pitch 和 yaw）
                 float pitch = pitchSupplier != null ? pitchSupplier.get() : shooter.getXRot();
@@ -161,6 +163,21 @@ public class ModernKineticGunScriptAPI {
             }
             return true;
         }, period, cycles);
+    }
+
+    /**
+     * 处理一次射击的过热变化
+     */
+    public void handleShootHeat() {
+        GunHeatData heatData = gunIndex.getGunData().getHeatData();
+        if (heatData == null) {
+            return;
+        }
+        float newHeat = Math.min(abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot(), heatData.getHeatMax());
+        abstractGunItem.setHeatAmount(itemStack, newHeat);
+        if (newHeat >= heatData.getHeatMax()) {
+            abstractGunItem.setOverheatLocked(itemStack, true);
+        }
     }
 
     /**
@@ -669,6 +686,33 @@ public class ModernKineticGunScriptAPI {
         return 0f;
     }
 
+    public boolean isOverheatLocked() {
+        return abstractGunItem.isOverheatLocked(itemStack);
+    }
+
+    public void setOverheatLocked(boolean locked) {
+        abstractGunItem.setOverheatLocked(itemStack, locked);
+    }
+
+    public long getOverheatTime() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getOverHeatTime();
+        return 0;
+    }
+
+    public long getCoolingDelay() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getCoolingDelay();
+        return 0;
+    }
+
+    public float calcHeatReduction(long heatTimestamp) {
+        GunHeatData heatData = gunIndex.getGunData().getHeatData();
+        if (heatData != null) {
+            return ((float)(System.currentTimeMillis() - heatTimestamp) / 10000f)
+                    * heatData.getCoolingMultiplier();
+        }
+        return 0f;
+    }
+
     // TODO: 测试检查 enum 值是否可以直接在 lua 中调用，以简化这个功能为下面那个方法
     public int getBoltByInt() {
         Bolt bolt = gunIndex.getGunData().getBolt();
@@ -713,6 +757,17 @@ public class ModernKineticGunScriptAPI {
         abstractGunItem = gunItem;
         if (itemStack.hasTag()) {
             nbtUtil = new LuaNbtAccessor(itemStack.getTag());
+        }
+    }
+
+
+    private LuaFunction checkFunction(LuaValue luaValue) {
+        if (luaValue.isfunction()) {
+            return (LuaFunction) luaValue;
+        } else if (luaValue.isnil()) {
+            return null;
+        } else {
+            throw new LuaError("bad argument: function or nil expected, got " + luaValue.typename());
         }
     }
 }

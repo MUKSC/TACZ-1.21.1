@@ -91,6 +91,12 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
     public abstract void melee(ShooterDataHolder dataHolder, LivingEntity user, ItemStack gunItem);
 
     /**
+     * 过热 tick 处理<br/>
+     * 默认不做任何事情
+     */
+    public void tickHeat(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter) {};
+
+    /**
      * 初始化子弹角度和速度
      * @param dataHolder 状态数据
      * @param gunItem 枪械物品

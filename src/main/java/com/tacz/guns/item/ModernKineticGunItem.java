@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.ReloadState;
+import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
@@ -197,6 +198,61 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
             }
             doMelee(user, distance, defaultData.getDistance(), defaultData.getRangeAngle(), defaultData.getKnockback(), defaultData.getDamage(), Collections.emptyList());
         });
+    }
+
+    @Override
+    public void tickHeat(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter) {
+        ModernKineticGunScriptAPI api = new ModernKineticGunScriptAPI();
+        api.setItemStack(gunItem);
+        api.setShooter(shooter);
+        api.setDataHolder(dataHolder);
+
+        long heatTimestamp = dataHolder.heatTimestamp;
+        CommonGunIndex gunIndex = api.getGunIndex();
+        Optional.ofNullable(gunIndex.getScript())
+                .map(script -> checkFunction(script.get("tick_heat")))
+                .ifPresentOrElse(
+                        func -> func.call(CoerceJavaToLua.coerce(api), LuaValue.valueOf(heatTimestamp)),
+                        () -> defaultTickHeat(heatTimestamp, gunItem)
+                );
+    }
+
+    private void defaultTickHeat(long heatTimestamp, ItemStack gunItem) {
+        var iGun = IGun.getIGunOrNull(gunItem);
+        if(iGun == null) return;
+        TimelessAPI.getCommonGunIndex(iGun.getGunId(gunItem))
+                .map(index -> index.getGunData().getHeatData())
+                .ifPresent(heatData -> {
+                    if (iGun.getHeatAmount(gunItem) <= 0) return;
+                    if (iGun.isOverheatLocked(gunItem)) {
+                        tickLocked(iGun, gunItem, heatData, heatTimestamp);
+                    } else {
+                        tickNormal(iGun, gunItem, heatData, heatTimestamp);
+                    }
+                });
+    }
+
+    public void tickLocked(IGun iGun, ItemStack gunStack, GunHeatData heatData, long heatTimestamp) {
+        if(System.currentTimeMillis() - heatTimestamp >= heatData.getOverHeatTime()) {
+            float heatAmount = iGun.getHeatAmount(gunStack)
+                    - ((float)(System.currentTimeMillis() - heatTimestamp) / 10000f)
+                    * heatData.getCoolingMultiplier();
+
+            iGun.setHeatAmount(gunStack, heatAmount);
+            if (heatAmount <= 0) {
+                iGun.setOverheatLocked(gunStack, false);
+            }
+        }
+    }
+
+    public void tickNormal(IGun iGun, ItemStack gunStack, GunHeatData heatData, long heatTimestamp) {
+        if(System.currentTimeMillis() - heatTimestamp >= heatData.getCoolingDelay()) {
+            float heatAmount = iGun.getHeatAmount(gunStack)
+                    - ((float)(System.currentTimeMillis() - heatTimestamp) / 10000f)
+                    * heatData.getCoolingMultiplier();
+
+            iGun.setHeatAmount(gunStack, heatAmount);
+        }
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.tacz.guns.entity.shooter;
 
-import com.tacz.guns.api.TimelessAPI;
-import com.tacz.guns.api.item.IGun;
-import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
+import com.tacz.guns.api.item.gun.AbstractGunItem;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 
 public class LivingEntityHeat {
 
@@ -18,40 +15,8 @@ public class LivingEntityHeat {
 
     public void tickHeat() {
         var gunStack = shooter.getMainHandItem();
-        var iGun = IGun.getIGunOrNull(gunStack);
-        if(iGun == null) return;
-        TimelessAPI.getCommonGunIndex(iGun.getGunId(gunStack))
-                .map(index -> index.getGunData().getHeatData())
-                .ifPresent(heatData -> {
-                    if (iGun.getHeatAmount(gunStack) <= 0) return;
-                    if (iGun.isOverheatLocked(gunStack)) {
-                        tickLocked(iGun, gunStack, heatData);
-                    } else {
-                        tickNormal(iGun, gunStack, heatData);
-                    }
-                });
-    }
-
-    public void tickLocked(IGun iGun, ItemStack gunStack, GunHeatData heatData) {
-        if(System.currentTimeMillis() - data.heatTimestamp >= heatData.getOverHeatTime()) {
-            float heatAmount = iGun.getHeatAmount(gunStack)
-                    - ((float)(System.currentTimeMillis() - data.heatTimestamp) / 10000f)
-                    * heatData.getCoolingMultiplier();
-
-            iGun.setHeatAmount(gunStack, heatAmount);
-            if (heatAmount <= 0) {
-                iGun.setOverheatLocked(gunStack, false);
-            }
-        }
-    }
-
-    public void tickNormal(IGun iGun, ItemStack gunStack, GunHeatData heatData) {
-        if(System.currentTimeMillis() - data.heatTimestamp >= heatData.getCoolingDelay()) {
-            float heatAmount = iGun.getHeatAmount(gunStack)
-                    - ((float)(System.currentTimeMillis() - data.heatTimestamp) / 10000f)
-                    * heatData.getCoolingMultiplier();
-
-            iGun.setHeatAmount(gunStack, heatAmount);
+        if (gunStack.getItem() instanceof AbstractGunItem gunItem) {
+            gunItem.tickHeat(data, gunStack, shooter);
         }
     }
 }
