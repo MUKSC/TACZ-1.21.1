@@ -46,14 +46,14 @@ public final class ThirdPersonManager {
             rightArm.x = (float) (x * cosTheta);
             rightArm.z = (float) (x * sinTheta);
 
-            rightArm.yRot = 0.1F + body.yRot;
-            rightArm.xRot = -0.7F + body.xRot;
+            rightArm.yRot = -1.0F + body.yRot;
+            rightArm.xRot = -0.1F + body.xRot;
 
             float x2 = leftArm.x;
             leftArm.x = (float) (x2 * cosTheta);
             leftArm.z = (float) (x2 * sinTheta);
 
-            leftArm.yRot = 0.2F + body.yRot;
+            leftArm.yRot = -0.1F + body.yRot;
             leftArm.xRot = -1F + body.xRot;
         }
 

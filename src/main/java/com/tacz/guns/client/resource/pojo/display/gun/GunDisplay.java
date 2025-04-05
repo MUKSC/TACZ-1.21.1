@@ -64,6 +64,9 @@ public class GunDisplay implements IDisplay {
     @SerializedName("player_animator_3rd")
     private ResourceLocation playerAnimator3rd;
     @Nullable
+    @SerializedName("3rd_fixed_hand")
+    private boolean playerAnimator3rdFixedHand = false;
+    @Nullable
     @SerializedName("sounds")
     private Map<String, ResourceLocation> sounds;
     @Nullable
@@ -224,6 +227,10 @@ public class GunDisplay implements IDisplay {
     @Nullable
     public LaserConfig getLaserConfig() {
         return laserConfig;
+    }
+
+    public boolean is3rdFixedHand() {
+        return playerAnimator3rdFixedHand;
     }
 
     @Override

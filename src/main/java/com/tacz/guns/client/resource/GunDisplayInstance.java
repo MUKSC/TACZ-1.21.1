@@ -54,6 +54,7 @@ public class GunDisplayInstance {
     private LuaAnimationStateMachine<GunAnimationStateContext> animationStateMachine;
     private @Nullable LuaTable stateMachineParam;
     private @Nullable ResourceLocation playerAnimator3rd = new ResourceLocation(GunMod.MOD_ID, "rifle_default.player_animation");
+    private boolean is3rdFixedHand = false;
     private Map<String, ResourceLocation> sounds;
     private GunTransform transform;
     private ResourceLocation modelTexture;
@@ -253,6 +254,7 @@ public class GunDisplayInstance {
         // player animator 兼容动画
         if (display.getPlayerAnimator3rd() != null) {
             playerAnimator3rd = display.getPlayerAnimator3rd();
+            is3rdFixedHand = display.is3rdFixedHand();
         }
     }
 
@@ -437,6 +439,10 @@ public class GunDisplayInstance {
 
     public @Nullable ResourceLocation getPlayerAnimator3rd() {
         return playerAnimator3rd;
+    }
+
+    public boolean is3rdFixedHand() {
+        return is3rdFixedHand;
     }
 
     public EnumMap<FireMode, ControllableData> getControllableData() {

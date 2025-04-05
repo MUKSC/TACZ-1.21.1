@@ -57,8 +57,8 @@
 				{
 					"name": "thirdperson_hand",
 					"parent": "positioning",
-					"pivot": [-1.5, 3.825, 23.425],
-					"rotation": [46.67975, 74.14639, -38.45204]
+					"pivot": [0, 3.825, 23.425],
+					"rotation": [90, 0, 0]
 				},
 				{
 					"name": "root",
