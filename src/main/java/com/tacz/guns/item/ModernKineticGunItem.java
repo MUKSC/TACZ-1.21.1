@@ -209,6 +209,9 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
 
         long heatTimestamp = dataHolder.heatTimestamp;
         CommonGunIndex gunIndex = api.getGunIndex();
+        if (gunIndex == null) {
+            return;
+        }
         Optional.ofNullable(gunIndex.getScript())
                 .map(script -> checkFunction(script.get("tick_heat")))
                 .ifPresentOrElse(
