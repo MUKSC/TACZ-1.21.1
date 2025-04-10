@@ -150,7 +150,8 @@ public class ModernKineticGunScriptAPI {
                 ResourceLocation ammoId = gunData.getAmmoId();
                 for (int i = 0; i < bulletAmount; i++) {
                     boolean isTracer = bulletData.hasTracerAmmo() && gunOperator.nextBulletIsTracer(bulletData.getTracerCountInterval());
-                    EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId, isTracer, gunData, bulletData);
+                    EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId,
+                            gunDisplayId, isTracer, gunData, bulletData);
                     abstractGunItem.doBulletSpread(dataHolder, itemStack, shooter, bullet, i, processedSpeed,
                             inaccuracy, pitch, yaw);
                     world.addFreshEntity(bullet);
