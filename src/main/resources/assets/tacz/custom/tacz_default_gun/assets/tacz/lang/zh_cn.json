@@ -158,6 +158,11 @@
   "tacz.attachment.scope_hamr.name": "§5HAMR 3x 组合式光学瞄具",
   "tacz.attachment.scope_mk5hd.name": "§6Mark 5 HD 5-25x 组合式光学瞄具",
   "tacz.attachment.scope_1873_6x.name":"§5老式 春田神射手瞄具",
+  "tacz.attachment.scope_contender.name":"§9竞技者 4x 光学瞄具",
+
+  "tacz.attachment.laser_compact": "§a米利泰克 小型激光指示器",
+   "tacz.attachment.laser_lopro":"§5低姿战术激光指示器",
+   "tacz.attachment.laser_nightstick":"§a夜槌 便携式激光指示器",
 
 
   "tacz.attachment.extended_mag_1.name": "重型弹药扩容弹匣",

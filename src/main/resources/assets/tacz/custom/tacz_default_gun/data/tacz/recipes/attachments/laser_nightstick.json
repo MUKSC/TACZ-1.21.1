@@ -4,12 +4,18 @@
       "item": {
         "tag": "forge:ingots/iron"
       },
-      "count": 10
+      "count": 4
+    },
+    {
+      "item": {
+        "tag": "forge:dusts/redstone"
+      },
+      "count": 4
     }
   ],
   "result": {
     "type": "attachment",
-    "id": "tacz:laser_lopro"
+    "id": "tacz:laser_nightstick"
   },
   "type": "tacz:gun_smith_table_crafting"
 }
