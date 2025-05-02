@@ -21,8 +21,10 @@ On Both:
   - Animations are slightly off
   - Enabling shaders in Iris fixes this
 - Controllable compat is removed since it's not available on 1.21.1
+
 On Forge:
 - Target minecart is disabled as I couldn't get it to compile on Forge
+
 On NeoForge:
 
 ## ===== Original README =====
