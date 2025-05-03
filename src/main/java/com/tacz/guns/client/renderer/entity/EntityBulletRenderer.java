@@ -79,6 +79,10 @@ public class EntityBulletRenderer extends EntityRenderer<EntityKineticBullet> {
             if (shooter == null) {
                 return;
             }
+            boolean isFirstPerson = this.entityRenderDispatcher.options.getCameraType().isFirstPerson() && shooter instanceof LocalPlayer;
+            if (isFirstPerson && !RenderConfig.FIRST_PERSON_BULLET_TRACER_ENABLE.get()) {
+                return;
+            }
             poseStack.pushPose();
             {
                 float width = 0.005f;
@@ -86,11 +90,8 @@ public class EntityBulletRenderer extends EntityRenderer<EntityKineticBullet> {
                 double trailLength = 0.85 * bullet.getDeltaMovement().length();
                 double disToEye = bulletPosition.distanceTo(shooter.getEyePosition(partialTicks));
                 trailLength = Math.min(trailLength, disToEye * 0.8);
-                boolean isFirstPerson = this.entityRenderDispatcher.options.getCameraType().isFirstPerson() && bullet.getOwner() instanceof LocalPlayer;
+
                 if (isFirstPerson) {
-                    if (!RenderConfig.FIRST_PERSON_BULLET_TRACER_ENABLE.get()) {
-                        return;
-                    }
                     // 第一人称渲染自己的曳光弹的时候需要应用偏移
                     Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
                     Vector3f offset = bullet.getFirstPersonRenderOffset();
