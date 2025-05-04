@@ -16,7 +16,7 @@ local STATIC_TRACK_LINE = increment(track_line_top)
 local BASE_TRACK = increment(static_track_top)
 local BOLT_CAUGHT_TRACK = increment(static_track_top)
 local SAFETY_TRACK = increment(static_track_top) -- 待实现
-local ADS_TRACK = increment(static_track_top) -- 待实现
+local ADS_TRACK = increment(static_track_top)
 local MAIN_TRACK = increment(static_track_top)
 
 -- 开火的轨道行
@@ -601,6 +601,72 @@ function spin_states.fire.transition(this, context, input)
 end
 -- 结束开火旋转部分
 
+local ADS_states = {
+    aiming_progress = 0,-- 记录瞄准进度
+    normal = {},-- 不瞄准状态
+    aiming = {}-- 瞄准状态
+}
+
+-- 进入不瞄准状态
+function ADS_states.normal.entry(this, context)
+    this.ADS_states.normal.update(this, context)
+end
+
+-- 更新不瞄准状态
+function ADS_states.normal.update(this, context)
+    -- 当瞄准进度正在增加时转到瞄准状态
+    if ((context:getAimingProgress() > this.ADS_states.aiming_progress or context:getAimingProgress() == 1) and context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+        context:trigger(this.INPUT_AIM)
+    else
+        -- 如果没有增加，则记录当前的瞄准进度
+        this.ADS_states.aiming_progress = context:getAimingProgress()
+    end
+end
+
+-- 转出不瞄准状态
+function ADS_states.normal.transition(this, context, input)
+    -- 接收到上文 update 方法的输入，则转到瞄准状态
+    if (input == this.INPUT_AIM) then
+        return this.ADS_states.aiming
+    end
+end
+
+-- 进入瞄准状态
+function ADS_states.aiming.entry(this, context)
+    -- 开始瞄准时播放瞄准动画，并且将其挂起
+    local track = context:getTrack(STATIC_TRACK_LINE, ADS_TRACK)
+    context:runAnimation("aim_start", track, false, PLAY_ONCE_HOLD, 0.2)
+    -- 打断检视动画
+    context:trigger(this.INPUT_INSPECT_RETREAT)
+end
+
+-- 更新瞄准状态
+function ADS_states.aiming.update(this, context)
+    local track = context:getTrack(STATIC_TRACK_LINE, ADS_TRACK)
+    if (context:isHolding(track)) then
+        -- 循环播放瞄准时的动画
+        context:runAnimation("aim", track, false, PLAY_ONCE_HOLD, 0.2)
+    end
+    -- 当瞄准进度正在减小时转到不瞄准状态，也即取消瞄准
+    if (context:getAimingProgress() < this.ADS_states.aiming_progress or not context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+        context:trigger(this.INPUT_AIM_RETREAT)
+    else
+        -- 如果没有减小，则记录当前瞄准进度
+        this.ADS_states.aiming_progress = context:getAimingProgress()
+    end
+end
+
+-- 转出瞄准状态
+function ADS_states.aiming.transition(this, context, input)
+    local track = context:getTrack(STATIC_TRACK_LINE, ADS_TRACK)
+    if (input == this.INPUT_AIM_RETREAT) then
+        --播放瞄准结束动画，并调整动画进度使开镜动画与当前的开镜进度相对应
+        context:runAnimation("aim_end", track, false, PLAY_ONCE_STOP, 0.2)
+        context:setAnimationProgress(track, 1 - context:getAimingProgress(), true)
+        return this.ADS_states.normal
+    end
+end
+
 local M = {
     -- 轨道行
     track_line_top = track_line_top,
@@ -630,6 +696,7 @@ local M = {
     main_track_states = main_track_states,
     gun_kick_state = gun_kick_state,
     movement_track_states = movement_track_states,
+    ADS_states = ADS_states,
     -- 输入
     INPUT_BOLT_CAUGHT = "bolt_caught",
     INPUT_BOLT_NORMAL = "bolt_normal",
@@ -637,7 +704,9 @@ local M = {
     INPUT_STOP_SPIN = "stop_spin",
     INPUT_OVER_HEAT = "over_heat",
     INPUT_COOLING_HEAT = "cooling_heat",
-    INPUT_INSPECT_RETREAT = "inspect_retreat"
+    INPUT_INSPECT_RETREAT = "inspect_retreat",
+    INPUT_AIM = "aim",
+    INPUT_AIM_RETREAT = "aim_retreat"
 }
 
 -- 状态机初始化函数，在切枪的时候调用
@@ -662,7 +731,8 @@ function M:states()
         self.spin_states.static,
         self.main_track_states.start,
         self.gun_kick_state,
-        self.movement_track_states.idle
+        self.movement_track_states.idle,
+        self.ADS_states.normal
     }
 end
 

@@ -30,6 +30,9 @@
 					"rotation": [112.83995, 15.19442, -265.51445],
 					"position": [7.625, -10.65, -4.725],
 					"scale": [1, 1.5, 1]
+				},
+				"laser_beam": {
+					"scale": 0
 				}
 			}
 		},
@@ -1492,6 +1495,36 @@
 			"sound_effects": {
 				"0.0": {
 					"effect": "tacz:minigun/minigun_barrel_whine1"
+				}
+			}
+		},
+		"aim_start": {
+			"animation_length": 0.2333,
+			"bones": {
+				"laser_beam": {
+					"scale": {
+						"0.0": [0, 0, 0],
+						"0.2333": [1, 1, 1]
+					}
+				}
+			}
+		},
+		"aim": {
+			"animation_length": 0.0333,
+			"bones": {
+				"laser_beam": {
+					"scale": 1
+				}
+			}
+		},
+		"aim_end": {
+			"animation_length": 0.2333,
+			"bones": {
+				"laser_beam": {
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.2333": [0, 0, 0]
+					}
 				}
 			}
 		}

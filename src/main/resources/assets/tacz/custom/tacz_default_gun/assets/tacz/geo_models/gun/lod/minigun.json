@@ -29,7 +29,8 @@
 				{
 					"name": "thirdperson_hand",
 					"parent": "positioning",
-					"pivot": [0, 8.825, 3.425]
+					"pivot": [0, 3.825, 23.425],
+					"rotation": [90, 0, 0]
 				},
 				{
 					"name": "lod",
@@ -997,6 +998,12 @@
 					"parent": "lod",
 					"pivot": [4, -1, 6.7],
 					"rotation": [149.35766, -54.46865, -143.94761]
+				},
+				{
+					"name": "laser_beam",
+					"parent": "lod",
+					"pivot": [-1.4375, -0.625, 8.5],
+					"rotation": [0, -1.25, 0]
 				}
 			]
 		}

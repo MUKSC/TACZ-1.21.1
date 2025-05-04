@@ -3205,6 +3205,12 @@
 					]
 				},
 				{
+					"name": "laser_beam",
+					"parent": "main_body",
+					"pivot": [-1.4375, -0.625, 6.07813],
+					"rotation": [0, -1.25, 0]
+				},
+				{
 					"name": "motor_group",
 					"parent": "body",
 					"pivot": [-1.71875, -1.65625, 8.5]
