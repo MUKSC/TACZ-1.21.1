@@ -1,0 +1,10 @@
+{
+  "slot": "tacz:attachment/slot/stock_sba3",
+  "model": "tacz:attachment/stock_sba3_geo",
+  "texture": "tacz:attachment/uv/stock_sba3",
+  "adapter": "ar_stock_adapter",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_a",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

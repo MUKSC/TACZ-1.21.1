@@ -1,0 +1,10 @@
+{
+  "slot": "tacz:attachment/slot/stock_ripstock",
+  "model": "tacz:attachment/stock_ripstock_geo",
+  "texture": "tacz:attachment/uv/stock_ripstock",
+  "adapter": "ar_stock_adapter",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_a",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

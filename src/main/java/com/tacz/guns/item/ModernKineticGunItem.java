@@ -4,12 +4,14 @@ import com.google.common.base.Suppliers;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.ReloadState;
+import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.item.nbt.GunItemDataAccessor;
 import com.tacz.guns.command.sub.DebugCommand;
 import com.tacz.guns.debug.GunMeleeDebug;
+import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.attachment.EffectData;
@@ -24,13 +26,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaFunction;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
+import org.joml.Vector2d;
+import org.luaj.vm2.*;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import javax.annotation.Nullable;
@@ -103,6 +104,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         if (gunIndex == null) {
             return;
         }
+
         Optional.ofNullable(gunIndex.getScript())
                 .map(script -> checkFunction(script.get("shoot")))
                 .ifPresentOrElse(
@@ -198,6 +200,94 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         });
     }
 
+    @Override
+    public void tickHeat(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter) {
+        ModernKineticGunScriptAPI api = new ModernKineticGunScriptAPI();
+        api.setItemStack(gunItem);
+        api.setShooter(shooter);
+        api.setDataHolder(dataHolder);
+
+        long heatTimestamp = dataHolder.heatTimestamp;
+        CommonGunIndex gunIndex = api.getGunIndex();
+        if (gunIndex == null) {
+            return;
+        }
+        Optional.ofNullable(gunIndex.getScript())
+                .map(script -> checkFunction(script.get("tick_heat")))
+                .ifPresentOrElse(
+                        func -> func.call(CoerceJavaToLua.coerce(api), LuaValue.valueOf(heatTimestamp)),
+                        () -> defaultTickHeat(heatTimestamp, gunItem)
+                );
+    }
+
+    private void defaultTickHeat(long heatTimestamp, ItemStack gunItem) {
+        var iGun = IGun.getIGunOrNull(gunItem);
+        if(iGun == null) return;
+        TimelessAPI.getCommonGunIndex(iGun.getGunId(gunItem))
+                .map(index -> index.getGunData().getHeatData())
+                .ifPresent(heatData -> {
+                    if (iGun.getHeatAmount(gunItem) <= 0) return;
+                    if (iGun.isOverheatLocked(gunItem)) {
+                        tickLocked(iGun, gunItem, heatData, heatTimestamp);
+                    } else {
+                        tickNormal(iGun, gunItem, heatData, heatTimestamp);
+                    }
+                });
+    }
+
+    public void tickLocked(IGun iGun, ItemStack gunStack, GunHeatData heatData, long heatTimestamp) {
+        if(System.currentTimeMillis() - heatTimestamp >= heatData.getOverHeatTime()) {
+            float heatAmount = iGun.getHeatAmount(gunStack)
+                    - ((float)(System.currentTimeMillis() - heatTimestamp) / 10000f)
+                    * heatData.getCoolingMultiplier();
+
+            iGun.setHeatAmount(gunStack, heatAmount);
+            if (heatAmount <= 0) {
+                iGun.setOverheatLocked(gunStack, false);
+            }
+        }
+    }
+
+    public void tickNormal(IGun iGun, ItemStack gunStack, GunHeatData heatData, long heatTimestamp) {
+        if(System.currentTimeMillis() - heatTimestamp >= heatData.getCoolingDelay()) {
+            float heatAmount = iGun.getHeatAmount(gunStack)
+                    - ((float)(System.currentTimeMillis() - heatTimestamp) / 10000f)
+                    * heatData.getCoolingMultiplier();
+
+            iGun.setHeatAmount(gunStack, heatAmount);
+        }
+    }
+
+    @Override
+    public void doBulletSpread(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter, Projectile projectile,
+                               int bulletCnt, float processedSpeed, float inaccuracy, float pitch, float yaw) {
+        if (!(projectile instanceof EntityKineticBullet bullet)) {
+            return;
+        }
+        ModernKineticGunScriptAPI api = new ModernKineticGunScriptAPI();
+        api.setItemStack(gunItem);
+        api.setShooter(shooter);
+        api.setDataHolder(dataHolder);
+
+        CommonGunIndex gunIndex = api.getGunIndex();
+        if (gunIndex == null) {
+            return;
+        }
+        Optional.ofNullable(gunIndex.getScript())
+                .map(script -> checkFunction(script.get("calcSpread")))
+                .map(func -> func.call(CoerceJavaToLua.coerce(api) , LuaValue.valueOf(bulletCnt), LuaValue.valueOf(inaccuracy)))
+                .map(luaValue -> {
+                    if (luaValue.istable()){
+                        LuaTable table = luaValue.checktable();
+                        return new Vector2d(table.get(1).checkdouble(), table.get(2).checkdouble());
+                    }
+                    return null;
+                }).ifPresentOrElse(vector2d -> {
+                    bullet.shootFromRotation(bullet, pitch, yaw, 0.0F, processedSpeed, vector2d);
+                },() -> {
+                    bullet.shootFromRotation(bullet, pitch, yaw, 0.0F, processedSpeed, inaccuracy);
+                });
+    }
 
     private boolean defaultTickBolt(ModernKineticGunScriptAPI api) {
         GunData gunData = api.getGunIndex().getGunData();
@@ -206,14 +296,18 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         long boltFeedTime = rawBoltFeedTime == -1 ? boltActionTime : (long) (gunData.getBoltFeedTime() * 1000);
         if (api.getBoltTime() < boltFeedTime) {
             return true;
-        } else {
-            if (!api.hasAmmoInBarrel()) {
-                if (api.removeAmmoFromMagazine(1) != 0) {
+        }
+        if (!api.hasAmmoInBarrel()) {
+            // 如果是背包直读则检测消耗背包弹药
+            if (api.useInventoryAmmo()) {
+                if (api.consumeAmmoFromPlayer(1) == 1) {
                     api.setAmmoInBarrel(true);
                 }
+            } else if (api.removeAmmoFromMagazine(1) != 0) {
+                api.setAmmoInBarrel(true);
             }
-            return api.getBoltTime() < boltActionTime;
         }
+        return api.getBoltTime() < boltActionTime;
     }
 
     private ReloadState defaultTickReload(ModernKineticGunScriptAPI api) {
@@ -274,6 +368,8 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         GunData data = api.getGunIndex().getGunData();
         int needAmmoCount = api.getNeededAmmoAmount();
         boolean needConsumeAmmo = api.isReloadingNeedConsumeAmmo();
+        boolean infinite = data.getReloadData().isInfinite();
+        needConsumeAmmo = needConsumeAmmo || infinite;
         switch (data.getReloadData().getType()) {
             case MAGAZINE -> {
                 if (needConsumeAmmo) {

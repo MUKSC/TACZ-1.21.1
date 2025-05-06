@@ -33,6 +33,8 @@ public class AnimationStateMachine<T extends AnimationStateContext> {
      */
     private final @Nonnull AnimationController animationController;
 
+    protected long exitingTime = -1;
+
     /**
      * @param animationController 动画状态机控制的动画控制器
      */
@@ -123,6 +125,23 @@ public class AnimationStateMachine<T extends AnimationStateContext> {
         // 调用状态列表内所有状态的 exit action。
         currentStates.forEach(state -> state.exitAction(context));
         this.currentStates = null;
+    }
+
+    /**
+     * 设置状态机的建议退出时间，单位为毫秒。<br/>
+     * 用于在切换至同一个物品时，建议延迟重新初始化状态机，以便让动画播放完毕。
+     */
+    public void setExitingTime(long keepTime) {
+        this.exitingTime = System.currentTimeMillis() + keepTime;
+    }
+
+    /**
+     * 获取状态机的建议退出时间，单位为毫秒。<br/>
+     * 用于在切换至同一个物品时，建议延迟重新初始化状态机，以便让动画播放完毕。<br/>
+     * @return 建议退出时间
+     */
+    public long getExitingTime() {
+        return exitingTime;
     }
 
     /**

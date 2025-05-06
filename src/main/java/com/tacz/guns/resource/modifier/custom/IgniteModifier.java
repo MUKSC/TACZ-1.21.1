@@ -1,23 +1,24 @@
 package com.tacz.guns.resource.modifier.custom;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class IgniteModifier implements IAttachmentModifier<Ignite, Ignite> {
-    public static final String ID = "ignite";
+    public static final String ID = GunProperties.IGNITE.name();
 
     @Override
     public String getId() {
@@ -26,7 +27,7 @@ public class IgniteModifier implements IAttachmentModifier<Ignite, Ignite> {
 
     @Override
     public JsonProperty<Ignite> readJson(String json) {
-        IgniteModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, IgniteModifier.Data.class);
+        IgniteModifier.Data data = CommonAssetsManager.GSON.fromJson(json, IgniteModifier.Data.class);
         return new IgniteJsonProperty(data.getIgnite());
     }
 

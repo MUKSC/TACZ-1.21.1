@@ -18,6 +18,8 @@ public class ModItems {
 
     public static RegistryObject<ModernKineticGunItem> MODERN_KINETIC_GUN = ITEMS.register("modern_kinetic_gun", ModernKineticGunItem::new);
 
+//    public static RegistryObject<ThrowableItem> M67 = ITEMS.register("m67", ThrowableItem::new);
+
     public static RegistryObject<Item> AMMO = ITEMS.register("ammo", AmmoItem::new);
     public static RegistryObject<AttachmentItem> ATTACHMENT = ITEMS.register("attachment", AttachmentItem::new);
 

@@ -1,0 +1,19 @@
+{
+  "slot": "tacz:attachment/slot/sight_okp7",
+  "model": "tacz:attachment/sight_okp7_geo",
+  "texture": "tacz:attachment/uv/sight_okp7",
+  "lod": {
+    "model": "tacz:attachment/lod/sight_okp7",
+    "texture": "tacz:attachment/lod/sight_okp7"
+  },
+  "zoom": [
+    1.5
+  ],
+  "scope": false,
+  "sight": true,
+  "fov": 70.0,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_c",
+    "uninstall": "tacz:attachments/scope_general_c"
+  }
+}

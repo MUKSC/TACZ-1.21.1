@@ -18,14 +18,10 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunFire;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.modifier.custom.AimInaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.AmmoSpeedModifier;
 import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
-import com.tacz.guns.resource.pojo.data.gun.Bolt;
-import com.tacz.guns.resource.pojo.data.gun.BulletData;
-import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
+import com.tacz.guns.resource.pojo.data.gun.*;
 import com.tacz.guns.sound.SoundManager;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.tacz.guns.util.CycleTaskHelper;
@@ -38,9 +34,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.LogicalSide;
+import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import java.util.Map;
 import java.util.Optional;
@@ -87,13 +85,17 @@ public class ModernKineticGunScriptAPI {
             return;
         }
 
+        //Handle Heat Data
+        float heatInaccuracy = 1f;
+        if(hasHeatData()) {
+            GunHeatData heatData = gunIndex.getGunData().getHeatData();
+            float heatPercentage = (getHeatAmount() / heatData.getHeatMax());
+            heatInaccuracy *= Mth.lerp(heatPercentage, heatData.getMinInaccuracy(), heatData.getMaxInaccuracy());
+        }
+
         // 散射影响
         InaccuracyType inaccuracyType = InaccuracyType.getInaccuracyType(shooter);
-        float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType));
-        if (inaccuracyType == InaccuracyType.AIM) {
-            inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(AimInaccuracyModifier.ID).get(inaccuracyType));
-        }
-        final float finalInaccuracy = inaccuracy;
+        final float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType) * heatInaccuracy);
 
         // 消音器影响
         Pair<Integer, Boolean> silence = cacheProperty.getCache(SilenceModifier.ID);
@@ -131,6 +133,15 @@ public class ModernKineticGunScriptAPI {
                         return false;
                     }
                 }
+                //Handle Heat Data
+                if(gunIndex.getGunData().hasHeatData()) {
+                    Optional.ofNullable(gunIndex.getScript())
+                            .map(script -> checkFunction(script.get("handle_shoot_heat")))
+                            .ifPresentOrElse(
+                                    func -> func.call(CoerceJavaToLua.coerce(this)),
+                                    this::handleShootHeat
+                            );
+                }
                 // 获取射击方向（pitch 和 yaw）
                 float pitch = pitchSupplier != null ? pitchSupplier.get() : shooter.getXRot();
                 float yaw = yawSupplier != null ? yawSupplier.get() : shooter.getYRot();
@@ -140,7 +151,8 @@ public class ModernKineticGunScriptAPI {
                 for (int i = 0; i < bulletAmount; i++) {
                     boolean isTracer = bulletData.hasTracerAmmo() && gunOperator.nextBulletIsTracer(bulletData.getTracerCountInterval());
                     EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId, isTracer, gunData, bulletData);
-                    bullet.shootFromRotation(bullet, pitch, yaw, 0.0F, processedSpeed, finalInaccuracy);
+                    abstractGunItem.doBulletSpread(dataHolder, itemStack, shooter, bullet, i, processedSpeed,
+                            inaccuracy, pitch, yaw);
                     world.addFreshEntity(bullet);
                 }
                 // 播放枪声
@@ -154,6 +166,21 @@ public class ModernKineticGunScriptAPI {
     }
 
     /**
+     * 处理一次射击的过热变化
+     */
+    public void handleShootHeat() {
+        GunHeatData heatData = gunIndex.getGunData().getHeatData();
+        if (heatData == null) {
+            return;
+        }
+        float newHeat = Math.min(abstractGunItem.getHeatAmount(itemStack) + heatData.getHeatPerShot(), heatData.getHeatMax());
+        abstractGunItem.setHeatAmount(itemStack, newHeat);
+        if (newHeat >= heatData.getHeatMax()) {
+            abstractGunItem.setOverheatLocked(itemStack, true);
+        }
+    }
+
+    /**
      * 让枪械内的子弹减少一发。会遵从栓动、闭膛待击和开膛待机的规律，消耗枪管内子弹或者弹匣内子弹。
      * 如果没有可以消耗的子弹，这个方法会返回 false。例如栓动步枪，虽然弹匣内有子弹，但是在 bolt 之前枪管内没有子弹，那么就会返回 false，
      * @return 是否成功减少子弹。
@@ -162,30 +189,62 @@ public class ModernKineticGunScriptAPI {
         Bolt boltType = TimelessAPI.getCommonGunIndex(abstractGunItem.getGunId(itemStack))
                 .map(index -> index.getGunData().getBolt())
                 .orElse(null);
+        // 膛内是否有子弹
+        boolean hasAmmoInBarrel = abstractGunItem.hasBulletInBarrel(itemStack) && boltType != Bolt.OPEN_BOLT;
+        // 背包内是否还有子弹 (创造模式是否消耗背包备弹)
+        boolean hasInventoryAmmo = abstractGunItem.hasInventoryAmmo(shooter, itemStack, isReloadingNeedConsumeAmmo());
+        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且弹匣子弹数 < 1)
+        boolean noAmmo = useInventoryAmmo() && !hasInventoryAmmo ||
+                !useInventoryAmmo() && abstractGunItem.getCurrentAmmoCount(itemStack) < 1;
         if (boltType == null) {
             return false;
         }
+        // 栓动逻辑
         if (boltType == Bolt.MANUAL_ACTION) {
-            if (!abstractGunItem.hasBulletInBarrel(itemStack)) {
+            // 没有膛内子弹无法射击
+            if (!hasAmmoInBarrel) {
                 return false;
             }
+            // 没有弹匣内的子弹则消耗枪膛内的子弹
             abstractGunItem.setBulletInBarrel(itemStack, false);
-        } else if (boltType == Bolt.CLOSED_BOLT) {
-            if (abstractGunItem.getCurrentAmmoCount(itemStack) > 0) {
-                abstractGunItem.reduceCurrentAmmoCount(itemStack);
-            } else {
-                if (!abstractGunItem.hasBulletInBarrel(itemStack)) {
-                    return false;
+            return true;
+        }
+        // 闭膛逻辑
+        if (boltType == Bolt.CLOSED_BOLT) {
+            // 如果有弹匣内的子弹则优先消耗弹匣内的子弹
+            if (!noAmmo) {
+                // 如果背包直读则背包内射击后弹药 - 1
+                if (useInventoryAmmo()) {
+                    return consumeAmmoFromPlayer(1) == 1;
                 }
-                abstractGunItem.setBulletInBarrel(itemStack, false);
+                // 如果非背包直读则弹匣内子弹 - 1
+                abstractGunItem.reduceCurrentAmmoCount(itemStack);
+                return true;
             }
-        } else {
-            if (abstractGunItem.getCurrentAmmoCount(itemStack) == 0) {
+            // 没有膛内子弹无法射击
+            if (!hasAmmoInBarrel) {
                 return false;
             }
-            abstractGunItem.reduceCurrentAmmoCount(itemStack);
+            // 没有弹匣内的子弹则消耗枪膛内的子弹
+            abstractGunItem.setBulletInBarrel(itemStack, false);
+            return true;
         }
-        return true;
+        // 开膛逻辑
+        if (boltType == Bolt.OPEN_BOLT) {
+            // 没有子弹无法射击
+            if (noAmmo) {
+                return false;
+            }
+            // 如果背包直读则背包内射击后弹药 - 1
+            if (useInventoryAmmo()) {
+                return consumeAmmoFromPlayer(1) == 1;
+            }
+            // 如果非背包直读则弹匣内子弹 - 1
+            abstractGunItem.reduceCurrentAmmoCount(itemStack);
+            return true;
+        }
+        // 非三种已知 Bolt 类型 (目前不会出现)，默认返回 false
+        return false;
     }
 
     /**
@@ -225,7 +284,7 @@ public class ModernKineticGunScriptAPI {
             coolDown = coolDown - 5;
             return Math.max(coolDown, 0L);
         }
-        long coolDown = gunIndex.getGunData().getShootInterval(this.shooter, fireMode);
+        long coolDown = gunIndex.getGunData().getShootInterval(this.shooter, fireMode, itemStack);
         // 给 5 ms 的窗口时间，以平衡延迟
         coolDown = coolDown - 5;
         return Math.max(coolDown, 0L);
@@ -359,11 +418,15 @@ public class ModernKineticGunScriptAPI {
      * @return 实际消耗的弹药数量
      */
     public int consumeAmmoFromPlayer(int neededAmount) {
+        // 如果处于背包直读并且创造模式不消耗的情况
+        if (useInventoryAmmo() && !isReloadingNeedConsumeAmmo()) {
+            return neededAmount;
+        }
         if (abstractGunItem.useDummyAmmo(itemStack)) {
             return abstractGunItem.findAndExtractDummyAmmo(itemStack, neededAmount);
         } else {
             return shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null)
-                    .map(cap -> abstractGunItem.findAndExtractInventoryAmmos(cap, itemStack, neededAmount))
+                    .map(cap -> abstractGunItem.findAndExtractInventoryAmmo(cap, itemStack, neededAmount))
                     .orElse(0);
         }
     }
@@ -581,8 +644,100 @@ public class ModernKineticGunScriptAPI {
         return gunIndex;
     }
 
+    public void setHeatAmount(float amount) {
+        abstractGunItem.setHeatAmount(itemStack, amount);
+    }
+
+    public float getHeatAmount() {
+        return abstractGunItem.getHeatAmount(itemStack);
+    }
+
+    public boolean hasHeatData() {
+        return gunIndex.getGunData().getHeatData() != null;
+    }
+
+    public float getHeatMinRpm() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMinRpmMod();
+        return 0f;
+    }
+
+    public float getHeatMaxRpm() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMaxRpmMod();
+        return 0f;
+    }
+
+    public float getHeatMinInaccuracy() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMinInaccuracy();
+        return 0f;
+    }
+
+    public float getHeatMaxInaccuracy() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getMaxInaccuracy();
+        return 0f;
+    }
+
+    public float getHeatMax() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getHeatMax();
+        return 0f;
+    }
+
+    public float getHeatPerShot() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getHeatPerShot();
+        return 0f;
+    }
+
+    public boolean isOverheatLocked() {
+        return abstractGunItem.isOverheatLocked(itemStack);
+    }
+
+    public void setOverheatLocked(boolean locked) {
+        abstractGunItem.setOverheatLocked(itemStack, locked);
+    }
+
+    public long getOverheatTime() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getOverHeatTime();
+        return 0;
+    }
+
+    public long getCoolingDelay() {
+        if(hasHeatData()) return gunIndex.getGunData().getHeatData().getCoolingDelay();
+        return 0;
+    }
+
+    public float calcHeatReduction(long heatTimestamp) {
+        GunHeatData heatData = gunIndex.getGunData().getHeatData();
+        if (heatData != null) {
+            return ((float)(System.currentTimeMillis() - heatTimestamp) / 10000f)
+                    * heatData.getCoolingMultiplier();
+        }
+        return 0f;
+    }
+
+    // TODO: 测试检查 enum 值是否可以直接在 lua 中调用，以简化这个功能为下面那个方法
+    public int getBoltByInt() {
+        Bolt bolt = gunIndex.getGunData().getBolt();
+        if (bolt == Bolt.MANUAL_ACTION) {
+            return 1;
+        }
+        if (bolt == Bolt.CLOSED_BOLT) {
+            return 2;
+        }
+        if (bolt == Bolt.OPEN_BOLT) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public Bolt getBolt() {
+        return gunIndex.getGunData().getBolt();
+    }
+
     public void setDataHolder(ShooterDataHolder dataHolder) {
         this.dataHolder = dataHolder;
+    }
+
+    public boolean useInventoryAmmo() {
+        return abstractGunItem.useInventoryAmmo(itemStack);
     }
 
     ShooterDataHolder getDataHolder() {
@@ -602,6 +757,17 @@ public class ModernKineticGunScriptAPI {
         abstractGunItem = gunItem;
         if (itemStack.hasTag()) {
             nbtUtil = new LuaNbtAccessor(itemStack.getTag());
+        }
+    }
+
+
+    private LuaFunction checkFunction(LuaValue luaValue) {
+        if (luaValue.isfunction()) {
+            return (LuaFunction) luaValue;
+        } else if (luaValue.isnil()) {
+            return null;
+        } else {
+            throw new LuaError("bad argument: function or nil expected, got " + luaValue.typename());
         }
     }
 }

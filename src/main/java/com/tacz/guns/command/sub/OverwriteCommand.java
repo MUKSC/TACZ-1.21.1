@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.tacz.guns.config.common.OtherConfig;
+import com.tacz.guns.config.PreLoadConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -24,9 +24,9 @@ public class OverwriteCommand {
 
     private static int setOverwrite(CommandContext<CommandSourceStack> context) {
         boolean enable = BoolArgumentType.getBool(context, ENABLE);
-        OtherConfig.DEFAULT_PACK_DEBUG.set(!enable);
+        PreLoadConfig.override.set(!enable);
         if (context.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
-            if (OtherConfig.DEFAULT_PACK_DEBUG.get()) {
+            if (PreLoadConfig.override.get()) {
                 serverPlayer.sendSystemMessage(Component.translatable("commands.tacz.reload.overwrite_off"));
             } else {
                 serverPlayer.sendSystemMessage(Component.translatable("commands.tacz.reload.overwrite_on"));

@@ -8,6 +8,8 @@ public class LocalPlayerSprint {
     private final LocalPlayerDataHolder data;
     private final LocalPlayer player;
 
+    public static boolean stopSprint = false;
+
     public LocalPlayerSprint(LocalPlayerDataHolder data, LocalPlayer player) {
         this.data = data;
         this.player = player;
@@ -24,7 +26,7 @@ public class LocalPlayerSprint {
         // （例如客户端的视觉效果是玩家在冲刺，而服务端玩家实际上没有冲刺）
         IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
         ReloadState.StateType reloadStateType = gunOperator.getSynReloadState().getStateType();
-        if (gunOperator.getSynIsAiming() || (reloadStateType.isReloading() && !reloadStateType.isReloadFinishing())) {
+        if (gunOperator.getSynIsAiming() || (reloadStateType.isReloading() && !reloadStateType.isReloadFinishing()) || stopSprint) {
             return false;
         } else {
             return sprinting;

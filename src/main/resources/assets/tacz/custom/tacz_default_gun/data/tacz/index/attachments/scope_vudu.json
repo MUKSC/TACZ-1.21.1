@@ -1,0 +1,8 @@
+{
+  "hidden": false,
+  "name": "tacz.attachment.scope_vudu.name",
+  "display": "tacz:scope_vudu_display",
+  "data": "tacz:scope_vudu_data",
+  "type": "scope",
+  "sort": 100
+}

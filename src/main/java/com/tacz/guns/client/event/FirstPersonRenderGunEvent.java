@@ -11,40 +11,28 @@ import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.event.common.GunFireEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.item.nbt.AttachmentItemDataAccessor;
 import com.tacz.guns.client.animation.screen.RefitTransform;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.model.BedrockGunModel;
-import com.tacz.guns.client.model.bedrock.BedrockModel;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
 import com.tacz.guns.client.model.functional.MuzzleFlashRender;
-import com.tacz.guns.client.model.functional.ShellRender;
-import com.tacz.guns.client.renderer.item.GunItemRenderer;
-import com.tacz.guns.client.resource.InternalAssetLoader;
+import com.tacz.guns.client.renderer.item.GunItemRendererWrapper;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
-import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.util.math.Easing;
 import com.tacz.guns.util.math.MathUtil;
 import com.tacz.guns.util.math.PerlinNoise;
 import com.tacz.guns.util.math.SecondOrderDynamics;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
@@ -55,16 +43,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
-import static net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
-
 /**
- * 负责第一人称的枪械模型渲染。其他人称参见 {@link GunItemRenderer}
+ * 负责第一人称的枪械模型额外效果的渲染。其他部分参见 {@link GunItemRendererWrapper}
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class FirstPersonRenderGunEvent {
     // 用于生成瞄准动作的运动曲线，使动作看起来更平滑
     private static final SecondOrderDynamics AIMING_DYNAMICS = new SecondOrderDynamics(1.2f, 1.2f, 0.5f, 0);
+    private static SecondOrderDynamics SWITCH_VIEW_DYNAMICS;
     // 用于打开改装界面时枪械运动的平滑
     private static final SecondOrderDynamics REFIT_OPENING_DYNAMICS = new SecondOrderDynamics(1f, 1.2f, 0.5f, 0);
     // 用于跳跃延滞动画的平滑
@@ -82,190 +68,9 @@ public class FirstPersonRenderGunEvent {
     private static boolean lastOnGround = false;
     private static long jumpingTimeStamp = -1;
     private static long shootTimeStamp = -1;
-
-    @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
-        if (event.getHand() == InteractionHand.OFF_HAND) {
-            ItemStack stack = KeepingItemRenderer.getRenderer().getCurrentItem();
-            if (stack.getItem() instanceof IGun) {
-                event.setCanceled(true);
-            }
-            return;
-        }
-        ItemStack stack = event.getItemStack();
-        if (!(stack.getItem() instanceof IGun iGun)) {
-            return;
-        }
-
-        // 获取 TransformType
-        ItemDisplayContext transformType;
-        if (event.getHand() == InteractionHand.MAIN_HAND) {
-            transformType = FIRST_PERSON_RIGHT_HAND;
-        } else {
-            transformType = FIRST_PERSON_LEFT_HAND;
-        }
-
-        TimelessAPI.getGunDisplay(stack).ifPresentOrElse(display -> {
-            BedrockGunModel gunModel = display.getGunModel();
-            var animationStateMachine = display.getAnimationStateMachine();
-            if (gunModel == null) {
-                return;
-            }
-            // 在渲染之前，先更新动画，让动画数据写入模型
-            animationStateMachine.processContextIfExist(context -> {
-                context.setCurrentGunItem(stack);
-                context.setPartialTicks(event.getPartialTick());
-            });
-            animationStateMachine.update();
-
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            // 逆转原版施加在手上的延滞效果，改为写入模型动画数据中
-            float xRotOffset = Mth.lerp(event.getPartialTick(), player.xBobO, player.xBob);
-            float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
-            float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
-            float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-            poseStack.mulPose(Axis.XP.rotationDegrees(xRot * -0.1F));
-            poseStack.mulPose(Axis.YP.rotationDegrees(yRot * -0.1F));
-            BedrockPart rootNode = gunModel.getRootNode();
-            if (rootNode != null) {
-                xRot = (float) Math.tanh(xRot / 25) * 25;
-                yRot = (float) Math.tanh(yRot / 25) * 25;
-                rootNode.offsetX += yRot * 0.1F / 16F / 3F;
-                rootNode.offsetY += -xRot * 0.1F / 16F / 3F;
-                rootNode.additionalQuaternion.mul(Axis.XP.rotationDegrees(xRot * 0.05F));
-                rootNode.additionalQuaternion.mul(Axis.YP.rotationDegrees(yRot * 0.05F));
-            }
-            // 从渲染原点 (0, 24, 0) 移动到模型原点 (0, 0, 0)
-            poseStack.translate(0, 1.5f, 0);
-            // 基岩版模型是上下颠倒的，需要翻转过来。
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
-            // 应用持枪姿态变换，如第一人称摄像机定位
-            applyFirstPersonGunTransform(player, stack, poseStack, gunModel, event.getPartialTick());
-
-            // 开启第一人称弹壳和火焰渲染
-            MuzzleFlashRender.isSelf = true;
-            ShellRender.isSelf = true;
-            {
-                // 如果正在打开改装界面，则取消手臂渲染
-                boolean renderHand = gunModel.getRenderHand();
-                if (RefitTransform.getOpeningProgress() != 0) {
-                    gunModel.setRenderHand(false);
-                }
-                // 调用枪械模型渲染
-                //RenderType renderType = RenderType.itemEntityTranslucentCull(gunIndex.getModelTexture());
-                RenderType renderType = RenderType.entityCutout(display.getModelTexture());
-                gunModel.render(poseStack, stack, transformType, renderType, event.getPackedLight(), OverlayTexture.NO_OVERLAY);
-                // 调用曳光弹渲染
-                renderBulletTracer(player, poseStack, gunModel, event.getPartialTick());
-                // 恢复手臂渲染
-                gunModel.setRenderHand(renderHand);
-                // 渲染完成后，将动画数据从模型中清除，不对其他视角下的模型渲染产生影响
-                poseStack.popPose();
-                gunModel.cleanAnimationTransform();
-            }
-            // 关闭第一人称弹壳和火焰渲染
-            MuzzleFlashRender.isSelf = false;
-            ShellRender.isSelf = false;
-
-            // 放这里，只有渲染了枪械，才取消后续（虽然一般来说也没有什么后续了）
-            event.setCanceled(true);
-        }, () -> renderBulletTracer(player, event.getPoseStack(), null, event.getPartialTick()));
-    }
-
-    private static void renderBulletTracer(LocalPlayer player, PoseStack poseStack, BedrockGunModel gunModel, float partialTicks) {
-        if (!RenderConfig.FIRST_PERSON_BULLET_TRACER_ENABLE.get()) {
-            return;
-        }
-        Optional<BedrockModel> modelOptional = InternalAssetLoader.getBedrockModel(InternalAssetLoader.DEFAULT_BULLET_MODEL);
-        if (modelOptional.isEmpty()) {
-            return;
-        }
-        BedrockModel model = modelOptional.get();
-        Level level = player.level();
-        AABB renderArea = player.getBoundingBox().inflate(256, 256, 256);
-        for (Entity entity : level.getEntities(player, renderArea, FirstPersonRenderGunEvent::bulletFromPlayer)) {
-            EntityKineticBullet entityBullet = (EntityKineticBullet) entity;
-            if (!entityBullet.isTracerAmmo()) {
-                continue;
-            }
-            Vec3 deltaMovement = entityBullet.getDeltaMovement().multiply(partialTicks, partialTicks, partialTicks);
-            Vec3 entityPosition = entityBullet.getPosition(0).add(deltaMovement);
-            Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-            Vec3 cameraPosition = camera.getPosition();
-            Vec3 originCameraPosition = entityBullet.getOriginCameraPosition();
-            if (originCameraPosition == null) {
-                if (gunModel == null) {
-                    continue;
-                }
-                if (gunModel.getMuzzleFlashPosPath() != null) {
-                    poseStack.pushPose();
-                    for (BedrockPart bedrockPart : gunModel.getMuzzleFlashPosPath()) {
-                        bedrockPart.translateAndRotateAndScale(poseStack);
-                    }
-                    Matrix4f pose = poseStack.last().pose();
-                    originCameraPosition = new Vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z);
-                    entityBullet.setOriginCameraPosition(originCameraPosition);
-                    entityBullet.setOriginRenderOffset(new Vec3(pose.m30(), pose.m31(), pose.m32()));
-                    poseStack.popPose();
-                } else {
-                    continue;
-                }
-            }
-            Vec3 originRenderOffset = entityBullet.getOriginRenderOffset();
-            Vec3 alphaCameraTranslation = originCameraPosition.subtract(cameraPosition);
-            double distance = entityPosition.distanceTo(originCameraPosition);
-            Vec3 bulletDirection = entityPosition.subtract(originCameraPosition);
-            double yRot = MathUtil.getTwoVecAngle(new Vec3(0, 0, -1), new Vec3(bulletDirection.x, 0, bulletDirection.z));
-            double xRot = MathUtil.getTwoVecAngle(new Vec3(bulletDirection.x, 0, bulletDirection.z), bulletDirection);
-            if (yRot == -1) {
-                yRot = Math.toRadians(camera.getYRot() + 180f);
-            }
-            if (xRot == -1) {
-                xRot = Math.toRadians(camera.getXRot());
-            }
-            xRot *= bulletDirection.y > 0 ? -1 : 1;
-            yRot *= bulletDirection.x > 0 ? 1 : -1;
-            PoseStack poseStack1 = new PoseStack();
-            // 逆转摄像机的旋转，回到起始坐标
-            poseStack1.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
-            poseStack1.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180f));
-            poseStack1.translate(alphaCameraTranslation.x, alphaCameraTranslation.y, alphaCameraTranslation.z);
-            // 恢复旋转角度，应用枪口定位偏移
-            poseStack1.mulPose(Axis.YN.rotation((float) yRot));
-            poseStack1.mulPose(Axis.XN.rotation((float) xRot));
-            poseStack1.translate(originRenderOffset.x, originRenderOffset.y, originRenderOffset.z - distance);
-            float trailLength = 0.5f * (float) entityBullet.getDeltaMovement().length();
-            float trailWidth = 0.03f * entityBullet.getTracerSizeOverride();
-            poseStack1.translate(0, 0, -trailLength / 2);
-            poseStack1.scale(trailWidth, trailWidth, trailLength);
-
-            ResourceLocation gunId = entityBullet.getGunId();
-            ResourceLocation displayId = entityBullet.getGunDisplayId();
-            TimelessAPI.getGunDisplay(displayId, gunId).ifPresent(display -> {
-                float[] entityTracerColor = entityBullet.getTracerColorOverride().orElseGet(display::getTracerColor);
-                if (entityTracerColor == null) {
-                    // 如果枪械没有添加弋光弹参数，那么调用子弹的
-                    ResourceLocation ammoId = entityBullet.getAmmoId();
-                    TimelessAPI.getClientAmmoIndex(ammoId).ifPresent(ammoIndex -> {
-                        float[] ammoTracerColor = ammoIndex.getTracerColor();
-                        RenderType type = RenderType.energySwirl(InternalAssetLoader.DEFAULT_BULLET_TEXTURE, 15, 15);
-                        model.render(poseStack1, ItemDisplayContext.NONE, type, LightTexture.pack(15, 15),
-                                OverlayTexture.NO_OVERLAY, ammoTracerColor[0], ammoTracerColor[1], ammoTracerColor[2], 1);
-                    });
-                } else {
-                    // 否则调用调用枪械的
-                    RenderType type = RenderType.energySwirl(InternalAssetLoader.DEFAULT_BULLET_TEXTURE, 15, 15);
-                    model.render(poseStack1, ItemDisplayContext.NONE, type, LightTexture.pack(15, 15),
-                            OverlayTexture.NO_OVERLAY, entityTracerColor[0], entityTracerColor[1], entityTracerColor[2], 1);
-                }
-            });
-        }
-    }
+    private static Matrix4f oldAimingViewMatrix;
+    private static float oldViewIndex;
+    private static int currentViewIndex = -1;
 
     /**
      * 当主手拿着枪械物品的时候，取消应用在它上面的 viewBobbing，以便应用自定义的跑步/走路动画。
@@ -290,12 +95,12 @@ public class FirstPersonRenderGunEvent {
             if (!shooter.equals(player)) {
                 return;
             }
-            ItemStack mainhandItem = player.getMainHandItem();
-            IGun iGun = IGun.getIGunOrNull(mainhandItem);
+            ItemStack mainHandItem = player.getMainHandItem();
+            IGun iGun = IGun.getIGunOrNull(mainHandItem);
             if (iGun == null) {
                 return;
             }
-            TimelessAPI.getClientGunIndex(iGun.getGunId(mainhandItem)).ifPresent(gunIndex -> {
+            TimelessAPI.getClientGunIndex(iGun.getGunId(mainHandItem)).ifPresent(gunIndex -> {
                 // 记录开火时间戳，用于后坐力程序动画
                 shootTimeStamp = System.currentTimeMillis();
                 // 记录枪口火焰数据
@@ -311,7 +116,7 @@ public class FirstPersonRenderGunEvent {
         return false;
     }
 
-    private static void applyFirstPersonGunTransform(LocalPlayer player, ItemStack gunItemStack, PoseStack poseStack, BedrockGunModel model, float partialTicks) {
+    public static void applyFirstPersonGunTransform(LocalPlayer player, ItemStack gunItemStack, PoseStack poseStack, BedrockGunModel model, float partialTicks) {
         // 配合运动曲线，计算改装枪口的打开进度
         float refitScreenOpeningProgress = REFIT_OPENING_DYNAMICS.update(RefitTransform.getOpeningProgress());
         // 配合运动曲线，计算瞄准进度
@@ -346,6 +151,9 @@ public class FirstPersonRenderGunEvent {
         if (scopeId.equals(DefaultAssets.EMPTY_ATTACHMENT_ID)) {
             scopeId = iGun.getBuiltInAttachmentId(stack, AttachmentType.SCOPE);
         }
+        CompoundTag scopeTag = iGun.getAttachmentTag(stack, AttachmentType.SCOPE);
+        int zoomNumber = AttachmentItemDataAccessor.getZoomNumberFromTag(scopeTag);
+        int viewIndex = 1;
         if (DefaultAssets.isEmptyAttachmentId(scopeId)) {
             // 未安装瞄具，使用机瞄定位组
             aimingNodePath = model.getIronSightPath();
@@ -357,14 +165,37 @@ public class FirstPersonRenderGunEvent {
                 Optional<ClientAttachmentIndex> indexOptional = TimelessAPI.getClientAttachmentIndex(scopeId);
                 if (indexOptional.isPresent()) {
                     BedrockAttachmentModel attachmentModel = indexOptional.get().getAttachmentModel();
-                    if (attachmentModel != null && attachmentModel.getScopeViewPath() != null) {
-                        aimingNodePath.addAll(attachmentModel.getScopeViewPath());
+                    int[] views = indexOptional.get().getViews();
+                    viewIndex = views[zoomNumber % views.length] - 1;
+                    if (attachmentModel != null) {
+                        List<BedrockPart> scopeViewPath = attachmentModel.getScopeViewPath(currentViewIndex == -1 ? viewIndex : currentViewIndex);
+                        if (scopeViewPath != null) {
+                            aimingNodePath.addAll(scopeViewPath);
+                        }
                     }
                 }
             }
         }
+        Matrix4f aimingViewMatrix = getPositioningNodeInverse(aimingNodePath);
+        // 执行两个 scope view 之间的插值
+        if (currentViewIndex == -1) {
+            currentViewIndex = viewIndex;
+            oldViewIndex = viewIndex;
+            oldAimingViewMatrix = aimingViewMatrix;
+            SWITCH_VIEW_DYNAMICS = new SecondOrderDynamics(0.35f, 1.2f, 0.3f, viewIndex);
+        }
+        float view_interpret = SWITCH_VIEW_DYNAMICS.update(viewIndex);
+        float span = currentViewIndex - oldViewIndex;
+        float switchingProgress = Math.abs(span) < 0.05 ? 1 : (view_interpret - oldViewIndex) / span;
+        MathUtil.applyMatrixLerp(aimingViewMatrix, oldAimingViewMatrix, aimingViewMatrix, 1 - switchingProgress);
+        if (currentViewIndex != viewIndex) {
+            oldAimingViewMatrix = aimingViewMatrix;
+            oldViewIndex = view_interpret;
+            currentViewIndex = viewIndex;
+        }
+        // 应用瞄准变换
         MathUtil.applyMatrixLerp(transformMatrix, getPositioningNodeInverse(idleNodePath), transformMatrix, (1 - refitScreenOpeningProgress));
-        MathUtil.applyMatrixLerp(transformMatrix, getPositioningNodeInverse(aimingNodePath), transformMatrix, (1 - refitScreenOpeningProgress) * aimingProgress);
+        MathUtil.applyMatrixLerp(transformMatrix, aimingViewMatrix, transformMatrix, (1 - refitScreenOpeningProgress) * aimingProgress);
         // 应用改装界面开启时的定位
         float refitTransformProgress = (float) Easing.easeOutCubic(RefitTransform.getTransformProgress());
         AttachmentType oldType = RefitTransform.getOldTransformType();
@@ -547,7 +378,8 @@ public class FirstPersonRenderGunEvent {
         // 配合约束系数，计算约束位移需要的反向位移
         Vector3f inverseTranslation = new Vector3f(originTranslation);
         inverseTranslation.sub(animatedTranslation);
-        inverseTranslation.mul(1 - translationICA.x(), 1 - translationICA.y(), 1 - translationICA.z());
+        inverseTranslation.mulDirection(poseStack.last().pose());
+        inverseTranslation.mul(translationICA.x() - 1, translationICA.y() - 1, 1 - translationICA.z()); // 基岩版模型的旋转导致 xy 轴要反过来
         // 计算约束旋转需要的反向旋转。因需要插值，获取的是欧拉角
         Vector3f inverseRotation = new Vector3f(rotation);
         inverseRotation.mul(rotationICA.x() - 1, rotationICA.y() - 1, rotationICA.z() - 1);

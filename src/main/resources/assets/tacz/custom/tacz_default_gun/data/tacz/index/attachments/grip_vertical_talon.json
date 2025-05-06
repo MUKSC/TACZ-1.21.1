@@ -2,5 +2,6 @@
   "name": "tacz.attachment.grip_vertical_talon.name",
   "display": "tacz:grip_vertical_talon_display",
   "data": "tacz:grip_vertical_talon_data",
-  "type": "grip"
+  "type": "grip",
+  "sort": 10
 }

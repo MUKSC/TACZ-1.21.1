@@ -14,7 +14,7 @@ public enum ShootResult {
      */
     COOL_DOWN,
     /**
-     * 无弹药
+     * 无弹药 (或没有备弹)
      */
     NO_AMMO,
     /**
@@ -60,5 +60,9 @@ public enum ShootResult {
     /**
      * Forge 事件原因取消
      */
-    FORGE_EVENT_CANCEL
+    FORGE_EVENT_CANCEL,
+    /**
+     * 武器过热
+     */
+    OVERHEATED
 }

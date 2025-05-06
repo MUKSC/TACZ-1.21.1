@@ -1,10 +1,11 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -20,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class WeightModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "weight_modifier";
+    public static final String ID = GunProperties.WEIGHT.name();
 
     @Override
     public String getId() {
@@ -30,7 +31,7 @@ public class WeightModifier implements IAttachmentModifier<Modifier, Float> {
     @Override
     @SuppressWarnings("deprecation")
     public JsonProperty<Modifier> readJson(String json) {
-        WeightModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, WeightModifier.Data.class);
+        WeightModifier.Data data = CommonAssetsManager.GSON.fromJson(json, WeightModifier.Data.class);
         Modifier weightModifier = data.getWeightModifier();
         // 兼容旧版本写法
         if (weightModifier == null) {
@@ -60,18 +61,19 @@ public class WeightModifier implements IAttachmentModifier<Modifier, Float> {
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
         float weight = gunData.getWeight() ;
-        float modified = cacheProperty.<Float>getCache(WeightModifier.ID) - weight;
+        float modifiedValue = cacheProperty.<Float>getCache(WeightModifier.ID);
+        float modifier = modifiedValue - weight;
 
         double percent = Math.min(weight / 20.0, 1);
-        double modifierPercent = Math.min(modified / 20.0, 1);
+        double modifierPercent = Math.min(modifier / 20.0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.weight";
-        String positivelyString = String.format("%.2fkg §c(+%.2f)", weight, modified);
-        String negativelyString = String.format("%.2fkg §a(%.2f)", weight, modified);
-        String defaultString = String.format("%.2fkg", weight);
+        String positivelyString = String.format("%.2fkg §c(+%.2f)", modifiedValue, modifier);
+        String negativelyString = String.format("%.2fkg §a(%.2f)", modifiedValue, modifier);
+        String defaultString = String.format("%.2fkg", modifiedValue);
         boolean positivelyBetter = false;
 
-        DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modified, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);
+        DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);
         return Collections.singletonList(diagramsData);
     }
 

@@ -2,5 +2,6 @@
   "name": "tacz.attachment.extended_mag_2.name",
   "display": "tacz:extended_mag_2_display",
   "data": "tacz:extended_mag_2_data",
-  "type": "extended_mag"
+  "type": "extended_mag",
+  "sort": 1
 }

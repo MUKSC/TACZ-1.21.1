@@ -3,7 +3,7 @@ package com.tacz.guns.client.model.functional;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.tacz.guns.client.model.BedrockGunModel;
+import com.tacz.guns.client.model.BedrockAnimatedModel;
 import com.tacz.guns.client.model.IFunctionalRenderer;
 import com.tacz.guns.util.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -13,9 +13,9 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class LeftHandRender implements IFunctionalRenderer {
-    private final BedrockGunModel bedrockGunModel;
+    private final BedrockAnimatedModel bedrockGunModel;
 
-    public LeftHandRender(BedrockGunModel bedrockGunModel) {
+    public LeftHandRender(BedrockAnimatedModel bedrockGunModel) {
         this.bedrockGunModel = bedrockGunModel;
     }
 

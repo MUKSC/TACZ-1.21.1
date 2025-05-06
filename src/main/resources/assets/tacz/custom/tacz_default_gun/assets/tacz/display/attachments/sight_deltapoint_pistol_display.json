@@ -1,0 +1,19 @@
+{
+  "slot": "tacz:attachment/slot/sight_deltapoint_pistol",
+  "model": "tacz:attachment/sight_deltapoint_pistol_geo",
+  "texture": "tacz:attachment/uv/sight_deltapoint_pistol",
+  "lod": {
+    "model": "tacz:attachment/lod/sight_deltapoint_pistol",
+    "texture": "tacz:attachment/lod/sight_deltapoint_pistol"
+  },
+  "zoom": [
+    1.25
+  ],
+  "scope": false,
+  "sight": true,
+  "fov": 70.0,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_c",
+    "uninstall": "tacz:attachments/scope_general_c"
+  }
+}

@@ -13,6 +13,7 @@ import com.tacz.guns.resource.index.CommonGunIndex;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,8 +31,10 @@ public interface GunItemDataAccessor extends IGun {
     String GUN_DUMMY_AMMO = "DummyAmmo";
     String GUN_MAX_DUMMY_AMMO = "MaxDummyAmmo";
     String GUN_ATTACHMENT_LOCK = "AttachmentLock";
-
     String GUN_DISPLAY_ID_TAG = "GunDisplayId";
+    String LASER_COLOR_TAG = "LaserColor";
+    String GUN_OVERHEAT_TAG = "HeatAmount";
+    String GUN_OVERHEAT_LOCK_TAG = "OverHeated";
 
     @Override
     default boolean useDummyAmmo(ItemStack gun) {
@@ -212,7 +215,10 @@ public interface GunItemDataAccessor extends IGun {
 
     @Override
     default void reduceCurrentAmmoCount(ItemStack gun) {
-        setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
+        // 只在不使用背包直读的情况下减少 AmmoCount
+        if (!useInventoryAmmo(gun)) {
+            setCurrentAmmoCount(gun, getCurrentAmmoCount(gun) - 1);
+        }
     }
 
     @Override
@@ -265,7 +271,7 @@ public interface GunItemDataAccessor extends IGun {
 
     @Override
     @NotNull
-    default  ResourceLocation getBuiltInAttachmentId(ItemStack gun, AttachmentType type) {
+    default ResourceLocation getBuiltInAttachmentId(ItemStack gun, AttachmentType type) {
         IGun iGun = IGun.getIGunOrNull(gun);
         if (iGun == null) {
             return DefaultAssets.EMPTY_ATTACHMENT_ID;
@@ -353,5 +359,75 @@ public interface GunItemDataAccessor extends IGun {
     default void setBulletInBarrel(ItemStack gun, boolean bulletInBarrel) {
         CompoundTag nbt = gun.getOrCreateTag();
         nbt.putBoolean(GUN_HAS_BULLET_IN_BARREL, bulletInBarrel);
+    }
+
+    @Override
+    default boolean hasCustomLaserColor(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        return nbt.contains(LASER_COLOR_TAG, Tag.TAG_INT);
+    }
+
+    @Override
+    default int getLaserColor(ItemStack gun) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        if (!hasCustomLaserColor(gun)) {
+            return 0xFF0000;
+        }
+        return nbt.getInt(LASER_COLOR_TAG);
+    }
+
+    @Override
+    default void setLaserColor(ItemStack gun, int color) {
+        CompoundTag nbt = gun.getOrCreateTag();
+        nbt.putInt(LASER_COLOR_TAG, color);
+    }
+
+    /**
+     * Heat Data
+     */
+    @Override
+    default boolean hasHeatData(ItemStack gun) {
+        return gun.getOrCreateTag().contains(GUN_OVERHEAT_TAG, Tag.TAG_FLOAT);
+    }
+
+    @Override
+    default boolean isOverheatLocked(ItemStack gun) {
+        return gun.getOrCreateTag().getBoolean(GUN_OVERHEAT_LOCK_TAG);
+    }
+
+    @Override
+    default void setOverheatLocked(ItemStack gun, boolean locked) {
+        gun.getOrCreateTag().putBoolean(GUN_OVERHEAT_LOCK_TAG, locked);
+    }
+
+    @Override
+    default float getHeatAmount(ItemStack gun) {
+        if(hasHeatData(gun)) return gun.getOrCreateTag().getFloat(GUN_OVERHEAT_TAG);
+        return 0f;
+    }
+
+    @Override
+    default void setHeatAmount(ItemStack gun, float amount) {
+        gun.getOrCreateTag().putFloat(GUN_OVERHEAT_TAG, amount >= 0 ? amount : 0f);
+    }
+
+    @Override
+    default float lerpRPM(ItemStack gun) {
+        return TimelessAPI.getCommonGunIndex(getGunId(gun))
+                .map(index -> index.getGunData().getHeatData())
+                .map(heatData -> {
+                    float heatPercentage = (getHeatAmount(gun) / heatData.getHeatMax());
+                    return Mth.lerp(heatPercentage, heatData.getMinRpmMod(), heatData.getMaxRpmMod());
+                }).orElse(1f);
+    }
+
+    @Override
+    default float lerpInaccuracy(ItemStack gun) {
+        return TimelessAPI.getCommonGunIndex(getGunId(gun))
+                .map(index -> index.getGunData().getHeatData())
+                .map(heatData -> {
+                    float heatPercentage = (getHeatAmount(gun) / heatData.getHeatMax());
+                    return Mth.lerp(heatPercentage, heatData.getMinInaccuracy(), heatData.getMaxInaccuracy());
+                }).orElse(1f);
     }
 }

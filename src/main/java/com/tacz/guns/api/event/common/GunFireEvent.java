@@ -8,7 +8,7 @@ import net.minecraftforge.fml.LogicalSide;
 /**
  * 生物的枪击发的事件。与 {@link GunShootEvent}不同的是，扣动一次扳机可能多次触发这个事件（如枪械处于 Burst 模式），但 {@link GunShootEvent} 只会触发一次
  */
-public class GunFireEvent extends Event {
+public class GunFireEvent extends Event implements KubeJSGunEventPoster<GunFireEvent>{
     private final LivingEntity shooter;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
@@ -17,6 +17,7 @@ public class GunFireEvent extends Event {
         this.shooter = shooter;
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     @Override

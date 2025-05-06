@@ -124,7 +124,7 @@ public class ControllableInner {
         @Override
         public boolean isActive() {
             LocalPlayer player = Minecraft.getInstance().player;
-            return !KeyConflictContext.GUI.isActive() && player != null && IGun.mainhandHoldGun(player);
+            return !KeyConflictContext.GUI.isActive() && player != null && IGun.mainHandHoldGun(player);
         }
 
         @Override

@@ -1,0 +1,17 @@
+{
+  "slot": "tacz:attachment/slot/grip_td",
+  "model": "tacz:attachment/laser_peq15_geo",
+  "texture": "tacz:attachment/uv/laser_peq15",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_b",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  },
+  "laser": {
+    // 默认的镭射颜色
+    "default_color": "0xFF6060",
+    // 是否允许在改装界面自定义该镭射的颜色
+    "can_edit": true,
+    // 激光的长度（因为是渐变，末端可能实际完全看不见）
+    "length": 75
+  }
+}

@@ -28,7 +28,7 @@
 				{
 					"name": "constraint",
 					"parent": "scar_h",
-					"pivot": [0, 12.875, -11]
+					"pivot": [0, 12.8125, 7]
 				},
 				{
 					"name": "additional_magazine",
@@ -5249,7 +5249,7 @@
 				{
 					"name": "switch",
 					"parent": "buttons",
-					"pivot": [0, 8, 0],
+					"pivot": [0, 8.0625, 7.74375],
 					"cubes": [
 						{
 							"origin": [-0.875, 13.00553, 6.23308],
@@ -7447,12 +7447,6 @@
 					"pivot": [0, 0, 0]
 				},
 				{
-					"name": "laser_pos",
-					"parent": "positioning2",
-					"pivot": [1.112, 9.375, -6.4],
-					"rotation": [0, 0, 90]
-				},
-				{
 					"name": "stock_pos",
 					"parent": "positioning2",
 					"pivot": [0, 10.025, 13.525]
@@ -7481,6 +7475,12 @@
 					"name": "shell",
 					"parent": "positioning2",
 					"pivot": [-0.15, 9.2625, 4.25]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "positioning2",
+					"pivot": [1.112, 9.375, -5.4],
+					"rotation": [0, 0, 90]
 				},
 				{
 					"name": "righthand",
@@ -10214,7 +10214,7 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 12.825, 15]
+					"pivot": [0, 12.825, 14.5]
 				},
 				{
 					"name": "refit_view",
@@ -10235,12 +10235,6 @@
 					"rotation": [0, 90, 0]
 				},
 				{
-					"name": "refit_laser_view",
-					"parent": "view",
-					"pivot": [7, 10, -11],
-					"rotation": [0, 125, 0]
-				},
-				{
 					"name": "refit_extended_mag_view",
 					"parent": "view",
 					"pivot": [10, 4, 3],
@@ -10257,6 +10251,12 @@
 					"parent": "view",
 					"pivot": [8, 13.1, 12.3],
 					"rotation": [0, 50, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [14, 14, -16],
+					"rotation": [15, 135, 0]
 				},
 				{
 					"name": "positioning",

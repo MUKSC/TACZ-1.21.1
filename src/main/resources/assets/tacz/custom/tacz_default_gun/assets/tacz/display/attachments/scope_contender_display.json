@@ -1,0 +1,23 @@
+{
+  "slot": "tacz:attachment/slot/scope_contender_slot",
+  "model": "tacz:attachment/scope_contender_geo",
+  "texture": "tacz:attachment/uv/scope_contender",
+  "lod": {
+    "model": "tacz:attachment/lod/scope_contender",
+    "texture": "tacz:attachment/lod/scope_contender"
+  },
+  "zoom": [
+    4.25
+  ],
+  "views": [
+    2
+  ],
+  "views_fov": [
+    30.0
+  ],
+  "scope": true,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_d",
+    "uninstall": "tacz:attachments/scope_general_d"
+  }
+}

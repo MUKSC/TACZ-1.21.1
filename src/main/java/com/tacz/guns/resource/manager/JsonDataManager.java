@@ -59,7 +59,7 @@ public class JsonDataManager<T> extends SimplePreparableReloadListener<Map<Resou
                 if (data != null) {
                     dataMap.put(id, data);
                 }
-            } catch (JsonParseException e) {
+            } catch (JsonParseException | IllegalArgumentException e) {
                 GunMod.LOGGER.error(marker, "Failed to load data file {}", id, e);
             }
         }

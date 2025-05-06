@@ -13,7 +13,7 @@
 			"bones": [
 				{
 					"name": "root",
-					"pivot": [-1, 5.375, 0]
+					"pivot": [0, 6.975, 2.5]
 				},
 				{
 					"name": "additional_magazine",
@@ -43,7 +43,8 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8, -1.75]
+					"pivot": [0, 8, -2.875],
+					"rotation": [0, 0, -180]
 				},
 				{
 					"name": "shell",
@@ -3436,7 +3437,7 @@
 				{
 					"name": "constraint",
 					"parent": "gun",
-					"pivot": [0, 10.25, -2]
+					"pivot": [0, 10.25, 3]
 				},
 				{
 					"name": "righthand",
@@ -4558,11 +4559,12 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "view",
-					"pivot": [8, 7, -3]
+					"pivot": [14, 12, -13],
+					"rotation": [15, 120, 0]
 				},
 				{
 					"name": "camera",
-					"pivot": [2, 8, 16.5]
+					"pivot": [3, 12, 14]
 				}
 			]
 		}

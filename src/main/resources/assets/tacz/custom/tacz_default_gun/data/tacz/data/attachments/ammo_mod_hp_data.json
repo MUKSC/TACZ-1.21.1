@@ -8,14 +8,14 @@
     "multiplier": 0.5
   },
   "damage": {
-    "multiplier": 1.2
+    "multiplier": 1.3
   },
   "ammo_speed": {
-    "multiplier": 0.85
+    "multiplier": 0.9
   },
   "pierce": {
     "multiplier": 0
   },
   // 扩容弹夹（匣）等级
-  "extended_mag_level": 1
+  "extended_mag_level": 3
 }

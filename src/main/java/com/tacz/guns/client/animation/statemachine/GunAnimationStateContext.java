@@ -20,10 +20,12 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import org.joml.Vector3f;
 import org.luaj.vm2.LuaTable;
 
 import java.util.Optional;
@@ -36,7 +38,6 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     private IGun iGun;
     private GunDisplayInstance display;
     private GunData gunData;
-    private float partialTicks;
     private float walkDistAnchor = 0f;
     private LuaNbtAccessor nbtUtil;
 
@@ -84,6 +85,15 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
         }).orElse(false);
     }
 
+    public boolean isOverHeat() {
+        return gunData.getHeatData() != null && iGun.isOverheatLocked(currentGunItem);
+    }
+
+    public float getHeatProgress() {
+        return gunData.getHeatData() != null ?
+                Mth.clamp(iGun.getHeatAmount(currentGunItem) / gunData.getHeatData().getHeatMax(), 0f, 1f) : 0f;
+    }
+
     /**
      * 获取枪械的射击间隔，单位毫秒
      * @return 射击间隔
@@ -96,7 +106,7 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
                     long coolDown = (long) (gunData.getBurstData().getMinInterval() * 1000f);
                     return Math.max(coolDown, 0L);
                 }
-                long coolDown = gunData.getShootInterval(livingEntity, fireMode);
+                long coolDown = gunData.getShootInterval(livingEntity, fireMode, currentGunItem);
                 return Math.max(coolDown, 0L);
             }
             return 0L;
@@ -303,6 +313,15 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     }
 
     /**
+     * 获取 玩家当前是否应该斜握枪械
+     * 需要同时满足蹲伏和枪械允许斜握
+     * @return 玩家当前是否应该斜握枪械
+     */
+    public boolean shouldSlide() {
+        return processCameraEntity(e -> e.isCrouching() && gunData.canSlide()).orElse(false);
+    }
+
+    /**
      * 在玩家当前的行走距离打上锚点。此后，getWalkDist() 将返回与此锚点的相对值
      */
     public void anchorWalkDist() {
@@ -328,11 +347,22 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
      * @param index 抛壳窗序号
      */
     public void popShellFrom(int index) {
-        BedrockGunModel gunModel = display.getGunModel();
-        if (display.getShellEjection() != null && gunModel != null) {
-            ShellRender shellRender = gunModel.getShellRender(index);
-            if (shellRender != null) {
-                shellRender.addShell(display.getShellEjection().getRandomVelocity());
+        if (display.getShellEjection() != null) {
+            BedrockGunModel gunModel = display.getGunModel();
+            if (gunModel != null) {
+                ShellRender shellRender = gunModel.getShellRender(index);
+                Vector3f velocity = display.getShellEjection().getRandomVelocity();
+                if (shellRender != null) {
+                    shellRender.addShell(velocity);
+                }
+
+                var lod = display.getLodModel();
+                if (lod != null) {
+                    ShellRender lodShell = lod.getLeft().getShellRender(index);
+                    if (lodShell != null) {
+                        lodShell.addShell(velocity);
+                    }
+                }
             }
         }
     }
@@ -385,20 +415,5 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
         if (currentGunItem.hasTag()) {
             nbtUtil = new LuaNbtAccessor(currentGunItem.getTag());
         }
-    }
-
-    /**
-     * 获取最后一次更新时的 partialTicks
-     * @return 状态机最后一次更新的 partialTicks.
-     */
-    public float getPartialTicks() {
-        return partialTicks;
-    }
-
-    /**
-     * 状态机脚本请不要调用此方法。此方法用于状态机更新时设置 partialTicks。
-     */
-    public void setPartialTicks(float partialTicks) {
-        this.partialTicks = partialTicks;
     }
 }

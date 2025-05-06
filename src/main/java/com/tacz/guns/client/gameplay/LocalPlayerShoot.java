@@ -62,19 +62,19 @@ public class LocalPlayerShoot {
             return ShootResult.IS_DRAWING;
         }
         // 暂定为只有主手能开枪
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return ShootResult.NOT_GUN;
         }
-        ResourceLocation gunId = iGun.getGunId(mainhandItem);
+        ResourceLocation gunId = iGun.getGunId(mainHandItem);
         Optional<ClientGunIndex> gunIndexOptional = TimelessAPI.getClientGunIndex(gunId);
-        GunDisplayInstance display = TimelessAPI.getGunDisplay(mainhandItem).orElse(null);
+        GunDisplayInstance display = TimelessAPI.getGunDisplay(mainHandItem).orElse(null);
         if (gunIndexOptional.isEmpty() || display == null) {
             return ShootResult.ID_NOT_EXIST;
         }
         ClientGunIndex gunIndex = gunIndexOptional.get();
         GunData gunData = gunIndex.getGunData();
-        long coolDown = this.getCoolDown(iGun, mainhandItem, gunData);
+        long coolDown = this.getCoolDown(iGun, mainHandItem, gunData);
         // 如果射击冷却大于等于 1 tick (即 50 ms)，则不允许开火
         if (coolDown >= 50) {
             return ShootResult.COOL_DOWN;
@@ -100,13 +100,28 @@ public class LocalPlayerShoot {
         }
         // 判断子弹数
         Bolt boltType = gunIndex.getGunData().getBolt();
-        boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(mainhandItem) && boltType != Bolt.OPEN_BOLT;
-        int ammoCount = iGun.getCurrentAmmoCount(mainhandItem) + (hasAmmoInBarrel ? 1 : 0);
-        if (ammoCount < 1) {
+        // 是否为背包直读
+        boolean useInventoryAmmo = iGun.useInventoryAmmo(mainHandItem);
+        // 膛内是否有子弹
+        boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(mainHandItem) && boltType != Bolt.OPEN_BOLT;
+        // 是否还有子弹 (创造模式是否消耗背包备弹)
+        boolean hasInventoryAmmo = iGun.hasInventoryAmmo(player, mainHandItem, gunOperator.needCheckAmmo()) || hasAmmoInBarrel;
+        int ammoCount = iGun.getCurrentAmmoCount(mainHandItem) + (hasAmmoInBarrel ? 1 : 0);
+        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且总子弹数 < 1)
+        boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
+                !useInventoryAmmo && ammoCount < 1;
+        if (noAmmo) {
             SoundPlayManager.playDryFireSound(player, display);
             return ShootResult.NO_AMMO;
         }
-        // 判断膛内子弹
+        //Handle Heat Data
+        if(gunData.hasHeatData()) {
+            if(iGun.isOverheatLocked(mainHandItem)) {
+                SoundPlayManager.playDryFireSound(player, display);
+                return ShootResult.OVERHEATED;
+            }
+        }
+        // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
             IClientPlayerGunOperator.fromLocalPlayer(player).bolt();
             return ShootResult.NEED_BOLT;
@@ -116,34 +131,44 @@ public class LocalPlayerShoot {
             return ShootResult.IS_SPRINTING;
         }
         // 触发开火事件
-        if (MinecraftForge.EVENT_BUS.post(new GunShootEvent(player, mainhandItem, LogicalSide.CLIENT))) {
+        if (MinecraftForge.EVENT_BUS.post(new GunShootEvent(player, mainHandItem, LogicalSide.CLIENT))) {
             return ShootResult.FORGE_EVENT_CANCEL;
         }
         // 切换状态锁，不允许换弹、检视等行为进行。
         data.lockState(SHOOT_LOCKED_CONDITION);
         data.isShootRecorded = false;
         // 调用开火逻辑
-        this.doShoot(display, iGun, mainhandItem, gunData, coolDown);
+        this.doShoot(display, iGun, mainHandItem, gunData, coolDown);
         return ShootResult.SUCCESS;
     }
 
-    private void doShoot(GunDisplayInstance display, IGun iGun, ItemStack mainhandItem, GunData gunData, long delay) {
-        FireMode fireMode = iGun.getFireMode(mainhandItem);
+    private void doShoot(GunDisplayInstance display, IGun iGun, ItemStack mainHandItem, GunData gunData, long delay) {
+        FireMode fireMode = iGun.getFireMode(mainHandItem);
         Bolt boltType = gunData.getBolt();
         // 获取余弹数
         boolean consumeAmmo = IGunOperator.fromLivingEntity(player).consumesAmmoOrNot();
-        boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(mainhandItem) && boltType != Bolt.OPEN_BOLT;
-        int ammoCount = consumeAmmo ? iGun.getCurrentAmmoCount(mainhandItem) + (hasAmmoInBarrel ? 1 : 0) : Integer.MAX_VALUE;
+        boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(mainHandItem) && boltType != Bolt.OPEN_BOLT;
+        int ammoCount = consumeAmmo ? iGun.getCurrentAmmoCount(mainHandItem) + (hasAmmoInBarrel ? 1 : 0) : Integer.MAX_VALUE;
         // 连发射击间隔
         long period = fireMode == FireMode.BURST ? gunData.getBurstShootInterval() : 1;
         // 最大连发数
         final int maxCount = Math.min(ammoCount, fireMode == FireMode.BURST ? gunData.getBurstData().getCount() : 1);
         // 连发计数器
         AtomicInteger count = new AtomicInteger(0);
+
         LocalPlayerDataHolder.SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
+
             if (count.get() == 0) {
                 // 转换 isRecord 状态，允许下一个tick的开火检测。
                 data.isShootRecorded = true;
+            }
+            //Handle Heat Data
+            if(gunData.hasHeatData()) {
+                if(iGun.isOverheatLocked(mainHandItem)) {
+                    ScheduledFuture<?> future = (ScheduledFuture<?>) Thread.currentThread();
+                    future.cancel(false); // 取消当前任务
+                    return;
+                }
             }
             // 如果达到最大连发次数，或者玩家已经死亡，取消任务
             if (count.get() >= maxCount || player.isDeadOrDying()) {
@@ -151,6 +176,7 @@ public class LocalPlayerShoot {
                 future.cancel(false); // 取消当前任务
                 return;
             }
+
             // 以下逻辑只需要执行一次
             if (count.get() == 0) {
                 // 如果状态锁正在准备锁定，且不是开火的状态锁，则不允许开火(主要用于防止切枪后开火动作覆盖切枪动作)
@@ -168,7 +194,7 @@ public class LocalPlayerShoot {
             // 播放声音和状态机触发需要从异步线程上传到主线程执行，否则会引起cme
             Minecraft.getInstance().submitAsync(() -> {
                 // 触发击发事件
-                boolean fire = !MinecraftForge.EVENT_BUS.post(new GunFireEvent(player, mainhandItem, LogicalSide.CLIENT));
+                boolean fire = !MinecraftForge.EVENT_BUS.post(new GunFireEvent(player, mainHandItem, LogicalSide.CLIENT));
                 if (fire) {
                     // 动画和声音循环播放
                     AnimationStateMachine<?> animationStateMachine = display.getAnimationStateMachine();
@@ -180,9 +206,9 @@ public class LocalPlayerShoot {
                     // 开火需要打断检视
                     SoundPlayManager.stopPlayGunSound(display, SoundManager.INSPECT_SOUND);
                     if (useSilenceSound) {
-                        SoundPlayManager.playSilenceSound(player, display);
+                        SoundPlayManager.playSilenceSound(player, display, gunData);
                     } else {
-                        SoundPlayManager.playShootSound(player, display);
+                        SoundPlayManager.playShootSound(player, display, gunData);
                     }
                 }
             });
@@ -206,7 +232,7 @@ public class LocalPlayerShoot {
         if (fireMode == FireMode.BURST) {
             coolDown = (long) (gunData.getBurstData().getMinInterval() * 1000f) - (System.currentTimeMillis() - data.clientShootTimestamp);
         } else {
-            coolDown = gunData.getShootInterval(this.player, fireMode) - (System.currentTimeMillis() - data.clientShootTimestamp);
+            coolDown = gunData.getShootInterval(this.player, fireMode, mainHandItem) - (System.currentTimeMillis() - data.clientShootTimestamp);
         }
         return Math.max(coolDown, 0);
     }

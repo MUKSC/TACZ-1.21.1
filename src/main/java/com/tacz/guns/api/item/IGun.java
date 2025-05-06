@@ -36,17 +36,37 @@ public interface IGun {
     /**
      * 是否主手持枪
      */
+    @Deprecated
     static boolean mainhandHoldGun(LivingEntity livingEntity) {
+        return livingEntity.getMainHandItem().getItem() instanceof IGun;
+    }
+
+    /**
+     * 是否主手持枪
+     */
+    static boolean mainHandHoldGun(LivingEntity livingEntity) {
         return livingEntity.getMainHandItem().getItem() instanceof IGun;
     }
 
     /**
      * 获取主手枪械的开火模式
      */
+    @Deprecated
     static FireMode getMainhandFireMode(LivingEntity livingEntity) {
-        ItemStack mainhandItem = livingEntity.getMainHandItem();
-        if (mainhandItem.getItem() instanceof IGun iGun) {
-            return iGun.getFireMode(mainhandItem);
+        ItemStack mainHandItem = livingEntity.getMainHandItem();
+        if (mainHandItem.getItem() instanceof IGun iGun) {
+            return iGun.getFireMode(mainHandItem);
+        }
+        return FireMode.UNKNOWN;
+    }
+
+    /**
+     * 获取主手枪械的开火模式
+     */
+    static FireMode getMainHandFireMode(LivingEntity livingEntity) {
+        ItemStack mainHandItem = livingEntity.getMainHandItem();
+        if (mainHandItem.getItem() instanceof IGun iGun) {
+            return iGun.getFireMode(mainHandItem);
         }
         return FireMode.UNKNOWN;
     }
@@ -266,4 +286,53 @@ public interface IGun {
      * 设置枪管中的子弹有无，用于闭膛待击的枪械
      */
     void setBulletInBarrel(ItemStack gun, boolean bulletInBarrel);
+
+    /**
+     * 枪械是否为备弹直读
+     */
+    boolean useInventoryAmmo(ItemStack gun);
+
+    /**
+     * 获取枪械是否有备弹 (只针对背包直读读的机制使用)
+     */
+    boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo);
+
+    /**
+     * 获取 RPM
+     */
+    int getRPM(ItemStack gun);
+
+    /**
+     * 获取是否可以趴下
+     */
+    boolean isCanCrawl(ItemStack gun);
+
+    boolean hasCustomLaserColor(ItemStack gun);
+
+    int getLaserColor(ItemStack gun);
+
+    void setLaserColor(ItemStack gun, int color);
+
+    /**
+     * Heat Data
+     */
+    boolean hasHeatData(ItemStack gun);
+
+    /**
+     * 是否完全过热
+     */
+    boolean isOverheatLocked(ItemStack gun);
+
+    void setOverheatLocked(ItemStack gun, boolean locked);
+
+    /**
+     * 设置当前过热值
+     */
+    void setHeatAmount(ItemStack gun, float amount);
+
+    float lerpRPM(ItemStack gun);
+
+    float lerpInaccuracy(ItemStack gun);
+
+    float getHeatAmount(ItemStack gun);
 }

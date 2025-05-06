@@ -4,6 +4,7 @@ import com.tacz.guns.client.renderer.crosshair.CrosshairType;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class RenderConfig {
+    public static ForgeConfigSpec.BooleanValue ENABLE_LASER_FADE_OUT;
     public static ForgeConfigSpec.IntValue GUN_LOD_RENDER_DISTANCE;
     public static ForgeConfigSpec.IntValue BULLET_HOLE_PARTICLE_LIFE;
     public static ForgeConfigSpec.DoubleValue BULLET_HOLE_PARTICLE_FADE_THRESHOLD;
@@ -22,6 +23,9 @@ public class RenderConfig {
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("render");
+
+        builder.comment("Whether or not apply fadeout effect on the laser beam. Close this may improve laser performance under some shaders.");
+        ENABLE_LASER_FADE_OUT = builder.define("EnableLaserFadeOut", true);
 
         builder.comment("How far to display the lod model, 0 means always display");
         GUN_LOD_RENDER_DISTANCE = builder.defineInRange("GunLodRenderDistance", 0, 0, Integer.MAX_VALUE);

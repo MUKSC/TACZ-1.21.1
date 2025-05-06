@@ -1761,7 +1761,7 @@
 				{
 					"name": "constraint",
 					"parent": "m4a1",
-					"pivot": [0, 12.525, -18.625]
+					"pivot": [0, 12.5875, -6.625]
 				},
 				{
 					"name": "gun_body",
@@ -11426,7 +11426,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [1.462, 9.55, -13.025],
+					"pivot": [1.46875, 9.5, -15],
 					"rotation": [0, 0, 90]
 				},
 				{
@@ -12549,8 +12549,8 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "view",
-					"pivot": [7, 10, -11],
-					"rotation": [0, 70, 0]
+					"pivot": [12, 13, -24],
+					"rotation": [15, 135, 0]
 				},
 				{
 					"name": "refit_grip_view",

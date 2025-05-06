@@ -1,5 +1,90 @@
 {
   // 配方过滤器，具体内容位于 data/<命名空间>/recipe_filters 下
   // 如果没有指定，将使用默认过滤器 tacz:default
-  "filter": "tacz:default"
+  "filter": "tacz:default",
+  // gui内包含的tab
+  // 如果没有填写此字段或者tabs为空，将使用内置的默认tab列表
+  // 你可以使用自定义的tab id来实现另外一种配方限制
+  "tabs": [
+    {
+      // tab的id，在配方的result中指定
+      "id": "tacz:pistol",
+      // tab的名称，将会显示在gui中
+      "name": "tacz.type.pistol.name",
+      // tab的图标，可以指定任意一个物品作为图标
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:glock_17"
+        }
+      }
+    },
+    {
+      "id": "tacz:sniper",
+      "name": "tacz.type.sniper.name",
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:ai_awp"
+        }
+      }
+    },
+    {
+      "id": "tacz:rifle",
+      "name": "tacz.type.rifle.name",
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:ak47"
+        }
+      }
+    },
+    {
+      "id": "tacz:shotgun",
+      "name": "tacz.type.shotgun.name",
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:db_short"
+        }
+      }
+    },
+    {
+      "id": "tacz:smg",
+      "name": "tacz.type.smg.name",
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:hk_mp5a5"
+        }
+      }
+    },
+    {
+      "id": "tacz:rpg",
+      "name": "tacz.type.rpg.name",
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:rpg7"
+        }
+      }
+    },
+    {
+      "id": "tacz:mg",
+      "name": "tacz.type.mg.name",
+      "icon": {
+        "item": "tacz:modern_kinetic_gun",
+        "nbt": {
+          "GunId": "tacz:m249"
+        }
+      }
+    },
+    {
+      "id": "tacz:misc",
+      "name": "tacz.type.misc.name",
+      "icon": {
+        "item": "tacz:gun_smith_table"
+      }
+    }
+  ]
 }

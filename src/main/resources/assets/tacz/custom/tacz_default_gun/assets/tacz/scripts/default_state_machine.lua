@@ -16,8 +16,9 @@ local STATIC_TRACK_LINE = increment(track_line_top)
 local BASE_TRACK = increment(static_track_top)
 local BOLT_CAUGHT_TRACK = increment(static_track_top)
 local SAFETY_TRACK = increment(static_track_top) -- 待实现
-local ADS_TRACK = increment(static_track_top) -- 待实现
+local ADS_TRACK = increment(static_track_top)
 local MAIN_TRACK = increment(static_track_top)
+local SPRINT_TRACK = increment(static_track_top)
 
 -- 开火的轨道行
 local GUN_KICK_TRACK_LINE = increment(track_line_top)
@@ -25,6 +26,9 @@ local GUN_KICK_TRACK_LINE = increment(track_line_top)
 -- 混合轨道行 和 其中的两条轨道,用于叠加动画,如跑步走路跳跃, LOOP_TRACK 只有定义却尚未启用,因此作用尚不得知
 local BLENDING_TRACK_LINE = increment(track_line_top)
 local MOVEMENT_TRACK = increment(blending_track_top)
+local SLIDE_TRACK = increment(blending_track_top)
+local OVER_HEAT_TRACK = increment(blending_track_top)
+local OVER_HEATING_TRACK = increment(blending_track_top)
 local LOOP_TRACK = increment(blending_track_top)
 
 -- 播放丢枪动画的方法
@@ -70,6 +74,11 @@ local function runInspectAnimation(context)
     end
 end
 
+-- 检查当前是否处于过热状态
+local function isOverHeat(context)
+    return context:isOverHeat()
+end
+
 -- 基础轨道上的状态,这个状态用于循环播放 static_idle 动画。
 local base_track_state = {}
 
@@ -79,7 +88,7 @@ function base_track_state.entry(this, context)
     context:runAnimation("static_idle", context:getTrack(STATIC_TRACK_LINE, BASE_TRACK), false, LOOP, 0)
 end
 
--- 空挂部分,该部分到 147 行结束
+-- 空挂部分,该部分到 153 行结束
 -- 由于空挂分为"空挂"和"不空挂"两类,因此这里面需要两个状态来调控当前武器
 -- 空挂的两个状态之间是会来回切换的,因此每个子状态都需要以下三个方法来操作
 -- entry 方法是进入该状态时发生的事,只在进入状态时执行一次
@@ -145,7 +154,7 @@ function bolt_caught_states.bolt_caught.transition(this, context, input)
 end
 -- 结束空挂部分
 
--- 主轨道状态,该部分到 256 行结束
+-- 主轨道状态,该部分到 271 行结束
 -- 主轨道控制的是武器的基本动作,包括换弹,检视,刺刀攻击,掏枪,丢枪
 -- 除了检视，其他动作不需要单独的状态控制。
 -- 检视状态需要被射击输入打断，此外，进入检视时，需要隐藏准心，退出检视时恢复准心。
@@ -158,7 +167,9 @@ local main_track_states = {
     -- 检视
     inspect = {},
     -- 结束
-    final = {},
+    final = {
+        isfinal = -1
+    },
     -- 刺刀攻击的计数器
     bayonet_counter = 0
 }
@@ -168,6 +179,7 @@ function main_track_states.start.transition(this, context, input)
     -- 玩家手里拿到枪的那一瞬间会自动输入一个 draw 的信号,不用手动触发
     if (input == INPUT_DRAW) then
         -- 收到 draw 信号后在主轨道行的主轨道上播放掏枪动画,然后转到闲置态
+        this.main_track_states.final.isfinal = -1
         context:runAnimation("draw", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_STOP, 0)
         return this.main_track_states.idle
     end
@@ -178,6 +190,7 @@ function main_track_states.idle.transition(this, context, input)
     -- 玩家从枪切到其他物品的时候会自动输入丢枪的信号,不用手动触发,只要检测就好了
     if (input == INPUT_PUT_AWAY) then
         runPutAwayAnimation(context)
+        this.main_track_states.final.isfinal = 1
         -- 丢枪后转到最终态
         return this.main_track_states.final
     end
@@ -200,7 +213,7 @@ function main_track_states.idle.transition(this, context, input)
         return this.main_track_states.idle
     end
     -- 玩家按下检视键后会输入检视信号
-    if (input == INPUT_INSPECT) then
+    if (input == INPUT_INSPECT and context:getAimingProgress() < 1) then
         runInspectAnimation(context)
         -- 检视需要转到检视态,因为检视过程中屏幕中央准星是隐藏的,因此需要一个检视态来调控准星
         return this.main_track_states.inspect
@@ -236,6 +249,7 @@ end
 
 -- 退出检视态
 function main_track_states.inspect.exit(this, context)
+    context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
     -- 退出后恢复屏幕中央准星
     context:setShouldHideCrossHair(false)
 end
@@ -254,8 +268,8 @@ function main_track_states.inspect.transition(this, context, input)
     if (input == this.INPUT_INSPECT_RETREAT) then
         return this.main_track_states.idle
     end
-    -- 特殊地,射击应当打断检视,当检测到射击输入时应该直接停止动画并返回闲置态
-    if (input == INPUT_SHOOT) then
+    -- 特殊地,射击与瞄准应当打断检视,当检测到射击输入或瞄准进度不为0时应该直接停止动画并返回闲置态
+    if (input == INPUT_SHOOT or context:getAimingProgress() > 0) then
         context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
         return this.main_track_states.idle
     end
@@ -276,16 +290,21 @@ function gun_kick_state.transition(this, context, input)
     return nil
 end
 
--- 移动轨道的状态,这部分到 435 行结束
+-- 移动轨道的状态,这部分到 450 行结束
 local movement_track_states = {
     -- 静止不动(或者在天上)
     idle = {},
     -- 奔跑, -1 是没有奔跑, 0 是在奔跑中
     run = {
-        mode = -1
+        mode = -1,
+        time = 0
     },
     -- 行走, -1 是没有行走, 0 是在空中, 1 是正在瞄准, 2 是在向前走, 3 是向后退, 4 是向侧面走
     walk = {
+        mode = -1
+    },
+    -- 战术冲刺
+    sprint = {
         mode = -1
     }
 }
@@ -305,7 +324,11 @@ end
 function movement_track_states.idle.transition(this, context, input)
     -- 如果玩家在奔跑则转去奔跑态
     if (input == INPUT_RUN) then
-        return this.movement_track_states.run
+        if (context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+            return this.movement_track_states.run
+        else
+            return this.movement_track_states.walk
+        end
     -- 如果玩家在行走则转去行走态
     elseif (input == INPUT_WALK) then
         return this.movement_track_states.walk
@@ -315,6 +338,7 @@ end
 -- 进入奔跑态
 function movement_track_states.run.entry(this, context)
     this.movement_track_states.run.mode = -1
+    this.movement_track_states.run.time = context:getCurrentTimestamp()
     -- 此处播放的轨道是混合轨道行的移动轨道,播放的动画是奔跑的起手式,播放结束后是挂起动画而不是停止
     context:runAnimation("run_start", context:getTrack(BLENDING_TRACK_LINE, MOVEMENT_TRACK), true, PLAY_ONCE_HOLD, 0.2)
 end
@@ -361,10 +385,11 @@ function movement_track_states.run.transition(this, context, input)
     if (input == INPUT_IDLE) then
         return this.movement_track_states.idle
     -- 收到行走输入则转去行走态
-    elseif (input == INPUT_WALK) then
+    elseif (input == INPUT_WALK or not context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
         return this.movement_track_states.walk
     end
 end
+
 
 -- 进入行走态
 function movement_track_states.walk.entry(this, context)
@@ -437,10 +462,164 @@ function movement_track_states.walk.transition(this, context, input)
         return this.movement_track_states.idle
     -- 收到奔跑信号则转到奔跑态
     elseif (input == INPUT_RUN) then
-        return this.movement_track_states.run
+        if (context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+            return this.movement_track_states.run
+        end
     end
 end
 -- 结束移动轨道的状态
+
+local slide_states = {
+    normal = {},
+    slide = {}
+}
+
+function slide_states.normal.transition(this, context, input)
+    if(context:shouldSlide() and context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)) and not context:isAiming()) then
+        return this.slide_states.slide
+    end
+end
+
+function slide_states.slide.entry(this, context)
+    context:runAnimation("slide", context:getTrack(BLENDING_TRACK_LINE, SLIDE_TRACK), true, PLAY_ONCE_HOLD, 0.5)
+end
+
+function slide_states.slide.update(this, context)
+    if (context:isStopped(context:getTrack(STATIC_TRACK_LINE, BASE_TRACK)) or context:isHolding(context:getTrack(BLENDING_TRACK_LINE, SLIDE_TRACK))) then
+        context:runAnimation("slide_idle", context:getTrack(BLENDING_TRACK_LINE, SLIDE_TRACK), true, LOOP, 0.4)
+    end
+end
+
+function slide_states.slide.transition(this, context, input)
+    if(not context:shouldSlide() or not context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK)) or context:isAiming()) then
+        return this.slide_states.normal
+    end
+end
+
+function slide_states.slide.exit(this, context)
+    context:runAnimation("slide_back", context:getTrack(BLENDING_TRACK_LINE, SLIDE_TRACK), true, PLAY_ONCE_HOLD, 0.2)
+end
+
+-- 过热部分,该部分到 505 行结束
+-- 过热部分的内容完全参照空挂部分
+
+local over_heat_states = {
+    -- normal 是不过热的正常状态
+    normal = {},
+    -- over_heat 是过热时的状态
+    over_heat = {}
+}
+
+-- 进入"不过热"状态
+function over_heat_states.normal.entry(this, context)
+    this.over_heat_states.normal.update(this, context)
+end
+
+-- 更新"不过热"状态
+function over_heat_states.normal.update(this, context)
+    if (isOverHeat(context)) then
+        context:trigger(this.INPUT_OVER_HEAT)
+    end
+end
+
+-- 转出"不过热"状态
+function over_heat_states.normal.transition(this, context, input)
+    if (input == this.INPUT_OVER_HEAT) then
+        return this.over_heat_states.over_heat
+    end
+end
+
+-- 进入"过热"状态
+function over_heat_states.over_heat.entry(this, context)
+    -- 仅播放一次的过热时触发的动画,比如大量冒烟和警报声
+    context:runAnimation("over_heat", context:getTrack(BLENDING_TRACK_LINE, OVER_HEAT_TRACK), true, PLAY_ONCE_STOP, 0.2)
+    -- 一直循环执行的过热触发动画,比如缓慢的冒烟
+    context:runAnimation("static_over_heating", context:getTrack(BLENDING_TRACK_LINE, OVER_HEATING_TRACK), true, LOOP, 0)
+end
+
+-- 更新"过热"状态
+function over_heat_states.over_heat.update(this, context)
+    if (not isOverHeat(context)) then
+        context:trigger(this.INPUT_COOLING_HEAT)
+    end
+end
+
+-- 转出"过热"状态
+function over_heat_states.over_heat.transition(this, context, input)
+    -- 如果收到了来自上文 update 方法的输入,则转到"不过热"状态
+    if (input == this.INPUT_COOLING_HEAT) then
+        -- 由于并没有一个"不过热"的动画,因此必须在这里把过热动画停止了才能转到"不过热"状态
+        context:stopAnimation(context:getTrack(BLENDING_TRACK_LINE, OVER_HEATING_TRACK))
+        return this.over_heat_states.normal
+    end
+end
+-- 结束过热部分
+
+local ADS_states = {
+    aiming_progress = 0,-- 记录瞄准进度
+    normal = {},-- 不瞄准状态
+    aiming = {}-- 瞄准状态
+}
+
+-- 进入不瞄准状态
+function ADS_states.normal.entry(this, context)
+    this.ADS_states.normal.update(this, context)
+end
+
+-- 更新不瞄准状态
+function ADS_states.normal.update(this, context)
+    -- 当瞄准进度正在增加时转到瞄准状态
+    if ((context:getAimingProgress() > this.ADS_states.aiming_progress or context:getAimingProgress() == 1) and context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+        context:trigger(this.INPUT_AIM)
+    else
+        -- 如果没有增加，则记录当前的瞄准进度
+        this.ADS_states.aiming_progress = context:getAimingProgress()
+    end
+end
+
+-- 转出不瞄准状态
+function ADS_states.normal.transition(this, context, input)
+    -- 接收到上文 update 方法的输入，则转到瞄准状态
+    if (input == this.INPUT_AIM) then
+        return this.ADS_states.aiming
+    end
+end
+
+-- 进入瞄准状态
+function ADS_states.aiming.entry(this, context)
+    -- 开始瞄准时播放瞄准动画，并且将其挂起
+    local track = context:getTrack(STATIC_TRACK_LINE, ADS_TRACK)
+    context:runAnimation("aim_start", track, false, PLAY_ONCE_HOLD, 0.2)
+    -- 打断检视动画
+    context:trigger(this.INPUT_INSPECT_RETREAT)
+end
+
+-- 更新瞄准状态
+function ADS_states.aiming.update(this, context)
+    local track = context:getTrack(STATIC_TRACK_LINE, ADS_TRACK)
+    if (context:isHolding(track)) then
+        -- 循环播放瞄准时的动画
+        context:runAnimation("aim", track, false, PLAY_ONCE_HOLD, 0.2)
+    end
+    -- 当瞄准进度正在减小时转到不瞄准状态，也即取消瞄准
+    if (context:getAimingProgress() < this.ADS_states.aiming_progress or not context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
+        context:trigger(this.INPUT_AIM_RETREAT)
+    else
+        -- 如果没有减小，则记录当前瞄准进度
+        this.ADS_states.aiming_progress = context:getAimingProgress()
+    end
+end
+
+-- 转出瞄准状态
+function ADS_states.aiming.transition(this, context, input)
+    local track = context:getTrack(STATIC_TRACK_LINE, ADS_TRACK)
+    if (input == this.INPUT_AIM_RETREAT) then
+        --播放瞄准结束动画，并调整动画进度使开镜动画与当前的开镜进度相对应
+        context:runAnimation("aim_end", track, false, PLAY_ONCE_STOP, 0.2)
+        context:setAnimationProgress(track, 1 - context:getAimingProgress(), true)
+        return this.ADS_states.normal
+    end
+end
 
 local M = {
     -- 轨道行
@@ -455,20 +634,31 @@ local M = {
     SAFETY_TRACK = SAFETY_TRACK,
     ADS_TRACK = ADS_TRACK,
     MAIN_TRACK = MAIN_TRACK,
+    SPRINT_TRACK = SPRINT_TRACK,
     -- 混合轨道
     blending_track_top = blending_track_top,
     MOVEMENT_TRACK = MOVEMENT_TRACK,
+    SLIDE_TRACK = SLIDE_TRACK,
+    OVER_HEAT_TRACK = OVER_HEAT_TRACK,
+    OVER_HEATING_TRACK = OVER_HEATING_TRACK,
     LOOP_TRACK = LOOP_TRACK,
     -- 状态
     base_track_state = base_track_state,
     bolt_caught_states = bolt_caught_states,
+    over_heat_states = over_heat_states,
     main_track_states = main_track_states,
     gun_kick_state = gun_kick_state,
     movement_track_states = movement_track_states,
+    ADS_states = ADS_states,
+    slide_states = slide_states,
     -- 输入
     INPUT_BOLT_CAUGHT = "bolt_caught",
     INPUT_BOLT_NORMAL = "bolt_normal",
-    INPUT_INSPECT_RETREAT = "inspect_retreat"
+    INPUT_OVER_HEAT = "over_heat",
+    INPUT_COOLING_HEAT = "cooling_heat",
+    INPUT_INSPECT_RETREAT = "inspect_retreat",
+    INPUT_AIM = "aim",
+    INPUT_AIM_RETREAT = "aim_retreat"
 }
 
 -- 状态机初始化函数，在切枪的时候调用
@@ -489,9 +679,12 @@ function M:states()
     return {
         self.base_track_state,
         self.bolt_caught_states.normal,
+        self.over_heat_states.normal,
         self.main_track_states.start,
         self.gun_kick_state,
-        self.movement_track_states.idle
+        self.movement_track_states.idle,
+        self.ADS_states.normal,
+        self.slide_states.normal
     }
 end
 

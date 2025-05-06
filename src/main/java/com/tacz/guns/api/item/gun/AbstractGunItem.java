@@ -7,7 +7,7 @@ import com.tacz.guns.api.item.*;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.builder.GunItemBuilder;
-import com.tacz.guns.client.renderer.item.GunItemRenderer;
+import com.tacz.guns.client.renderer.item.GunItemRendererWrapper;
 import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.inventory.tooltip.GunTooltip;
@@ -16,13 +16,13 @@ import com.tacz.guns.resource.pojo.data.gun.FeedType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import com.tacz.guns.util.AttachmentDataUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +38,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class AbstractGunItem extends Item implements IGun {
+public abstract class AbstractGunItem extends Item implements IGun, IAnimationItem {
     protected AbstractGunItem(Properties pProperties) {
         super(pProperties);
     }
@@ -91,7 +91,30 @@ public abstract class AbstractGunItem extends Item implements IGun {
     public abstract void melee(ShooterDataHolder dataHolder, LivingEntity user, ItemStack gunItem);
 
     /**
-     * 换弹前的检查，完成如下检查：枪内弹药是否已经填满？玩家背包是否有可用弹药？
+     * 过热 tick 处理<br/>
+     * 默认不做任何事情
+     */
+    public void tickHeat(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter) {};
+
+    /**
+     * 初始化子弹角度和速度
+     * @param dataHolder 状态数据
+     * @param gunItem 枪械物品
+     * @param shooter 射击者
+     * @param projectile 子弹
+     * @param bulletCnt 多弹丸的子弹序数
+     * @param processedSpeed 修正后的子弹初速
+     * @param inaccuracy 修正后的子弹不准确度
+     * @param pitch 射击方向
+     * @param yaw 射击方向
+     */
+    public void doBulletSpread(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter, Projectile projectile,
+                                        int bulletCnt, float processedSpeed, float inaccuracy, float pitch, float yaw) {
+        projectile.shootFromRotation(projectile, pitch, yaw, 0.0F, processedSpeed, inaccuracy);
+    }
+
+    /**
+     * 换弹前的检查，完成如下检查：枪内弹药是否已经填满？玩家背包是否有可用弹药？是否为背包直读？
      * @param shooter 准备换弹的实体
      * @param gunItem 枪械物品
      * @return 是否满足换弹条件
@@ -108,9 +131,19 @@ public abstract class AbstractGunItem extends Item implements IGun {
         if (currentAmmoCount >= maxAmmoCount) {
             return false;
         }
+        // 背包直读不进行换弹
+        if (useInventoryAmmo(gunItem)) {
+            return false;
+        }
+        // 无限备弹不需要消耗实际子弹
+        if (gunIndex.getGunData().getReloadData().isInfinite()) {
+            return true;
+        }
+        // 虚拟备弹处理
         if (useDummyAmmo(gunItem)) {
             return getDummyAmmoAmount(gunItem) > 0;
         }
+        // 检查背包内的弹药数量
         return shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null).map(cap -> {
             // 背包检查
             for (int i = 0; i < cap.getSlots(); i++) {
@@ -134,6 +167,10 @@ public abstract class AbstractGunItem extends Item implements IGun {
      */
     @Override
     public void dropAllAmmo(Player player, ItemStack gunItem) {
+        // 背包直读时不调用退弹
+        if (useInventoryAmmo(gunItem)) {
+            return;
+        }
         //TODO 这里操作的对象不应该是 Player 而是 LivingEntity。此外枪膛内的子弹也要退
         int ammoCount = getCurrentAmmoCount(gunItem);
         if (ammoCount <= 0) {
@@ -183,10 +220,22 @@ public abstract class AbstractGunItem extends Item implements IGun {
      * 枪械寻弹和扣除背包弹药逻辑
      * @param itemHandler 目标实体的背包
      * @param gunItem 枪械物品
-     * @param needAmmoCount 需要的弹药(物品)数量
-     * @return 寻找到的弹药(物品)数量
+     * @param needAmmoCount 需要的弹药 (物品) 数量
+     * @return 寻找到的弹药 (物品) 数量
      */
+    @Deprecated
     public int findAndExtractInventoryAmmos(IItemHandler itemHandler, ItemStack gunItem, int needAmmoCount) {
+        return findAndExtractInventoryAmmo(itemHandler, gunItem, needAmmoCount);
+    }
+
+    /**
+     * 枪械寻弹和扣除背包弹药逻辑
+     * @param itemHandler 目标实体的背包
+     * @param gunItem 枪械物品
+     * @param needAmmoCount 需要的弹药 (物品) 数量
+     * @return 寻找到的弹药 (物品) 数量
+     */
+    public int findAndExtractInventoryAmmo(IItemHandler itemHandler, ItemStack gunItem, int needAmmoCount) {
         int cnt = needAmmoCount;
         // 背包检查
         for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -292,6 +341,7 @@ public abstract class AbstractGunItem extends Item implements IGun {
                         .setId(entry.getKey())
                         .setFireMode(gunData.getFireModeSet().get(0))
                         .setAmmoCount(gunData.getAmmoAmount())
+                        .setHeatData(gunData.hasHeatData())
                         .setAmmoInBarrel(true)
                         .build();
                 stacks.add(itemStack);
@@ -313,8 +363,7 @@ public abstract class AbstractGunItem extends Item implements IGun {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft minecraft = Minecraft.getInstance();
-                return new GunItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                return new GunItemRendererWrapper();
             }
         });
     }
@@ -334,5 +383,108 @@ public abstract class AbstractGunItem extends Item implements IGun {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * 获取是否使用弹药直读
+     * @param gun 枪械
+     * @return 是否使用弹药直读
+     */
+    @Override
+    public boolean useInventoryAmmo(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            Optional<CommonGunIndex> gunIndexOptional = TimelessAPI.getCommonGunIndex(this.getGunId(gun));
+            if (gunIndexOptional.isEmpty()) {
+                return false;
+            }
+            CommonGunIndex gunIndex = gunIndexOptional.get();
+            // 是否为弹药直读
+            return gunIndex.getGunData().getReloadData().getType().equals(FeedType.INVENTORY);
+        }
+        return false;
+    }
+
+    /**
+     * 获取是否有供给弹药直读的弹药
+     * @param gun 枪械
+     * @return 是否有供给弹药直读的弹药
+     */
+    @Override
+    public boolean hasInventoryAmmo(LivingEntity shooter, ItemStack gun, boolean needCheckAmmo) {
+        // 如果不是背包直读，则直接返回 false
+        if (!useInventoryAmmo(gun)) {
+            return false;
+        }
+        // 如果不需要检查子弹，则直接返回 true
+        if (!needCheckAmmo) {
+            return true;
+        }
+        // 虚拟备弹处理
+        if (useDummyAmmo(gun)) {
+            return getDummyAmmoAmount(gun) > 0;
+        }
+        // 检查背包内的弹药数量
+        return shooter.getCapability(ForgeCapabilities.ITEM_HANDLER, null).map(cap -> {
+            // 背包检查
+            for (int i = 0; i < cap.getSlots(); i++) {
+                ItemStack checkAmmoStack = cap.getStackInSlot(i);
+                if (checkAmmoStack.getItem() instanceof IAmmo iAmmo && iAmmo.isAmmoOfGun(gun, checkAmmoStack)) {
+                    return true;
+                }
+                if (checkAmmoStack.getItem() instanceof IAmmoBox iAmmoBox && iAmmoBox.isAmmoBoxOfGun(gun, checkAmmoStack)) {
+                    return true;
+                }
+            }
+            return false;
+        }).orElse(false);
+    }
+
+    /**
+     * 获取 RPM
+     * @param gun 枪械
+     * @return RPM 数值
+     */
+    public int getRPM(ItemStack gun) {
+        if (gun.getItem() instanceof IGun iGun) {
+            return TimelessAPI.getCommonGunIndex(this.getGunId(gun))
+                    .map(CommonGunIndex::getGunData)
+                    .map(gunData -> {
+                        FireMode fireMode = getFireMode(gun);
+                        int rpm = gunData.getRoundsPerMinute(fireMode);
+                        if (iGun.hasHeatData(gun)) {
+                            rpm *= (int) iGun.lerpRPM(gun);
+                        }
+                        return rpm;
+                    }).orElse(300);
+        }
+        return 300;
+    }
+
+    /**
+     * 获取是否可以趴下射击
+     * @param gun 枪械
+     * @return 是否可以趴下射击
+     */
+    public boolean isCanCrawl(ItemStack gun) {
+        if (gun.getItem() instanceof IGun) {
+            return TimelessAPI.getCommonGunIndex(this.getGunId(gun))
+                    .map(CommonGunIndex::getGunData)
+                    .map(GunData::isCanCrawl)
+                    .orElse(false);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isSame(ItemStack i, ItemStack j) {
+        IGun iGun1 = IGun.getIGunOrNull(i);
+        IGun iGun2 = IGun.getIGunOrNull(j);
+        if (iGun1 != null && iGun2 != null) {
+            return iGun1.getGunId(i).equals(iGun2.getGunId(j));
+        }
+        if (i.isEmpty() || j.isEmpty()) {
+            return i.isEmpty() && j.isEmpty();
+        }
+        return ItemStack.matches(i, j);
     }
 }

@@ -29,10 +29,6 @@
     "scale": 0.5
   },
   "sounds": {
-    "reload_empty": "tacz:p320/p320_reload_empty",
-    "reload_tactical": "tacz:p320/p320_reload_tactical",
-    "inspect": "tacz:p320/p320_inspect",
-    "inspect_empty": "tacz:p320/p320_inspect_empty",
     "draw": "tacz:p320/p320_draw",
     "put_away": "tacz:p320/p320_put_away",
     "shoot": "tacz:p320/p320_shoot",

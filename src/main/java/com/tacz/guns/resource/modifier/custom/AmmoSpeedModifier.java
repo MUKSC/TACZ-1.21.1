@@ -1,12 +1,13 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class AmmoSpeedModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "ammo_speed";
+    public static final String ID = GunProperties.AMMO_SPEED.name();
 
     @Override
     public String getId() {
@@ -33,7 +34,7 @@ public class AmmoSpeedModifier implements IAttachmentModifier<Modifier, Float> {
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        AmmoSpeedModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, AmmoSpeedModifier.Data.class);
+        AmmoSpeedModifier.Data data = CommonAssetsManager.GSON.fromJson(json, AmmoSpeedModifier.Data.class);
         return new AmmoSpeedModifier.BulletSpeedJsonProperty(data.getAmmoSpeed());
     }
 
@@ -65,15 +66,16 @@ public class AmmoSpeedModifier implements IAttachmentModifier<Modifier, Float> {
         if (fireModeAdjustData != null) {
             ammoSpeed += fireModeAdjustData.getSpeed();
         }
-        float ammoSpeedModifier = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID) - ammoSpeed;
+        float modifiedAmmoSpeed = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
+        float ammoSpeedModifier = modifiedAmmoSpeed - ammoSpeed;
 
         double ammoSpeedPercent = Math.min(ammoSpeed / 600.0, 1);
         double ammoSpeedModifierPercent = Math.min(ammoSpeedModifier / 600.0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.ammo_speed";
-        String positivelyString = String.format("%dm/s §a(+%d)", Math.round(ammoSpeed), Math.round(ammoSpeedModifier));
-        String negativelyString = String.format("%dm/s §c(%d)", Math.round(ammoSpeed), Math.round(ammoSpeedModifier));
-        String defaultString = String.format("%dm/s", Math.round(ammoSpeed));
+        String positivelyString = String.format("%dm/s §a(+%d)", Math.round(modifiedAmmoSpeed), Math.round(ammoSpeedModifier));
+        String negativelyString = String.format("%dm/s §c(%d)", Math.round(modifiedAmmoSpeed), Math.round(ammoSpeedModifier));
+        String defaultString = String.format("%dm/s", Math.round(modifiedAmmoSpeed));
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(ammoSpeedPercent, ammoSpeedModifierPercent, ammoSpeedModifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

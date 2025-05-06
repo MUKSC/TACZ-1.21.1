@@ -1,10 +1,11 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -20,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AdsModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "ads";
+    public static final String ID = GunProperties.ADS_TIME.name();
 
     @Override
     public String getId() {
@@ -36,7 +37,7 @@ public class AdsModifier implements IAttachmentModifier<Modifier, Float> {
     @Override
     @SuppressWarnings("deprecation")
     public JsonProperty<Modifier> readJson(String json) {
-        Data data = CommonGunPackLoader.GSON.fromJson(json, Data.class);
+        Data data = CommonAssetsManager.GSON.fromJson(json, Data.class);
         Modifier ads = data.getAds();
         // 兼容旧版本写法
         if (ads == null) {
@@ -61,15 +62,19 @@ public class AdsModifier implements IAttachmentModifier<Modifier, Float> {
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
         float aimTime = gunData.getAimTime();
-        float adsTimeModifier = cacheProperty.<Float>getCache(AdsModifier.ID) - aimTime;
+        float modifiedAimTime = cacheProperty.<Float>getCache(AdsModifier.ID);
+        float adsTimeModifier = modifiedAimTime - aimTime;
+
+        double percent = Math.min(gunData.getAimTime() / 0.5, 1);
+        double adsTimeModifierPercent = Math.min(adsTimeModifier / 0.5, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.ads";
-        String positivelyString = String.format("%.2fs §c(+%.2f)", aimTime, adsTimeModifier);
-        String negativelyString = String.format("%.2fs §a(%.2f)", aimTime, adsTimeModifier);
-        String defaultString = String.format("%.2fs", aimTime);
+        String positivelyString = String.format("%.2fs §c(+%.2f)", modifiedAimTime, adsTimeModifier);
+        String negativelyString = String.format("%.2fs §a(%.2f)", modifiedAimTime, adsTimeModifier);
+        String defaultString = String.format("%.2fs", modifiedAimTime);
         boolean positivelyBetter = false;
 
-        DiagramsData diagramsData = new DiagramsData(aimTime, adsTimeModifier, adsTimeModifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);
+        DiagramsData diagramsData = new DiagramsData(percent, adsTimeModifierPercent, adsTimeModifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);
         return Collections.singletonList(diagramsData);
     }
 

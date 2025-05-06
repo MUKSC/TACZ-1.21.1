@@ -67,14 +67,25 @@ public class ItemInHandRendererMixin implements KeepingItemRenderer {
         if (time < tacz$KeepTimeMs) {
             return;
         }
-        this.tacz$KeepItem = itemStack;
-        this.mainHandItem = itemStack;
         this.tacz$KeepTimeMs = timeMs;
         this.tacz$KeepTimestamp = System.currentTimeMillis();
+        this.tacz$KeepItem = itemStack;
+        this.mainHandItem = itemStack;
     }
 
     @Override
     public ItemStack getCurrentItem() {
+        if (Minecraft.getInstance().player == null) {
+            return mainHandItem;
+        }
+        if (tacz$KeepItem != null) {
+            long time = System.currentTimeMillis() - tacz$KeepTimestamp;
+            if (time < tacz$KeepTimeMs) {
+                return tacz$KeepItem;
+            } else {
+                tacz$KeepItem = null;
+            }
+        }
         return mainHandItem;
     }
 }

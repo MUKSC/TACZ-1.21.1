@@ -59,6 +59,12 @@ public class ModSyncedEntityData {
             .syncMode(SyncedDataKey.SyncMode.ALL)
             .build();
 
+    public static final SyncedDataKey<LivingEntity, Integer> THROWABLE_USE_TICK = SyncedDataKey.builder(SyncedClassKey.LIVING_ENTITY, Serializers.INTEGER)
+            .id(new ResourceLocation(GunMod.MOD_ID, "throwable_using"))
+            .defaultValueSupplier(() -> -1)
+            .syncMode(SyncedDataKey.SyncMode.SELF_ONLY)
+            .build();
+
     public static void init() {
         registerEntityData(SHOOT_COOL_DOWN_KEY);
         registerEntityData(MELEE_COOL_DOWN_KEY);
@@ -68,6 +74,7 @@ public class ModSyncedEntityData {
         registerEntityData(IS_AIMING_KEY);
         registerEntityData(SPRINT_TIME_KEY);
         registerEntityData(IS_BOLTING_KEY);
+        registerEntityData(THROWABLE_USE_TICK);
     }
 
     private static void registerEntityData(SyncedDataKey<? extends Entity, ?> dataKey) {

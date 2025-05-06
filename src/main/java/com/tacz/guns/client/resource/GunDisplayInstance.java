@@ -12,10 +12,12 @@ import com.tacz.guns.api.client.animation.ObjectAnimation;
 import com.tacz.guns.api.client.animation.gltf.AnimationStructure;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.animation.statemachine.LuaStateMachineFactory;
+import com.tacz.guns.api.client.other.GunModelTypeManager;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.resource.pojo.animation.bedrock.BedrockAnimationFile;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import com.tacz.guns.client.resource.pojo.display.ammo.AmmoParticle;
 import com.tacz.guns.client.resource.pojo.display.gun.*;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
@@ -36,8 +38,10 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 /**
  * 经过处理和校验的枪械显示数据
@@ -50,6 +54,7 @@ public class GunDisplayInstance {
     private LuaAnimationStateMachine<GunAnimationStateContext> animationStateMachine;
     private @Nullable LuaTable stateMachineParam;
     private @Nullable ResourceLocation playerAnimator3rd = new ResourceLocation(GunMod.MOD_ID, "rifle_default.player_animation");
+    private boolean is3rdFixedHand = false;
     private Map<String, ResourceLocation> sounds;
     private GunTransform transform;
     private ResourceLocation modelTexture;
@@ -68,6 +73,7 @@ public class GunDisplayInstance {
     private EnumMap<FireMode, ControllableData> controllableData;
     private AmmoCountStyle ammoCountStyle = AmmoCountStyle.NORMAL;
     private DamageStyle damageStyle = DamageStyle.PER_PROJECTILE;
+    private @Nullable LaserConfig laserConfig;
 
     GunDisplayInstance(GunDisplay display) {
         checkTextureAndModel(display);
@@ -88,6 +94,7 @@ public class GunDisplayInstance {
         controllableData = display.getControllableData();
         ammoCountStyle = display.getAmmoCountStyle();
         damageStyle = display.getDamageStyle();
+        laserConfig = display.getLaserConfig();
     }
 
     public static GunDisplayInstance create(GunDisplay display)  throws IllegalArgumentException {
@@ -121,6 +128,9 @@ public class GunDisplayInstance {
     }
 
     private void checkTextureAndModel(GunDisplay display) {
+        //获取模型类型
+        String modelType = display.getModelType();
+        BiFunction<BedrockModelPOJO, BedrockVersion, ? extends BedrockGunModel> constructor = GunModelTypeManager.getModelInstanceConstructor(modelType);
         // 检查模型
         ResourceLocation modelLocation = display.getModelLocation();
         Preconditions.checkArgument(modelLocation != null, "display object missing model field");
@@ -132,11 +142,11 @@ public class GunDisplayInstance {
         modelTexture = textureLocation;
         // 先判断是不是 1.10.0 版本基岩版模型文件
         if (BedrockVersion.isLegacyVersion(modelPOJO) && modelPOJO.getGeometryModelLegacy() != null) {
-            gunModel = new BedrockGunModel(modelPOJO, BedrockVersion.LEGACY);
+            gunModel = constructor.apply(modelPOJO, BedrockVersion.LEGACY);
         }
         // 判定是不是 1.12.0 版本基岩版模型文件
         if (BedrockVersion.isNewVersion(modelPOJO) && modelPOJO.getGeometryModelNew() != null) {
-            gunModel = new BedrockGunModel(modelPOJO, BedrockVersion.NEW);
+            gunModel = constructor.apply(modelPOJO, BedrockVersion.NEW);
         }
         Preconditions.checkArgument(gunModel != null, "there is no model data in the model file");
     }
@@ -186,17 +196,29 @@ public class GunDisplayInstance {
                 throw new IllegalArgumentException("animation not found: " + location);
             }
             // 将默认动画填入动画控制器
-            DefaultAnimation defaultAnimation = display.getDefaultAnimation();
+            ResourceLocation defaultAnimation = display.getDefaultAnimation();
             if (defaultAnimation != null) {
-                switch (defaultAnimation) {
-                    case RIFLE -> {
-                        for (ObjectAnimation animation : InternalAssetLoader.getDefaultRifleAnimations()) {
-                            controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                BedrockAnimationFile animationFile = ClientAssetsManager.INSTANCE.getBedrockAnimations(defaultAnimation);
+                if (animationFile == null) {
+                    throw new IllegalArgumentException("animation not found: " + defaultAnimation);
+                }
+                List<ObjectAnimation> animations = Animations.createAnimationFromBedrock(animationFile);
+                for (ObjectAnimation animation : animations) {
+                    controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                }
+            } else {
+                DefaultAnimationType defaultAnimationType = display.getDefaultAnimationType();
+                if (defaultAnimationType != null) {
+                    switch (defaultAnimationType) {
+                        case RIFLE -> {
+                            for (ObjectAnimation animation : InternalAssetLoader.getDefaultRifleAnimations()) {
+                                controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                            }
                         }
-                    }
-                    case PISTOL -> {
-                        for (ObjectAnimation animation : InternalAssetLoader.getDefaultPistolAnimations()) {
-                            controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                        case PISTOL -> {
+                            for (ObjectAnimation animation : InternalAssetLoader.getDefaultPistolAnimations()) {
+                                controller.providePrototypeIfAbsent(animation.name, () -> new ObjectAnimation(animation));
+                            }
                         }
                     }
                 }
@@ -215,7 +237,7 @@ public class GunDisplayInstance {
                     .setLuaScripts(script)
                     .build();
         } else {
-            throw new NullPointerException("statemachine not found: " + stateMachineLocation);
+            throw new IllegalArgumentException("statemachine not found: " + stateMachineLocation);
         }
         // 加载状态机参数
         Map<String, Object> params = display.getStateMachineParam();
@@ -232,6 +254,7 @@ public class GunDisplayInstance {
         // player animator 兼容动画
         if (display.getPlayerAnimator3rd() != null) {
             playerAnimator3rd = display.getPlayerAnimator3rd();
+            is3rdFixedHand = display.is3rdFixedHand();
         }
     }
 
@@ -418,6 +441,10 @@ public class GunDisplayInstance {
         return playerAnimator3rd;
     }
 
+    public boolean is3rdFixedHand() {
+        return is3rdFixedHand;
+    }
+
     public EnumMap<FireMode, ControllableData> getControllableData() {
         return controllableData;
     }
@@ -428,5 +455,9 @@ public class GunDisplayInstance {
 
     public DamageStyle getDamageStyle() {
         return damageStyle;
+    }
+
+    public @Nullable LaserConfig getLaserConfig() {
+        return laserConfig;
     }
 }

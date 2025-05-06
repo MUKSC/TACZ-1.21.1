@@ -1,16 +1,17 @@
 package com.tacz.guns.crafting.result;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.builder.AttachmentItemBuilder;
 import com.tacz.guns.api.item.builder.GunItemBuilder;
+import com.tacz.guns.resource.pojo.data.block.TabConfig;
 import com.tacz.guns.resource.pojo.data.recipe.GunResult;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +51,7 @@ public class RawGunTableResult {
             case GunSmithTableResult.GUN -> raw.getGunStack();
             case GunSmithTableResult.AMMO -> raw.getAmmoStack();
             case GunSmithTableResult.ATTACHMENT -> raw.getAttachmentStack();
-            default -> new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY);
+            default -> new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY);
         };
         if (raw.nbt != null) {
             CompoundTag itemTag = result.getResult().getOrCreateTag();
@@ -83,20 +84,28 @@ public class RawGunTableResult {
                     .setAmmoInBarrel(false)
                     .putAllAttachment(attachments)
                     .setFireMode(gunIndex.getGunData().getFireModeSet().get(0)).build();
-            String group = gunIndex.getType();
+            String raw = gunIndex.getType();
+            if (!raw.contains(":")) {
+                raw = GunMod.MOD_ID + ":" + raw;
+            }
+            ResourceLocation group = ResourceLocation.tryParse(raw);
             return new GunSmithTableResult(itemStack, group);
-        }).orElse(new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY));
+        }).orElse(new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY));
     }
 
     private GunSmithTableResult getAmmoStack() {
-        return new GunSmithTableResult(AmmoItemBuilder.create().setCount(count).setId(id).build(), GunSmithTableResult.AMMO);
+        return new GunSmithTableResult(AmmoItemBuilder.create().setCount(count).setId(id).build(), TabConfig.TAB_AMMO);
     }
 
     private GunSmithTableResult getAttachmentStack() {
         return TimelessAPI.getCommonAttachmentIndex(id).map(attachmentIndex -> {
             ItemStack itemStack = AttachmentItemBuilder.create().setCount(count).setId(id).build();
-            String group = attachmentIndex.getType().name().toLowerCase(Locale.US);
+            String raw = attachmentIndex.getType().name().toLowerCase(Locale.US);
+            if (!raw.contains(":")) {
+                raw = GunMod.MOD_ID + ":" + raw;
+            }
+            ResourceLocation group = ResourceLocation.tryParse(raw);
             return new GunSmithTableResult(itemStack, group);
-        }).orElse(new GunSmithTableResult(ItemStack.EMPTY, StringUtils.EMPTY));
+        }).orElse(new GunSmithTableResult(ItemStack.EMPTY, TabConfig.TAB_EMPTY));
     }
 }

@@ -204,8 +204,6 @@
 							"origin": [-0.28125, 9.81514, 3.56991],
 							"size": [0.5625, 0.5625, 0.625],
 							"inflate": 0.001,
-							"pivot": [0, 10.40889, 3.88241],
-							"rotation": [0, 0, 0],
 							"uv": {
 								"north": {"uv": [34, 22], "uv_size": [0.5, 0.5]},
 								"east": {"uv": [19, 33], "uv_size": [0.75, 0.5]},
@@ -341,6 +339,12 @@
 					"name": "muzzle_flash",
 					"parent": "bone",
 					"pivot": [0, 9.5, -4.4375]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "bone",
+					"pivot": [0, 8, -1.75],
+					"rotation": [0, 0, -177.5]
 				},
 				{
 					"name": "shell",

@@ -1,0 +1,62 @@
+{
+  "model": "tacz:gun/springfield1873_geo",
+  "texture": "tacz:gun/uv/springfield1873",
+  "lod": {
+    "model": "tacz:gun/lod/springfield1873",
+    "texture": "tacz:gun/lod/springfield1873"
+  },
+  "hud": "tacz:gun/hud/springfield1873_hud",
+  "slot": "tacz:gun/slot/springfield1873_slot",
+  "animation": "tacz:springfield1873",
+  "use_default_animation": "rifle",
+  "third_person_animation": "default",
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 1
+  },
+  "ammo":{
+    "particle": {
+    // 名称，具体可选粒子可参考 wiki：https://minecraft.fandom.com/zh/wiki/%E7%B2%92%E5%AD%90
+    "name": "mycelium",
+    // 生成的区域，默认为 0 0 0
+    "delta": [
+      0,
+      0,
+      0
+    ],
+    // 速度，默认为0，必须至少为 0
+    "speed": 0.0,
+    // 粒子存在时间，单位 tick，默认为 20 tick
+    "life_time": 25,
+    // 粒子数量，当子弹速度过快时，可以增大此数量，能够填满子弹路径的空隙
+    "count": 75
+    }
+  },
+  "iron_zoom": 2,
+  "zoom_model_fov": 25,
+  "sounds": {
+    "draw": "tacz:springfield1873/springfield1873_draw",
+    "put_away": "tacz:springfield1873/springfield1873_put_away",
+    "shoot": "tacz:springfield1873/springfield1873_shoot",
+    "shoot_3p": "tacz:springfield1873/springfield1873_shoot_3p"
+  },
+  "offhand_show": {
+    "pos": [0, 20, 4],
+    "rotate": [0, 0, 60],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [0, 20, 3],
+      "rotate": [-180, 0, 120],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}
