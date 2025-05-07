@@ -59,10 +59,14 @@ public class AttachmentsTagManager extends SimplePreparableReloadListener<Map<Re
                 try {
                     List<String> data = parseJson(element);
                     if (data != null) {
-                        temp.addAll(data);
+                        if (data.stream().anyMatch(Objects::isNull)) {
+                            throw new JsonParseException("Null value found in JSON data");
+                        } else {
+                            temp.addAll(data);
+                        }
                     }
                 } catch (JsonParseException e) {
-                    GunMod.LOGGER.error(marker, "Failed to load data file {}", id, e);
+                    GunMod.LOGGER.error(marker, "Failed to parse data file {}", id, e);
                 }
             }
 
