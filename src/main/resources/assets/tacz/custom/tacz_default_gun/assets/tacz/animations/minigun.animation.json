@@ -1499,12 +1499,12 @@
 			}
 		},
 		"aim_start": {
-			"animation_length": 0.2333,
+			"animation_length": 0.1,
 			"bones": {
 				"laser_beam": {
 					"scale": {
 						"0.0": [0, 0, 0],
-						"0.2333": [1, 1, 1]
+						"0.1": [1, 1, 1]
 					}
 				}
 			}
@@ -1518,12 +1518,12 @@
 			}
 		},
 		"aim_end": {
-			"animation_length": 0.2333,
+			"animation_length": 0.1,
 			"bones": {
 				"laser_beam": {
 					"scale": {
 						"0.0": [1, 1, 1],
-						"0.2333": [0, 0, 0]
+						"0.1": [0, 0, 0]
 					}
 				}
 			}
