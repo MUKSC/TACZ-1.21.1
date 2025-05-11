@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Schaft",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Schaft",
   "tacz.attachment.stock_m4ss.name": "M4SS Schaft",
-  "tacz.block.gun_smith_table": "TaCZ Waffen Schmiedetisch",
+  "tacz.block.gun_smith_table.name": "TaCZ Waffen Schmiedetisch",
   "config.tacz.client.render.enable_tooltip_id": "Zeige Ids in Tooltip",
   "config.tacz.client.render.enable_tooltip_id.desc": "Zeige die Waffe/Munition/Aufsätze id im Item Tooltip, wenn der erweiterte Tooltip aktiviert ist."
 }

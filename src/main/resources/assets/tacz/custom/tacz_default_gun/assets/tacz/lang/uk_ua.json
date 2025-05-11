@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
   "tacz.attachment.stock_m4ss.name": "M4SS Stock",
-  "tacz.block.gun_smith_table": "Стіл Зброяра",
+  "tacz.block.gun_smith_table.name": "Стіл Зброяра",
   "config.tacz.client.render.enable_tooltip_id": "Показувати Ids в підказці",
   "config.tacz.client.render.enable_tooltip_id.desc": "Показувати ID зброї/набоїв/модулів у підказці предмета, коли ввімкнено розширені підказки (F3+H)"
 }

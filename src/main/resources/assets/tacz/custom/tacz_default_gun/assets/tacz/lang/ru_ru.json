@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Приклад Magpul MOE",
   "tacz.attachment.stock_ripstock.name": "Приклад CMMG RipStock",
   "tacz.attachment.stock_m4ss.name": "Приклад M4SS",
-  "tacz.block.gun_smith_table": "Оружейный стол TaCZ",
+  "tacz.block.gun_smith_table.name": "Оружейный стол TaCZ",
   "config.tacz.client.render.enable_tooltip_id": "Отображать ID в подсказках предметов",
   "config.tacz.client.render.enable_tooltip_id.desc": "При включённых расширенных подсказках показывает ID оружия/патронов/обвеса."
 }

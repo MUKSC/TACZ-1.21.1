@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
   "tacz.attachment.stock_m4ss.name": "M4SS Stock",
-  "tacz.block.gun_smith_table": "Stół Rusznikarski",
+  "tacz.block.gun_smith_table.name": "Stół Rusznikarski",
   "config.tacz.client.render.enable_tooltip_id": "Wyswietl ID w podpowiedziach",
   "config.tacz.client.render.enable_tooltip_id.desc": "Wyświetl ID broni/amunicji/wyposażenia w podpowiedziach kiedy zaawansowane informacje są włączone."
 }

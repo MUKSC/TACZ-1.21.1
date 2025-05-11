@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE ストック",
   "tacz.attachment.stock_ripstock.name": "CMMG Ripstock ストック",
   "tacz.attachment.stock_m4ss.name": "M4SSストック",
-  "tacz.block.gun_smith_table": "TaCZガンスミステーブル",
+  "tacz.block.gun_smith_table.name": "TaCZガンスミステーブル",
   "config.tacz.client.render.enable_tooltip_id": "アイテム情報にIDを表示する",
   "config.tacz.client.render.enable_tooltip_id.desc": "高度な情報を表示がオンの時、銃/弾薬/アタッチメントのIDをアイテム情報に加える"
 }

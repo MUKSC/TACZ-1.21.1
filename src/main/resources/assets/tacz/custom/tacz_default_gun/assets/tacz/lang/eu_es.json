@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
   "tacz.attachment.stock_m4ss.name": "M4SS Stock",
-  "tacz.block.gun_smith_table": "Tacz (etako) Armetako Burdingile mahaia",
+  "tacz.block.gun_smith_table.name": "Tacz (etako) Armetako Burdingile mahaia",
   "config.tacz.client.render.enable_tooltip_id": "Tresnei buruzko informazioan identifikatzaileak erakustea",
   "config.tacz.client.render.enable_tooltip_id.desc": "."
 }

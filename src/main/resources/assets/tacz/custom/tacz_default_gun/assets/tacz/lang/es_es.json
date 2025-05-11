@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
   "tacz.attachment.stock_m4ss.name": "M4SS Stock",
-  "tacz.block.gun_smith_table": "Estación de armas TaCZ",
+  "tacz.block.gun_smith_table.name": "Estación de armas TaCZ",
   "config.tacz.client.render.enable_tooltip_id": "Mostrar Ids en la descripción",
   "config.tacz.client.render.enable_tooltip_id.desc": "Muestra el ID del Arma/Municion/Accesorio en la descripción del elemento cuando la descripción avanzada está activada."
 }

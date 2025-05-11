@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
   "tacz.attachment.stock_m4ss.name": "M4SS Stock",
-  "tacz.block.gun_smith_table": "โต๊ะแต่งปืน",
+  "tacz.block.gun_smith_table.name": "โต๊ะแต่งปืน",
   "config.tacz.client.render.enable_tooltip_id": "แสดงเลข ID ในคำแนะนำเครื่องมือ",
   "config.tacz.client.render.enable_tooltip_id.desc": "แสดงเลข ID ของปืน/กระสุน/ของแต่งปืน ในคำแนะนำเครื่องมือ"
 }

@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Magpul MOE Stock",
   "tacz.attachment.stock_ripstock.name": "CMMG RipStock Stock",
   "tacz.attachment.stock_m4ss.name": "M4SS Stock",
-  "tacz.block.gun_smith_table": "Forge d'arme TACZ",
+  "tacz.block.gun_smith_table.name": "Forge d'arme TACZ",
   "config.tacz.client.render.enable_tooltip_id": "Afficher les IDs dans le tooltip",
   "config.tacz.client.render.enable_tooltip_id.desc": "Afficher les ID des armes/munitions/attachements dans le tooltip lorsqu'il est activé (F3+H)."
 }

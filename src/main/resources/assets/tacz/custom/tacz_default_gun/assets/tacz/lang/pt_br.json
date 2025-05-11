@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Coronha Magpul MOE",
   "tacz.attachment.stock_ripstock.name": "Coronha CMMG RipStock",
   "tacz.attachment.stock_m4ss.name": "Coronha M4SS",
-  "tacz.block.gun_smith_table": "Mesa de Fabricação de Armas",
+  "tacz.block.gun_smith_table.name": "Mesa de Fabricação de Armas",
   "config.tacz.client.render.enable_tooltip_id": "Exibir Ids na descrição",
   "config.tacz.client.render.enable_tooltip_id.desc": "Exibir a Id da arma/munição/acessório na descrição do item quando descrição avançada estiver ativo."
 }

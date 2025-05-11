@@ -206,7 +206,7 @@
   "tacz.attachment.stock_moe.name": "Popor Magpul MOE",
   "tacz.attachment.stock_ripstock.name": "Popor CMMG RipStock",
   "tacz.attachment.stock_m4ss.name": "Popor M4SS",
-  "tacz.block.gun_smith_table": "Meja Senjata TaCZ",
+  "tacz.block.gun_smith_table.name": "Meja Senjata TaCZ",
   "config.tacz.client.render.enable_tooltip_id": "Tampilkan ID di Deskripsi",
   "config.tacz.client.render.enable_tooltip_id.desc": "Tampilkan senjata/amunisi/aksesoris id di deskripsi item saat deskripsi lanjutan diaktifkan."
 }
