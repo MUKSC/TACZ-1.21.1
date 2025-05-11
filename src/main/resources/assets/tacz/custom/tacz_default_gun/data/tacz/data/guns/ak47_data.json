@@ -295,30 +295,30 @@
     "stock",
     "muzzle",
     "extended_mag"
-  ],
+  ]
   // 配件槽的默认配件，当未安装配件时使用
   // 默认配件的data将不会被应用，仅仅有外观效果
   // 用于默认瞄具等特殊场合
-//  "builtin_attachments": {
-//    "scope": "tacz:scope_standard_8x"
-//  },
+ //  "builtin_attachments": {
+ //    "scope": "tacz:scope_standard_8x"
+ //  },
   // 指定枪械逻辑的脚本，调用的是 data/{命名空间}/scripts 下的脚本
   // "script": "tacz:default_gun_logic",
   // 指定枪械逻辑脚本的脚本参数，具体内容取决于脚本需要
   //"script_param": {
   //  "bolt_time": 0.5
   //},
-  // 为特定的配件指派属性
-  "exclusive_attachments": {
+  // 为特定的配件指派属性(功能已损坏待修复)
+  //"exclusive_attachments": {
     // 配件 ID，后面的数据和配件的 data 部分结构完全一致
-    "tacz:scope_standard_8x": {
-      "weight": 2.0,
-      "ads_addend": 0.04,
-      "inaccuracy_addend": -0.4,
-      "recoil_modifier": {
-        "pitch": -0.2,
-        "yaw": -0.1
-      }
-    }
-  }
+    //"tacz:scope_standard_8x": {
+      //"weight": 2.0,
+      //"ads_addend": 0.04,
+      //"inaccuracy_addend": -0.4,
+      //"recoil_modifier": {
+        //"pitch": -0.2,
+        //"yaw": -0.1
+      // }
+    // }
+  // }
 }
