@@ -268,5 +268,6 @@
   "tooltip.tacz.page.next": "下一页",
   "tooltip.tacz.page.previous": "上一页",
   "tooltip.tacz.refit.unload": "卸载",
+  "tooltip.tacz.attachment.laser.color": "镭射颜色: %s",
   "tacz.resources.modresources": "永恒枪械工坊：Zero 枪包资源集"
 }
