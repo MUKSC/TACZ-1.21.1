@@ -8238,7 +8238,7 @@
 				{
 					"name": "refit_scope_view",
 					"parent": "view",
-					"pivot": [8.6, 13.275, -4.975],
+					"pivot": [16.6, 13.275, -12.975],
 					"rotation": [0, 120, 0]
 				}
 			]

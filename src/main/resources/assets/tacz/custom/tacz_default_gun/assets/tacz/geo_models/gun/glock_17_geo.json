@@ -3648,7 +3648,14 @@
 				{
 					"name": "shell",
 					"parent": "g17",
-					"pivot": [-0.01875, 5.375, -0.4]
+					"pivot": [-0.01875, 5.375, 1.35],
+					"rotation": [0, 15, 0]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "g17",
+					"pivot": [0, 4.125, -3.8125],
+					"rotation": [0, 0, -180]
 				},
 				{
 					"name": "lefthand",
@@ -3756,6 +3763,12 @@
 					"name": "refit_muzzle_view",
 					"parent": "refit",
 					"pivot": [7, 5.35, -12],
+					"rotation": [0, 120, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "refit",
+					"pivot": [8, 3.375, -10],
 					"rotation": [0, 120, 0]
 				}
 			]

@@ -9,6 +9,30 @@
     37,
     40
   ],
+  // 指定逻辑机及相关数值的修改
+  "script": "tacz:xmag_reload_logic",
+  "script_param": {
+    "reload_feed": 1.55,
+    "reload_cooldown": 2.0,
+    "empty_feed": 2.25,
+    "empty_cooldown": 2.6,
+    "reload_xmag_1_feed": 1.54,
+    "reload_xmag_1_cooldown": 2.29,
+    "empty_xmag_1_feed": 2.5,
+    "empty_xmag_1_cooldown": 2.85,
+    "reload_xmag_2_feed": 1.54,
+    "reload_xmag_2_cooldown": 2.29,
+    "empty_xmag_2_feed": 2.5,
+    "empty_xmag_2_cooldown": 2.85,
+    "reload_xmag_3_feed": 1.54,
+    "reload_xmag_3_cooldown": 2.29,
+    "empty_xmag_3_feed": 2.5,
+    "empty_xmag_3_cooldown": 2.85
+  },
+  // 是否允许趴下
+  "can_crawl": true,
+  // 是否允许斜握（仅视觉效果）
+  "can_slide": true,
   // 枪栓类型：开膛待机（open_bolt）、闭膛待击（closed_bolt）、手动上膛（manual_action)
   "bolt": "closed_bolt",
   // 每分钟射出弹药量，最大不应超过 1200
@@ -32,14 +56,14 @@
       "head_shot_multiplier": 1.5,
       // 距离-伤害分段常函数
       "damage_adjust": [
-        {"distance": 25, "damage": 9},
-        {"distance": 55, "damage": 7.5},
+        {"distance": 30, "damage": 9},
+        {"distance": 60, "damage": 7.5},
         // 如果你忘记写这个无穷，那么超过上述距离，我就认为是 0
         {"distance": "infinite", "damage": 6}
       ]
     },
     // 速度 m/s
-    "speed": 240,
+    "speed": 250,
     // 重力
     "gravity": 0.15,
     // 击退效果
@@ -74,10 +98,19 @@
       // "destroy_block": false
     // }
   },
+  // 射击声音传播距离修正
+  "fire_sound": {
+    // 射击声音传播距离修正乘数
+    "fire_multiplier": 1.0,
+    // 消音器射击声音传播距离修正乘数
+    "silence_multiplier": 1.0
+  },
   // 换弹相关
   "reload": {
-    // magazine 是弹匣供弹，manual 是手动供弹，fuel是类燃料罐供弹（消耗一个物品填满）
+    // magazine 是弹匣供弹，manual 是手动供弹，fuel 是类燃料罐供弹（消耗一个物品填满），inventory 是消耗背包内弹药供弹（背包直读）
     "type": "magazine",
+    // 无限备弹，注意，目前此项与“inventory”不兼容
+    "infinite": false,
     // 弹匣供弹换弹时长（秒），到达此时间点，服务端就更新枪内子弹数量
     "feed": {
       // 空仓换弹
@@ -93,11 +126,34 @@
       "tactical": 2.0
     }
   },
+  // 过热参数
+//  "heat":  {
+//    // 过热上限
+//    "max": 240,
+//    // 每发子弹过热值
+//    "per_shot": 2,
+//    // 冷却倍率，过热值的减少速度会随着时间增加
+//    // t时间(秒)内可以冷却的过热值可以参考: max = cooling_multiplier * t^2
+//    "cooling_multiplier": 4,
+//    // 冷却延迟，ms
+//    "cooling_delay": 500,
+//    // 完全过热后，开始过热的延迟时间，ms
+//    "over_heat_time": 3000,
+//    // 以下将在使用过热进度(0-1)在最小值和最大值之间线性插值，然后与原始数值相乘
+//    // 最小不准确度影响
+//    "min_inaccuracy": 1,
+//    // 最大不准确度影响
+//    "max_inaccuracy": 1.2,
+//    // 最小射速影响
+//    "min_rpm_mod": 1,
+//    // 最大射速影响
+//    "max_rpm_mod": 1.2
+//  },
   // 枪械抬起的动作时长，单位秒。
   // 抬起动作完成后，枪械可以进行开火、检视等行为
   "draw_time": 0.35,
   // 收枪的动作时长，单位秒。
-  "put_away_time": 0.4,
+  "put_away_time": 0.57,
   // 瞄准时长，单位秒。
   "aim_time": 0.2,
   "sprint_time": 0.2,
@@ -181,14 +237,14 @@
   // 后坐力
   "recoil": {
     "pitch": [
-      {"time": 0, "value": [0.7, 0.7]},
-      {"time": 0.25, "value": [0.7, 0.7]},
+      {"time": 0, "value": [0.66, 0.66]},
+      {"time": 0.1, "value": [0.66, 0.66]},
       {"time": 0.45, "value": [-0.175, -0.175]},
       {"time": 0.6, "value": [0, 0]}
     ],
     "yaw": [
-      {"time": 0, "value": [-0.35, 0.25]},
-      {"time": 0.45, "value": [0, 0]}
+      {"time": 0, "value": [-0.23, 0.18]},
+      {"time": 0.35, "value": [0, 0]}
     ]
   },
   // 受伤晃动幅度修改，乘数，1 为原版晃动程度，0 为完全不晃动，默认为 0.05
@@ -196,13 +252,13 @@
   // 不准确度
   "inaccuracy": {
     // 站立射击散布
-    "stand": 5,
+    "stand": 4.5,
     // 移动射击散布
-    "move": 5.75,
+    "move": 5,
     // 潜行射击散布
-    "sneak": 3.5,
+    "sneak": 2.5,
     // 趴下射击散布
-    "lie": 2.5,
+    "lie": 1.5,
     // 瞄准射击时散布
     "aim": 0.15
   },
@@ -239,30 +295,30 @@
     "stock",
     "muzzle",
     "extended_mag"
-  ],
+  ]
   // 配件槽的默认配件，当未安装配件时使用
   // 默认配件的data将不会被应用，仅仅有外观效果
   // 用于默认瞄具等特殊场合
-//  "builtin_attachments": {
-//    "scope": "tacz:scope_standard_8x"
-//  },
+ //  "builtin_attachments": {
+ //    "scope": "tacz:scope_standard_8x"
+ //  },
   // 指定枪械逻辑的脚本，调用的是 data/{命名空间}/scripts 下的脚本
   // "script": "tacz:default_gun_logic",
   // 指定枪械逻辑脚本的脚本参数，具体内容取决于脚本需要
   //"script_param": {
   //  "bolt_time": 0.5
   //},
-  // 为特定的配件指派属性
-  "exclusive_attachments": {
+  // 为特定的配件指派属性(功能已损坏待修复)
+  //"exclusive_attachments": {
     // 配件 ID，后面的数据和配件的 data 部分结构完全一致
-    "tacz:scope_standard_8x": {
-      "weight": 2.0,
-      "ads_addend": 0.04,
-      "inaccuracy_addend": -0.4,
-      "recoil_modifier": {
-        "pitch": -0.2,
-        "yaw": -0.1
-      }
-    }
-  }
+    //"tacz:scope_standard_8x": {
+      //"weight": 2.0,
+      //"ads_addend": 0.04,
+      //"inaccuracy_addend": -0.4,
+      //"recoil_modifier": {
+        //"pitch": -0.2,
+        //"yaw": -0.1
+      // }
+    // }
+  // }
 }

@@ -8,7 +8,7 @@ import net.minecraftforge.fml.LogicalSide;
 /**
  * 用枪近战时触发
  */
-public class GunMeleeEvent extends Event {
+public class GunMeleeEvent extends Event implements KubeJSGunEventPoster<GunMeleeEvent>{
     private final LivingEntity shooter;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
@@ -17,6 +17,7 @@ public class GunMeleeEvent extends Event {
         this.shooter = shooter;
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     @Override

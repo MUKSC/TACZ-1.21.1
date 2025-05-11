@@ -1,0 +1,17 @@
+{
+  // 方块的显示名称，支持本地化
+  "name": "tacz.block.attachment_workbench.name",
+  // 方块效果文件
+  "display": "tacz:attachment_workbench",
+  // 方块参数文件
+  "data": "tacz:attachment_workbench",
+  // 方块文本提示
+  "tooltip": "tacz.block.attachment_workbench.desc",
+  // 方块id，可选值：tacz:workbench_a, tacz:workbench_b, tacz:workbench_c
+  // 对应（长x高x宽）1x1x1，2x1x1，1x2x1
+  // 更改该字段无法影响已经放置的方块/物品，请谨慎修改
+  "id": "tacz:workbench_c",
+  // 排序数，决定了在创造模式标签页中的顺序
+  // 数字越小，优先级越高
+  "sort": 2
+}

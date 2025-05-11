@@ -682,6 +682,12 @@
 					"pivot": [-0.15, 9.2625, 3.25]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "positioning2",
+					"pivot": [1.112, 9.375, -6.4],
+					"rotation": [0, 0, 90]
+				},
+				{
 					"name": "positioning",
 					"pivot": [0, 0, -8]
 				},

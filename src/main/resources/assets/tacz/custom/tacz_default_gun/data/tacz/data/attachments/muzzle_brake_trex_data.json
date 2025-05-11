@@ -3,15 +3,12 @@
   "ads": {
     "addend": 0.03
   },
-  "inaccuracy": {
-    "multiplier": 0.9
-  },
   "recoil": {
     "pitch": {
       "multiplier": 0.66
     },
     "yaw": {
-      "multiplier": 1.1
+      "multiplier": 0.95
     }
   }
 }

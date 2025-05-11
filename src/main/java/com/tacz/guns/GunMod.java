@@ -1,6 +1,7 @@
 package com.tacz.guns;
 
 import com.tacz.guns.api.resource.ResourceManager;
+import com.tacz.guns.compat.kubejs.TimelessKubeJSPlugin;
 import com.tacz.guns.config.ClientConfig;
 import com.tacz.guns.config.CommonConfig;
 import com.tacz.guns.config.ServerConfig;
@@ -10,8 +11,7 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import net.minecraft.server.packs.PackType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoader;
-import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -51,6 +51,9 @@ public class GunMod {
         ModSounds.SOUNDS.register(bus);
         ModParticles.PARTICLE_TYPES.register(bus);
         ModAttributes.ATTRIBUTES.register(bus);
+        if (ModList.get().isLoaded("kubejs")) {
+            bus.register(new TimelessKubeJSPlugin());
+        }
 
         registerDefaultExtraGunPack();
         AttachmentPropertyManager.registerModifier();

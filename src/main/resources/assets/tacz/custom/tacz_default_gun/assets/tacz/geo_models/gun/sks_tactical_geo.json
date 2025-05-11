@@ -1455,11 +1455,6 @@
 					"pivot": [0, 4.5, -5.075]
 				},
 				{
-					"name": "laser_pos",
-					"parent": "positioning2",
-					"pivot": [0, 8.24375, -7.475]
-				},
-				{
 					"name": "muzzle_flash",
 					"parent": "positioning2",
 					"pivot": [0, 6.5, -25.625]
@@ -1473,6 +1468,11 @@
 					"name": "shell",
 					"parent": "positioning2",
 					"pivot": [-0.325, 6.875, 1.825]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "positioning2",
+					"pivot": [0, 8.25, -7.15]
 				},
 				{
 					"name": "additional_magazine",
@@ -8004,12 +8004,6 @@
 					"rotation": [0, 90, 0]
 				},
 				{
-					"name": "refit_laser_view",
-					"parent": "view",
-					"pivot": [8.925, 9.45, -6.875],
-					"rotation": [0, 90, 0]
-				},
-				{
 					"name": "refit_grip_view",
 					"parent": "view",
 					"pivot": [8.925, 2.975, -4.875],
@@ -8020,6 +8014,12 @@
 					"parent": "view",
 					"pivot": [8.925, 9.3, -4.875],
 					"rotation": [0, 120, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [14, 14, -22],
+					"rotation": [15, 135, 0]
 				}
 			]
 		}

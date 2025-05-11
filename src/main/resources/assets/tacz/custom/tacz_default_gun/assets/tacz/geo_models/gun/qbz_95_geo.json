@@ -67,8 +67,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [1.462, 12.5625, -4.6875],
-					"rotation": [0, 0, 90]
+					"pivot": [0, 12.6875, -4.6875]
 				},
 				{
 					"name": "scope_pos",
@@ -9834,16 +9833,16 @@
 					"rotation": [0, 90, 30]
 				},
 				{
-					"name": "refit_laser_view",
-					"parent": "view",
-					"pivot": [9, 10, -3],
-					"rotation": [0, 70, 0]
-				},
-				{
 					"name": "refit_grip_view",
 					"parent": "view",
 					"pivot": [10.8, 5.4, -5],
 					"rotation": [0, 90, 20]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [14, 16, -16],
+					"rotation": [10, 135, 0]
 				}
 			]
 		}

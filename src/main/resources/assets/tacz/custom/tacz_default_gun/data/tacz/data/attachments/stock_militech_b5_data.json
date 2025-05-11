@@ -1,15 +1,14 @@
 {
   "weight": 0.5,
   "ads": {
-    // 加数（多个配件的数值相加，作为第一个乘区）
-    "addend": 0.05
+    "multiplier": 1.1
   },
   "aim_inaccuracy": {
-    "multiplier": 0.9
+    "multiplier": 0.87
   },
   "recoil": {
     "pitch": {
-      "multiplier": 0.75
+      "multiplier": 0.68
     },
     "yaw": {
       "multiplier": 0.6

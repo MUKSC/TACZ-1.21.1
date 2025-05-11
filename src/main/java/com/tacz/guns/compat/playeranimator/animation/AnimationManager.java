@@ -332,6 +332,7 @@ public class AnimationManager {
         if (currentGunItem.getItem() instanceof IGun && previousGunItem.getItem() instanceof IGun) {
             stopAnimation(player, PlayerAnimatorCompat.LOOP_UPPER_ANIMATION, 8);
             stopAnimation(player, PlayerAnimatorCompat.ONCE_UPPER_ANIMATION, 8);
+            stopAnimation(player, PlayerAnimatorCompat.LOWER_ANIMATION, 8);
         }
     }
 }

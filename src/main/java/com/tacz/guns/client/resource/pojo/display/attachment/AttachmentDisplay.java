@@ -3,12 +3,17 @@ package com.tacz.guns.client.resource.pojo.display.attachment;
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.client.resource.pojo.display.IDisplay;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
+import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
 public class AttachmentDisplay implements IDisplay {
+    @SerializedName("laser")
+    private LaserConfig laserConfig;
+
     @SerializedName("slot")
     private ResourceLocation slotTextureLocation;
 
@@ -29,9 +34,16 @@ public class AttachmentDisplay implements IDisplay {
     @SerializedName("show_muzzle")
     private boolean showMuzzle = false;
 
+    @SerializedName("text_show")
+    private Map<String, TextShow> textShows = Maps.newHashMap();
+
     @SerializedName("zoom")
     @Nullable
     private float[] zoom;
+
+    @SerializedName("views")
+    @Nullable
+    private int[] views;
 
     @SerializedName("scope")
     private boolean isScope = false;
@@ -41,6 +53,10 @@ public class AttachmentDisplay implements IDisplay {
 
     @SerializedName("fov")
     private float fov = 70;
+
+    @SerializedName("views_fov")
+    @Nullable
+    private float[] viewsFov;
 
     @SerializedName("sounds")
     private Map<String, ResourceLocation> sounds = Maps.newHashMap();
@@ -71,9 +87,18 @@ public class AttachmentDisplay implements IDisplay {
         return showMuzzle;
     }
 
+    public Map<String, TextShow> getTextShows() {
+        return textShows;
+    }
+
     @Nullable
     public float[] getZoom() {
         return zoom;
+    }
+
+    @Nullable
+    public int[] getViews() {
+        return views;
     }
 
     public boolean isScope() {
@@ -88,8 +113,18 @@ public class AttachmentDisplay implements IDisplay {
         return fov;
     }
 
+    @Nullable
+    public float[] getViewsFov() {
+        return viewsFov;
+    }
+
     public Map<String, ResourceLocation> getSounds() {
         return sounds;
+    }
+
+    @Nullable
+    public LaserConfig getLaserConfig() {
+        return laserConfig;
     }
 
     @Override

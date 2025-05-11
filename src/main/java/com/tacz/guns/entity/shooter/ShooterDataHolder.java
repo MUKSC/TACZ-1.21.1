@@ -98,6 +98,8 @@ public class ShooterDataHolder {
      */
     @Nullable
     public LuaValue scriptData = null;
+
+    public long heatTimestamp = -1;
     /**
      * 配件修改过的各种属性缓存
      */
@@ -119,5 +121,6 @@ public class ShooterDataHolder {
         isBolting = false;
         shootCount = 0;
         scriptData = null;
+        heatTimestamp = -1;
     }
 }

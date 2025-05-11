@@ -8,7 +8,7 @@ import net.minecraftforge.fml.LogicalSide;
 /**
  * 生物切换枪械开火模式时触发的事件
  */
-public class GunFireSelectEvent extends Event {
+public class GunFireSelectEvent extends Event implements KubeJSGunEventPoster<GunFireSelectEvent>{
     private final LivingEntity shooter;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
@@ -17,6 +17,7 @@ public class GunFireSelectEvent extends Event {
         this.shooter = shooter;
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     @Override

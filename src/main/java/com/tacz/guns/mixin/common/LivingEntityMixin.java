@@ -38,6 +38,7 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
     private final @Unique LivingEntityReload tacz$reload = new LivingEntityReload(tacz$shooter, this.tacz$data, this.tacz$draw, this.tacz$shoot);
     private final @Unique LivingEntitySpeedModifier tacz$speed = new LivingEntitySpeedModifier(tacz$shooter, tacz$data);
     private final @Unique LivingEntitySprint tacz$sprint = new LivingEntitySprint(tacz$shooter, this.tacz$data);
+    private final @Unique LivingEntityHeat tacz$heat = new LivingEntityHeat(tacz$shooter, this.tacz$data);
 
 
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
@@ -94,8 +95,12 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
     @Override
     @Unique
     public void initialData() {
-        // draw 中会进行 ShooterDataHolder 的 init，以及配件数据的刷新
-        this.tacz$draw.draw(() -> tacz$shooter.getMainHandItem());
+        // 初始化 ShooterDataHolder
+        this.tacz$data.initialData();
+        // 刷新当前武器
+        this.tacz$data.currentGunItem = () -> tacz$shooter.getMainHandItem();
+        // 刷新配件属性缓存
+        AttachmentPropertyManager.postChangeEvent(tacz$shooter, tacz$shooter.getMainHandItem());
     }
 
     @Unique
@@ -216,6 +221,7 @@ public abstract class LivingEntityMixin extends Entity implements IGunOperator, 
             this.tacz$bolt.tickBolt();
             this.tacz$melee.scheduleTickMelee();
             this.tacz$speed.updateSpeedModifier();
+            this.tacz$heat.tickHeat();
             tacz$shooter.setSprinting(getProcessedSprintStatus(tacz$shooter.isSprinting()));
             // 从服务端同步数据
             ModSyncedEntityData.SHOOT_COOL_DOWN_KEY.setValue(tacz$shooter, this.tacz$shoot.getShootCoolDown());

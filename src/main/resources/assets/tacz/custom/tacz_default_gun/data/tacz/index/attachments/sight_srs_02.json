@@ -1,0 +1,8 @@
+{
+  "hidden": false,
+  "name": "tacz.attachment.sight_srs_02.name",
+  "display": "tacz:sight_srs_02_display",
+  "data": "tacz:sight_srs_02_data",
+  "type": "scope",
+  "sort": 1
+}

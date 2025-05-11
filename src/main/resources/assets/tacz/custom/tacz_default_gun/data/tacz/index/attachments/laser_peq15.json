@@ -1,0 +1,8 @@
+{
+  "name": "tacz.attachment.laser_peq15",
+  "display": "tacz:laser_peq15_display",
+  "data": "tacz:laser_peq15_data",
+  "type": "laser",
+  "sort": 10,
+  "hidden": true
+}

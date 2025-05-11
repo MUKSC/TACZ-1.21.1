@@ -8,6 +8,7 @@
   "hud": "tacz:gun/hud/hk_mp5a5",
   "slot": "tacz:gun/slot/hk_mp5a5",
   "animation": "tacz:hk_mp5a5",
+  "state_machine": "tacz:hk_mp5a5_state_machine",
   "use_default_animation": "rifle",
   "third_person_animation": "default",
   "transform": {

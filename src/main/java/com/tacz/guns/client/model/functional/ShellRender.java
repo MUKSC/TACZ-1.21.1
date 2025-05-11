@@ -35,6 +35,9 @@ public class ShellRender implements IFunctionalRenderer {
     }
 
     public void addShell(Vector3f randomVelocity) {
+        if (SHELL_QUEUE.size() > 128) {
+            SHELL_QUEUE.pollFirst();
+        }
         double xRandom = Math.random() * randomVelocity.x();
         double yRandom = Math.random() * randomVelocity.y();
         double zRandom = Math.random() * randomVelocity.z();
@@ -76,8 +79,9 @@ public class ShellRender implements IFunctionalRenderer {
             }
 
             // 渲染抛壳
-            gunModel.delegateRender((poseStack1, vertexConsumer1, transformType1, light, overlay) ->
-                    SHELL_QUEUE.forEach(data -> renderSingleShell(transformType1, light, overlay, data, initialVelocity, acceleration, angularVelocity, model, location)));
+            gunModel.delegateRender((poseStack1, vertexConsumer1, transformType1, light, overlay) ->{
+                SHELL_QUEUE.forEach(data -> renderSingleShell(transformType1, light, overlay, data, initialVelocity, acceleration, angularVelocity, model, location));
+            });
         });
     }
 

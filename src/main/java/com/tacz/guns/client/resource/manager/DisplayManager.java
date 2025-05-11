@@ -40,7 +40,7 @@ public class DisplayManager<T extends IDisplay> extends JsonDataManager<T> {
                     data.init();
                     dataMap.put(id, data);
                 }
-            } catch (JsonParseException e) {
+            } catch (JsonParseException | IllegalArgumentException e) {
                 GunMod.LOGGER.error(getMarker(), "Failed to load data file {}", id, e);
             }
         }

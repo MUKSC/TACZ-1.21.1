@@ -82,8 +82,8 @@
   "inaccuracy": {
     "stand": 3.75,
     "move": 4.5,
-    "sneak": 3.25,
-    "lie": 2.75,
+    "sneak": 2.5,
+    "lie": 1.5,
     "aim": 0.1375
   },
   // 近战相关
@@ -111,7 +111,8 @@
   },
   "allow_attachment_types": [
     "muzzle",
-    "extended_mag"
+    "extended_mag",
+    "laser"
   ],
   "builtin_attachments": {
     "scope": "tacz:scope_aug_default"

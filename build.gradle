@@ -30,9 +30,9 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-//version = "1.0.4"
+version = "1.1.5"
 // 版本号，正式发布需要修改这一行
-version = FORMAT.format(new Date())
+//version = FORMAT.format(new Date())
 group = "com.tacz"
 archivesBaseName = "tacz-1.21.1"
 
@@ -155,6 +155,20 @@ repositories {
         url = 'https://maven.tterrag.com/'
     }
     maven {
+        // Shedaniel's maven (Architectury API)
+        url = "https://maven.architectury.dev"
+        content {
+            includeGroup "dev.architectury"
+        }
+    }
+    maven {
+        // saps.dev Maven (KubeJS and Rhino)
+        url = "https://maven.latvian.dev/releases"
+        content {
+            includeGroup "dev.latvian.mods"
+        }
+    }
+    maven {
         url 'https://jitpack.io'
     }
     maven {
@@ -218,6 +232,12 @@ dependencies {
     compileOnly fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${player_animation_lib}")
 
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
+
+    // kubejs开发环境引入
+    compileOnly "dev.latvian.mods:kubejs-neoforge:${kubejs_version}"
+    compileOnly "dev.latvian.mods:rhino:${rhino_version}"
+    //compileOnly fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
+
     // 引入 MixinExtras 以解决一些棘手的 Mixin 冲突问题（比如 @Redirect 不能嵌套）
     // 如果未来有迁移到 Fabric / NeoForge 的计划，请注意这两个框架都已自带 MixinExtras，无需自行打包。
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))

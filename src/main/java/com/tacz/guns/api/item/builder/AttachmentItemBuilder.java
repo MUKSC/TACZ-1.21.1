@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 public class AttachmentItemBuilder {
     private int count = 1;
     private ResourceLocation attachmentId = DefaultAssets.DEFAULT_ATTACHMENT_ID;
-    private ResourceLocation skinId = null;
 
     private AttachmentItemBuilder() {
     }
@@ -28,8 +27,8 @@ public class AttachmentItemBuilder {
         return this;
     }
 
+    @Deprecated
     public AttachmentItemBuilder setSkinId(ResourceLocation skinId) {
-        this.skinId = skinId;
         return this;
     }
 
@@ -37,7 +36,6 @@ public class AttachmentItemBuilder {
         ItemStack attachment = new ItemStack(ModItems.ATTACHMENT.get(), this.count);
         if (attachment.getItem() instanceof IAttachment iAttachment) {
             iAttachment.setAttachmentId(attachment, this.attachmentId);
-            iAttachment.setSkinId(attachment, this.skinId);
         }
         return attachment;
     }

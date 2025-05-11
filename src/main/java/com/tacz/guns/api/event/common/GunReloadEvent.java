@@ -8,7 +8,7 @@ import net.minecraftforge.fml.LogicalSide;
 /**
  * 生物开始更换枪械弹药时触发的事件。
  */
-public class GunReloadEvent extends Event {
+public class GunReloadEvent extends Event implements KubeJSGunEventPoster<GunReloadEvent>{
     private final LivingEntity entity;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
@@ -17,6 +17,7 @@ public class GunReloadEvent extends Event {
         this.entity = entity;
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     @Override

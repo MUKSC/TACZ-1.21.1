@@ -1,5 +1,7 @@
 package com.tacz.guns.compat.playeranimator.animation;
 
+import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.client.resource.GunDisplayInstance;
 import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import net.minecraft.client.Minecraft;
@@ -46,8 +48,13 @@ public class AdjustmentYRotModifier implements Function<String, Optional<Adjustm
                 }
                 yield Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(0, -yaw * Mth.DEG_TO_RAD, 0), Vec3f.ZERO));
             }
-            case "head", "leftArm", "rightArm" ->
-                    Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(pitch * Mth.DEG_TO_RAD, 0, 0), Vec3f.ZERO));
+            case "head" -> Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(pitch * Mth.DEG_TO_RAD, 0, 0), Vec3f.ZERO));
+            case "leftArm", "rightArm" -> {
+                if (TimelessAPI.getGunDisplay(player.getMainHandItem()).map(GunDisplayInstance::is3rdFixedHand).orElse(false)) {
+                    yield Optional.empty();
+                }
+                yield Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(pitch * Mth.DEG_TO_RAD, 0, 0), Vec3f.ZERO));
+            }
             default -> Optional.empty();
         };
     }

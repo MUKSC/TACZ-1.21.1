@@ -27,7 +27,10 @@
   ],
   "result": {
     "type": "gun",
-    "id": "tacz:ai_awp"
+    "id": "tacz:ai_awp",
+    "attachments": {
+      "scope": "tacz:scope_contender"
+    }
   },
   "type": "tacz:gun_smith_table_crafting"
 }

@@ -42,7 +42,7 @@
   },
   "draw_time": 0.43,
   "put_away_time": 0.53,
-  "aim_time": 0.21,
+  "aim_time": 0.17,
   "sprint_time": 0.15,
   "weight": 3.6,
   "movement_speed": {
@@ -75,10 +75,10 @@
     ]
   },
   "inaccuracy": {
-    "stand": 3.875,
+    "stand": 3.75,
     "move": 4.5,
-    "sneak": 3.25,
-    "lie": 1,
+    "sneak": 2,
+    "lie": 1.5,
     "aim": 0.12
   },
   // 近战相关
@@ -109,7 +109,8 @@
     "extended_mag",
     "scope",
     "grip",
-    "stock"
+    "stock",
+    "laser"
   ],
   "exclusive_attachments": {
   }

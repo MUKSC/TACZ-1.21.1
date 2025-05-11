@@ -1,18 +1,11 @@
 {
   "weight": 0.4,
-  "ads": {
-    // 加数（多个配件的数值相加，作为第一个乘区）
-    "addend": 0.035
-  },
-  "inaccuracy": {
-    "multiplier": 0.9
-  },
   "recoil": {
     "pitch": {
-      "multiplier": 0.8
+      "multiplier": 0.75
     },
     "yaw": {
-      "multiplier": 0.7
+      "multiplier": 0.75
     }
   },
   // 近战伤害，用于刺刀

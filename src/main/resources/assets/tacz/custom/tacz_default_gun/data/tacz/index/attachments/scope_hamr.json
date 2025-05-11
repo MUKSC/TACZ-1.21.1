@@ -1,0 +1,8 @@
+{
+  "hidden": false,
+  "name": "tacz.attachment.scope_hamr.name",
+  "display": "tacz:scope_hamr_display",
+  "data": "tacz:scope_hamr_data",
+  "type": "scope",
+  "sort": 10
+}

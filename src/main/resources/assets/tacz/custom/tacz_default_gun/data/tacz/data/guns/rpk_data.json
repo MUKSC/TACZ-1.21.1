@@ -16,7 +16,7 @@
   // 子弹实体属性
   "bullet": {
     // 寿命，单位秒
-    "life": 0.8,
+    "life": 0.9,
     // 用于霰弹，默认为 1，每发的伤害 / bullet_amount，每次射击扣除一发子弹
     "bullet_amount": 1,
     // 伤害
@@ -32,14 +32,14 @@
       "head_shot_multiplier": 1.5,
       // 距离-伤害分段常函数
       "damage_adjust": [
-        {"distance": 30, "damage": 10},
-        {"distance": 60, "damage": 7},
+        {"distance": 36, "damage": 10},
+        {"distance": 64, "damage": 7},
         // 如果你忘记写这个无穷，那么超过上述距离，我就认为是 0
         {"distance": "infinite", "damage": 6}
       ]
     },
     // 速度 m/s
-    "speed": 260,
+    "speed": 270,
     // 重力
     "gravity": 0.15,
     // 击退效果
@@ -94,16 +94,16 @@
   // 收枪的动作时长，单位秒。
   "put_away_time": 0.6,
   // 瞄准时长，单位秒。
-  "aim_time": 0.18,
+  "aim_time": 0.17,
   "sprint_time": 0.23,
   // 拉栓上膛的时间，仅当枪栓类型为 manual_action 时有效
   // "bolt_action_time": 0.9,
   // 开火模式
-  "weight": 4.8,
+  "weight": 4.5,
   "movement_speed": {
     "base": 0.0,
     "aim": -0.2,
-    "reload": -0.1
+    "reload": 0
   },
   "crawl_recoil_multiplier": 0.2,
   "fire_mode": [
@@ -130,11 +130,11 @@
   // 不准确度
   "inaccuracy": {
     // 站立射击散布
-    "stand": 4.75,
+    "stand": 4,
     // 移动射击散布
-    "move": 5.25,
+    "move": 4.55,
     // 潜行射击散布
-    "sneak": 3.5,
+    "sneak": 3.25,
     // 趴下射击散布
     "lie": 2,
     // 瞄准射击时散布

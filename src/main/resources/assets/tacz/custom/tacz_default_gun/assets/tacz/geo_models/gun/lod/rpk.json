@@ -363,8 +363,6 @@
 						{
 							"origin": [-0.625, -11.73392, -24.94254],
 							"size": [1.3125, 1.75, 1.5],
-							"pivot": [0, -11.26517, -17.41129],
-							"rotation": [0, 0, 0],
 							"uv": {
 								"north": {"uv": [46, 20], "uv_size": [1.5, 2]},
 								"east": {"uv": [21, 48], "uv_size": [1.5, 2]},
@@ -621,16 +619,6 @@
 					"name": "positioning2",
 					"parent": "positioning",
 					"pivot": [0, 0, 0]
-				},
-				{
-					"name": "muzzle_pos",
-					"parent": "positioning2",
-					"pivot": [0, -10.44375, -28.2]
-				},
-				{
-					"name": "stock_pos",
-					"parent": "positioning2",
-					"pivot": [0, -11.34375, 9.55]
 				},
 				{
 					"name": "muzzle_flash",

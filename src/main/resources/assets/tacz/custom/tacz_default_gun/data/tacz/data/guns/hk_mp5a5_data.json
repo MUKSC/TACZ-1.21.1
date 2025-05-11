@@ -29,6 +29,25 @@
     50,
     60
   ],
+  "script": "tacz:xmag_reload_logic",
+  "script_param": {
+    "reload_feed": 1.33,
+    "reload_cooldown": 1.87,
+    "empty_feed": 2.7,
+    "empty_cooldown": 3.03,
+    "reload_xmag_1_feed": 1.7,
+    "reload_xmag_1_cooldown": 2.13,
+    "empty_xmag_1_feed": 3.03,
+    "empty_xmag_1_cooldown": 3.4,
+    "reload_xmag_2_feed": 1.7,
+    "reload_xmag_2_cooldown": 2.13,
+    "empty_xmag_2_feed": 3.03,
+    "empty_xmag_2_cooldown": 3.4,
+    "reload_xmag_3_feed": 1.7,
+    "reload_xmag_3_cooldown": 2.13,
+    "empty_xmag_3_feed": 3.03,
+    "empty_xmag_3_cooldown": 3.4
+  },
   "bolt": "closed_bolt",
   "reload": {
     "type": "magazine",
@@ -68,7 +87,8 @@
     "stock",
     "grip",
     "muzzle",
-    "extended_mag"
+    "extended_mag",
+    "laser"
   ],
   "recoil": {
     "pitch": [
@@ -84,10 +104,10 @@
     ]
   },
   "inaccuracy": {
-    "stand": 3.2,
+    "stand": 3.5,
     "move": 4.5,
-    "sneak": 2.5,
-    "lie": 1.8,
+    "sneak": 2.25,
+    "lie": 1.5,
     "aim": 0.175
   },
   // 近战相关

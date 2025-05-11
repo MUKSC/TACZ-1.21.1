@@ -1,0 +1,19 @@
+{
+  "slot": "tacz:attachment/slot/sight_acro_rifle",
+  "model": "tacz:attachment/sight_acro_rifle_geo",
+  "texture": "tacz:attachment/uv/sight_acro_rifle",
+  "lod": {
+    "model": "tacz:attachment/lod/sight_acro_rifle",
+    "texture": "tacz:attachment/lod/sight_acro_rifle"
+  },
+  "zoom": [
+    1.25
+  ],
+  "scope": false,
+  "sight": true,
+  "fov": 70.0,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_c",
+    "uninstall": "tacz:attachments/scope_general_c"
+  }
+}

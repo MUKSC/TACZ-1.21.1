@@ -1,0 +1,10 @@
+{
+  "slot": "tacz:attachment/slot/stock_moe",
+  "model": "tacz:attachment/stock_moe_geo",
+  "texture": "tacz:attachment/uv/stock_moe",
+  "adapter": "ar_stock_adapter",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_a",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

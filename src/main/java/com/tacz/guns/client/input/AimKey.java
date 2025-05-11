@@ -38,7 +38,7 @@ public class AimKey {
             if (!(player instanceof IClientPlayerGunOperator operator)) {
                 return;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (IGun.mainHandHoldGun(player)) {
                 boolean action = true;
                 if (!KeyConfig.HOLD_TO_AIM.get()) {
                     action = !operator.isAim();
@@ -64,7 +64,7 @@ public class AimKey {
         if (!(player instanceof IClientPlayerGunOperator operator)) {
             return false;
         }
-        if (!IGun.mainhandHoldGun(player)) {
+        if (!IGun.mainHandHoldGun(player)) {
             return false;
         }
         boolean action = true;

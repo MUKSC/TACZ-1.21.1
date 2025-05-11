@@ -62,6 +62,9 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2d;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.util.*;
 
@@ -120,9 +123,10 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     private Vec3 startPos;
     // 曳光弹
     private boolean isTracerAmmo;
-    // 只对客户端有用的曳光弹数据
-    private Vec3 originCameraPosition;
-    private Vec3 originRenderOffset;
+    // 以下几个是只对客户端有用的曳光弹数据
+    private float cameraXRot;
+    private float cameraYRot;
+    private Vector3f firstPersonRenderOffset;
     // 发射的枪械 ID
     private ResourceLocation gunId;
     // 枪械display ID
@@ -317,6 +321,28 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         }
     }
 
+    public void shoot(double pitch, double yaw, float pVelocity, Vector2d vector2d) {
+        Vector3d left = new Vector3d(vector2d.x, vector2d.y, 8);
+
+        left.rotateX(pitch * Mth.DEG_TO_RAD);
+        left.rotateY(-yaw * Mth.DEG_TO_RAD);
+
+        Vec3 vec3 = new Vec3(left.x, left.y, left.z).normalize().scale(pVelocity);
+
+        this.setDeltaMovement(vec3.x, vec3.y, vec3.z);
+        double d0 = vec3.horizontalDistance();
+        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * (double)(180F / (float)Math.PI)));
+        this.setXRot((float)(Mth.atan2(vec3.y, d0) * (double)(180F / (float)Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+    }
+
+    public void shootFromRotation(Entity pShooter, float pX, float pY, float pZ, float pVelocity, Vector2d vector2d) {
+        this.shoot(pX, pY, pVelocity, vector2d);
+        Vec3 vec3 = pShooter.getDeltaMovement();
+        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, pShooter.onGround() ? 0.0D : vec3.y, vec3.z));
+    }
+
     public record MaybeMultipartEntity(
             Entity hitPart,
             Entity core
@@ -414,16 +440,17 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     }
 
     protected void onHitBlock(BlockHitResult result, Vec3 startVec, Vec3 endVec) {
-        super.onHitBlock(result);
         if (result.getType() == HitResult.Type.MISS) {
             return;
         }
-        Vec3 hitVec = result.getLocation();
         BlockPos pos = result.getBlockPos();
+        Vec3 hitVec = result.getLocation();
         // 触发事件
+        // 提前触发事件以让事件可以取消原版的命中行为（例如敲钟，打倒靶子等）
         if (MinecraftForge.EVENT_BUS.post(new AmmoHitBlockEvent(this.level(), result, this.level().getBlockState(pos), this))) {
             return;
         }
+        super.onHitBlock(result);
         // 爆炸
         if (this.explosion) {
             ExplodeUtil.createExplosion(this.getOwner(), this, this.explosionDamage, this.explosionRadius, this.explosionKnockback, this.explosionDestroyBlock, hitVec);
@@ -571,20 +598,28 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         return this.random;
     }
 
-    public Vec3 getOriginCameraPosition() {
-        return originCameraPosition;
+    public float getCameraYRot() {
+        return cameraYRot;
     }
 
-    public void setOriginCameraPosition(Vec3 originCameraPosition) {
-        this.originCameraPosition = originCameraPosition;
+    public void setCameraYRot(float cameraYRot) {
+        this.cameraYRot = cameraYRot;
     }
 
-    public Vec3 getOriginRenderOffset() {
-        return originRenderOffset;
+    public float getCameraXRot() {
+        return cameraXRot;
     }
 
-    public void setOriginRenderOffset(Vec3 originRenderOffset) {
-        this.originRenderOffset = originRenderOffset;
+    public void setCameraXRot(float cameraXRot) {
+        this.cameraXRot = cameraXRot;
+    }
+
+    public Vector3f getFirstPersonRenderOffset() {
+        return firstPersonRenderOffset;
+    }
+
+    public void setFirstPersonRenderOffset(Vector3f originRenderOffset) {
+        this.firstPersonRenderOffset = originRenderOffset;
     }
 
     public Optional<float[]> getTracerColorOverride() {

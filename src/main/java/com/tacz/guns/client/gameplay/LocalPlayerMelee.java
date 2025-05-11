@@ -38,24 +38,24 @@ public class LocalPlayerMelee {
             return;
         }
         // 暂定为主手
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return;
         }
-        GunDisplayInstance display = TimelessAPI.getGunDisplay(mainhandItem).orElse(null);
+        GunDisplayInstance display = TimelessAPI.getGunDisplay(mainHandItem).orElse(null);
         if (display == null) {
             return;
         }
-        ResourceLocation gunId = iGun.getGunId(mainhandItem);
+        ResourceLocation gunId = iGun.getGunId(mainHandItem);
         // 先检查枪口有没有近战属性
-        ResourceLocation muzzleId = iGun.getAttachmentId(mainhandItem, AttachmentType.MUZZLE);
+        ResourceLocation muzzleId = iGun.getAttachmentId(mainHandItem, AttachmentType.MUZZLE);
         MeleeData muzzleMeleeData = getMeleeData(muzzleId);
         if (muzzleMeleeData != null) {
             this.doMuzzleMelee(display);
             return;
         }
 
-        ResourceLocation stockId = iGun.getAttachmentId(mainhandItem, AttachmentType.STOCK);
+        ResourceLocation stockId = iGun.getAttachmentId(mainHandItem, AttachmentType.STOCK);
         MeleeData stockMeleeData = getMeleeData(stockId);
         if (stockMeleeData != null) {
             this.doStockMelee(display);

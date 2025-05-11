@@ -15,10 +15,10 @@
         {"distance": "infinite", "damage": 5}
       ]
     },
-    "speed": 155,
+    "speed": 170,
     "gravity": 0.15,
     "knockback": 0,
-    "friction": 0.035,
+    "friction": 0.025,
     "ignite": false,
     "pierce": 1
   },
@@ -43,7 +43,7 @@
   "draw_time": 0.63,
   "put_away_time": 0.28,
   "aim_time": 0.16,
-  "sprint_time": 0.05,
+  "sprint_time": 0.1,
   "weight": 1.2,
   "movement_speed": {
     "base": 0.0,
@@ -57,7 +57,8 @@
   "allow_attachment_types": [
     "scope",
     "muzzle",
-    "extended_mag"
+    "extended_mag",
+    "laser"
   ],
   "recoil": {
     "pitch": [
@@ -73,8 +74,8 @@
     ]
   },
   "inaccuracy": {
-    "stand": 2.0,
-    "move": 2.25,
+    "stand": 1.8,
+    "move": 2,
     "sneak": 1.25,
     "lie": 0.75,
     "aim": 0.175

@@ -10,8 +10,37 @@
     5.0,
     10.0
   ],
+  "views": [
+    1,
+    1
+  ],
+  "views_fov": [
+    20.0,
+    20.0
+  ],
+  // 模型上的文本显示
+  "text_show": {
+    // 作用的组名，该组的旋转点决定文本的位置和朝向
+    "ammo_count_text": {
+      // 文本缩放，默认大小对于 BlockBench 里的 1
+      "scale": 1,
+      // 对齐方式：right，center，left
+      "align": "center",
+      // 阴影
+      "shadow": false,
+      // 文本颜色
+      "color": "#FFFFFF",
+      // 亮度：1-15
+      "light": 15,
+      // 本地化，且支持PlaceholderAPI 风格的占位符
+      // 目前仅支持两个：%player_name% %ammo_count%
+      "text": "%ammo_count%"
+    }
+  },
+  // 组合镜需要将两个选项都设为 true
   "scope": true,
-  "fov": 20.0,
+  // 组合镜不需要这个
+  //"fov": 20.0,
   "sounds": {
     "install": "tacz:attachments/scope_general_a",
     "uninstall": "tacz:attachments/scope_general_a"

@@ -1,0 +1,9 @@
+{
+  "slot": "tacz:attachment/slot/grip_rk1_b25u",
+  "model": "tacz:attachment/grip_rk1_b25u",
+  "texture": "tacz:attachment/uv/grip_rk1_b25u",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_b",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

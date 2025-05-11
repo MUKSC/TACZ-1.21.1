@@ -1,6 +1,7 @@
 package com.tacz.guns.network;
 
-import com.tacz.guns.GunMod;
+import
+com.tacz.guns.GunMod;
 import com.tacz.guns.network.message.*;
 import com.tacz.guns.network.message.event.*;
 import com.tacz.guns.network.message.handshake.Acknowledge;
@@ -22,7 +23,6 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-
 public class NetworkHandler {
     private static final String VERSION = "1.0.4";
 
@@ -64,6 +64,8 @@ public class NetworkHandler {
         CHANNEL.messageBuilder(ServerMessageGunShoot.class, ID_COUNT.getAndIncrement(), NetworkDirection.PLAY_TO_CLIENT).encoder(ServerMessageGunShoot::encode).decoder(ServerMessageGunShoot::decode).consumerMainThread(ServerMessageGunShoot::handle).add();
         CHANNEL.messageBuilder(ServerMessageSyncBaseTimestamp.class, ID_COUNT.getAndIncrement(), NetworkDirection.PLAY_TO_CLIENT).encoder(ServerMessageSyncBaseTimestamp::encode).decoder(ServerMessageSyncBaseTimestamp::decode).consumerMainThread(ServerMessageSyncBaseTimestamp::handle).add();
         CHANNEL.messageBuilder(ClientMessageSyncBaseTimestamp.class, ID_COUNT.getAndIncrement(), NetworkDirection.PLAY_TO_SERVER).encoder(ClientMessageSyncBaseTimestamp::encode).decoder(ClientMessageSyncBaseTimestamp::decode).consumerMainThread(ClientMessageSyncBaseTimestamp::handle).add();
+
+        CHANNEL.messageBuilder(ClientMessageLaserColor.class, ID_COUNT.getAndIncrement(), NetworkDirection.PLAY_TO_SERVER).encoder(ClientMessageLaserColor::encode).decoder(ClientMessageLaserColor::decode).consumerMainThread(ClientMessageLaserColor::handle).add();
 
         registerAcknowledge();
         registerHandshakeMessage(ServerMessageSyncedEntityDataMapping.class, null);

@@ -9,6 +9,7 @@
   "slot": "tacz:gun/slot/scar_l",
   "animation": "tacz:scar_l",
   "use_default_animation": "rifle",
+  "state_machine": "tacz:scar_l_state_machine",
   "third_person_animation": "default",
   "transform": {
     "scale": {

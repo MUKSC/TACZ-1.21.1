@@ -19,6 +19,7 @@ public class RootCommand {
         root.then(ReloadCommand.get());
         root.then(HideTooltipPartCommand.get());
         root.then(ConvertCommand.get());
+        root.then(ConfigCommand.get());
         dispatcher.register(root);
     }
 }

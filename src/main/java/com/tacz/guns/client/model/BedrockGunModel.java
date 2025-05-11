@@ -59,6 +59,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
     protected @Nullable BedrockPart magazineNode;
     // 换弹时第二个弹匣定位组
     protected @Nullable BedrockPart additionalMagazineNode;
+    protected @Nullable List<BedrockPart> laserBeamPaths;
 
     private boolean renderHand = true;
     private ItemStack currentGunItem;
@@ -124,6 +125,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         groundOriginPath = getPath(modelMap.get(GROUND_ORIGIN_NODE));
         muzzleFlashPosPath = getPath(modelMap.get(MUZZLE_FLASH_ORIGIN_NODE));
         scopePosPath = getPath(modelMap.get(AttachmentType.SCOPE.name().toLowerCase() + ATTACHMENT_POS_SUFFIX));
+        laserBeamPaths = getPath(modelMap.get("laser_beam"));
         root = Optional.ofNullable(modelMap.get(ROOT_NODE)).map(ModelRendererWrapper::getModelRenderer).orElse(null);
     }
 
@@ -271,6 +273,9 @@ public class BedrockGunModel extends BedrockAnimatedModel {
                 });
             }
         }
+        if (laserBeamPaths != null) {
+            BeamRenderer.renderLaserBeam(gunItem, matrixStack, transformType, laserBeamPaths);
+        }
         // 镜子需要先渲染，写入模板值
         ItemStack attachmentItem = currentAttachmentItem.get(AttachmentType.SCOPE);
         IAttachment iAttachment = IAttachment.getIAttachmentOrNull(attachmentItem);
@@ -279,19 +284,22 @@ public class BedrockGunModel extends BedrockAnimatedModel {
             for (BedrockPart bedrockPart : scopePosPath) {
                 bedrockPart.translateAndRotateAndScale(matrixStack);
             }
-            AttachmentRender.renderAttachment(attachmentItem, matrixStack, transformType, light, overlay);
+            AttachmentRender.renderAttachment(attachmentItem, currentGunItem, matrixStack, transformType, light, overlay);
             matrixStack.popPose();
             // 开启模板测试，因为镜内不渲染枪体
             if (iAttachment != null) {
                 Optional<ClientAttachmentIndex> attachmentIndex = TimelessAPI.getClientAttachmentIndex(iAttachment.getAttachmentId(attachmentItem));
                 attachmentIndex.ifPresent(index -> {
-                    if (index.isScope()) {
+                    if (index.isScope() && index.isSight()) { // 组合镜
                         RenderHelper.enableItemEntityStencilTest();
+                        RenderSystem.stencilFunc(GL11.GL_GREATER, 127, 0xFF);
+                    } else if (index.isScope()) { // 长筒镜
+                        RenderHelper.enableItemEntityStencilTest();
+                        RenderSystem.stencilFunc(GL11.GL_EQUAL, 0, 0xFF);
                     }
                 });
             }
         }
-        RenderSystem.stencilFunc(GL11.GL_EQUAL, 0, 0xFF);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
         super.render(matrixStack, transformType, renderType, light, overlay);
         RenderHelper.disableItemEntityStencilTest();

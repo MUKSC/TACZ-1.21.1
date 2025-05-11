@@ -1,6 +1,8 @@
 package com.tacz.guns.inventory;
 
+import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
 import com.tacz.guns.network.NetworkHandler;
@@ -15,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -57,12 +58,23 @@ public class GunSmithTableMenu extends AbstractContainerMenu {
 
     @Nullable
     private GunSmithTableRecipe getRecipe(ResourceLocation recipeId, RecipeManager recipeManager) {
-        if (filter != null && !filter.contains(recipeId)) {
-            return null;
+        if (!DefaultAssets.DEFAULT_BLOCK_ID.equals(getBlockId()) || SyncConfig.ENABLE_TABLE_FILTER.get()) {
+            if (filter != null && !filter.contains(recipeId)) {
+                return null;
+            }
         }
         RecipeHolder<?> holder = recipeManager.byKey(recipeId).orElse(null);
-        if (holder != null && holder.value() instanceof GunSmithTableRecipe recipe) {
-            return recipe;
+        if (holder != null && holder.value() instanceof GunSmithTableRecipe gunSmithTableRecipe) {
+            boolean flag = TimelessAPI.getCommonBlockIndex(getBlockId()).map(blockIndex -> {
+                return blockIndex.getData().getTabs().stream().noneMatch(tab -> tab.id().equals(gunSmithTableRecipe.getTab()));
+            }).orElse(true);
+            if (DefaultAssets.DEFAULT_BLOCK_ID.equals(getBlockId()) && !SyncConfig.ENABLE_TABLE_FILTER.get()) {
+                flag = false;
+            }
+            if (flag) {
+                return null;
+            }
+            return gunSmithTableRecipe;
         }
         return null;
     }
@@ -73,37 +85,40 @@ public class GunSmithTableMenu extends AbstractContainerMenu {
             return;
         }
         player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(handler -> {
-            Int2IntArrayMap recordCount = new Int2IntArrayMap();
-            List<GunSmithTableIngredient> ingredients = recipe.getInputs();
+            // 是创造模式，就不扣材料
+            if (!player.isCreative()) {
+                Int2IntArrayMap recordCount = new Int2IntArrayMap();
+                List<GunSmithTableIngredient> ingredients = recipe.getInputs();
 
-            for (GunSmithTableIngredient ingredient : ingredients) {
-                int count = 0;
-                for (int slotIndex = 0; slotIndex < handler.getSlots(); slotIndex++) {
-                    ItemStack stack = handler.getStackInSlot(slotIndex);
-                    int stackCount = stack.getCount();
-                    if (!stack.isEmpty() && ingredient.getIngredient().test(stack)) {
-                        count = count + stackCount;
-                        // 记录扣除的 slot 和数量
-                        if (count <= ingredient.getCount()) {
-                            // 如果数量不足，全扣
-                            recordCount.put(slotIndex, stackCount);
-                        } else {
-                            //  数量够了，只扣需要的数量
-                            int remaining = count - ingredient.getCount();
-                            recordCount.put(slotIndex, stackCount - remaining);
-                            break;
+                for (GunSmithTableIngredient ingredient : ingredients) {
+                    int count = 0;
+                    for (int slotIndex = 0; slotIndex < handler.getSlots(); slotIndex++) {
+                        ItemStack stack = handler.getStackInSlot(slotIndex);
+                        int stackCount = stack.getCount();
+                        if (!stack.isEmpty() && ingredient.getIngredient().test(stack)) {
+                            count = count + stackCount;
+                            // 记录扣除的 slot 和数量
+                            if (count <= ingredient.getCount()) {
+                                // 如果数量不足，全扣
+                                recordCount.put(slotIndex, stackCount);
+                            } else {
+                                //  数量够了，只扣需要的数量
+                                int remaining = count - ingredient.getCount();
+                                recordCount.put(slotIndex, stackCount - remaining);
+                                break;
+                            }
                         }
                     }
+                    // 数量不够，不执行后续逻辑，合成失败
+                    if (count < ingredient.getCount()) {
+                        return;
+                    }
                 }
-                // 数量不够，不执行后续逻辑，合成失败
-                if (count < ingredient.getCount()) {
-                    return;
-                }
-            }
 
-            // 开始扣材料
-            for (int slotIndex : recordCount.keySet()) {
-                handler.extractItem(slotIndex, recordCount.get(slotIndex), false);
+                // 开始扣材料
+                for (int slotIndex : recordCount.keySet()) {
+                    handler.extractItem(slotIndex, recordCount.get(slotIndex), false);
+                }
             }
 
             // 给玩家对应的物品

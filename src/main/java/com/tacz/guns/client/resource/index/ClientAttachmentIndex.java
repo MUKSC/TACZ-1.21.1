@@ -4,13 +4,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.resource.ClientAssetsManager;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentDisplay;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentLod;
+import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
 import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.pojo.AttachmentIndexPOJO;
 import com.tacz.guns.resource.pojo.data.attachment.AttachmentData;
+import com.tacz.guns.util.ColorHex;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
@@ -29,14 +32,16 @@ public class ClientAttachmentIndex {
     private @Nullable Pair<BedrockAttachmentModel, ResourceLocation> lodModel;
     private ResourceLocation slotTexture;
     private AttachmentData data;
-    private float fov = 70.0f;
+    private float[] viewsFov;
     private float @Nullable [] zoom;
+    private int [] views;
     private boolean isScope;
     private boolean isSight;
     private boolean showMuzzle;
     private @Nullable String adapterNodeName;
     private @Nullable String tooltipKey;
     private Map<String, ResourceLocation> sounds;
+    private @Nullable LaserConfig laserConfig;
 
     private ClientAttachmentIndex() {
     }
@@ -49,6 +54,7 @@ public class ClientAttachmentIndex {
         checkName(indexPOJO, index);
         checkSlotTexture(display, index);
         checkTextureAndModel(display, index);
+        checkTextShow(display, index.attachmentModel);
         checkLod(display, index);
 //        checkSkins(registryName, index);
         checkSounds(display, index);
@@ -66,8 +72,15 @@ public class ClientAttachmentIndex {
         Preconditions.checkArgument(pojoDisplay != null, "index object missing display field");
         AttachmentDisplay display = ClientAssetsManager.INSTANCE.getAttachmentDisplay(pojoDisplay);
         Preconditions.checkArgument(display != null, "there is no corresponding display file");
-        Preconditions.checkArgument(display.getFov() > 0, "fov must > 0");
-        index.fov = display.getFov();
+        index.viewsFov = display.getViewsFov();
+        if (index.viewsFov == null) {
+            Preconditions.checkArgument(display.getFov() > 0, "fov must > 0");
+            index.viewsFov = new float[]{display.getFov()};
+        } else {
+            for(float fov : index.viewsFov) {
+                Preconditions.checkArgument(fov > 0, "fov must > 0");
+            }
+        }
         index.zoom = display.getZoom();
         if (index.zoom != null) {
             for (int i = 0; i < index.zoom.length; i++) {
@@ -76,11 +89,36 @@ public class ClientAttachmentIndex {
                 }
             }
         }
+        index.views = display.getViews();
+        if (index.views == null) {
+            index.views = new int[]{1};
+        } else {
+            for (int i = 0; i < index.views.length; i++) {
+                if (index.views[i] < 1) {
+                    throw new IllegalArgumentException("view index must >= 1");
+                }
+            }
+        }
         index.isScope = display.isScope();
         index.isSight = display.isSight();
         index.adapterNodeName = display.getAdapterNodeName();
         index.showMuzzle = display.isShowMuzzle();
+        index.laserConfig = display.getLaserConfig();
         return display;
+    }
+
+    private static void checkTextShow(AttachmentDisplay display, BedrockAttachmentModel model) {
+        if (model != null) {
+            Map<String, TextShow> textShowMap = Maps.newHashMap();
+            display.getTextShows().forEach((key, textShow) -> {
+                if (StringUtils.isNoneBlank(key)) {
+                    int color = ColorHex.colorTextToRbgInt(textShow.getColorText());
+                    textShow.setColorInt(color);
+                    textShowMap.put(key, textShow);
+                }
+            });
+            model.setTextShowList(textShowMap);
+        }
     }
 
     private static void checkData(AttachmentIndexPOJO indexPOJO, ClientAttachmentIndex index) {
@@ -166,15 +204,6 @@ public class ClientAttachmentIndex {
         }
     }
 
-//    private static void checkSkins(ResourceLocation registryName, ClientAttachmentIndex index) {
-//        Map<ResourceLocation, AttachmentSkin> skins = ClientAssetManager.INSTANCE.getAttachmentSkins(registryName);
-//        if (skins != null) {
-//            for (Map.Entry<ResourceLocation, AttachmentSkin> entry : skins.entrySet()) {
-//                ClientAttachmentSkinIndex skinIndex = ClientAttachmentSkinIndex.getInstance(entry.getValue());
-//                index.skinIndexMap.put(entry.getKey(), skinIndex);
-//            }
-//        }
-//    }
 
     private static void checkSounds(AttachmentDisplay display, ClientAttachmentIndex index) {
         Map<String, ResourceLocation> displaySounds = display.getSounds();
@@ -213,24 +242,26 @@ public class ClientAttachmentIndex {
         return slotTexture;
     }
 
-    public float getFov() {
-        return fov;
+    public float[] getViewsFov() {
+        return viewsFov;
     }
 
     public float @Nullable [] getZoom() {
         return zoom;
     }
 
+    public int[] getViews() {
+        return views;
+    }
+
     public AttachmentData getData() {
         return data;
     }
 
+    @Deprecated
     @Nullable
     public ClientAttachmentSkinIndex getSkinIndex(@Nullable ResourceLocation skinName) {
-        if (skinName == null) {
-            return null;
-        }
-        return skinIndexMap.get(skinName);
+        return null;
     }
 
     public boolean isScope() {
@@ -252,5 +283,9 @@ public class ClientAttachmentIndex {
 
     public Map<String, ResourceLocation> getSounds() {
         return sounds;
+    }
+
+    public @Nullable LaserConfig getLaserConfig() {
+        return laserConfig;
     }
 }
