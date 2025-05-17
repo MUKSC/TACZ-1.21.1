@@ -46,6 +46,7 @@ public class GunMod {
         ModCreativeTabs.TABS.register(bus);
         ModItems.ITEMS.register(bus);
         ModEntities.ENTITY_TYPES.register(bus);
+        ModIngredientTypes.INGREDIENT_TYPES.register(bus);
         ModRecipe.RECIPE_SERIALIZERS.register(bus);
         ModRecipe.RECIPE_TYPES.register(bus);
         ModContainer.CONTAINER_TYPE.register(bus);
