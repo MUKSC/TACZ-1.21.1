@@ -46,7 +46,7 @@ public class ClientIndexManager {
         loadBlockIndex();
 
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null && IGun.mainhandHoldGun(player)) {
+        if (player != null && IGun.mainHandHoldGun(player)) {
             AttachmentPropertyManager.postChangeEvent(player, player.getMainHandItem());
 
             // 自动切一次枪，以便刷新状态机

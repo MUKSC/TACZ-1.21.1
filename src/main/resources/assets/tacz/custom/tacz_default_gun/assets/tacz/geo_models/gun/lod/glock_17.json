@@ -321,6 +321,12 @@
 					"rotation": [0, 90, 0]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "positioning",
+					"pivot": [0, 4.25, -3.5],
+					"rotation": [0, 0, -180]
+				},
+				{
 					"name": "thirdperson_hand",
 					"parent": "positioning",
 					"pivot": [0.025, 4.225, -0.35]

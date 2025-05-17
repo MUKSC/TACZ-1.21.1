@@ -5,6 +5,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class MoveSpeed {
+    public MoveSpeed() {
+    }
+
+    public MoveSpeed(float baseMultiplier, float aimMultiplier, float reloadMultiplier) {
+        this.baseMultiplier = baseMultiplier;
+        this.aimMultiplier = aimMultiplier;
+        this.reloadMultiplier = reloadMultiplier;
+    }
+
     @SerializedName("base")
     private float baseMultiplier = 0.0f;
 

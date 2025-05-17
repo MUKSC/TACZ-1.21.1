@@ -1,8 +1,13 @@
 package com.tacz.guns.resource.modifier.custom;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
-import com.tacz.guns.api.modifier.*;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.api.modifier.CacheValue;
+import com.tacz.guns.api.modifier.IAttachmentModifier;
+import com.tacz.guns.api.modifier.JsonProperty;
+import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -15,7 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,7 +29,7 @@ import java.util.List;
  * right 是 Yaw
  */
 public class RecoilModifier implements IAttachmentModifier<Pair<Modifier, Modifier>, ParameterizedCachePair<Float, Float>> {
-    public static final String ID = "recoil";
+    public static final String ID = GunProperties.RECOIL.name();
 
     @Override
     public String getId() {
@@ -40,7 +44,7 @@ public class RecoilModifier implements IAttachmentModifier<Pair<Modifier, Modifi
     @Override
     @SuppressWarnings("deprecation")
     public JsonProperty<Pair<Modifier, Modifier>> readJson(String json) {
-        RecoilModifier.Data data = CommonGunPackLoader.GSON.fromJson(json, RecoilModifier.Data.class);
+        RecoilModifier.Data data = CommonAssetsManager.GSON.fromJson(json, RecoilModifier.Data.class);
         NewRecoilData newRecoilData = data.newRecoilData;
         OldRecoilData oldRecoilData = data.oldRecoilData;
         // 兼容旧版本写法
@@ -86,22 +90,24 @@ public class RecoilModifier implements IAttachmentModifier<Pair<Modifier, Modifi
         GunRecoil recoil = gunData.getRecoil();
 
         double pitch = propertyCache.left().getDefaultValue();
-        double pitchModifier = propertyCache.left().eval(getMaxInGunRecoilKeyFrame(recoil.getPitch())) - pitch;
+        double modifiedPitch = propertyCache.left().eval(getMaxInGunRecoilKeyFrame(recoil.getPitch()));
+        double pitchModifier = modifiedPitch - pitch;
         double pitchPercent = Math.min(pitch / 5.0, 1);
         double pitchModifierPercent = Math.min(pitchModifier / 5.0, 1);
         String pitchTitleKey = "gui.tacz.gun_refit.property_diagrams.pitch";
-        String pitchPositivelyString = String.format("%.2f §c(+%.2f)", pitch, pitchModifier);
-        String pitchNegativelyString = String.format("%.2f §a(%.2f)", pitch, pitchModifier);
-        String pitchDefaultString = String.format("%.2f", pitch);
+        String pitchPositivelyString = String.format("%.2f §c(+%.2f)", modifiedPitch, pitchModifier);
+        String pitchNegativelyString = String.format("%.2f §a(%.2f)", modifiedPitch, pitchModifier);
+        String pitchDefaultString = String.format("%.2f", modifiedPitch);
 
         double yaw = propertyCache.right().getDefaultValue();
-        double yawModifier = propertyCache.right().eval(getMaxInGunRecoilKeyFrame(recoil.getYaw())) - yaw;
+        double modifiedYaw = propertyCache.right().eval(getMaxInGunRecoilKeyFrame(recoil.getYaw()));
+        double yawModifier = modifiedYaw - yaw;
         double yawPercent = Math.min(yaw / 5.0, 1);
         double yawModifierPercent = Math.min(yawModifier / 5.0, 1);
         String yawTitleKey = "gui.tacz.gun_refit.property_diagrams.yaw";
-        String yawPositivelyString = String.format("%.2f §c(+%.2f)", yaw, yawModifier);
-        String yawNegativelyString = String.format("%.2f §a(%.2f)", yaw, yawModifier);
-        String yawDefaultString = String.format("%.2f", yaw);
+        String yawPositivelyString = String.format("%.2f §c(+%.2f)", modifiedYaw, yawModifier);
+        String yawNegativelyString = String.format("%.2f §a(%.2f)", modifiedYaw, yawModifier);
+        String yawDefaultString = String.format("%.2f", modifiedYaw);
 
         boolean positivelyBetter = false;
 

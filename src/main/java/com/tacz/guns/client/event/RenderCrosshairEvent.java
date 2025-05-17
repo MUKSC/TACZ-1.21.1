@@ -48,7 +48,7 @@ public class RenderCrosshairEvent {
         if (player == null) {
             return;
         }
-        if (!IGun.mainhandHoldGun(player)) {
+        if (!IGun.mainHandHoldGun(player)) {
             return;
         }
         // 全面替换成自己的

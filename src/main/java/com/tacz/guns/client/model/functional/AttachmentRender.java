@@ -9,7 +9,6 @@ import com.tacz.guns.client.model.BedrockAttachmentModel;
 import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.model.IFunctionalRenderer;
 import com.tacz.guns.client.renderer.item.AttachmentItemRenderer;
-import com.tacz.guns.client.resource.index.ClientAttachmentSkinIndex;
 import com.tacz.guns.util.RenderDistance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -33,35 +32,24 @@ public class AttachmentRender implements IFunctionalRenderer {
         this.type = type;
     }
 
-    public static void renderAttachment(ItemStack attachmentItem, PoseStack poseStack, ItemDisplayContext transformType, int light, int overlay) {
+    public static void renderAttachment(ItemStack attachmentItem, ItemStack gunItem, PoseStack poseStack, ItemDisplayContext transformType, int light, int overlay) {
         poseStack.translate(0, -1.5, 0);
         if (attachmentItem.getItem() instanceof IAttachment iAttachment) {
             ResourceLocation attachmentId = iAttachment.getAttachmentId(attachmentItem);
             TimelessAPI.getClientAttachmentIndex(attachmentId).ifPresentOrElse(attachmentIndex -> {
-                ResourceLocation skinId = iAttachment.getSkinId(attachmentItem);
-                ClientAttachmentSkinIndex skinIndex = attachmentIndex.getSkinIndex(skinId);
-                if (skinIndex != null) {
-                    // 有皮肤则渲染皮肤
-                    BedrockAttachmentModel model = skinIndex.getModel();
-                    ResourceLocation texture = skinIndex.getTexture();
-                    RenderType renderType = RenderType.entityCutout(texture);
-                    model.render(poseStack, transformType, renderType, light, overlay);
-                } else {
-                    // 没有皮肤，渲染默认模型
-                    BedrockAttachmentModel model = attachmentIndex.getAttachmentModel();
-                    ResourceLocation texture = attachmentIndex.getModelTexture();
-                    // 这里是枪械里的配件渲染，没有模型材质就不渲染
-                    if (model != null && texture != null) {
-                        // 调用低模
-                        Pair<BedrockAttachmentModel, ResourceLocation> lodModel = attachmentIndex.getLodModel();
-                        // 有低模、在高模渲染范围外、不是第一人称
-                        if (lodModel != null && !RenderDistance.inRenderHighPolyModelDistance(poseStack) && !transformType.firstPerson()) {
-                            model = lodModel.getLeft();
-                            texture = lodModel.getRight();
-                        }
-                        RenderType renderType = RenderType.entityCutout(texture);
-                        model.render(poseStack, transformType, renderType, light, overlay);
+                BedrockAttachmentModel model = attachmentIndex.getAttachmentModel();
+                ResourceLocation texture = attachmentIndex.getModelTexture();
+                // 这里是枪械里的配件渲染，没有模型材质就不渲染
+                if (model != null && texture != null) {
+                    // 调用低模
+                    Pair<BedrockAttachmentModel, ResourceLocation> lodModel = attachmentIndex.getLodModel();
+                    // 有低模、在高模渲染范围外、不是第一人称
+                    if (lodModel != null && !RenderDistance.inRenderHighPolyModelDistance(poseStack) && !transformType.firstPerson()) {
+                        model = lodModel.getLeft();
+                        texture = lodModel.getRight();
                     }
+                    RenderType renderType = RenderType.entityCutout(texture);
+                    model.render(attachmentItem, gunItem, poseStack, transformType, renderType, light, overlay);
                 }
             }, () -> {
                 // 没有对应的 attachmentIndex，渲染黑紫材质以提醒
@@ -85,7 +73,7 @@ public class AttachmentRender implements IFunctionalRenderer {
                 poseStack2.last().normal().mul(normal);
                 poseStack2.last().pose().mul(pose);
                 // 渲染配件
-                renderAttachment(attachmentItem, poseStack2, transformType, light, overlay);
+                renderAttachment(attachmentItem, bedrockGunModel.getCurrentGunItem(), poseStack2, transformType, light, overlay);
             });
         }
     }

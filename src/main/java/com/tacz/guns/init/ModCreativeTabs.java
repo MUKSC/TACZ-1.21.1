@@ -65,13 +65,13 @@ public class ModCreativeTabs {
             .icon(() -> AttachmentItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "extended_mag_3")).build())
             .displayItems((parameters, output) -> output.acceptAll(AttachmentItem.fillItemCategory(AttachmentType.EXTENDED_MAG))).build());
 
-//    public static DeferredHolder<CreativeModeTab, CreativeModeTab> ATTACHMENT_LASER_TAB = TABS.register("laser", () -> CreativeModeTab.builder()
-//            .title(Component.translatable("tacz.type.laser.name")).withTabsBefore(ATTACHMENT_EXTENDED_MAG_TAB.getId())
-//            .icon(() -> AttachmentItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath()(GunMod.MOD_ID, "sight_sro_dot")).build())
-//            .displayItems((parameters, output) -> output.acceptAll(AttachmentItem.fillItemCategory(AttachmentType.LASER))).build());
+    public static DeferredHolder<CreativeModeTab, CreativeModeTab> ATTACHMENT_LASER_TAB = TABS.register("laser", () -> CreativeModeTab.builder()
+            .title(Component.translatable("tacz.type.laser.name")).withTabsBefore(ATTACHMENT_EXTENDED_MAG_TAB.getId())
+            .icon(() -> AttachmentItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "laser_compact")).build())
+            .displayItems((parameters, output) -> output.acceptAll(AttachmentItem.fillItemCategory(AttachmentType.LASER))).build());
 
     public static DeferredHolder<CreativeModeTab, CreativeModeTab> GUN_PISTOL_TAB = TABS.register("pistol", () -> CreativeModeTab.builder()
-            .title(Component.translatable("tacz.type.pistol.name")).withTabsBefore(ATTACHMENT_EXTENDED_MAG_TAB.getId())
+            .title(Component.translatable("tacz.type.pistol.name")).withTabsBefore(ATTACHMENT_LASER_TAB.getId())
             .icon(() -> GunItemBuilder.create().setId(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "glock_17")).build(Minecraft.getInstance().level.registryAccess()))
             .displayItems((parameters, output) -> output.acceptAll(AbstractGunItem.fillItemCategory(GunTabType.PISTOL, parameters.holders()))).build());
 

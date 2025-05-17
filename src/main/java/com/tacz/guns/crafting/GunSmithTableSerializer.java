@@ -6,8 +6,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 /**
- * 此类为数据包侧载枪械工作台的实现<br>
- * 枪包的序列化不在此处
+ * 工作台配方序列化器
  */
 public class GunSmithTableSerializer implements RecipeSerializer<GunSmithTableRecipe> {
     @Override

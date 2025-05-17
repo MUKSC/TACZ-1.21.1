@@ -21,10 +21,7 @@
   ],
   "result": {
     "type": "gun",
-    "id": "tacz:hk_g3",
-    "attachments": {
-      "stock": "tacz:oem_stock_tactical"
-    }
+    "id": "tacz:hk_g3"
   },
   "type": "tacz:gun_smith_table_crafting"
 }

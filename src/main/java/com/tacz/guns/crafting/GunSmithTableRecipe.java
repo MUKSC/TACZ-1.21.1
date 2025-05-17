@@ -7,6 +7,7 @@ import com.tacz.guns.resource.pojo.data.recipe.TableRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -84,5 +85,9 @@ public class GunSmithTableRecipe implements Recipe<SmithingRecipeInput> {
 
     public void init(HolderLookup.Provider provider) {
         result.init(provider);
+    }
+
+    public ResourceLocation getTab() {
+        return result.getGroup();
     }
 }

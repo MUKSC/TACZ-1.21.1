@@ -1,0 +1,61 @@
+{
+  "model": "tacz:gun/g36k_geo",
+  "texture": "tacz:gun/uv/g36k",
+  "lod": {
+    "model": "tacz:gun/lod/g36k",
+    "texture": "tacz:gun/lod/g36k"
+  },
+  "hud": "tacz:gun/hud/g36k",
+  "slot": "tacz:gun/slot/g36k",
+  "animation": "tacz:g36k",
+  "use_default_animation": "rifle",
+  "third_person_animation": "default",
+  "state_machine": "tacz:g36k_state_machine",
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 0.75
+  },
+  "iron_zoom": 1.33,
+  "zoom_model_fov": 60,
+  "shell": {
+    "initial_velocity": [5, 2, 1],
+    "random_velocity": [1, 1, 0.25],
+    "acceleration": [0.0, -10, 0.0],
+    "angular_velocity": [360, -1200, 90],
+    "living_time": 1.0
+  },
+  "sounds": {
+    "shoot": "tacz:g36k/g36k_shoot",
+    "shoot_3p": "tacz:g36k/g36k_shoot_3p",
+    "silence": "tacz:g36k/g36k_silence",
+    "silence_3p": "tacz:g36k/g36k_silence_3p",
+    "draw": "tacz:g36k/g36k_draw",
+    "put_away": "tacz:g36k/g36k_put_away",
+    "dry_fire": "tacz:dry_fire",
+    "fire_select": "tacz:fire_select",
+    "head_hit": "tacz:head_hit",
+    "flesh_hit": "tacz:flesh_hit",
+    "kill": "tacz:kill",
+    "melee_push": "tacz:melee_stock/melee_stock_01",
+    "melee_stock": "tacz:melee_stock/melee_stock_03"
+  },
+  "offhand_show": {
+    "pos": [1, 19, 4],
+    "rotate": [0, 0, 50],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [-1, 19, 3],
+      "rotate": [-180, 0, 130],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

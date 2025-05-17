@@ -17,6 +17,8 @@ iris-modrinth = "1.8.1+1.21.1-neoforge"
 carry-on-modrinth = "2.2.2"
 shoulder-surfing-reloaded-modrinth = "1.21.1-4.7.0+neoforge"
 jei = "19.21.0.247"
+kubejs = "2101.7.1-build.181"
+rhino = "2101.2.7-build.74"
 
 [libraries]
 org-apache-commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math" }
@@ -33,6 +35,8 @@ maven-modrinth-shoulder-surfing-reloaded = { module = "maven.modrinth:shoulder-s
 mezz-jei-common-api = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
 mezz-jei-neoforge-api = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
 mezz-jei-neoforge = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
+dev-latvian-mods-kubejs-neoforge = { module = "dev.latvian.mods:kubejs-neoforge", version.ref = "kubejs" }
+dev-latvian-mods-rhino = { module = "dev.latvian.mods:rhino", version.ref = "rhino" }
 
 [plugins]
 moddev = { id = "net.neoforged.moddev", version.ref = "moddev" }

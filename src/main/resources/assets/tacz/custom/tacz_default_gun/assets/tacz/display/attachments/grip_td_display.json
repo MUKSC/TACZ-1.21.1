@@ -1,0 +1,9 @@
+{
+  "slot": "tacz:attachment/slot/grip_td",
+  "model": "tacz:attachment/grip_td",
+  "texture": "tacz:attachment/uv/grip_td",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_b",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.resource.pojo.display.IDisplay;
+import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +13,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class GunDisplay implements IDisplay {
+    @SerializedName("model_type")
+    private String modelType = "default";
     @SerializedName("model")
     private ResourceLocation modelLocation;
     @SerializedName("texture")
@@ -52,10 +55,17 @@ public class GunDisplay implements IDisplay {
     private Map<String, Object> stateMachineParam = null;
     @Nullable
     @SerializedName("use_default_animation")
-    private DefaultAnimation defaultAnimation;
+    // 弃用，优先使用 default_animation 指定默认动画
+    private DefaultAnimationType defaultAnimationType;
+    @Nullable
+    @SerializedName("default_animation")
+    private ResourceLocation defaultAnimation = null;
     @Nullable
     @SerializedName("player_animator_3rd")
     private ResourceLocation playerAnimator3rd;
+    @Nullable
+    @SerializedName("3rd_fixed_hand")
+    private boolean playerAnimator3rdFixedHand = false;
     @Nullable
     @SerializedName("sounds")
     private Map<String, ResourceLocation> sounds;
@@ -82,6 +92,12 @@ public class GunDisplay implements IDisplay {
     private boolean showCrosshair = false;
     @SerializedName("controllable")
     private EnumMap<FireMode, ControllableData> controllableData = Maps.newEnumMap(FireMode.class);
+    @SerializedName("laser")
+    private LaserConfig laserConfig;
+
+    public String getModelType() {
+        return modelType;
+    }
 
     public ResourceLocation getModelLocation() {
         return modelLocation;
@@ -127,7 +143,12 @@ public class GunDisplay implements IDisplay {
     }
 
     @Nullable
-    public DefaultAnimation getDefaultAnimation() {
+    public DefaultAnimationType getDefaultAnimationType() {
+        return defaultAnimationType;
+    }
+
+    @Nullable
+    public ResourceLocation getDefaultAnimation() {
         return defaultAnimation;
     }
 
@@ -203,6 +224,14 @@ public class GunDisplay implements IDisplay {
         return damageStyle;
     }
 
+    @Nullable
+    public LaserConfig getLaserConfig() {
+        return laserConfig;
+    }
+
+    public boolean is3rdFixedHand() {
+        return playerAnimator3rdFixedHand;
+    }
 
     @Override
     public void init() {

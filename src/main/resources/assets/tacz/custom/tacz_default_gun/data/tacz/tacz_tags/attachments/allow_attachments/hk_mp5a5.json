@@ -7,5 +7,7 @@
   "#tacz:stock",
   "#tacz:oem_stock",
   "#tacz:grip",
-  "#tacz:ammo_mod_no_he"
+  "#tacz:ammo_mod_no_he",
+  "#tacz:pistol_laser",
+  "#tacz:scope_lowsight"
 ]

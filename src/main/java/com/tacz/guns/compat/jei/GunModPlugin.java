@@ -28,6 +28,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @JeiPlugin
 public class GunModPlugin implements IModPlugin {
@@ -57,7 +59,10 @@ public class GunModPlugin implements IModPlugin {
 
         for (var entry : recipeTypeMap.entrySet()) {
             TimelessAPI.getCommonBlockIndex(entry.getKey()).ifPresent(blockIndex -> {
-                List<GunSmithTableRecipe> recipeList = blockIndex.getFilter().filter(recipes, RecipeHolder::id).stream().map(RecipeHolder::value).toList();
+                List<GunSmithTableRecipe> recipeList = blockIndex.getFilter().filter(recipes, RecipeHolder::id).stream().map(RecipeHolder::value).collect(Collectors.toList());
+                recipeList.removeIf(recipe -> {
+                    return blockIndex.getData().getTabs().stream().noneMatch(tab -> Objects.equals(tab.id(), recipe.getResult().getGroup()));
+                });
                 registration.addRecipes(entry.getValue(), recipeList);
             });
         }
@@ -82,6 +87,9 @@ public class GunModPlugin implements IModPlugin {
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AMMO.get(), GunModSubtype.getAmmoSubtype());
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.ATTACHMENT.get(), GunModSubtype.getAttachmentSubtype());
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.AMMO_BOX.get(), GunModSubtype.getAmmoBoxSubtype());
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.WORKBENCH_111.get(), GunModSubtype.getTableSubType());
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.WORKBENCH_121.get(), GunModSubtype.getTableSubType());
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.WORKBENCH_211.get(), GunModSubtype.getTableSubType());
         GunItemManager.getAllGunItems().forEach(item -> registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, item.get(), GunModSubtype.getGunSubtype()));
     }
 

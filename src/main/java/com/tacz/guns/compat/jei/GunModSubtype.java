@@ -6,6 +6,7 @@ import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
+import com.tacz.guns.api.item.*;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +56,23 @@ public class GunModSubtype {
             public String getLegacyStringSubtypeInfo(ItemStack stack, UidContext uidContext) {
                 if (stack.getItem() instanceof IAttachment iAttachment) {
                     return iAttachment.getAttachmentId(stack).toString();
+                }
+                return "";
+            }
+        };
+    }
+
+    public static ISubtypeInterpreter<ItemStack> getTableSubType() {
+        return new ISubtypeInterpreter<>() {
+            @Override
+            public @Nullable Object getSubtypeData(ItemStack stack, UidContext uidContext) {
+                return getLegacyStringSubtypeInfo(stack, uidContext);
+            }
+
+            @Override
+            public String getLegacyStringSubtypeInfo(ItemStack stack, UidContext uidContext) {
+                if (stack.getItem() instanceof IBlock iBlock) {
+                    return iBlock.getBlockId(stack).toString();
                 }
                 return "";
             }

@@ -10,7 +10,7 @@
     3.25
   ],
   "scope": true,
-  "fov": 35.0,
+  "fov": 45.0,
   "sounds": {
     "install": "tacz:attachments/scope_general_d",
     "uninstall": "tacz:attachments/scope_general_d"

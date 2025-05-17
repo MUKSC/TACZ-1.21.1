@@ -94,7 +94,7 @@ public class AttachmentItem extends Item implements AttachmentItemDataAccessor {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return Optional.of(new AttachmentItemTooltip(this.getAttachmentId(stack), this.getType(stack)));
+        return Optional.of(new AttachmentItemTooltip(this.getAttachmentId(stack), this.getType(stack), stack));
     }
 
     @Override

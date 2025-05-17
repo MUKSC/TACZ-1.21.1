@@ -74,10 +74,10 @@
     ]
   },
   "inaccuracy": {
-    "stand": 4.75,
-    "move": 6.5,
-    "sneak": 4,
-    "lie": 2,
+    "stand": 4.25,
+    "move": 5,
+    "sneak": 2.5,
+    "lie": 1.75,
     "aim": 0.15
   },
   // 近战相关
@@ -107,7 +107,8 @@
     "muzzle",
     "extended_mag",
     "scope",
-    "grip"
+    "grip",
+    "laser"
   ],
   "exclusive_attachments": {
   }

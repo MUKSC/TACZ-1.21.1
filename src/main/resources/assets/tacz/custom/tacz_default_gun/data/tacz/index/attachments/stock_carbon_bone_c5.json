@@ -2,5 +2,6 @@
   "name": "tacz.attachment.stock_carbon_bone_c5.name",
   "display": "tacz:stock_carbon_bone_c5_display",
   "data": "tacz:stock_carbon_bone_c5_data",
-  "type": "stock"
+  "type": "stock",
+  "sort": 10
 }

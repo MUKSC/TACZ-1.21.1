@@ -17,6 +17,11 @@ public class RenderClothConfig {
     public static void init(ConfigBuilder root, ConfigEntryBuilder entryBuilder) {
         ConfigCategory render = root.getOrCreateCategory(Component.translatable("config.tacz.client.render"));
 
+        render.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.client.render.laser_fadeout"), RenderConfig.ENABLE_LASER_FADE_OUT.get())
+                .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.client.render.laser_fadeout.desc"))
+                .setSaveConsumer(RenderConfig.ENABLE_LASER_FADE_OUT::set).build());
+
+
         render.addEntry(entryBuilder.startIntField(Component.translatable("config.tacz.client.render.gun_lod_render_distance"), RenderConfig.GUN_LOD_RENDER_DISTANCE.get())
                 .setMin(0).setMax(Integer.MAX_VALUE).setDefaultValue(0).setTooltip(Component.translatable("config.tacz.client.render.gun_lod_render_distance.desc"))
                 .setSaveConsumer(RenderConfig.GUN_LOD_RENDER_DISTANCE::set).build());

@@ -5,13 +5,12 @@ import com.tacz.guns.api.event.common.AttachmentPropertyEvent;
 import com.tacz.guns.api.item.IGun;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import org.jetbrains.annotations.ApiStatus;
 
-@EventBusSubscriber
+@ApiStatus.Internal
 public class ChangeGunPropertyEvent {
-    @SubscribeEvent
-    public static void onAttachmentPropertyEvent(AttachmentPropertyEvent event) {
+    @ApiStatus.Internal
+    public static void internalOnAttachmentPropertyEvent(AttachmentPropertyEvent event) {
         ItemStack gunItem = event.getGunItem();
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun == null) {

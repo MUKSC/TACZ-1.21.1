@@ -47,4 +47,10 @@ public enum AttachmentType implements StringRepresentable {
     public @NotNull String getSerializedName() {
         return name();
     }
+
+    public static AttachmentType fromId(int id) {
+        return VALUES[id];
+    }
+
+    private static final AttachmentType[] VALUES = AttachmentType.values();
 }

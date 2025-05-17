@@ -6,11 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.fml.ModList;
 
 public final class IrisCompat {
-    public static void initCompat() {
-        ModList.get().getModContainerById(CompatRegistry.IRIS).ifPresent(mod -> {
-            IrisCompatInner.registerPBRLoader();
-        });
-    }
+    public static void initCompat() { }
 
     public static boolean isPackInUseQuick() {
         if (ModList.get().isLoaded(CompatRegistry.IRIS)) {

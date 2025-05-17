@@ -17,6 +17,7 @@ public interface AttachmentItemDataAccessor extends IAttachment {
     String ATTACHMENT_ID_TAG = "AttachmentId";
     String SKIN_ID_TAG = "Skin";
     String ZOOM_NUMBER_TAG = "ZoomNumber";
+    String LASER_COLOR_TAG = "LaserColor";
 
     // 仅检查给定的 CompoundTag 是否具有配件 ID ，不校验其是否存在
     static boolean isAttachmentLike(CompoundTag tag) {
@@ -47,6 +48,10 @@ public interface AttachmentItemDataAccessor extends IAttachment {
 
     static void setZoomNumberToTag(CompoundTag nbt, int zoomNumber) {
         nbt.putInt(ZOOM_NUMBER_TAG, zoomNumber);
+    }
+
+    static void setLaserColorToTag(CompoundTag nbt, int color) {
+        nbt.putInt(LASER_COLOR_TAG, color);
     }
 
     @Override
@@ -96,6 +101,28 @@ public interface AttachmentItemDataAccessor extends IAttachment {
     default void setZoomNumber(ItemStack attachmentStack, int zoomNumber) {
         attachmentStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> data.update(tag -> {
             setZoomNumberToTag(tag, zoomNumber);
+        }));
+    }
+
+    @Override
+    default boolean hasCustomLaserColor(ItemStack attachmentStack) {
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        return nbt.contains(LASER_COLOR_TAG, Tag.TAG_INT);
+    }
+
+    @Override
+    default int getLaserColor(ItemStack attachmentStack) {
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if (!hasCustomLaserColor(attachmentStack)) {
+            return 0xFF0000;
+        }
+        return nbt.getInt(LASER_COLOR_TAG);
+    }
+
+    @Override
+    default void setLaserColor(ItemStack attachmentStack, int color) {
+        attachmentStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> data.update(tag -> {
+            setLaserColorToTag(tag, color);
         }));
     }
 }

@@ -8,7 +8,7 @@ import net.neoforged.fml.LogicalSide;
 /**
  * 生物开始更换枪械弹药时触发的事件。
  */
-public class GunDrawEvent extends Event {
+public class GunDrawEvent extends Event implements KubeJSGunEventPoster<GunDrawEvent>{
     private final LivingEntity entity;
     private final ItemStack previousGunItem;
     private final ItemStack currentGunItem;
@@ -19,6 +19,7 @@ public class GunDrawEvent extends Event {
         this.previousGunItem = previousGunItem;
         this.currentGunItem = currentGunItem;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     public LivingEntity getEntity() {

@@ -74,6 +74,18 @@ repositories {
     maven("https://maven.shedaniel.me")
     maven("https://maven.kosmx.dev")
     maven("https://maven.blamejared.com")
+    maven {
+        url = uri("https://maven.architectury.dev")
+        content {
+            includeGroup("dev.architectury")
+        }
+    }
+    maven {
+        url = uri("https://maven.latvian.dev/releases")
+        content {
+            includeGroup("dev.latvian.mods")
+        }
+    }
     exclusiveContent {
         forRepository {
             maven {
@@ -109,6 +121,8 @@ dependencies {
     compileOnly(libs.mezz.jei.common.api)
     compileOnly(libs.mezz.jei.neoforge.api)
     runtimeOnly(libs.mezz.jei.neoforge)
+    compileOnly(libs.dev.latvian.mods.kubejs.neoforge)
+    compileOnly(libs.dev.latvian.mods.rhino)
 }
 
 java {

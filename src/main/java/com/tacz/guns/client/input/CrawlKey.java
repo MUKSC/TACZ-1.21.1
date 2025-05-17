@@ -40,7 +40,12 @@ public class CrawlKey {
             if (!(player instanceof IClientPlayerGunOperator operator)) {
                 return;
             }
-            if (IGun.mainhandHoldGun(player)) {
+            if (player.getMainHandItem().getItem() instanceof IGun iGun) {
+                // 如果不允许下蹲，则禁止进行下蹲
+                if (!iGun.isCanCrawl(player.getMainHandItem())) {
+                    IClientPlayerGunOperator.fromLocalPlayer(player).crawl(false);
+                    return;
+                }
                 boolean action = true;
                 if (!KeyConfig.HOLD_TO_CRAWL.get()) {
                     action = !operator.isCrawl();
@@ -69,7 +74,7 @@ public class CrawlKey {
         if (!(player instanceof IClientPlayerGunOperator operator)) {
             return false;
         }
-        if (!IGun.mainhandHoldGun(player)) {
+        if (!IGun.mainHandHoldGun(player)) {
             return false;
         }
         boolean action = true;

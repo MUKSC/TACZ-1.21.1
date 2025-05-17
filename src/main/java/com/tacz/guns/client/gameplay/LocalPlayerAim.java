@@ -23,11 +23,11 @@ public class LocalPlayerAim {
 
     public void aim(boolean isAim) {
         // 暂定为主手
-        ItemStack mainhandItem = player.getMainHandItem();
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return;
         }
-        ResourceLocation gunId = iGun.getGunId(mainhandItem);
+        ResourceLocation gunId = iGun.getGunId(mainHandItem);
         TimelessAPI.getClientGunIndex(gunId).ifPresent(gunIndex -> {
             data.clientIsAiming = isAim;
             // 发送切换开火模式的数据包，通知服务器
@@ -44,9 +44,9 @@ public class LocalPlayerAim {
     }
 
     public void tickAimingProgress() {
-        ItemStack mainhandItem = player.getMainHandItem();
+        ItemStack mainHandItem = player.getMainHandItem();
         // 如果主手物品不是枪械，则取消瞄准状态并将 aimingProgress 归零，返回。
-        if (!(mainhandItem.getItem() instanceof IGun iGun)) {
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             data.clientAimingProgress = 0;
             LocalPlayerDataHolder.oldAimingProgress = 0;
             return;
@@ -55,7 +55,7 @@ public class LocalPlayerAim {
         if (System.currentTimeMillis() - data.clientDrawTimestamp < 0) {
             data.clientIsAiming = false;
         }
-        ResourceLocation gunId = iGun.getGunId(mainhandItem);
+        ResourceLocation gunId = iGun.getGunId(mainHandItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresentOrElse(index -> {
             float alphaProgress = this.getAlphaProgress(index.getGunData());
             this.aimProgressCalculate(alphaProgress);

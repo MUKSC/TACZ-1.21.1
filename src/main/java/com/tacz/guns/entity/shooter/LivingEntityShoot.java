@@ -1,21 +1,29 @@
 package com.tacz.guns.entity.shooter;
 
 import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ShootResult;
 import com.tacz.guns.api.event.common.GunShootEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
+import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.network.NetworkHandler;
+import com.tacz.guns.network.message.ServerMessageSyncBaseTimestamp;
 import com.tacz.guns.network.message.event.ServerMessageGunShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -44,23 +52,29 @@ public class LivingEntityShoot {
             return ShootResult.ID_NOT_EXIST;
         }
         CommonGunIndex gunIndex = gunIndexOptional.get();
-        // 判断射击是否正在冷却
-        long coolDown = getShootCoolDown(timestamp);
-        if (coolDown == -1) {
-            // 一般来说不太可能为 -1，原因未知
-            return ShootResult.UNKNOWN_FAIL;
+        if (SyncConfig.SERVER_SHOOT_COOLDOWN_V.get()) {
+            // 判断射击是否正在冷却
+            long coolDown = getShootCoolDown(timestamp);
+            if (coolDown == -1) {
+                // 一般来说不太可能为 -1，原因未知
+                return ShootResult.UNKNOWN_FAIL;
+            }
+            if (coolDown > 0) {
+                return ShootResult.COOL_DOWN;
+            }
         }
-        if (coolDown > 0) {
-            return ShootResult.COOL_DOWN;
+        if (SyncConfig.SERVER_SHOOT_NETWORK_V.get()) {
+            // 根据 tick time 和 允许的网络延迟波动 计算 时间戳的接受窗口
+            MinecraftServer server = Objects.requireNonNull(shooter.getServer());
+            double tickTime = Math.max(server.getTickTimesNanos()[server.getTickCount() % 100] * 1.0E-6D, 50);
+            long alpha = System.currentTimeMillis() - data.baseTimestamp - timestamp;
+            if (alpha < -300 || alpha > 300 + tickTime * 2) { // 允许 +- 300ms 的网络波动、窗口下限再扩大 2 个 tick time 时间(最坏情况射击会延迟2个 tick)
+                if (shooter instanceof ServerPlayer player) {
+                    PacketDistributor.sendToPlayer(player, ServerMessageSyncBaseTimestamp.INSTANCE);
+                }
+                return ShootResult.NETWORK_FAIL;
+            }
         }
-        // FIXME: Something is wrong?
-        // 根据 tick time 和 允许的网络延迟波动 计算 时间戳的接受窗口
-        /*MinecraftServer server = Objects.requireNonNull(shooter.getServer());
-        double tickTime = Math.max(server.getTickTimesNanos()[server.getTickCount() % 100] * 1.0E-6D, 50);
-        long alpha = System.currentTimeMillis() - data.baseTimestamp - timestamp;
-        if (alpha < -300 || alpha > 300 + tickTime * 2) { // 允许 +- 300ms 的网络波动、窗口下限再扩大 2 个 tick time 时间(最坏情况射击会延迟2个 tick)
-            return ShootResult.NETWORK_FAIL;
-        }*/
         // 检查是否正在换弹
         if (data.reloadStateType.isReloading()) {
             return ShootResult.IS_RELOADING;
@@ -77,27 +91,50 @@ public class LivingEntityShoot {
         if (data.sprintTimeS > 0) {
             return ShootResult.IS_SPRINTING;
         }
+        IGunOperator gunOperator = IGunOperator.fromLivingEntity(shooter);
+        // 判断子弹数
         Bolt boltType = gunIndex.getGunData().getBolt();
+        // 是否为背包直读
+        boolean useInventoryAmmo = iGun.useInventoryAmmo(currentGunItem);
+        // 膛内是否有子弹
         boolean hasAmmoInBarrel = iGun.hasBulletInBarrel(currentGunItem) && boltType != Bolt.OPEN_BOLT;
+        // 是否还有子弹 (创造模式是否消耗背包备弹)
+        boolean hasInventoryAmmo = iGun.hasInventoryAmmo(shooter, currentGunItem, gunOperator.needCheckAmmo()) || hasAmmoInBarrel;
         int ammoCount = iGun.getCurrentAmmoCount(currentGunItem) + (hasAmmoInBarrel ? 1 : 0);
-        // 创造模式也要判断子弹数
-        if (ammoCount < 1) {
+        // 判断没有子弹的条件 (背包直读且包内没子弹 / 非背包直读且总子弹数 < 1)
+        boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
+                !useInventoryAmmo && ammoCount < 1;
+        if (noAmmo) {
             return ShootResult.NO_AMMO;
+        }
+        //Handle Heat Data
+        if(gunIndex.getGunData().hasHeatData()) {
+            if(iGun.isOverheatLocked(currentGunItem)) {
+                return ShootResult.OVERHEATED;
+            }
         }
         // 检查膛内子弹
         if (boltType == Bolt.MANUAL_ACTION && !hasAmmoInBarrel) {
             return ShootResult.NEED_BOLT;
         }
+        // 闭膛的膛内检查逻辑
         if (boltType == Bolt.CLOSED_BOLT && !hasAmmoInBarrel) {
-            iGun.reduceCurrentAmmoCount(currentGunItem);
+            // 两种不同的上膛情况
+            if (useInventoryAmmo) {
+                consumeAmmoFromPlayer(1, currentGunItem, gunOperator.needCheckAmmo());
+            } else {
+                iGun.reduceCurrentAmmoCount(currentGunItem);
+            }
             iGun.setBulletInBarrel(currentGunItem, true);
         }
         // 触发射击事件
         if (NeoForge.EVENT_BUS.post(new GunShootEvent(shooter, currentGunItem, LogicalSide.SERVER)).isCanceled()) {
             return ShootResult.FORGE_EVENT_CANCEL;
         }
+
         NetworkHandler.sendToTrackingEntity(new ServerMessageGunShoot(shooter.getId(), currentGunItem), shooter);
         data.lastShootTimestamp = data.shootTimestamp;
+        data.heatTimestamp = System.currentTimeMillis();
         data.shootTimestamp = timestamp;
         // 执行枪械射击逻辑
         if (iGun instanceof AbstractGunItem logicGun) {
@@ -140,10 +177,29 @@ public class LivingEntityShoot {
             }).orElse(-1L);
         }
         return gunIndex.map(index -> {
-            long coolDown = index.getGunData().getShootInterval(this.shooter, fireMode) - interval;
+            long coolDown = index.getGunData().getShootInterval(this.shooter, fireMode, currentGunItem) - interval;
             // 给 5 ms 的窗口时间，以平衡延迟
             coolDown = coolDown - 5;
             return Math.max(coolDown, 0L);
         }).orElse(-1L);
+    }
+
+    /**
+     * 消耗备弹 TODO: 需要检查，是否有其他更简单的方法消耗背包内的弹药 (这段是直接从逻辑机 API 里复制过来的)
+     */
+    public void consumeAmmoFromPlayer(int neededAmount, ItemStack itemStack, boolean needCheckAmmo) {
+        if (!(itemStack.getItem() instanceof AbstractGunItem abstractGunItem)) {
+            return;
+        }
+        // 如果处于创造模式不消耗的情况
+        if (!needCheckAmmo) {
+            return;
+        }
+        if (abstractGunItem.useDummyAmmo(itemStack)) {
+            abstractGunItem.findAndExtractDummyAmmo(itemStack, neededAmount);
+        } else {
+            Optional.ofNullable(shooter.getCapability(Capabilities.ItemHandler.ENTITY, null))
+                    .map(cap -> abstractGunItem.findAndExtractInventoryAmmo(cap, itemStack, neededAmount));
+        }
     }
 }

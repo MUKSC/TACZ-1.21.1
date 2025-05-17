@@ -28,9 +28,13 @@ public class LivingEntityDrawGun {
     public void draw(Supplier<ItemStack> gunItemSupplier) {
         // 重置各个状态
         data.initialData();
+
         // 更新切枪时间戳
         if (data.drawTimestamp == -1) {
             data.drawTimestamp = System.currentTimeMillis();
+        }
+        if (data.heatTimestamp == -1) {
+            data.heatTimestamp = System.currentTimeMillis();
         }
         long drawTime = System.currentTimeMillis() - data.drawTimestamp;
         if (drawTime >= 0) {

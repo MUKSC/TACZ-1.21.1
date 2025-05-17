@@ -1,12 +1,13 @@
 package com.tacz.guns.resource.modifier.custom;
 
 import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
-import com.tacz.guns.resource_legacy.CommonGunPackLoader;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class KnockbackModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "knockback";
+    public static final String ID = GunProperties.KNOCKBACK.name();
 
     @Override
     public String getId() {
@@ -35,7 +36,7 @@ public class KnockbackModifier implements IAttachmentModifier<Modifier, Float> {
 
     @Override
     public JsonProperty<Modifier> readJson(String json) {
-        Data data = CommonGunPackLoader.GSON.fromJson(json, Data.class);
+        Data data = CommonAssetsManager.GSON.fromJson(json, Data.class);
         return new KnockbackJsonProperty(data.getKnockback());
     }
 
@@ -73,15 +74,17 @@ public class KnockbackModifier implements IAttachmentModifier<Modifier, Float> {
         // 最终的 base
         float finalBase = bulletData.getKnockback();
         finalBase = fireModeAdjustData != null ? finalBase + fireModeAdjustData.getKnockback() : finalBase;
-        float modifier = cacheProperty.<Float>getCache(KnockbackModifier.ID) - finalBase;
+
+        float modifiedValue = cacheProperty.<Float>getCache(KnockbackModifier.ID);
+        float modifier = modifiedValue - finalBase;
 
         double percent = Mth.clamp(finalBase, 0, 1);
         double modifierPercent = Mth.clamp(modifier, 0, 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.knockback";
-        String positivelyString = String.format("%.2f §a(+%.2f)", finalBase, modifier);
-        String negativelyString = String.format("%.2f §c(%.2f)", finalBase, modifier);
-        String defaultString = String.format("%.2f", finalBase);
+        String positivelyString = String.format("%.2f §a(+%.2f)", modifiedValue, modifier);
+        String negativelyString = String.format("%.2f §c(%.2f)", modifiedValue, modifier);
+        String defaultString = String.format("%.2f", modifiedValue);
         boolean positivelyBetter = true;
 
         DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, modifier, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);

@@ -9649,16 +9649,16 @@
 					"rotation": [0, 107.5, 0]
 				},
 				{
-					"name": "refit_scope_view",
-					"parent": "view",
-					"pivot": [7, 13, 12],
-					"rotation": [0, 70, 0]
-				},
-				{
 					"name": "refit_extended_mag_view",
 					"parent": "view",
 					"pivot": [16, 2, 7],
 					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "refit_scope_view",
+					"parent": "view",
+					"pivot": [16.6, 13.275, -12.975],
+					"rotation": [0, 120, 0]
 				},
 				{
 					"name": "positioning",

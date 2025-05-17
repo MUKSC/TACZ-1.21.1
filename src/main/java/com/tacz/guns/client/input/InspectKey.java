@@ -2,7 +2,6 @@ package com.tacz.guns.client.input;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
-import com.tacz.guns.api.item.IGun;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -32,9 +31,7 @@ public class InspectKey {
             if (player == null || player.isSpectator()) {
                 return;
             }
-            if (IGun.mainhandHoldGun(player)) {
-                IClientPlayerGunOperator.fromLocalPlayer(player).inspect();
-            }
+            IClientPlayerGunOperator.fromLocalPlayer(player).inspect();
         }
     }
 
@@ -44,10 +41,8 @@ public class InspectKey {
             if (player == null || player.isSpectator()) {
                 return false;
             }
-            if (IGun.mainhandHoldGun(player)) {
-                IClientPlayerGunOperator.fromLocalPlayer(player).inspect();
-                return true;
-            }
+            IClientPlayerGunOperator.fromLocalPlayer(player).inspect();
+            return true;
         }
         return false;
     }

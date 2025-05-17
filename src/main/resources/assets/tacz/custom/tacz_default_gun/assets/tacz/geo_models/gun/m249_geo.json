@@ -81,7 +81,7 @@
 				{
 					"name": "constraint",
 					"parent": "m249_default",
-					"pivot": [0, 11, -16.675]
+					"pivot": [0, 11, 8.325]
 				},
 				{
 					"name": "attachment_positioning",
@@ -107,6 +107,11 @@
 					"name": "grip_pos",
 					"parent": "attachment_positioning",
 					"pivot": [0, 5.38125, -4.3625]
+				},
+				{
+					"name": "laser_pos",
+					"parent": "attachment_positioning",
+					"pivot": [0, 10.125, -7]
 				},
 				{
 					"name": "grip2",
@@ -8377,7 +8382,7 @@
 				},
 				{
 					"name": "iron_view",
-					"pivot": [0, 11, 17]
+					"pivot": [0, 11, 16.5]
 				},
 				{
 					"name": "camera",
@@ -8442,6 +8447,12 @@
 					"parent": "view",
 					"pivot": [8.8, 3.4, -4],
 					"rotation": [0, 90, 0]
+				},
+				{
+					"name": "refit_laser_view",
+					"parent": "view",
+					"pivot": [12, 16, -24],
+					"rotation": [15, 135, 0]
 				}
 			]
 		}

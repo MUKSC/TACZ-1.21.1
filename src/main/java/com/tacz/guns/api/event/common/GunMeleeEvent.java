@@ -9,7 +9,7 @@ import net.neoforged.fml.LogicalSide;
 /**
  * 用枪近战时触发
  */
-public class GunMeleeEvent extends Event implements ICancellableEvent {
+public class GunMeleeEvent extends Event implements KubeJSGunEventPoster<GunMeleeEvent>, ICancellableEvent{
     private final LivingEntity shooter;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
@@ -18,6 +18,7 @@ public class GunMeleeEvent extends Event implements ICancellableEvent {
         this.shooter = shooter;
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     public LivingEntity getShooter() {

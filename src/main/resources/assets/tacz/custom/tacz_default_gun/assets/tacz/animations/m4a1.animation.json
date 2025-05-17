@@ -2,10 +2,10 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"static_idle": {
-			"animation_length": 0.06667,
+			"animation_length": 0.0667,
 			"bones": {
 				"righthand": {
-					"rotation": [7.95, 0, 0],
+					"rotation": [96.07, 8.95, -179.05],
 					"position": [-6.5, -14.3, -1.7],
 					"scale": [1, 1.5, 1]
 				},
@@ -21,7 +21,7 @@
 			}
 		},
 		"static_bolt_caught": {
-			"animation_length": 0.66667,
+			"animation_length": 0.6667,
 			"bones": {
 				"bolt_release": {
 					"rotation": [0, 0, 12.5]
@@ -169,7 +169,7 @@
 			}
 		},
 		"put_away": {
-			"animation_length": 0.43333,
+			"animation_length": 0.4333,
 			"bones": {
 				"righthand": {
 					"rotation": {
@@ -292,11 +292,10 @@
 				"0.1": {
 					"effect": "p01_ar_mike4_drop"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"reload_tactical": {
-			"animation_length": 2.36667,
+			"animation_length": 2.3667,
 			"bones": {
 				"righthand": {
 					"rotation": [96.07, 8.95, -179.05],
@@ -854,11 +853,10 @@
 				"1.7667": {
 					"effect": "p01_ar_mike4_reload_end"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"reload_empty": {
-			"animation_length": 2.66667,
+			"animation_length": 2.6667,
 			"bones": {
 				"bullet_in_mag": {
 					"scale": 0
@@ -1607,11 +1605,10 @@
 				"1.8667": {
 					"effect": "p01_ar_mike4_reload_empty_charge"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"inspect": {
-			"animation_length": 8.86667,
+			"animation_length": 8.8667,
 			"bones": {
 				"righthand": {
 					"rotation": {
@@ -3725,11 +3722,10 @@
 				"7.8333": {
 					"effect": "p01_ar_mike4_inspect_hit"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"shoot": {
-			"animation_length": 0.63333,
+			"animation_length": 0.6333,
 			"bones": {
 				"root": {
 					"rotation": {
@@ -3801,11 +3797,13 @@
 				},
 				"constraint": {
 					"rotation": {
+						"0.0": [0.35, 0.45, 1],
 						"0.1667": [0.2, 0.2, 0.2],
 						"0.2333": [0.1, 0.1, 0.1],
 						"0.3333": [0, 0, 0]
 					},
 					"position": {
+						"0.0": [0.2, 0.1, 0.5],
 						"0.1667": [0.15, 0.05, 0.25],
 						"0.2333": [0.1, 0, 0.1],
 						"0.3333": [0, 0, 0]
@@ -3816,11 +3814,10 @@
 				"0.0": {
 					"effect": "weap_iw9_mike4_fire_plr_02"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"inspect_empty": {
-			"animation_length": 10.16667,
+			"animation_length": 10.1667,
 			"bones": {
 				"bullet_in_mag": {
 					"scale": 0
@@ -6243,9 +6240,6 @@
 					}
 				},
 				"camera": {
-					"relative_to": {
-						"rotation": "entity"
-					},
 					"rotation": {
 						"0.0": [0, 0, 0.01],
 						"0.0333": [0.05, 0.02, -0.03],
@@ -6594,8 +6588,7 @@
 				"9.2667": {
 					"effect": "p01_ar_mike4_reload_empty_end"
 				}
-			},
-			"particle_effects": {}
+			}
 		},
 		"static_AFG": {
 			"loop": true,
@@ -6626,7 +6619,7 @@
 			}
 		},
 		"select_auto": {
-			"animation_length": 0.66667,
+			"animation_length": 0.6667,
 			"bones": {
 				"righthand": {
 					"rotation": {
@@ -6753,7 +6746,7 @@
 			}
 		},
 		"select_semi": {
-			"animation_length": 0.66667,
+			"animation_length": 0.6667,
 			"bones": {
 				"righthand": {
 					"rotation": {

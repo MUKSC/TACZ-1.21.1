@@ -9,7 +9,7 @@ import net.neoforged.fml.LogicalSide;
 /**
  * 生物切换枪械开火模式时触发的事件
  */
-public class GunFireSelectEvent extends Event implements ICancellableEvent {
+public class GunFireSelectEvent extends Event implements KubeJSGunEventPoster<GunFireSelectEvent>, ICancellableEvent{
     private final LivingEntity shooter;
     private final ItemStack gunItemStack;
     private final LogicalSide logicalSide;
@@ -18,6 +18,7 @@ public class GunFireSelectEvent extends Event implements ICancellableEvent {
         this.shooter = shooter;
         this.gunItemStack = gunItemStack;
         this.logicalSide = side;
+        postEventToKubeJS(this);
     }
 
     public LivingEntity getShooter() {

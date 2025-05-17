@@ -1,4 +1,8 @@
 [
   "tacz:sight_sro_dot",
-  "tacz:sight_rmr_dot"
+  "tacz:sight_rmr_dot",
+  "tacz:sight_acro_pistol",
+  "tacz:sight_deltapoint_pistol",
+  "tacz:sight_fastfire_pistol",
+  "tacz:sight_pk06_pistol"
 ]

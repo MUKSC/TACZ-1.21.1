@@ -2,5 +2,6 @@
   "name": "tacz.attachment.sniper_extended_mag_1.name",
   "display": "tacz:sniper_extended_mag_1_display",
   "data": "tacz:sniper_extended_mag_1_data",
-  "type": "extended_mag"
+  "type": "extended_mag",
+  "sort": 100
 }

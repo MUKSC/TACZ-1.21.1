@@ -8,6 +8,7 @@
   "hud": "tacz:gun/hud/hk416d",
   "slot": "tacz:gun/slot/hk416d",
   "animation": "tacz:hk416d",
+  "state_machine": "tacz:hk416d_state_machine",
   "use_default_animation": "rifle",
   "third_person_animation": "default",
   "transform": {
@@ -33,10 +34,6 @@
   "sounds": {
     "shoot": "tacz:hk416d/hk416d_shoot",
     "shoot_3p": "tacz:hk416d/hk416d_shoot_3p",
-    "reload_empty": "tacz:hk416d/hk416d_reload_empty",
-    "reload_tactical": "tacz:hk416d/hk416d_reload_tactical",
-    "inspect": "tacz:hk416d/hk416d_inspect",
-    "inspect_empty": "tacz:hk416d/hk416d_inspect_empty",
     "draw": "tacz:hk416d/hk416d_draw",
     "put_away": "tacz:hk416d/hk416d_put_away",
     "silence": "tacz:hk416d/hk416d_silence",

@@ -18,7 +18,7 @@ public class AnimationKeyframesSerializer implements JsonDeserializer<AnimationK
         // 如果是数字
         if (json.isJsonPrimitive()) {
             if (json.getAsJsonPrimitive().isString()) {
-                GunMod.LOGGER.warn("Molang is not supported: \"{}\"", json.getAsString());
+                GunMod.LOGGER.debug("Molang is not supported: \"{}\"", json.getAsString());
                 return new AnimationKeyframes(keyframes);
             } else {
                 float value = json.getAsJsonPrimitive().getAsFloat();
@@ -43,7 +43,7 @@ public class AnimationKeyframesSerializer implements JsonDeserializer<AnimationK
                 try {
                     time = Double.parseDouble(entrySet.getKey());
                 } catch (NumberFormatException e) {
-                    GunMod.LOGGER.warn("Molang is not supported: \"{}\"", entrySet.getKey());
+                    GunMod.LOGGER.debug("Molang is not supported: \"{}\"", entrySet.getKey());
                     return new AnimationKeyframes(keyframes);
                 }
                 AnimationKeyframes.Keyframe keyframe = readKeyFrames(entrySet.getValue());
@@ -94,7 +94,7 @@ public class AnimationKeyframesSerializer implements JsonDeserializer<AnimationK
 
     private float readVector3fElement(JsonElement element, String memberName) {
         if (element.getAsJsonPrimitive().isString()) {
-            GunMod.LOGGER.warn("Molang is not supported: \"{}\"", element.getAsString());
+            GunMod.LOGGER.debug("Molang is not supported: \"{}\"", element.getAsString());
             return 0;
         } else {
             return GsonHelper.convertToFloat(element, memberName);

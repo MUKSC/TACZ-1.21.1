@@ -1279,6 +1279,12 @@
 					"pivot": [0, 7.05, 5.575]
 				},
 				{
+					"name": "laser_pos",
+					"parent": "Deagle",
+					"pivot": [0, 4, 0.60625],
+					"rotation": [0, 0, -180]
+				},
+				{
 					"name": "shell",
 					"parent": "Deagle",
 					"pivot": [0, 5.95, 5.775]
@@ -1287,11 +1293,6 @@
 					"name": "muzzle_flash",
 					"parent": "Deagle",
 					"pivot": [0, 5.875, -3.2]
-				},
-				{
-					"name": "laser_pos",
-					"parent": "Deagle",
-					"pivot": [0, 4, -0.39375]
 				},
 				{
 					"name": "muzzle_pos",
@@ -6106,8 +6107,8 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "view",
-					"pivot": [7, 3.375, 1.9],
-					"rotation": [0, 70, 0]
+					"pivot": [7, 3.375, -4.1],
+					"rotation": [0, 120, 0]
 				}
 			]
 		}

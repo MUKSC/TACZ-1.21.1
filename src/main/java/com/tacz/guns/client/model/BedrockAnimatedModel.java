@@ -19,7 +19,10 @@ import org.joml.Quaternionf;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+
+import static com.tacz.guns.client.model.GunModelConstant.ROOT_NODE;
 
 public class BedrockAnimatedModel extends BedrockModel implements AnimationListenerSupplier {
     public static final String CAMERA_NODE_NAME = "camera";
@@ -30,6 +33,11 @@ public class BedrockAnimatedModel extends BedrockModel implements AnimationListe
      */
     protected @Nullable List<BedrockPart> constraintPath;
     private @Nullable ConstraintObject constraintObject;
+
+    // 根组
+    protected @Nullable BedrockPart root;
+    // 第一人称idle状态摄像机定位组的路径
+    protected @Nullable List<BedrockPart> idleSightPath;
 
     public BedrockAnimatedModel(BedrockModelPOJO pojo, BedrockVersion version) {
         super(pojo, version);
@@ -49,7 +57,11 @@ public class BedrockAnimatedModel extends BedrockModel implements AnimationListe
                 constraintObject.node = constraintNode;
             }
         }
+        root = Optional.ofNullable(modelMap.get(ROOT_NODE)).map(ModelRendererWrapper::getModelRenderer).orElse(null);
+        idleSightPath = getPath(modelMap.get("idle_view"));
     }
+
+
 
     @Nullable
     public List<BedrockPart> getConstraintPath() {
@@ -156,5 +168,17 @@ public class BedrockAnimatedModel extends BedrockModel implements AnimationListe
             return new ModelScaleListener(model);
         }
         return null;
+    }
+
+    public boolean getRenderHand() {
+        return true;
+    }
+
+    public BedrockPart getRootNode() {
+        return root;
+    }
+
+    public List<BedrockPart> getIdleSightPath() {
+        return idleSightPath;
     }
 }

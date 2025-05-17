@@ -1,3 +1,34 @@
+## Unofficial TaCZ 1.21.1 Forge/NeoForge Port
+> [!IMPORTANT]
+> This is UNOFFICIAL; Support is not guaranteed and things may not work properly  
+> Do not report issues with this to the original devs  
+
+> [!WARNING]
+> Don't try to open any worlds from older versions with this mod  
+> All the item data are incompatible and will likely to break things
+
+If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > Unofficial TaCZ 1.21.1 Forge/NeoForge Port](https://discord.com/channels/1243278348399022252/1329058172148645909) channel
+
+Recipes in other gun packs are broken by default  
+You can upgrade packs to be 1.21.1 NeoForge compatible using [this other mod](https://discord.com/channels/1243278348399022252/1329058172148645909/1349704400540668006) I made (join the TaCZ Offical Discord)  
+The upgrader mod is not available for Forge
+
+### Known Issues
+The `FIXME` annotations in the source code indicate issues I couldn't fix
+
+On Both:
+- First person gun rendering is slightly wrong
+  - Animations are slightly off
+  - Enabling shaders in Iris fixes this
+- Controllable compat is removed since it's not available on 1.21.1
+
+On Forge:
+- Target minecart is disabled as I couldn't get it to compile on Forge
+
+On NeoForge:
+
+## ===== Original README =====
+
 <p align="center">
     <img width="300" src="https://s2.loli.net/2024/04/30/NJrstR1QzpoLyIT.png" alt="title">
 </p>

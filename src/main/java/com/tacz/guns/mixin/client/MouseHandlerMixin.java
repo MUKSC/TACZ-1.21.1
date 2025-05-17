@@ -78,11 +78,11 @@ public class MouseHandlerMixin {
             // 仰角正负是反的
             float playerPitch = -player.getXRot();
             // 如果玩家上仰超过 25 度，不允许上
-            if (playerPitch > 25) {
+            if (playerPitch > 45) {
                 finalPitch = Math.max(finalPitch, 0);
             }
             // 下俯超过 25 度，不允许下
-            if (playerPitch < -10) {
+            if (playerPitch < -30) {
                 finalPitch = Math.min(finalPitch, 0);
             }
         }

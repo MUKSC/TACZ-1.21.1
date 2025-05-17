@@ -25,6 +25,12 @@
   // "aim_inaccuracy": {
     // "addend": 0.05
   // },
+  //"sneak_inaccuracy": {
+    //"multiplier": 0.5
+  //},
+  //"lie_inaccuracy": {
+    //"multiplier": 0.5
+  //},
   // "effective_range": {
     // "addend": 10
   // },

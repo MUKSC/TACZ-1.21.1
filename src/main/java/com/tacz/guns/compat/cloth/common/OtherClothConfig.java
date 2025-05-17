@@ -18,5 +18,9 @@ public class OtherClothConfig {
         other.addEntry(entryBuilder.startIntField(Component.translatable("config.tacz.common.other.target_sound_distance"), OtherConfig.TARGET_SOUND_DISTANCE.get())
                 .setMin(0).setMax(Integer.MAX_VALUE).setDefaultValue(128).setTooltip(Component.translatable("config.tacz.common.other.target_sound_distance.desc"))
                 .setSaveConsumer(OtherConfig.TARGET_SOUND_DISTANCE::set).build());
+
+//        other.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.common.other.enable_table_filter"), OtherConfig.ENABLE_TABLE_FILTER.get())
+//                .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.common.other.enable_table_filter.desc"))
+//                .setSaveConsumer(OtherConfig.ENABLE_TABLE_FILTER::set).build());
     }
 }

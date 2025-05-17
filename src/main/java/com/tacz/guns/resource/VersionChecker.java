@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.tacz.guns.resource_legacy.CommonGunPackLoader.GSON;
 
 public final class VersionChecker {
     private static final Marker MARKER = MarkerManager.getMarker("VersionChecker");
@@ -56,7 +55,7 @@ public final class VersionChecker {
             return true;
         }
         try (InputStream stream = Files.newInputStream(packInfoFilePath)) {
-            Info info = GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), Info.class);
+            Info info = CommonAssetsManager.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), Info.class);
             return modVersionAllMatch(info);
         } catch (IOException | JsonSyntaxException | JsonIOException | InvalidVersionSpecificationException exception) {
             GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", packInfoFilePath);
@@ -79,7 +78,7 @@ public final class VersionChecker {
                 return true;
             }
             try (InputStream stream = zipFile.getInputStream(entry)) {
-                Info info = GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), Info.class);
+                Info info = CommonAssetsManager.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), Info.class);
                 // 只要有一个不符，那么就不加载
                 if (!modVersionAllMatch(info)) {
                     return false;

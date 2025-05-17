@@ -1,12 +1,10 @@
 package com.tacz.guns.network;
 
 import com.tacz.guns.GunMod;
-import com.tacz.guns.entity.sync.core.SyncedEntityData;
 import com.tacz.guns.network.message.*;
 import com.tacz.guns.network.message.event.*;
 import com.tacz.guns.network.message.handshake.Acknowledge;
 import com.tacz.guns.network.message.handshake.ServerMessageSyncedEntityDataMapping;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +23,6 @@ import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
@@ -66,6 +63,8 @@ public class NetworkHandler {
         registrar.playToClient(ServerMessageGunShoot.TYPE, ServerMessageGunShoot.STREAM_CODEC, ServerMessageGunShoot::handle);
         registrar.playToClient(ServerMessageSyncBaseTimestamp.TYPE, ServerMessageSyncBaseTimestamp.STREAM_CODEC, ServerMessageSyncBaseTimestamp::handle);
         registrar.playToServer(ClientMessageSyncBaseTimestamp.TYPE, ClientMessageSyncBaseTimestamp.STREAM_CODEC, ClientMessageSyncBaseTimestamp::handle);
+
+        registrar.playToServer(ClientMessageLaserColor.TYPE, ClientMessageLaserColor.STREAM_CODEC, ClientMessageLaserColor::handle);
 
         final PayloadRegistrar handshakeRegistrar = event.registrar(VERSION).executesOn(HandlerThread.NETWORK);
         handshakeRegistrar.configurationToServer(Acknowledge.TYPE, Acknowledge.STREAM_CODEC, Acknowledge::handle);

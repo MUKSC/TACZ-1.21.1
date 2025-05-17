@@ -1,0 +1,56 @@
+{
+  "slot": "tacz:attachment/slot/scope_mk5hd_slot",
+  "model": "tacz:attachment/scope_mk5hd_geo",
+  "texture": "tacz:attachment/uv/scope_mk5hd",
+  "lod": {
+    "model": "tacz:attachment/lod/scope_mk5hd",
+    "texture": "tacz:attachment/lod/scope_mk5hd"
+  },
+  "zoom": [
+    5,
+    25,
+    1.25
+  ],
+  "views": [
+    2,
+    2,
+    1
+  ],
+  "views_fov": [
+    27.0,
+    10.0,
+    60.0
+  ],
+  "text_show": {
+    // 作用的组名，该组的旋转点决定文本的位置和朝向
+    "ammo_count_text": {
+      // 文本缩放，默认大小对于 BlockBench 里的 1
+      "scale": 0.09375,
+      // 对齐方式：right，center，left
+      "align": "left",
+      // 阴影
+      "shadow": false,
+      // 文本颜色
+      "color": "#00ffff",
+      // 亮度：1-15
+      "light": 15,
+      // 本地化，且支持PlaceholderAPI 风格的占位符
+      // 目前仅支持两个：%player_name% %ammo_count%
+      "text": "%ammo_count%"
+    },
+    "custom_text_ammo":{
+      "scale": 0.0625,
+      "align": "center",
+      "shadow": false,
+      "color": "#ffffff",
+      "light": 15,
+      "text": "AMMO"
+    }
+  },
+  "scope": true,
+  "sight": true,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_c",
+    "uninstall": "tacz:attachments/scope_general_c"
+  }
+}

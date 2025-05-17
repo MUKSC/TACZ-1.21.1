@@ -21,10 +21,7 @@
   ],
   "result": {
     "type": "gun",
-    "id": "tacz:ak47",
-    "attachments": {
-      "stock": "tacz:oem_stock_tactical"
-    }
+    "id": "tacz:ak47"
   },
   "type": "tacz:gun_smith_table_crafting"
 }

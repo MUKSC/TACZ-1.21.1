@@ -1,0 +1,8 @@
+{
+  "hidden": false,
+  "name": "tacz.attachment.sight_fastfire_rifle.name",
+  "display": "tacz:sight_fastfire_rifle_display",
+  "data": "tacz:sight_fastfire_rifle_data",
+  "type": "scope",
+  "sort": 10
+}

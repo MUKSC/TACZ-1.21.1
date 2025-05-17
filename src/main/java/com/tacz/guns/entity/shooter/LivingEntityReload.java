@@ -37,6 +37,10 @@ public class LivingEntityReload {
         }
         ResourceLocation gunId = gunItem.getGunId(currentGunItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(gunIndex -> {
+            // 检查是否为背包直读
+            if (gunItem.useInventoryAmmo(currentGunItem)) {
+                return;
+            }
             // 检查换弹是否还未完成
             if (data.reloadStateType.isReloading()) {
                 return;

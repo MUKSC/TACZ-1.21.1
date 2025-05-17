@@ -11,6 +11,9 @@ public class SyncConfig {
     public static ModConfigSpec.ConfigValue<List<String>> INTERACT_KEY_WHITELIST_ENTITIES;
     public static ModConfigSpec.ConfigValue<List<String>> INTERACT_KEY_BLACKLIST_BLOCKS;
     public static ModConfigSpec.ConfigValue<List<String>> INTERACT_KEY_BLACKLIST_ENTITIES;
+    public static ModConfigSpec.BooleanValue ENABLE_TABLE_FILTER;
+    public static ModConfigSpec.BooleanValue SERVER_SHOOT_NETWORK_V;
+    public static ModConfigSpec.BooleanValue SERVER_SHOOT_COOLDOWN_V;
 
     // 三个全局系数，用于客户端枪械文本提示，需要同步
     public static ModConfigSpec.DoubleValue DAMAGE_BASE_MULTIPLIER;
@@ -85,6 +88,17 @@ public class SyncConfig {
         builder.comment("Whether or not players are allowed to use the crawl feature");
         ENABLE_CRAWL = builder.define("EnableCrawl", true);
 
+        builder.comment("Enable the recipe limit of default gunsmith table or not");
+        ENABLE_TABLE_FILTER = builder.define("EnableDefaultGunSmithTableFilter", true);
+
+        builder.comment("[Debug Option] Do server-side network check while shooting or not");
+        SERVER_SHOOT_NETWORK_V = builder.define("ServerShootNetworkCheck", true);
+
+        builder.comment("[Debug Option] Do server-side shoot cooldown check or not." +
+                " WARNING: Close this will disable the shoot cooldown check in server-side at all," +
+                " which may lead to potential for cheating." +
+                " Only consider to close this when you can't shoot at all sometimes.");
+        SERVER_SHOOT_COOLDOWN_V = builder.define("ServerShootCooldownCheck", true);
         builder.pop();
     }
 }
