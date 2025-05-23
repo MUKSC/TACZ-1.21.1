@@ -182,6 +182,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             });
             animationStateMachine.update();
 
+            // FIXME: Apparently this is wrong since `applyAnimationConstraintTransform` is producing slightly different results than the other versions
             if (!IrisCompat.isPackInUseQuick()) {
                 Quaternionf quaternionf = Minecraft.getInstance().gameRenderer.getMainCamera().rotation().conjugate(new Quaternionf());
                 Matrix4f matrix4f1 = (new Matrix4f()).rotation(quaternionf).invert();
