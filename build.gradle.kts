@@ -1,19 +1,10 @@
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.TimeZone
-
 plugins {
     alias(libs.plugins.moddev)
 }
 
-val format = SimpleDateFormat("MMdd-HHmmss").apply {
-    timeZone = TimeZone.getTimeZone("UTC")
-}
-
 val id = project.property("mod_id") as String
 group = project.property("maven_group") as String
-version = format.format(Date())
-//version = project.property("mod_version") as String
+version = project.property("mod_version") as String
 
 base {
     archivesName.set(project.property("archives_base_name") as String)

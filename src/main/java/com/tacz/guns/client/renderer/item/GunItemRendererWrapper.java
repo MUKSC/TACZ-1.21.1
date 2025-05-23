@@ -135,7 +135,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
                 lastModel = model;
             }
             IClientPlayerGunOperator clientPlayerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            float partialTicks = Minecraft.getInstance().getFrameTimeNs();
+            float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
             float aimingProgress = clientPlayerGunOperator.getClientAimingProgress(partialTicks);
             float zoom = iGun.getAimingZoom(stack);
             float multiplier = 1 - aimingProgress + aimingProgress / (float) Math.sqrt(zoom);
@@ -151,7 +151,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         Optional.ofNullable(getModel(stack)).ifPresent(model -> {
             PoseStack poseStack = event.getPoseStack();
             IClientPlayerGunOperator clientPlayerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            float partialTicks = Minecraft.getInstance().getFrameTimeNs();
+            float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
             float aimingProgress = clientPlayerGunOperator.getClientAimingProgress(partialTicks);
             float zoom = iGun.getAimingZoom(stack);
             float multiplier = 1 - aimingProgress + aimingProgress / (float) Math.sqrt(zoom);
@@ -182,6 +182,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             });
             animationStateMachine.update();
 
+            // FIXME: Apparently this is wrong since `applyAnimationConstraintTransform` is producing slightly different results than the other versions
             if (!IrisCompat.isPackInUseQuick()) {
                 Quaternionf quaternionf = Minecraft.getInstance().gameRenderer.getMainCamera().rotation().conjugate(new Quaternionf());
                 Matrix4f matrix4f1 = (new Matrix4f()).rotation(quaternionf).invert();
