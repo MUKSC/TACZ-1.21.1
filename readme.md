@@ -10,7 +10,7 @@
 If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > Unofficial TaCZ 1.21.1 Forge/NeoForge Port](https://discord.com/channels/1243278348399022252/1329058172148645909) channel
 
 Recipes in other gun packs are broken by default  
-You can upgrade packs to be 1.21.1 NeoForge compatible using [this other mod](https://discord.com/channels/1243278348399022252/1329058172148645909/1349704400540668006) I made (join the TaCZ Offical Discord)  
+You can upgrade packs to be 1.21.1 NeoForge compatible using the pack upgrader mod, which you can find the download link [here](https://discord.com/channels/1243278348399022252/1329058172148645909/1349704400540668006) (join the TaCZ Offical Discord)  
 The upgrader mod is not available for Forge
 
 ### Known Issues
