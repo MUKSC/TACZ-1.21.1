@@ -9,12 +9,17 @@ import com.tacz.guns.compat.kubejs.events.GunKubeJSEvents;
 import com.tacz.guns.compat.kubejs.events.TimelessClientEvents;
 import com.tacz.guns.compat.kubejs.events.TimelessCommonEvents;
 import com.tacz.guns.compat.kubejs.events.TimelessServerEvents;
+import com.tacz.guns.compat.kubejs.recipe.GunSmithTableResultComponents;
 import com.tacz.guns.compat.kubejs.recipe.TimelessGunSmithTableRecipeSchema;
+import com.tacz.guns.compat.kubejs.util.GunSmithTableResultInfo;
 import com.tacz.guns.compat.kubejs.util.TimelessItemWrapper;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
+import dev.latvian.mods.kubejs.recipe.schema.RecipeComponentFactoryRegistryEvent;
 import dev.latvian.mods.kubejs.recipe.schema.RegisterRecipeSchemasEvent;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
+import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.rhino.util.wrap.TypeWrappers;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,11 +51,22 @@ public class TimelessKubeJSPlugin extends KubeJSPlugin {
     public void registerBindings(BindingsEvent event) {
         event.add("TimelessItem", TimelessItemWrapper.class);
         event.add("GunProperties", GunProperties.class);
+        event.add("GunSmithTableResultInfo", GunSmithTableResultInfo.class);
+    }
+
+    @Override
+    public void registerTypeWrappers(ScriptType type, TypeWrappers typeWrappers) {
+        typeWrappers.registerSimple(GunSmithTableResultInfo.class, GunSmithTableResultInfo::of);
     }
 
     @Override
     public void registerRecipeSchemas(RegisterRecipeSchemasEvent event) {
         event.namespace(GunMod.MOD_ID).register("gun_smith_table_crafting", TimelessGunSmithTableRecipeSchema.SCHEMA);
+    }
+
+    @Override
+    public void registerRecipeComponents(RecipeComponentFactoryRegistryEvent event) {
+        event.register("gunSmithTableResultInfo", GunSmithTableResultComponents.RESULT_INFO);
     }
 
     public static void registerGunType(String typeName, RegistryObject<? extends AbstractGunItem> registryObject) {

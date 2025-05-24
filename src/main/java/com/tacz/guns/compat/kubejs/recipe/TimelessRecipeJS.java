@@ -7,6 +7,7 @@ import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.builder.AmmoItemBuilder;
 import com.tacz.guns.api.item.builder.AttachmentItemBuilder;
 import com.tacz.guns.api.item.builder.GunItemBuilder;
+import com.tacz.guns.compat.kubejs.util.GunSmithTableResultInfo;
 import com.tacz.guns.crafting.result.GunSmithTableResult;
 import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.index.CommonGunIndex;
@@ -28,14 +29,29 @@ import java.util.EnumMap;
 import java.util.Locale;
 
 public class TimelessRecipeJS extends RecipeJS {
-    String outputGroup = "";
+    private String outputGroup = "";
+    private GunSmithTableResultInfo info;
 
+    public GunSmithTableResultInfo getResultInfo() {
+        return info;
+    }
+
+    public void setResultInfo(GunSmithTableResultInfo info) {
+        this.info = info;
+    }
+
+    /**
+     * 设置后对配方结果的影响改至{@link com.tacz.guns.compat.kubejs.util.GunSmithTableResultInfo}
+     */
     public TimelessRecipeJS outputGroupName(String group) {
-        this.outputGroup = group;
+        getResultInfo().setGroupName(group);
         return this;
     }
 
-    public TimelessRecipeJS outputGroup(OutputGroupName group) {
+    /**
+     * 设置后对配方结果的影响改至{@link com.tacz.guns.compat.kubejs.util.GunSmithTableResultInfo}
+     */
+    public TimelessRecipeJS outputGroup(GunSmithTableResultInfo.OutputGroupName group) {
         return outputGroupName(group.getName());
     }
 
@@ -68,6 +84,7 @@ public class TimelessRecipeJS extends RecipeJS {
         return jsonObject;
     }
 
+    @Deprecated
     @Override
     public OutputItem readOutputItem(Object from) {
         if (from instanceof JsonObject jsonObject) {
@@ -88,7 +105,7 @@ public class TimelessRecipeJS extends RecipeJS {
                     resultItemStack = getGunItemFromJson(jsonObject);
                 }
                 case GunSmithTableResult.AMMO -> {
-                    groupName = OutputGroupName.AMMO.getName();
+                    groupName = GunSmithTableResultInfo.OutputGroupName.AMMO.getName();
                     resultItemStack = getAmmoItemFromJson(jsonObject);
                 }
                 case GunSmithTableResult.ATTACHMENT -> {
@@ -115,6 +132,7 @@ public class TimelessRecipeJS extends RecipeJS {
         return super.readOutputItem(from);
     }
 
+    @Deprecated
     @Override
     public JsonElement writeOutputItem(OutputItem value) {
         JsonObject jsonObject = new JsonObject();
@@ -181,31 +199,5 @@ public class TimelessRecipeJS extends RecipeJS {
     private ItemStack getAmmoItemFromJson(JsonObject jsonObject) {
         ResourceLocation ammoId = getIdFromJson(jsonObject);
         return AmmoItemBuilder.create().setId(ammoId).build();
-    }
-
-    public enum OutputGroupName {
-        AMMO("ammo"),
-        EXTENDED_MAG("extended_mag"),
-        GRIP("grip"),
-        MG("mg"),
-        MUZZLE("muzzle"),
-        PISTOL("pistol"),
-        RIFLE("rifle"),
-        ROG("rpg"),
-        SCOPE("scope"),
-        SHOTGUN("shotgun"),
-        SMG("smg"),
-        SNIPER("sniper"),
-        STOCK("stock");
-
-        private final String name;
-
-        OutputGroupName(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 }
