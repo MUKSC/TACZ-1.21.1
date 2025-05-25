@@ -1,6 +1,5 @@
 package com.tacz.guns.entity;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.PropertyMap;
 import com.tacz.guns.api.entity.ITargetEntity;
 import com.tacz.guns.api.event.common.EntityHurtByGunEvent;
@@ -138,11 +137,12 @@ public abstract class TargetMinecart extends AbstractMinecart implements ITarget
     }
 
     @Nullable
-    public GameProfile getGameProfile() {
+    public ResolvableProfile getGameProfile() {
         if (this.gameProfile == null && this.getCustomName() != null) {
             this.gameProfile = new ResolvableProfile(Optional.of(this.getCustomName().getString()), Optional.empty(), new PropertyMap());
+            this.gameProfile.resolve().thenAcceptAsync((profile) -> this.gameProfile = profile);
         }
-        return gameProfile.gameProfile();
+        return gameProfile;
     }
 
     @Override
