@@ -12,10 +12,10 @@
   ],
   "key": {
     "C": {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "B": {
       "item": "tacz:ammo_box"
