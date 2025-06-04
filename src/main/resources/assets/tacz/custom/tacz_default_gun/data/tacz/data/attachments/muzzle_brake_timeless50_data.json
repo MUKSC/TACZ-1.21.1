@@ -1,0 +1,19 @@
+{
+  "ads": {
+    "addend": 0.03
+  },
+  "recoil": {
+    "pitch": {
+      "multiplier": 0.35
+    },
+    "yaw": {
+      "multiplier": 0.75
+    }
+  },
+  "inaccuracy": {
+    "multiplier": 0.6
+  },
+  "sneak_inaccuracy": {
+    "multiplier": 0.5
+  }
+}
