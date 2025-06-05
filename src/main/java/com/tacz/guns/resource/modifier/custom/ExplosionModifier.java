@@ -73,7 +73,7 @@ public class ExplosionModifier implements IAttachmentModifier<ExplosionModifier.
         float damage = (float) AttachmentPropertyManager.eval(damageValues, cacheValue.getDamage());
         boolean knockback = AttachmentPropertyManager.eval(knockbackValues, false);
         boolean destroyBlock = AttachmentPropertyManager.eval(destroyBlockValues, false);
-        int delay = (int) AttachmentPropertyManager.eval(delayValues, cacheValue.getDelay());
+        float delay = (float) AttachmentPropertyManager.eval(delayValues, cacheValue.getDelay());
         ExplosionData explosionData = new ExplosionData(true, radius, damage, knockback, delay, destroyBlock);
         cache.setValue(explosionData);
     }

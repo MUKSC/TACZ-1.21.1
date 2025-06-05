@@ -187,7 +187,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
             this.explosionRadius = Mth.clamp(explosionData.getRadius(), 0, Float.MAX_VALUE);
             this.explosionKnockback = explosionData.isKnockback();
             // 防止越界，提前判定
-            int delayTickCount = explosionData.getDelay() * 20;
+            int delayTickCount = (int)(explosionData.getDelay() * 20);
             if (delayTickCount < 0) {
                 delayTickCount = Integer.MAX_VALUE;
             }
