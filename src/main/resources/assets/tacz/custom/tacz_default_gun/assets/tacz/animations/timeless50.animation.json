@@ -305,6 +305,11 @@
 						}
 					}
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:timeless50/timeless50_draw"
+				}
 			}
 		},
 		"put_away": {
@@ -392,6 +397,11 @@
 						},
 						"0.32": [0, 0, 0]
 					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:timeless50/timeless50_put_away"
 				}
 			}
 		},
@@ -951,10 +961,7 @@
 						}
 					},
 					"scale": {
-						"1.5667": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"1.5667": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -1052,22 +1059,22 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "p55_pi_mike2011_reload_raise"
+					"effect": "tacz:timeless50/timeless50_reload_raise"
 				},
 				"0.4333": {
-					"effect": "p55_pi_mike2011_reload_magout"
+					"effect": "tacz:timeless50/timeless50_reload_magout"
 				},
 				"0.85": {
-					"effect": "p55_pi_mike2011_reload_maghit"
+					"effect": "tacz:timeless50/timeless50_reload_maghit"
 				},
 				"1.0833": {
-					"effect": "p55_pi_mike2011_reload_fast_magin"
+					"effect": "tacz:timeless50/timeless50_reload_magin"
 				},
 				"1.3333": {
-					"effect": "p55_pi_mike2011_reload_mvmnt"
+					"effect": "tacz:timeless50/timeless50_reload_mvmnt"
 				},
 				"1.7": {
-					"effect": "p55_pi_mike2011_reload_end"
+					"effect": "tacz:timeless50/timeless50_reload_end"
 				}
 			}
 		},
@@ -1442,10 +1449,7 @@
 						"1.5667": [2.07674, -7.36639, 4.32277]
 					},
 					"scale": {
-						"1.5667": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"1.5667": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -1551,22 +1555,22 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "p55_pi_mike2011_reload_raise"
+					"effect": "tacz:timeless50/timeless50_reload_raise"
 				},
 				"0.4": {
-					"effect": "p55_pi_mike2011_reload_magout"
+					"effect": "tacz:timeless50/timeless50_reload_magout"
 				},
 				"0.8167": {
-					"effect": "p55_pi_mike2011_reload_maghit"
+					"effect": "tacz:timeless50/timeless50_reload_maghit"
 				},
 				"1.1667": {
-					"effect": "p55_pi_mike2011_reload_fast_magin"
+					"effect": "tacz:timeless50/timeless50_reload_magin"
 				},
 				"1.3667": {
-					"effect": "p55_pi_mike2011_reload_mvmnt"
+					"effect": "tacz:timeless50/timeless50_reload_mvmnt"
 				},
 				"1.75": {
-					"effect": "p55_pi_mike2011_reload_end"
+					"effect": "tacz:timeless50/timeless50_reload_end"
 				}
 			}
 		},
@@ -1941,10 +1945,7 @@
 						"1.8333": [2.07674, -7.36639, 4.32277]
 					},
 					"scale": {
-						"1.8333": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"1.8333": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -2050,22 +2051,22 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "p55_pi_mike2011_reload_raise"
+					"effect": "tacz:timeless50/timeless50_reload_raise"
 				},
 				"0.45": {
-					"effect": "p55_pi_mike2011_reload_magout"
+					"effect": "tacz:timeless50/timeless50_reload_magout"
 				},
 				"0.9": {
-					"effect": "p55_pi_mike2011_reload_maghit"
+					"effect": "tacz:timeless50/timeless50_reload_maghit"
 				},
 				"1.3": {
-					"effect": "p55_pi_mike2011_reload_fast_magin"
+					"effect": "tacz:timeless50/timeless50_reload_magin"
 				},
 				"1.6167": {
-					"effect": "p55_pi_mike2011_reload_mvmnt"
+					"effect": "tacz:timeless50/timeless50_reload_mvmnt"
 				},
 				"2.0833": {
-					"effect": "p55_pi_mike2011_reload_end"
+					"effect": "tacz:timeless50/timeless50_reload_end"
 				}
 			}
 		},
@@ -2440,10 +2441,7 @@
 						"1.7167": [2.07674, -7.36639, 4.32277]
 					},
 					"scale": {
-						"1.7167": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"1.7167": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -2553,22 +2551,22 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "p55_pi_mike2011_reload_raise"
+					"effect": "tacz:timeless50/timeless50_reload_raise"
 				},
 				"0.4333": {
-					"effect": "p55_pi_mike2011_reload_magout"
+					"effect": "tacz:timeless50/timeless50_reload_magout"
 				},
 				"0.8667": {
-					"effect": "p55_pi_mike2011_reload_maghit"
+					"effect": "tacz:timeless50/timeless50_reload_maghit"
 				},
 				"1.2833": {
-					"effect": "p55_pi_mike2011_reload_fast_magin"
+					"effect": "tacz:timeless50/timeless50_reload_magin"
 				},
 				"1.5833": {
-					"effect": "p55_pi_mike2011_reload_mvmnt"
+					"effect": "tacz:timeless50/timeless50_reload_mvmnt"
 				},
 				"2.0167": {
-					"effect": "p55_pi_mike2011_reload_end"
+					"effect": "tacz:timeless50/timeless50_reload_end"
 				}
 			}
 		},
@@ -2871,10 +2869,7 @@
 						"0.5": [0.1409, -20.47403, 3.75822]
 					},
 					"scale": {
-						"0.55": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"0.55": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"slide": {
@@ -2913,10 +2908,7 @@
 						"1.2167": [0, 0, 0]
 					},
 					"scale": {
-						"0.55": {
-							"pre": [0, 0, 0],
-							"post": [1, 1, 1]
-						}
+						"0.55": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
 				},
 				"bolt_release": {
@@ -3022,25 +3014,25 @@
 			},
 			"sound_effects": {
 				"0.2": {
-					"effect": "p55_pi_mike2011_reload_empty_magout"
+					"effect": "tacz:timeless50/timeless50_reload_empty_magout"
 				},
 				"0.55": {
-					"effect": "p55_pi_mike2011_reload_empty_rotate"
+					"effect": "tacz:timeless50/timeless50_reload_empty_rotate"
 				},
 				"0.6167": {
 					"effect": "iw8_phys_mag_drop_smg_poly_concrete_01"
 				},
 				"0.95": {
-					"effect": "p55_pi_mike2011_reload_empty_maghit"
+					"effect": "tacz:timeless50/timeless50_reload_empty_maghit"
 				},
 				"1.1": {
-					"effect": "p55_pi_mike2011_reload_empty_magin"
+					"effect": "tacz:timeless50/timeless50_reload_empty_magin"
 				},
 				"1.4167": {
-					"effect": "p55_pi_mike2011_reload_empty_barcomp_charge"
+					"effect": "tacz:timeless50/timeless50_reload_empty_barcomp_charge"
 				},
 				"1.7667": {
-					"effect": "p55_pi_mike2011_reload_empty_end"
+					"effect": "tacz:timeless50/timeless50_reload_empty_end"
 				}
 			}
 		},
@@ -3381,10 +3373,7 @@
 						"0.7": [0.1409, -20.47403, 3.75822]
 					},
 					"scale": {
-						"0.7167": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"0.7167": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -3508,10 +3497,7 @@
 						"1.55": [0, 0, 0]
 					},
 					"scale": {
-						"0.4667": {
-							"pre": [0, 0, 0],
-							"post": [1, 1, 1]
-						}
+						"0.4667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
 				},
 				"bolt_release": {
@@ -3540,28 +3526,28 @@
 			},
 			"sound_effects": {
 				"0.0333": {
-					"effect": "p55_pi_mike2011_reload_empty_raise"
+					"effect": "tacz:timeless50/timeless50_reload_empty_raise"
 				},
 				"0.55": {
-					"effect": "p55_pi_mike2011_reload_empty_magout"
+					"effect": "tacz:timeless50/timeless50_reload_empty_magout"
 				},
 				"0.7167": {
-					"effect": "iw8_phys_mag_drop_smg_poly_concrete_01"
+					"effect": "tacz:mag_drop_sound/mag_drop_pi_metal_dirt"
 				},
 				"0.7833": {
-					"effect": "p55_pi_mike2011_reload_empty_rotate"
+					"effect": "iw8_phys_mag_drop_smg_poly_concrete_01"
 				},
-				"1.2333": {
-					"effect": "p55_pi_mike2011_reload_empty_maghit"
+				"1.05": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_maghit"
 				},
-				"1.5167": {
-					"effect": "p55_pi_mike2011_reload_empty_magin"
+				"1.4833": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_magin"
 				},
 				"1.8333": {
-					"effect": "p55_pi_mike2011_reload_empty_barcomp_charge"
+					"effect": "tacz:timeless50/timeless50_reload_empty_barcomp_charge"
 				},
 				"2.0333": {
-					"effect": "p55_pi_mike2011_reload_empty_end"
+					"effect": "tacz:timeless50/timeless50_reload_empty_end"
 				}
 			}
 		},
@@ -3900,10 +3886,7 @@
 						"0.75": [0.1409, -20.47403, 3.75822]
 					},
 					"scale": {
-						"0.7833": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"0.7833": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -4040,10 +4023,7 @@
 						"1.6333": [0, 0, 0]
 					},
 					"scale": {
-						"0.4833": {
-							"pre": [0, 0, 0],
-							"post": [1, 1, 1]
-						}
+						"0.4833": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
 				},
 				"bullet_in_barrel": {
@@ -4059,28 +4039,25 @@
 			},
 			"sound_effects": {
 				"0.0333": {
-					"effect": "p55_pi_mike2011_reload_empty_raise"
+					"effect": "tacz:timeless50/timeless50_reload_empty_raise"
 				},
 				"0.5833": {
-					"effect": "p55_pi_mike2011_reload_empty_magout"
+					"effect": "tacz:timeless50/timeless50_reload_empty_magout"
 				},
 				"0.7833": {
-					"effect": "iw8_phys_mag_drop_smg_poly_concrete_01"
+					"effect": "tacz:mag_drop_sound/mag_drop_pi_metal_dirt"
 				},
-				"0.85": {
-					"effect": "p55_pi_mike2011_reload_empty_rotate"
+				"1.15": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_maghit"
 				},
-				"1.3333": {
-					"effect": "p55_pi_mike2011_reload_empty_maghit"
-				},
-				"1.6": {
-					"effect": "p55_pi_mike2011_reload_empty_magin"
+				"1.5667": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_magin"
 				},
 				"1.9833": {
-					"effect": "p55_pi_mike2011_reload_empty_barcomp_charge"
+					"effect": "tacz:timeless50/timeless50_reload_empty_barcomp_charge"
 				},
-				"2.2": {
-					"effect": "p55_pi_mike2011_reload_empty_end"
+				"2.3": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_end"
 				}
 			}
 		},
@@ -4421,10 +4398,7 @@
 						"0.7333": [0.1409, -20.47403, 3.75822]
 					},
 					"scale": {
-						"0.7667": {
-							"pre": [1, 1, 1],
-							"post": [0, 0, 0]
-						}
+						"0.7667": {"pre": [1, 1, 1], "post": [0, 0, 0]}
 					}
 				},
 				"camera": {
@@ -4561,10 +4535,7 @@
 						"1.6": [0, 0, 0]
 					},
 					"scale": {
-						"0.4667": {
-							"pre": [0, 0, 0],
-							"post": [1, 1, 1]
-						}
+						"0.4667": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
 				},
 				"bullet_in_barrel": {
@@ -4580,28 +4551,25 @@
 			},
 			"sound_effects": {
 				"0.0333": {
-					"effect": "p55_pi_mike2011_reload_empty_raise"
+					"effect": "tacz:timeless50/timeless50_reload_empty_raise"
 				},
 				"0.5667": {
-					"effect": "p55_pi_mike2011_reload_empty_magout"
+					"effect": "tacz:timeless50/timeless50_reload_empty_magout"
 				},
 				"0.7667": {
-					"effect": "iw8_phys_mag_drop_smg_poly_concrete_01"
+					"effect": "tacz:mag_drop_sound/mag_drop_pi_metal_dirt"
 				},
-				"0.8333": {
-					"effect": "p55_pi_mike2011_reload_empty_rotate"
-				},
-				"1.3": {
-					"effect": "p55_pi_mike2011_reload_empty_maghit"
+				"1.1333": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_maghit"
 				},
 				"1.5667": {
-					"effect": "p55_pi_mike2011_reload_empty_magin"
+					"effect": "tacz:timeless50/timeless50_reload_empty_magin"
 				},
 				"1.9333": {
-					"effect": "p55_pi_mike2011_reload_empty_barcomp_charge"
+					"effect": "tacz:timeless50/timeless50_reload_empty_barcomp_charge"
 				},
-				"2.1333": {
-					"effect": "p55_pi_mike2011_reload_empty_end"
+				"2.2": {
+					"effect": "tacz:timeless50/timeless50_reload_empty_end"
 				}
 			}
 		},
@@ -5630,10 +5598,7 @@
 					"scale": {
 						"0.0": [0, 0, 0],
 						"3.0": [0, 0, 0],
-						"3.0333": {
-							"pre": [0, 0, 0],
-							"post": [1, 1, 1]
-						}
+						"3.0333": {"pre": [0, 0, 0], "post": [1, 1, 1]}
 					}
 				},
 				"constraint": {
@@ -5643,31 +5608,31 @@
 			},
 			"sound_effects": {
 				"0.2": {
-					"effect": "p55_pi_mike2011_inspect_decock"
+					"effect": "tacz:timeless50/timeless50_inspect_decock"
 				},
 				"0.7": {
-					"effect": "p55_pi_mike2011_inspect_twirl"
+					"effect": "tacz:timeless50/timeless50_inspect_twirl"
 				},
 				"1.8": {
-					"effect": "p55_pi_mike2011_inspect_rotate1"
+					"effect": "tacz:timeless50/timeless50_inspect_rotate1"
 				},
 				"3.1333": {
-					"effect": "p55_pi_mike2011_inspect_magout"
+					"effect": "tacz:timeless50/timeless50_inspect_magout"
 				},
 				"4.2333": {
-					"effect": "p55_pi_mike2011_inspect_magin"
+					"effect": "tacz:timeless50/timeless50_inspect_magin"
 				},
-				"4.7": {
-					"effect": "wfoly_sm_charlie9_selectsemi_on"
+				"4.9667": {
+					"effect": "tacz:timeless50/timeless50_inspect_selectburst_on_switch"
 				},
 				"5.4333": {
-					"effect": "wfoly_plr_pi_glima21_inspect_slidepull"
+					"effect": "tacz:timeless50/timeless50_inspect_slidepull"
 				},
-				"6.2333": {
-					"effect": "wfoly_plr_pi_glima21_inspect_sliderelease"
+				"6.2": {
+					"effect": "tacz:timeless50/timeless50_inspect_charge"
 				},
 				"6.5333": {
-					"effect": "p55_pi_mike2011_inspect_end"
+					"effect": "tacz:timeless50/timeless50_inspect_end"
 				}
 			}
 		},
@@ -6628,28 +6593,25 @@
 			},
 			"sound_effects": {
 				"0.2": {
-					"effect": "p55_pi_mike2011_inspect_decock"
+					"effect": "tacz:timeless50/timeless50_inspect_decock"
 				},
 				"0.7": {
-					"effect": "p55_pi_mike2011_inspect_twirl"
+					"effect": "tacz:timeless50/timeless50_inspect_twirl"
 				},
 				"1.8": {
-					"effect": "p55_pi_mike2011_inspect_rotate1"
+					"effect": "tacz:timeless50/timeless50_inspect_rotate1"
 				},
 				"3.1333": {
-					"effect": "p55_pi_mike2011_inspect_magout"
+					"effect": "tacz:timeless50/timeless50_inspect_magout"
 				},
 				"4.2333": {
-					"effect": "p55_pi_mike2011_inspect_magin"
+					"effect": "tacz:timeless50/timeless50_inspect_magin"
 				},
-				"4.7": {
-					"effect": "wfoly_sm_charlie9_selectsemi_on"
-				},
-				"5.2333": {
-					"effect": "p55_pi_mike2011_inspect_barcomp_rotate1"
+				"4.9667": {
+					"effect": "tacz:timeless50/timeless50_inspect_selectburst_on_switch"
 				},
 				"6.2333": {
-					"effect": "p55_pi_mike2011_inspect_end"
+					"effect": "tacz:timeless50/timeless50_inspect_end"
 				}
 			}
 		}
