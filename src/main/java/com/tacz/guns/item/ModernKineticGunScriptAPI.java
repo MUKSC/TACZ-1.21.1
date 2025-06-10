@@ -12,6 +12,7 @@ import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.util.LuaEntityAccessor;
 import com.tacz.guns.api.util.LuaNbtAccessor;
 import com.tacz.guns.client.animation.statemachine.GunAnimationStateContext;
+import com.tacz.guns.config.common.AmmoConfig;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.network.NetworkHandler;
@@ -104,6 +105,7 @@ public class ModernKineticGunScriptAPI {
 
         // 子弹飞行速度
         float speed = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
+        speed *= AmmoConfig.GLOBAL_BULLET_SPEED_MODIFIER.get();
         float processedSpeed = Mth.clamp(speed / 20, 0, Float.MAX_VALUE);
         // 弹丸数量
         int bulletAmount = Math.max(bulletData.getBulletAmount(), 1);

@@ -14,6 +14,7 @@ public class AmmoConfig {
     public static ForgeConfigSpec.BooleanValue DESTROY_GLASS;
     public static ForgeConfigSpec.BooleanValue IGNITE_BLOCK;
     public static ForgeConfigSpec.BooleanValue IGNITE_ENTITY;
+    public static ForgeConfigSpec.DoubleValue GLOBAL_BULLET_SPEED_MODIFIER;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("ammo");
@@ -41,6 +42,10 @@ public class AmmoConfig {
 
         builder.comment("Whether a ammo can ignite the entity");
         IGNITE_ENTITY = builder.define("IgniteEntity", true);
+
+        builder.comment("Global bullet speed modifier, the init speed of the bullet will be multiplied by this value, default is 2.0");
+        builder.comment("This is to compensate the side effects introduced while fixing the shooter variable input issue");
+        GLOBAL_BULLET_SPEED_MODIFIER = builder.defineInRange("GlobalBulletSpeedModifier", 2.0, 0.01, 20);
 
         builder.pop();
     }
