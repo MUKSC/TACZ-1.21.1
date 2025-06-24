@@ -17,9 +17,6 @@ The upgrader mod is not available for Forge
 The `FIXME` annotations in the source code indicate issues I couldn't fix
 
 On Both:
-- First person gun rendering is slightly wrong
-  - Animations are slightly off
-  - Enabling shaders in Iris fixes this
 - Controllable compat is removed since it's not available on 1.21.1
 
 On Forge:

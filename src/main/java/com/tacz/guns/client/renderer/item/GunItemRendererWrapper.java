@@ -1,6 +1,5 @@
 package com.tacz.guns.client.renderer.item;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -22,7 +21,6 @@ import com.tacz.guns.client.model.functional.MuzzleFlashRender;
 import com.tacz.guns.client.model.functional.ShellRender;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.client.resource.pojo.TransformScale;
-import com.tacz.guns.compat.iris.IrisCompat;
 import com.tacz.guns.util.RenderDistance;
 import com.tacz.guns.util.math.MathUtil;
 import net.minecraft.client.Minecraft;
@@ -182,14 +180,6 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             });
             animationStateMachine.update();
 
-            // FIXME: Apparently this is wrong since `applyAnimationConstraintTransform` is producing slightly different results than the other versions
-            if (!IrisCompat.isPackInUseQuick()) {
-                Quaternionf quaternionf = Minecraft.getInstance().gameRenderer.getMainCamera().rotation().conjugate(new Quaternionf());
-                Matrix4f matrix4f1 = (new Matrix4f()).rotation(quaternionf).invert();
-                poseStack.mulPose(matrix4f1.invert(new Matrix4f()));
-                RenderSystem.getModelViewStack().pushMatrix().mul(matrix4f1);
-                RenderSystem.applyModelViewMatrix();
-            }
             poseStack.pushPose();
             // 逆转原版施加在手上的延滞效果，改为写入模型动画数据中
             float xRotOffset = Mth.lerp(partialTick, player.xBobO, player.xBob);
@@ -230,10 +220,6 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             // 恢复手臂渲染
             gunModel.setRenderHand(renderHand);
             // 渲染完成后，将动画数据从模型中清除，不对其他视角下的模型渲染产生影响
-            if (!IrisCompat.isPackInUseQuick()) {
-                RenderSystem.getModelViewStack().popMatrix();
-                RenderSystem.applyModelViewMatrix();
-            }
             poseStack.popPose();
             gunModel.cleanAnimationTransform();
             // 关闭第一人称弹壳和火焰渲染
