@@ -61,7 +61,12 @@ neoForge {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://jitpack.io")
+    maven("https://jitpack.io") {
+        content {
+            includeGroup("com.github.rtyley")
+            includeGroup("com.github.FiguraMC.luaj")
+        }
+    }
     maven("https://maven.shedaniel.me")
     maven("https://maven.kosmx.dev")
     maven("https://maven.blamejared.com")
@@ -75,6 +80,7 @@ repositories {
         url = uri("https://maven.latvian.dev/releases")
         content {
             includeGroup("dev.latvian.mods")
+            includeGroup("dev.latvian.apps")
         }
     }
     exclusiveContent {

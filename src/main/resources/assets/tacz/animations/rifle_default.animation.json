@@ -1519,17 +1519,11 @@
 			"loop": true,
 			"animation_length": 0.75,
 			"bones": {
-				"mag3": {
-					"position": [-6, -23, 6]
-				},
 				"constraint": {
 					"rotation": [0.01, 0.01, 0.01],
 					"position": [0.01, 0.01, 0.01]
 				},
 				"root": {
-					"relative_to": {
-						"rotation": "entity"
-					},
 					"rotation": {
 						"0.0": [0, 0, 0.01],
 						"0.1667": {
@@ -1596,9 +1590,6 @@
 			"loop": true,
 			"animation_length": 0.85,
 			"bones": {
-				"mag3": {
-					"position": [-6, -23, 6]
-				},
 				"constraint": {
 					"rotation": {
 						"0.0": [0.01, 0.01, 0.01],
@@ -1677,9 +1668,6 @@
 			"loop": true,
 			"animation_length": 7.3333,
 			"bones": {
-				"mag3": {
-					"position": [-6, -23, 6]
-				},
 				"constraint": {
 					"rotation": [0.01, 0.01, 0.01],
 					"position": [0.01, 0.01, 0.01]

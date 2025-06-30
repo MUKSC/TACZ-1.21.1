@@ -62,6 +62,7 @@
   "tacz.gun.spr15hb.name": "SPR-15 HB “射手座” 反狙击步枪",
   "tacz.gun.springfield1873.name": "春田 1873 活门步枪",
   "tacz.gun.g36k.name": "G36K 突击步枪",
+  "tacz.gun.timeless50.name": "§6永恒 .50 Z型",
 
 
 
@@ -101,11 +102,12 @@
   "tacz.gun.qbz_95.desc": "做最优质的战士！",
   "tacz.gun.p90.desc": "用它在防弹衣上画个笑脸",
   "tacz.gun.m870.desc": "你选错屋了，蠢货！",
-  "tacz.gun.b93r.desc":"又是官僚主义的谎言，但也没那么差",
+  "tacz.gun.b93r.desc":"又是官僚主义的谎言？也没那么差",
   "tacz.gun.minigun.desc":"§6“在枪管熔毁之前，焚烧这个世界”",
   "tacz.gun.springfield1873.desc": "人穷枪不短",
   "tacz.gun.spr15hb.desc":"精准所至，金石为开",
   "tacz.gun.g36k.desc": "聚合物科技，小子！",
+  "tacz.gun.timeless50.desc": "让一切从零开始，再一次 \n§eTaCZ 一周年纪念武器",
 
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",
@@ -213,6 +215,7 @@
   "tacz.attachment.muzzle_brake_pioneer.name": "先锋 A3 制退器",
   "tacz.attachment.muzzle_brake_cthulhu.name": "克苏鲁 K7 制退器",
   "tacz.attachment.muzzle_brake_trex.name": "霸王龙 重型制退器",
+  "tacz.attachment.muzzle_brake_timeless50.name": "§6永恒 .50口径制退器",
 
 
   "tacz.attachment.deagle_golden_long_barrel.name": ".357 黄金沙漠之鹰加长枪管",

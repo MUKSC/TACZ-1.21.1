@@ -80,7 +80,9 @@ public enum GunPackLoader implements RepositorySource {
             firstLoad = false;
         }
 
+        GunMod.LOGGER.info(MARKER, "Start scanning for gun packs in {}", resourcePacksPath);
         List<GunPack> gunPacks = scanExtensions(resourcePacksPath);
+        GunMod.LOGGER.info(MARKER, "Found {} possible gunpack(s) and added them to resource set.", gunPacks.size());
         List<PackResources> extensionPacks = new ArrayList<>();
 
         for(GunPack gunPack : gunPacks) {
@@ -155,18 +157,18 @@ public enum GunPackLoader implements RepositorySource {
             PackMeta info = CommonAssetsManager.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), PackMeta.class);
 
             if (info == null) {
-                GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", packInfoFilePath);
+                GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", packInfoFilePath.getFileName());
                 return null;
             }
 
             if (info.getDependencies() !=null && !modVersionAllMatch(info)) {
-                GunMod.LOGGER.warn(MARKER, "Mod version mismatch: {}", packInfoFilePath);
+                GunMod.LOGGER.warn(MARKER, "Mod version mismatch: {}", packInfoFilePath.getFileName());
                 return null;
             }
 
             return new GunPack(path, info.getName());
         } catch (IOException | JsonSyntaxException | JsonIOException | InvalidVersionSpecificationException exception) {
-            GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", packInfoFilePath);
+            GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", packInfoFilePath.getFileName());
             GunMod.LOGGER.warn(exception.getMessage());
         }
         return null;
@@ -176,7 +178,7 @@ public enum GunPackLoader implements RepositorySource {
         try(ZipFile zipFile = new ZipFile(path.toFile())){
             ZipEntry extDescriptorEntry = zipFile.getEntry("gunpack.meta.json");
             if (extDescriptorEntry == null) {
-                GunMod.LOGGER.error(MARKER,"Failed to load extension from ZIP {}. Error: {}", path, "No gunpack.meta.json found");
+                GunMod.LOGGER.error(MARKER,"Failed to load extension from ZIP {}. Error: {}", path.getFileName(), "No gunpack.meta.json found");
                 return null;
             }
 
@@ -184,22 +186,22 @@ public enum GunPackLoader implements RepositorySource {
                 PackMeta info = CommonAssetsManager.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), PackMeta.class);
 
                 if (info == null) {
-                    GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", path);
+                    GunMod.LOGGER.warn(MARKER, "Failed to read info json: {}", path.getFileName());
                     return null;
                 }
 
                 if (info.getDependencies() !=null && !modVersionAllMatch(info)) {
-                    GunMod.LOGGER.warn(MARKER, "Mod version mismatch: {}", path);
+                    GunMod.LOGGER.warn(MARKER, "Mod version mismatch: {}", path.getFileName());
                     return null;
                 }
 
                 return new GunPack(path, info.getName());
             } catch (IOException | JsonSyntaxException | JsonIOException | InvalidVersionSpecificationException e) {
-                GunMod.LOGGER.error(MARKER,"Failed to load extension from ZIP {}. Error: {}", path, e);
+                GunMod.LOGGER.error(MARKER,"Failed to load extension from ZIP {}. Error: {}", path.getFileName(), e);
                 return null;
             }
         } catch (IOException e) {
-            GunMod.LOGGER.error(MARKER,"Failed to load extension from ZIP {}. Error: {}", path, e);
+            GunMod.LOGGER.error(MARKER,"Failed to load extension from ZIP {}. Error: {}", path.getFileName(), e);
             return null;
         }
     }
@@ -216,11 +218,12 @@ public enum GunPackLoader implements RepositorySource {
                     gunPack = fromZipPath(entry);
                 }
                 if (gunPack != null) {
+                    GunMod.LOGGER.info(MARKER, "- {}, Main namespace: {}", gunPack.path.getFileName(), gunPack.name);
                     gunPacks.add(gunPack);
                 }
             }
         } catch (IOException e) {
-            GunMod.LOGGER.error(MARKER,"Failed to scan extensions from {}. Error: {}", extensionsPath, e);
+            GunMod.LOGGER.error(MARKER, "Failed to scan extensions from {}. Error: {}", extensionsPath, e);
         }
 
         return gunPacks;

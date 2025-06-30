@@ -42,5 +42,9 @@ public class AmmoClothConfig {
         ammo.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.common.ammo.ignite_entity"), AmmoConfig.IGNITE_ENTITY.get())
                 .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.common.ammo.ignite_entity.desc"))
                 .setSaveConsumer(AmmoConfig.IGNITE_ENTITY::set).build());
+
+        ammo.addEntry(entryBuilder.startDoubleField(Component.translatable("config.tacz.common.ammo.global_speed_modifier"), AmmoConfig.GLOBAL_BULLET_SPEED_MODIFIER.get())
+                .setDefaultValue(2.0).setTooltip(Component.translatable("config.tacz.common.ammo.global_speed_modifier.desc"))
+                .setSaveConsumer(AmmoConfig.GLOBAL_BULLET_SPEED_MODIFIER::set).build());
     }
 }

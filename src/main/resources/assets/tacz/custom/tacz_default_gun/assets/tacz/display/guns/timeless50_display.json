@@ -1,0 +1,56 @@
+{
+  "model": "tacz:gun/timeless50_geo",
+  "texture": "tacz:gun/uv/timeless50",
+  "lod": {
+    "model": "tacz:gun/lod/timeless50",
+    "texture": "tacz:gun/lod/timeless50"
+  },
+  "hud": "tacz:gun/hud/timeless50_hud",
+  "slot": "tacz:gun/slot/timeless50_slot",
+  "animation": "tacz:timeless50",
+  "use_default_animation": "pistol",
+  "state_machine": "tacz:timeless50_state_machine",
+  "player_animator_3rd": "tacz:pistol_default.player_animation",
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "shell": {
+    "initial_velocity": [3.5, 4.0, -6],
+    "random_velocity": [1, 2, 4],
+    "acceleration": [0.0, -20, 0.0],
+    "angular_velocity": [360, -1200, 360],
+    "living_time": 1.0
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 0.65
+  },
+  "sounds": {
+    "reload_empty": "tacz:timeless50/timeless50_reload_empty",
+    "reload_tactical": "tacz:timeless50/timeless50_reload_tactical",
+    "inspect": "tacz:timeless50/timeless50_inspect",
+    "inspect_empty": "tacz:timeless50/timeless50_inspect_empty",
+    "draw": "tacz:timeless50/timeless50_draw",
+    "put_away":"tacz:timeless50/timeless50_put_away",
+    "shoot": "tacz:timeless50/timeless50_shoot",
+    "shoot_3p": "tacz:timeless50/timeless50_shoot_3p",
+    "silence": "tacz:timeless50/timeless50_silence",
+    "silence_3p": "tacz:timeless50/timeless50_silence_3p"
+  },
+  "offhand_show": {
+    "pos": [4, 13, -1],
+    "rotate": [-90, -35, 90],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [-5, 13, -1],
+      "rotate": [-90, -35, 90],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

@@ -267,15 +267,6 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
                     float cos = Mth.cos(angle);
                     builder.addVertex(centerX + cos * rad, centerY + sin * rad, -90.0F).setColor(255, 255, 255, 255);
                 }
-                /* FIXME: This is another way to fix the rendering issue, instead of what we have now on `FirstPersonRenderGunEvent`
-                    I'm not sure what the best way is; I'm not even sure what the actual problem is in the first place
-                builder.addVertex(matrixStack.last(), 0, 0, 0).setColor(255, 255, 255, 255);
-                for (int i = 0; i <= 90; i++) {
-                    float angle = (float) i * ((float) Math.PI * 2F) / 90.0F;
-                    float sin = Mth.sin(angle);
-                    float cos = Mth.cos(angle);
-                    builder.addVertex(matrixStack.last(), cos * rad, sin * rad, 0).setColor(255, 255, 255, 255);
-                }*/
                 BufferUploader.drawWithShader(builder.buildOrThrow());
             }
             RenderSystem.depthMask(true);
