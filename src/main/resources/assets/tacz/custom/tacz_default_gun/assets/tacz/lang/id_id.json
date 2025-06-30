@@ -207,6 +207,11 @@
   "tacz.attachment.stock_ripstock.name": "Popor CMMG RipStock",
   "tacz.attachment.stock_m4ss.name": "Popor M4SS",
   "tacz.block.gun_smith_table.name": "Meja Senjata TaCZ",
+  "tacz.block.ammo_workbench.name": "Meja Perakitan Amunisi TaCZ",
+  "tacz.block.attachment_workbench.name": "Meja Aksesoris TaCZ",
+  "tacz.block.gun_smith_table.desc": "Tempat semuanya dimulai",
+  "tacz.block.ammo_workbench.desc": "Bubuk Mesiu Berkilap",
+  "tacz.block.attachment_workbench.desc": "Memperindah yang sudah indah",
   "config.tacz.client.render.enable_tooltip_id": "Tampilkan ID di Deskripsi",
   "config.tacz.client.render.enable_tooltip_id.desc": "Tampilkan senjata/amunisi/aksesoris id di deskripsi item saat deskripsi lanjutan diaktifkan."
 }

@@ -17,6 +17,8 @@ The upgrader mod is not available for Forge
 The `FIXME` annotations in the source code indicate issues I couldn't fix
 
 On Both:
+- Built-in KubeJS recipe integration is disabled
+  - I don't really know about KubeJS, and it got massive changes, so I'll just remove it for now 
 - Controllable compat is removed since it's not available on 1.21.1
 
 On Forge:
@@ -89,13 +91,7 @@ dependencies {
     // You can see the https://www.cursemaven.com/
     // Choose one of the following three
 
-    // If you want to use version tacz-1.20.1-1.0.2-release
-    implementation fg.deobf('curse.maven:timeless-and-classics-zero-1028108:5529117-sources-5529578')
-
-    // If you want to use version tacz-1.19.2-1.0.2-release
-    implementation fg.deobf('curse.maven:timeless-and-classics-zero-1028108:5529111-sources-5529576')
-
-    // If you want to use version tacz-1.18.2-1.0.2-release
-    implementation fg.deobf('curse.maven:timeless-and-classics-zero-1028108:5529108-sources-5529188')
+    // If you want to use version tacz-1.20.1-1.1.6-release
+    implementation fg.deobf("curse.maven:timeless-and-classics-zero-1028108:6632240-sources-6633203")
 }
 ```

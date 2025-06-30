@@ -22,9 +22,9 @@ public class ExplosionData {
      * 无论是否触碰实体或者方块，默认延迟 30 秒就爆炸
      */
     @SerializedName("delay")
-    private int delay;
+    private float delay;
 
-    public ExplosionData(boolean explode, float radius, float damage, boolean knockback, int delay, boolean destroyBlock) {
+    public ExplosionData(boolean explode, float radius, float damage, boolean knockback, float delay, boolean destroyBlock) {
         this.explode = explode;
         this.radius = radius;
         this.damage = damage;
@@ -53,7 +53,7 @@ public class ExplosionData {
         return destroyBlock;
     }
 
-    public int getDelay() {
+    public float getDelay() {
         return delay;
     }
 }

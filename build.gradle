@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = "1.1.5-r2"
+version = "1.1.6-hotfix-r1"
 group = "com.tacz"
 archivesBaseName = "tacz-1.21.1"
 
@@ -154,14 +154,19 @@ repositories {
         }
     }
     maven {
-        // saps.dev Maven (KubeJS and Rhino)
-        url = "https://maven.latvian.dev/releases"
+        // latvian.dev Maven (KubeJS and Rhino)
+        url "https://maven.latvian.dev/releases"
         content {
             includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
         }
     }
     maven {
         url 'https://jitpack.io'
+        content {
+            includeGroup "com.github.rtyley"
+            includeGroup "com.github.FiguraMC.luaj"
+        }
     }
     maven {
         name "KosmX's maven"

@@ -111,7 +111,7 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
      */
     public void doBulletSpread(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter, Projectile projectile,
                                         int bulletCnt, float processedSpeed, float inaccuracy, float pitch, float yaw) {
-        projectile.shootFromRotation(projectile, pitch, yaw, 0.0F, processedSpeed, inaccuracy);
+        projectile.shootFromRotation(shooter, pitch, yaw, 0.0F, processedSpeed, inaccuracy);
     }
 
     /**

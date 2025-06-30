@@ -67,10 +67,10 @@
       "tactical": 1.64
     }
   },
-  "draw_time": 0.35,
+  "draw_time": 0.33,
   "put_away_time": 0.33,
   "aim_time": 0.2,
-  "sprint_time": 0.2,
+  "sprint_time": 0.1,
   "weight": 2,
   "movement_speed": {
     "base": 0.0,
