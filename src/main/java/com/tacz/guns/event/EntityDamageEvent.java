@@ -19,7 +19,7 @@ public class EntityDamageEvent {
 
             AttributeInstance resistance = living.getAttribute(ModAttributes.BULLET_RESISTANCE.getDelegate());
             if (resistance != null) {
-                float modifiedDamage = event.getOriginalDamage() * (float) (1 - resistance.getValue());
+                float modifiedDamage = event.getNewDamage() * (float) (1 - resistance.getValue());
                 event.setNewDamage(modifiedDamage);
             }
         }
