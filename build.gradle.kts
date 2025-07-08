@@ -94,6 +94,17 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "CurseForge"
+                url = uri("https://cursemaven.com")
+            }
+        }
+        filter {
+            includeGroup("curse.maven")
+        }
+    }
     flatDir {
         dir("libs")
     }
@@ -118,6 +129,8 @@ dependencies {
     compileOnly(libs.mezz.jei.common.api)
     compileOnly(libs.mezz.jei.neoforge.api)
     runtimeOnly(libs.mezz.jei.neoforge)
+    compileOnly(libs.curse.maven.framework)
+    compileOnly(libs.curse.maven.controllable)
     compileOnly(libs.dev.latvian.mods.kubejs.neoforge)
     compileOnly(libs.dev.latvian.mods.rhino)
 }

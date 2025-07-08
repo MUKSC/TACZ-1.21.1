@@ -18,8 +18,7 @@ The `FIXME` annotations in the source code indicate issues I couldn't fix
 
 On Both:
 - Built-in KubeJS recipe integration is disabled
-  - I don't really know about KubeJS, and it got massive changes, so I'll just remove it for now 
-- Controllable compat is removed since it's not available on 1.21.1
+  - I don't really know about KubeJS, and it got massive changes, so I'll just remove it for now
 
 On Forge:
 - Target minecart is disabled as I couldn't get it to compile on Forge
