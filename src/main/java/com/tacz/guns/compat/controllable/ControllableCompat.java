@@ -7,8 +7,7 @@ public class ControllableCompat {
 
     public static void init() {
         if (ModList.get().isLoaded(MOD_ID)) {
-            /* FIXME: Replace with Controlify?
-            ontrollableInner.init();*/
+            ControllableInner.init();
         }
     }
 }
