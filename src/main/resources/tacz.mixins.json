@@ -19,7 +19,6 @@
     "client.ItemInHandLayerMixin",
     "client.ItemInHandRendererMixin",
     "client.LanguageMixin",
-    "client.LevelRendererMixin",
     "client.LocalPlayerMixin",
     "client.MouseHandlerMixin",
     "client.PlayerModelMixin"
