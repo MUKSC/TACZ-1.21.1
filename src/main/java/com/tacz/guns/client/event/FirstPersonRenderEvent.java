@@ -1,20 +1,28 @@
 package com.tacz.guns.client.event;
 
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.animation.statemachine.AnimationStateMachine;
 import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
+import com.tacz.guns.client.renderer.other.HandRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.bus.api.SubscribeEvent;
 
+@EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class FirstPersonRenderEvent {
     private static AnimationStateMachine<?> lastStateMachine = null;
 
+    @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
@@ -54,8 +62,16 @@ public class FirstPersonRenderEvent {
                 renderer.tryInit(stack, player, event.getPartialTick());
             }
 
-            renderer.renderFirstPerson(player, stack, transformType, event.getPoseStack(), event.getMultiBufferSource(),
-                    event.getPackedLight(), event.getPartialTick());
+            GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
+            HandRenderer.INSTANCE.renderSolid((poseStack) -> {
+                renderer.renderFirstPerson(
+                    player, stack, transformType,
+                    poseStack == null ? event.getPoseStack() : poseStack,
+                    event.getMultiBufferSource(),
+                    event.getPackedLight(),
+                    event.getPartialTick()
+                );
+            }, event.getPartialTick(), gameRenderer.getMainCamera(), gameRenderer);
             event.setCanceled(true);
         }
     }

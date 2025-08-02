@@ -28,23 +28,20 @@ package com.tacz.guns.client.renderer.other;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.tacz.guns.compat.iris.IrisCompat;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameType;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
-import org.joml.Matrix4fc;
+
+import java.util.function.Consumer;
 
 public class HandRenderer {
     public static final HandRenderer INSTANCE = new HandRenderer();
     public static final float DEPTH = 0.125F;
-    private boolean ACTIVE;
-
-    public static Matrix4fc projection;
 
     private PoseStack setupGlState(GameRenderer gameRenderer, Camera camera, float tickDelta) {
         final PoseStack poseStack = new PoseStack();
@@ -65,20 +62,13 @@ public class HandRenderer {
         return poseStack;
     }
 
-    private boolean canRender(Camera camera, GameRenderer gameRenderer) {
-        return !(!gameRenderer.renderHand
-            || camera.isDetached()
-            || !(camera.getEntity() instanceof Player)
-            || gameRenderer.panoramicMode
-            || Minecraft.getInstance().options.hideGui
-            || (camera.getEntity() instanceof LivingEntity && ((LivingEntity) camera.getEntity()).isSleeping())
-            || Minecraft.getInstance().gameMode.getPlayerMode() == GameType.SPECTATOR);
-    }
+    public void renderSolid(Consumer<PoseStack> renderer, float tickDelta, Camera camera, GameRenderer gameRenderer) {
+        if (IrisCompat.isPackInUseQuick()) {
+            renderer.accept(null);
+            return;
+        }
 
-    public void renderSolid(float tickDelta, Camera camera, GameRenderer gameRenderer, MultiBufferSource.BufferSource bufferSource) {
-        if (!canRender(camera, gameRenderer) || IrisCompat.isPackInUseQuick()) return;
-
-        ACTIVE = true;
+        Matrix4f projection = RenderSystem.getProjectionMatrix();
 
         PoseStack poseStack = setupGlState(gameRenderer, camera, tickDelta);
 
@@ -88,22 +78,20 @@ public class HandRenderer {
         RenderSystem.getModelViewStack().set(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
 
-        gameRenderer.itemInHandRenderer.renderHandsWithItems(tickDelta, new PoseStack(), bufferSource, Minecraft.getInstance().player, Minecraft.getInstance().getEntityRenderDispatcher().getPackedLightCoords(camera.getEntity(), tickDelta));
+        LocalPlayer playerEntity = Minecraft.getInstance().player;
+        float f2 = Mth.lerp(tickDelta, playerEntity.xBobO, playerEntity.xBob);
+        float f3 = Mth.lerp(tickDelta, playerEntity.yBobO, playerEntity.yBob);
+        poseStack.mulPose(Axis.XP.rotationDegrees((playerEntity.getViewXRot(tickDelta) - f2) * 0.1F));
+        poseStack.mulPose(Axis.YP.rotationDegrees((playerEntity.getViewYRot(tickDelta) - f3) * 0.1F));
+
+        renderer.accept(poseStack);
 
         Minecraft.getInstance().getProfiler().pop();
 
-        bufferSource.endBatch();
-
-        gameRenderer.resetProjectionMatrix(new Matrix4f(projection));
+        gameRenderer.resetProjectionMatrix(projection);
 
         poseStack.popPose();
         RenderSystem.getModelViewStack().popMatrix();
         RenderSystem.applyModelViewMatrix();
-
-        ACTIVE = false;
-    }
-
-    public boolean isActive() {
-        return ACTIVE;
     }
 }
