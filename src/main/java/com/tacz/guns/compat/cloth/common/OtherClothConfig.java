@@ -13,14 +13,23 @@ public class OtherClothConfig {
 
         other.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.common.other.default_pack_debug"), PreLoadConfig.override.get())
                 .setDefaultValue(false).setTooltip(Component.translatable("config.tacz.common.other.default_pack_debug.desc"))
-                .setSaveConsumer(PreLoadConfig.override::set).build());
+                .setSaveConsumer(value -> {
+                    PreLoadConfig.override.set(value);
+                    PreLoadConfig.override.save();
+                }).build());
 
         other.addEntry(entryBuilder.startIntField(Component.translatable("config.tacz.common.other.target_sound_distance"), OtherConfig.TARGET_SOUND_DISTANCE.get())
                 .setMin(0).setMax(Integer.MAX_VALUE).setDefaultValue(128).setTooltip(Component.translatable("config.tacz.common.other.target_sound_distance.desc"))
-                .setSaveConsumer(OtherConfig.TARGET_SOUND_DISTANCE::set).build());
+                .setSaveConsumer(value -> {
+                    OtherConfig.TARGET_SOUND_DISTANCE.set(value);
+                    OtherConfig.TARGET_SOUND_DISTANCE.save();
+                }).build());
 
 //        other.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.common.other.enable_table_filter"), OtherConfig.ENABLE_TABLE_FILTER.get())
 //                .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.common.other.enable_table_filter.desc"))
-//                .setSaveConsumer(OtherConfig.ENABLE_TABLE_FILTER::set).build());
+//                .setSaveConsumer(value -> {
+//                    OtherConfig.ENABLE_TABLE_FILTER.set(value);
+//                    OtherConfig.ENABLE_TABLE_FILTER.save();
+//                }).build());
     }
 }

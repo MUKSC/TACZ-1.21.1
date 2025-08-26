@@ -13,15 +13,24 @@ public class KeyClothConfig {
 
         key.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.client.key.hold_to_aim"), KeyConfig.HOLD_TO_AIM.get())
                 .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.client.key.hold_to_aim.desc"))
-                .setSaveConsumer(KeyConfig.HOLD_TO_AIM::set).build());
+                .setSaveConsumer(value -> {
+                    KeyConfig.HOLD_TO_AIM.set(value);
+                    KeyConfig.HOLD_TO_AIM.save();
+                }).build());
 
         key.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.client.key.hold_to_crawl"), KeyConfig.HOLD_TO_CRAWL.get())
                 .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.client.key.hold_to_crawl.desc"))
-                .setSaveConsumer(KeyConfig.HOLD_TO_CRAWL::set).build());
+                .setSaveConsumer(value -> {
+                    KeyConfig.HOLD_TO_CRAWL.set(value);
+                    KeyConfig.HOLD_TO_CRAWL.save();
+                }).build());
 
         key.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.client.key.auto_reload"), KeyConfig.AUTO_RELOAD.get())
                 .setDefaultValue(false).setTooltip(Component.translatable("config.tacz.client.key.auto_reload.desc"))
-                .setSaveConsumer(KeyConfig.AUTO_RELOAD::set).build());
+                .setSaveConsumer((value -> {
+                    KeyConfig.AUTO_RELOAD.set(value);
+                    KeyConfig.AUTO_RELOAD.save();
+                })).build());
 
         key.addEntry(new OpenGunPackDirEntry(Component.literal("test")));
     }
