@@ -1,6 +1,8 @@
 package com.tacz.guns.item;
 
 import com.tacz.guns.api.DefaultAssets;
+import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.api.GunProperty;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.event.common.GunFireEvent;
@@ -19,8 +21,6 @@ import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunFire;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.modifier.custom.AmmoSpeedModifier;
-import com.tacz.guns.resource.modifier.custom.InaccuracyModifier;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
 import com.tacz.guns.resource.pojo.data.gun.*;
 import com.tacz.guns.sound.SoundManager;
@@ -41,7 +41,7 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -72,6 +72,29 @@ public class ModernKineticGunScriptAPI {
     private LuaEntityAccessor entityAccessor;
 
     /**
+     * 获取玩家的属性缓存中缓存的值。
+     * 请勿获取拥有复杂数据结构的属性值，该行为是未定义的。
+     *
+     * @param id 属性 id，请参阅 {@link GunProperties}
+     * @see com.tacz.guns.api.CacheModifiableByScript
+     * @return 属性的值
+     *
+     * @author ChloePrime
+     * @since 1.1.7
+     */
+    public LuaValue getCachedProperty(String id) {
+        GunProperty<?> property = GunProperties.all().get(id);
+        if (property == null) {
+            throw new LuaError("unknown gun property: " + id);
+        }
+        AttachmentCacheProperty cache = IGunOperator.fromLivingEntity(shooter).getCacheProperty();
+        if (cache == null) {
+            return LuaValue.NIL;
+        }
+        return CoerceJavaToLua.coerce(cache.getCache(id));
+    }
+
+    /**
      * 执行一次完整的射击逻辑，会考虑玩家的状态(是否在瞄准、是否在移动、是否在匍匐等)、配件数值影响、多弹丸散射、连发，播放开火音效、
      * @param consumeAmmo 本次射击是否消耗弹药
      */
@@ -89,32 +112,35 @@ public class ModernKineticGunScriptAPI {
         //Handle Heat Data
         float heatInaccuracy = 1f;
         if(hasHeatData()) {
-            GunHeatData heatData = gunIndex.getGunData().getHeatData();
-            float heatPercentage = (getHeatAmount() / heatData.getHeatMax());
+            GunHeatData heatData = Objects.requireNonNull(gunIndex.getGunData().getHeatData());
+            float heatMax = modifyProperty(GunProperties.RuntimeOnly.MAX_HEAT, Float.class, heatData.getHeatMax());
+            float heatPercentage = (getHeatAmount() / heatMax);
             heatInaccuracy *= Mth.lerp(heatPercentage, heatData.getMinInaccuracy(), heatData.getMaxInaccuracy());
         }
 
         // 散射影响
         InaccuracyType inaccuracyType = InaccuracyType.getInaccuracyType(shooter);
-        final float inaccuracy = Math.max(0, cacheProperty.<Map<InaccuracyType, Float>>getCache(InaccuracyModifier.ID).get(inaccuracyType) * heatInaccuracy);
+        final float unmodifiedInaccuracy = cacheProperty.getCache(GunProperties.INACCURACY).get(inaccuracyType) * heatInaccuracy;
+        final float inaccuracy = Math.max(0, modifyProperty(GunProperties.INACCURACY, Float.class, unmodifiedInaccuracy));
 
         // 消音器影响
+        // 使用消音这个选项对于射手来说是在客户端处理的，脚本改了没用，所以干脆不让改了
         Pair<Integer, Boolean> silence = cacheProperty.getCache(SilenceModifier.ID);
-        final int soundDistance = silence.first();
+        final int soundDistance = modifyProperty(GunProperties.RuntimeOnly.SOUND_DISTANCE, Integer.class, silence.left());
         final boolean useSilenceSound = silence.right();
 
         // 子弹飞行速度
-        float speed = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
+        float speed = modifyProperty(GunProperties.AMMO_SPEED, Float.class, cacheProperty.getCache(GunProperties.AMMO_SPEED));
         speed *= AmmoConfig.GLOBAL_BULLET_SPEED_MODIFIER.get();
         float processedSpeed = Mth.clamp(speed / 20, 0, Float.MAX_VALUE);
         // 弹丸数量
-        int bulletAmount = Math.max(bulletData.getBulletAmount(), 1);
+        int bulletAmount = modifyProperty(GunProperties.RuntimeOnly.BULLET_AMOUNT, Integer.class, Math.max(bulletData.getBulletAmount(), 1));
 
         // 连发数量
         FireMode fireMode = abstractGunItem.getFireMode(itemStack);
-        int cycles = fireMode == FireMode.BURST ? gunData.getBurstData().getCount() : 1;
+        int cycles = modifyProperty(GunProperties.RuntimeOnly.BURST_COUNT, Integer.class, fireMode == FireMode.BURST ? gunData.getBurstData().getCount() : 1);
         // 连发间隔
-        long period = fireMode == FireMode.BURST ? gunData.getBurstShootInterval() : 1;
+        long period = modifyProperty(GunProperties.RuntimeOnly.BURST_SHOOT_INTERVAL, Long.class, fireMode == FireMode.BURST ? gunData.getBurstShootInterval() : 1);
 
         CycleTaskHelper.addCycleTask(() -> {
             // 如果射击者死亡，取消射击
@@ -154,6 +180,7 @@ public class ModernKineticGunScriptAPI {
                     boolean isTracer = bulletData.hasTracerAmmo() && gunOperator.nextBulletIsTracer(bulletData.getTracerCountInterval());
                     EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId,
                             gunDisplayId, isTracer, gunData, bulletData);
+                    bullet.applyShotgunDamageSpread(bulletAmount);
                     abstractGunItem.doBulletSpread(dataHolder, itemStack, shooter, bullet, i, processedSpeed,
                             inaccuracy, pitch, yaw);
                     world.addFreshEntity(bullet);
@@ -166,6 +193,14 @@ public class ModernKineticGunScriptAPI {
             }
             return true;
         }, period, cycles);
+    }
+
+    private <T> T modifyProperty(GunProperty<?> property, Class<T> type, T value) {
+        return abstractGunItem.modifyProperty(dataHolder, itemStack, shooter, property, type, value);
+    }
+
+    private <T> T modifyProperty(String id, Class<T> type, T value) {
+        return abstractGunItem.modifyProperty(dataHolder, itemStack, shooter, id, type, value);
     }
 
     /**
