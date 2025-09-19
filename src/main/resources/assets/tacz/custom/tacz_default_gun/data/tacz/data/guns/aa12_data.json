@@ -61,7 +61,8 @@
   "allow_attachment_types": [
     "scope",
     "extended_mag",
-    "grip"
+    "grip",
+    "muzzle"
   ],
   "recoil": {
     "pitch": [

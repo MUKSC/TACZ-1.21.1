@@ -1,0 +1,90 @@
+{
+  "model": "tacz:gun/fn_fal_geo",
+  "texture": "tacz:gun/uv/fn_fal",
+  "lod": {
+    "model": "tacz:gun/lod/fn_fal",
+    "texture": "tacz:gun/lod/fn_fal"
+  },
+  "hud": "tacz:gun/hud/fn_fal",
+  "slot": "tacz:gun/slot/fn_fal",
+  "ammo_count_style": "normal",
+  "damage_style": "per_projectile",
+  "animation": "tacz:fn_fal",
+  "state_machine": "tacz:fn_fal_state_machine",
+  "use_default_animation": "rifle",
+  "third_person_animation": "default",
+  "player_animator_3rd": "tacz:rifle_default.player_animation",
+  "show_crosshair": false,
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 0.75
+  },
+  "iron_zoom": 1.33,
+  "zoom_model_fov": 50,
+  "shell": {
+    "initial_velocity": [7.5, 2, -2.5],
+    "random_velocity": [3.5, 1.5, 0.25],
+    "acceleration": [-1.5, -10, 0.0],
+    "angular_velocity": [360, -1200, 90],
+    "living_time": 1.0
+  },
+  "ammo": {
+    "tracer_color": "#FF8888"
+  },
+  "sounds": {
+    "shoot": "tacz:fn_fal/fn_fal_shoot",
+    "shoot_3p": "tacz:fn_fal/fn_fal_shoot_3p",
+    "reload_empty": "tacz:fn_fal/reload_empty",
+    "reload_tactical": "tacz:fn_fal/reload_tactical",
+    "inspect": "",
+    "inspect_empty": "",
+    "draw": "tacz:fn_fal/draw",
+    "put_away": "tacz:fn_fal/put_away",
+    "silence": "tacz:fn_fal/fn_fal_silence",
+    "silence_3p": "tacz:fn_fal/fn_fal_silence_3p",
+    "dry_fire": "tacz:dry_fire",
+    "fire_select": "tacz:fire_select",
+    "head_hit": "tacz:head_hit",
+    "flesh_hit": "tacz:flesh_hit",
+    "kill": "tacz:kill",
+    "melee_bayonet": "tacz:melee_bayonet/melee_bayonet_01",
+    "melee_push": "tacz:melee_stock/melee_stock_01",
+    "melee_stock": "tacz:melee_stock/melee_stock_02"
+  },
+  "offhand_show": {
+    "pos": [1, 20, 3.5],
+    "rotate": [0, 0, 60],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [-1, 20, 3],
+      "rotate": [-180, 0, 120],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  },
+  "controllable": {
+    "semi": {
+      "low_frequency": 0.25,
+      "high_frequency": 0.5,
+      "time": 100
+    },
+    "auto": {
+      "low_frequency": 0.15,
+      "high_frequency": 0.25,
+      "time": 80
+    },
+    "burst": {
+      "low_frequency": 0.25,
+      "high_frequency": 0.5,
+      "time": 100
+    }
+  }
+}

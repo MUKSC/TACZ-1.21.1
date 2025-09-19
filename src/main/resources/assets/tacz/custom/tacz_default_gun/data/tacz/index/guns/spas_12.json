@@ -1,0 +1,9 @@
+{
+  "name": "tacz.gun.spas_12.name",
+  "display": "tacz:spas_12_display",
+  "data": "tacz:spas_12_data",
+  "tooltip": "tacz.gun.spas_12.desc",
+  "type": "shotgun",
+  "item_type": "modern_kinetic",
+  "sort": 2
+}

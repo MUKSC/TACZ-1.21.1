@@ -34,7 +34,7 @@
     "type": "magazine",
     "feed": {
       "empty": 2.85,
-      "tactical": 1.6
+      "tactical": 1.75
     },
     "cooldown": {
       "empty": 3.45,
@@ -45,7 +45,7 @@
   "put_away_time": 0.4,
   "aim_time": 0.17,
   "sprint_time": 0.2,
-  "bolt_action_time": 0.9,
+  "bolt_action_time": 0.85,
   "weight": 6.5,
   "movement_speed": {
     // 默认修正

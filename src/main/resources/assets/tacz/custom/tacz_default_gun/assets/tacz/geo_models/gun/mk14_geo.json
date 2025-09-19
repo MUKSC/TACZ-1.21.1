@@ -4498,7 +4498,12 @@
 				{
 					"name": "barrel2",
 					"parent": "mk14_default",
-					"pivot": [-7, 8, 0],
+					"pivot": [-7, 8, 0]
+				},
+				{
+					"name": "sight_illuminated",
+					"parent": "barrel2",
+					"pivot": [-0.00511, 8.40855, -17.6225],
 					"cubes": [
 						{
 							"origin": [-0.05198, 8.1898, -17.66214],

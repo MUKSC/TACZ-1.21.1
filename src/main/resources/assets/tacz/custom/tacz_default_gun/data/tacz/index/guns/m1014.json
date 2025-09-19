@@ -1,0 +1,9 @@
+{
+    "name": "tacz.gun.m1014.name",
+    "display": "tacz:m1014_display",
+    "data": "tacz:m1014_data",
+    "tooltip": "tacz.gun.m1014.desc",
+    "type": "shotgun",
+    "item_type": "modern_kinetic",
+    "sort": 3
+}

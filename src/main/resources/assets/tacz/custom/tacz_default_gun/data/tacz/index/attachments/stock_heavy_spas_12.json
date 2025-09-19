@@ -1,0 +1,7 @@
+{
+  "name": "tacz.attachment.stock_heavy_spas_12.name",
+  "display": "tacz:stock_heavy_spas_12_display",
+  "data": "tacz:stock_heavy_spas_12_data",
+  "type": "stock",
+  "sort": 11
+}

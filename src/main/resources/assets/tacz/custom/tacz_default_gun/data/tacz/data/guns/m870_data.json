@@ -110,6 +110,7 @@
     "loop_feed": 0.25
   },
   "allow_attachment_types": [
-    "extended_mag"
+    "extended_mag",
+    "muzzle"
   ]
 }

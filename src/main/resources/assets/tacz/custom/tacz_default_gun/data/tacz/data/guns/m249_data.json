@@ -6,6 +6,7 @@
     150,
     200
   ],
+  "can_slide": false,
   "bolt": "open_bolt",
   "rpm": 750,
   "bullet": {
