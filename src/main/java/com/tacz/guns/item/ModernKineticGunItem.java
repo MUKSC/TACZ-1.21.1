@@ -3,6 +3,7 @@ package com.tacz.guns.item;
 import com.google.common.base.Suppliers;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.ReloadState;
 import com.tacz.guns.api.item.IGun;
@@ -18,6 +19,7 @@ import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.attachment.EffectData;
 import com.tacz.guns.resource.pojo.data.attachment.MeleeData;
 import com.tacz.guns.resource.pojo.data.gun.*;
+import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -273,14 +275,33 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
             return original;
         }
 
+        var afterDefaultModification = defaultPropertyModification.modify(gunItem, shooter, gunIndex, id, original);
+
         try {
             return Optional.ofNullable(gunIndex.getScript())
                     .map(script -> checkFunction(script.get(luaMethodName)))
-                    .map(func -> func.call(CoerceJavaToLua.coerce(api), LuaValue.valueOf(id), CoerceJavaToLua.coerce(original)))
+                    .map(func -> func.call(CoerceJavaToLua.coerce(api), LuaValue.valueOf(id), CoerceJavaToLua.coerce(afterDefaultModification)))
                     .map(luaValue -> type.cast(CoerceLuaToJava.coerce(luaValue, type)))
-                    .orElse(original);
+                    .orElse(afterDefaultModification);
         } catch (Exception exception) {
             GunMod.LOGGER.warn(MarkerManager.getMarker("Gun Script"), "Failed to modify gun property {}", id, exception);
+            return afterDefaultModification;
+        }
+    }
+
+    public final DefaultPropertyModification defaultPropertyModification = new DefaultPropertyModification();
+
+    public class DefaultPropertyModification {
+        public static final ResourceLocation SLUGS = new ResourceLocation(GunMod.MOD_ID, "intrinsic/slug");
+
+        @SuppressWarnings("unchecked")
+        public <T> T modify(ItemStack gunItem, LivingEntity shooter, CommonGunIndex gunIndex,
+                            String id, T original) {
+            if (GunProperties.RuntimeOnly.BULLET_AMOUNT.equals(id)) {
+                if (AllowAttachmentTagMatcher.matchTag(SLUGS, getAttachmentId(gunItem, AttachmentType.EXTENDED_MAG))) {
+                    return (T) Integer.valueOf(1);
+                }
+            }
             return original;
         }
     }
