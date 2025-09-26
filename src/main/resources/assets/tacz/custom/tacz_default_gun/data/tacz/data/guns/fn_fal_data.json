@@ -71,7 +71,7 @@
     }
   },
   "draw_time": 0.42,
-  "put_away_time": 0.50,
+  "put_away_time": 0.63,
   "aim_time": 0.2,
   "sprint_time": 0.2,
   "weight": 4.7,

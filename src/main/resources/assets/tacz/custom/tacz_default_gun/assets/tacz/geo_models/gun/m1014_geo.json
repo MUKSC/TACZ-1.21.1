@@ -7298,6 +7298,26 @@
 					"pivot": [0, 11.99688, 2.175]
 				},
 				{
+					"name": "positioning",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "thirdperson_hand",
+					"parent": "positioning",
+					"pivot": [0, 6.8875, 8.5]
+				},
+				{
+					"name": "ground",
+					"parent": "positioning",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "fixed",
+					"parent": "positioning",
+					"pivot": [1.1875, 8.75, -1],
+					"rotation": [0, 90, 0]
+				},
+				{
 					"name": "camera",
 					"pivot": [2.5, 12, 14]
 				},

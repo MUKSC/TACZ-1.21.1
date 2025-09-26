@@ -7079,6 +7079,12 @@
 					"pivot": [0, 11.075, 8.525]
 				},
 				{
+					"name": "stock_pos",
+					"parent": "positioning2",
+					"pivot": [0, 8.42188, 21.6875],
+					"rotation": [-5, 0, 0]
+				},
+				{
 					"name": "stock_default",
 					"parent": "spas12",
 					"pivot": [0, 7, 13]
@@ -9810,11 +9816,6 @@
 							}
 						}
 					]
-				},
-				{
-					"name": "stock_pos",
-					"parent": "tube",
-					"pivot": [0, 8.6875, 21.4375]
 				},
 				{
 					"name": "lefthand",
