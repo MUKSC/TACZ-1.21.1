@@ -5,6 +5,7 @@ moddev = "2.0.74"
 parchment = "2024.11.17"
 minecraft = "1.21.1"
 minecraft-range = "[1.21.1]"
+mod-publish = "1.0.0"
 
 commons-math = "3.6.1"
 luaj = "3.0.8-figura"
@@ -44,3 +45,4 @@ dev-latvian-mods-rhino = { module = "dev.latvian.mods:rhino", version.ref = "rhi
 
 [plugins]
 moddev = { id = "net.neoforged.moddev", version.ref = "moddev" }
+mod-publish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish" }

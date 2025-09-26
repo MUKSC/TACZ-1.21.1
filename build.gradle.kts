@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.moddev)
+    alias(libs.plugins.mod.publish)
 }
 
 val id = project.property("mod_id") as String
@@ -155,4 +156,31 @@ tasks.processResources {
     filteringCharset = "UTF-8"
     inputs.properties(properties)
     filesMatching("META-INF/neoforge.mods.toml") { expand(properties) }
+}
+
+publishMods {
+    displayName = "[TaCZ] ${project.property("mod_name")} ${project.version}"
+    changelog = providers.fileContents(layout.projectDirectory.file("changelog.md")).asText
+    file = tasks.jar.get().archiveFile
+    type = BETA
+    modLoaders.add("neoforge")
+
+    modrinth {
+        projectId = project.property("modrinth_id") as String
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add("1.21.1")
+    }
+
+    curseforge {
+        projectId = project.property("curseforge_id") as String
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add("1.21.1")
+    }
+
+    github {
+        repository = project.property("repository") as String
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        commitish = "neoforge/1.21.1"
+        tagName = "neoforge-${project.version}"
+    }
 }

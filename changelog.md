@@ -1,0 +1,1 @@
+- Fixed various issues related to hand rendering
