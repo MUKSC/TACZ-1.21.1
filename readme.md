@@ -1,4 +1,8 @@
 ## Unofficial TaCZ 1.21.1 Forge/NeoForge Port
+[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/tacz-1.21.1)
+[![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/tacz-1-21-1)
+[![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg)](https://github.com/MUKSC/TACZ-1.21.1)
+
 > [!IMPORTANT]
 > This is UNOFFICIAL; Support is not guaranteed and things may not work properly  
 > Do not report issues with this to the original devs  
