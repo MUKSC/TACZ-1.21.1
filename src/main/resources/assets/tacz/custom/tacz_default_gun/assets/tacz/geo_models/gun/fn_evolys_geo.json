@@ -1,5 +1,5 @@
 {
-	"format_version": "1.21.0",
+	"format_version": "1.12.0",
 	"minecraft:geometry": [
 		{
 			"description": {
@@ -13,7 +13,7 @@
 			"bones": [
 				{
 					"name": "root",
-					"pivot": [0, 7.95, 6.125]
+					"pivot": [0, 9.95, 2.125]
 				},
 				{
 					"name": "mag_and_lefthand",
@@ -12237,11 +12237,6 @@
 				{
 					"name": "camera",
 					"pivot": [3.5, 14.5, 15.925]
-				},
-				{
-					"name": "refit_grip_view2",
-					"pivot": [9.375, 6.375, -8.3125],
-					"rotation": [0, 90, 0]
 				}
 			]
 		}
