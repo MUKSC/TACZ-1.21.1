@@ -132,9 +132,9 @@
     "bolt_feed_time": 0.3,
     "intro_empty": 2.43,
     "intro_empty_semi": 1.9,
-    "intro": 0.7,
-    "loop": 0.75,
-    "ending": 0.73,
+    "intro": 0.6,
+    "loop": 0.65,
+    "ending": 0.6,
     "intro_empty_feed": 1.63,
     "intro_empty_feed_semi": 1.02,
     "loop_feed": 0.45

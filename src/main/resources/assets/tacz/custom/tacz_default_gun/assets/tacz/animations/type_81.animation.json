@@ -1069,6 +1069,9 @@
 				},
 				"bullet_in_barrel": {
 					"position": [0, 0.35, 0]
+				},
+				"bullet": {
+					"scale": 0
 				}
 			},
 			"sound_effects": {
@@ -2000,6 +2003,9 @@
 							"lerp_mode": "catmullrom"
 						}
 					}
+				},
+				"bullet": {
+					"scale": 0
 				}
 			},
 			"sound_effects": {
@@ -2747,6 +2753,9 @@
 						"2.25": [0.08, 0, -0.15],
 						"2.4167": [0, 0, 0]
 					}
+				},
+				"bullet": {
+					"scale": 0
 				}
 			},
 			"sound_effects": {
@@ -3379,6 +3388,9 @@
 						"2.7667": [0, 0, -0.3125],
 						"2.9": [0, 0, 0]
 					}
+				},
+				"bullet": {
+					"scale": 1
 				}
 			},
 			"sound_effects": {
