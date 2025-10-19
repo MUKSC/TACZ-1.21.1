@@ -6,6 +6,7 @@ local MAIN_TRACK = default.MAIN_TRACK
 local GUN_KICK_TRACK_LINE = default.GUN_KICK_TRACK_LINE
 local main_track_states = default.main_track_states
 local gun_kick_state = default.gun_kick_state
+local ADS_states = default.ADS_states
 local BASE_TRACK = default.BASE_TRACK
 -- main_track_states.idle 是我们要重写的状态。
 local shoot_state = setmetatable({},{__index = gun_kick_state})
@@ -50,6 +51,34 @@ function start_state.transition(this, context, input)
         end
         return this.main_track_states.idle
     end
+end
+
+local crosshair_state = {
+    ads_ing = 0
+}
+
+-- 进入瞄准状态
+function crosshair_state.entry(this, context)
+    -- 开始瞄准时播放瞄准动画，并且将其挂起
+end
+
+-- 更新瞄准状态
+function crosshair_state.update(this, context)
+    if (context:getAimingProgress() >= 1) then
+        crosshair_state.ads_ing = 1
+        if (context:getAttachment("SCOPE") == "tacz:empty") then
+            context:setShouldHideCrossHair(false)
+        else
+            context:setShouldHideCrossHair(true)
+        end
+    else
+        if (crosshair_state.ads_ing == 1) then
+            crosshair_state.ads_ing = 0
+            context:setShouldHideCrossHair(false)
+        end
+        context:setShouldHideCrossHair(context:shouldHideCrossHair())
+    end
+    print(context:shouldHideCrossHair())
 end
 
 local base_state = {
@@ -149,8 +178,8 @@ local function runInspectAnimation(context)
     else
         context:runAnimation("inspect", track, false, PLAY_ONCE_STOP, 0.2)
     end
-end    
-    
+end
+
 -- 重写 idle 状态的 transition 函数，将输入 INPUT_RELOAD 重定向到新定义的 reload_state 状态
 function idle_state.transition(this, context, input)
     if (input == INPUT_PUT_AWAY) then
@@ -245,8 +274,9 @@ local M = setmetatable({
         idle = idle_state,
         start = start_state,
         reload = reload_state,
-        inspect = inspect_state
+        inspect = inspect_state,
     }, {__index = main_track_states}),
+    crosshair_state = crosshair_state,
     INPUT_RELOAD_RETREAT = "reload_retreat",
     gun_kick_state = setmetatable({},{__index = shoot_state}),
     base_track_state = setmetatable({},{__index = base_state})
@@ -256,6 +286,20 @@ function M:initialize(context)
     default.initialize(self, context)
     self.main_track_states.reload.need_ammo = 0
     self.main_track_states.reload.loaded_ammo = 0
+end
+
+function M:states()
+    return {
+        self.base_track_state,
+        self.bolt_caught_states.normal,
+        self.over_heat_states.normal,
+        self.main_track_states.start,
+        self.gun_kick_state,
+        self.movement_track_states.idle,
+        self.ADS_states.normal,
+        self.slide_states.normal,
+        self.crosshair_state
+    }
 end
 -- 导出状态机
 return M

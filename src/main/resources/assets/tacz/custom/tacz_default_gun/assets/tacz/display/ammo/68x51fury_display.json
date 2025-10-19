@@ -1,4 +1,8 @@
 {
-  "slot": "tacz:ammo/slot/68x51fury"
+  "slot": "tacz:ammo/slot/68x51fury",
+  "shell": {
+    "model": "tacz:shell/308_shell",
+    "texture": "tacz:shell/308_shell"
+  }
 }
     

@@ -1,4 +1,8 @@
 {
-  "slot": "tacz:ammo/slot/46x30"
+  "slot": "tacz:ammo/slot/46x30",
+  "shell": {
+    "model": "tacz:shell/46x30_shell",
+    "texture": "tacz:shell/46x30_shell"
+  }
 }
     

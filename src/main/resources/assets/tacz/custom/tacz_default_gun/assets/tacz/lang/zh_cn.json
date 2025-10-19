@@ -1,6 +1,8 @@
 {
   "pack.tacz.tacz_default_gun.name": "TAC Zero 默认枪械包",
   "pack.tacz.tacz_default_gun.desc": "TaCZ默认枪械包；最具盛名，最经典，最独特，最为人所熟知的枪械。",
+
+
   "tacz.type.ammo.name": "子弹",
   "tacz.type.pistol.name": "手枪",
   "tacz.type.rifle.name": "步枪",
@@ -149,6 +151,7 @@
   "tacz.attachment.scope_acog_ta31.name": "§9TA31 2x 先进战斗光学瞄具",
   "tacz.attachment.scope_elcan_4x.name": "§5埃尔坎 4x 光学瞄具",
   "tacz.attachment.scope_retro_2x.name": "§93x 光学瞄具\"复古\"",
+  "tacz.attachment.scope_aug_default.name": "AUG 内置瞄具",
   "tacz.attachment.sight_srs_02.name": "SRS-02 反射式瞄具",
   "tacz.attachment.sight_okp7.name": "OKP-7 反射式瞄具",
   "tacz.attachment.sight_acro_rifle.name": "ACRO P-1 增高 反射式瞄具",
@@ -179,6 +182,7 @@
   "tacz.attachment.sniper_extended_mag_1.name": "狙击弹药扩容弹匣",
   "tacz.attachment.sniper_extended_mag_2.name": "§9狙击弹药扩容弹匣",
   "tacz.attachment.sniper_extended_mag_3.name": "§d狙击弹药扩容弹匣",
+
   "tacz.attachment.ammo_mod_fmj.name": "§e全金属被甲弹",
   "tacz.attachment.ammo_mod_he.name": "§e高爆弹",
   "tacz.attachment.ammo_mod_hp.name": "§e空尖弹",
@@ -217,7 +221,7 @@
   "tacz.attachment.muzzle_brake_trex.name": "霸王龙 重型制退器",
   "tacz.attachment.muzzle_brake_timeless50.name": "§6永恒 .50口径制退器",
   "tacz.attachment.deagle_golden_long_barrel.name": ".357 黄金沙漠之鹰加长枪管",
-  "tacz.attachment.muzzle_duckbill_sg.name":"鸭嘴枪口§7(暂无实际效果)",
+  "tacz.attachment.muzzle_duckbill_sg.name":"鸭嘴枪口",
   "tacz.attachment.muzzle_choke_sg.name":"扼流器",
   "tacz.attachment.muzzle_brake_mastiff_sg.name":"獒犬 制退器",
   "tacz.attachment.muzzle_silencer_sg.name":"12号口径消音器",
@@ -237,13 +241,15 @@
   "tacz.attachment.stock_moe.name": "MOE 轻型枪托",
   "tacz.attachment.stock_ripstock.name": "RS 超轻型枪托",
   "tacz.attachment.stock_m4ss.name": "M4SS 战术枪托",
-  "tacz.attachment.stock_heavy_spas_12.name": "SPAS12专属重型枪托§7(名字暂定)",
-  "tacz.attachment.stock_tactical_spas_12.name": "SPAS12专属战术枪托§7(名字暂定)",
+  "tacz.attachment.stock_heavy_spas_12.name": "弗兰基 重型枪托",
+  "tacz.attachment.stock_tactical_spas_12.name": "弗兰基 战术枪托",
 
   "tacz.block.gun_smith_table.name": "TaCZ枪械工作台",
   "tacz.block.ammo_workbench.name": "TaCZ弹药装配台",
   "tacz.block.attachment_workbench.name": "TaCZ配件工作台",
+
   "tacz.block.gun_smith_table.desc": "一切开始的地方",
   "tacz.block.ammo_workbench.desc": "子弹是笨蛋",
   "tacz.block.attachment_workbench.desc": "锦上添花"
+
 }

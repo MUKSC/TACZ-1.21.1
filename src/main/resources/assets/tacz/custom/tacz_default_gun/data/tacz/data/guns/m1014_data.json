@@ -10,16 +10,16 @@
   "rpm": 250,
   "bullet": {
     "life": 0.6,
-    "bullet_amount": 9,
-    "damage": 34,
+    "bullet_amount": 8,
+    "damage": 40,
     "tracer_count_interval": 0,
     "extra_damage": {
       "armor_ignore": 0.25,
       "head_shot_multiplier": 1.33,
       "damage_adjust": [
-        {"distance": 14, "damage": 34},
-        {"distance": 28, "damage": 28},
-        {"distance": "infinite", "damage": 20}
+        {"distance": 14, "damage": 40},
+        {"distance": 28, "damage": 25},
+        {"distance": "infinite", "damage": 18}
       ]
     },
     "speed": 150,
@@ -115,9 +115,9 @@
     "loop": 0.67,
     "loop_2": 0.7,
     "ending": 0.17,
-    "intro_empty_feed": 1.30,
-    "loop_feed": 0.47,
-    "loop_feed_2": 0.53
+    "intro_empty_feed": 1.27,
+    "loop_feed": 0.38,
+    "loop_feed_2": 0.43
   },
   "allow_attachment_types": [
     "muzzle",

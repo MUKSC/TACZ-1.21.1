@@ -20,7 +20,7 @@
   "use_default_animation": "rifle",
   "third_person_animation": "default",
   "player_animator_3rd": "tacz:rifle_default.player_animation",
-  "show_crosshair": false,
+  "show_crosshair": true,
   "transform": {
     "scale": {
       "thirdperson": [0.6, 0.6, 0.6],

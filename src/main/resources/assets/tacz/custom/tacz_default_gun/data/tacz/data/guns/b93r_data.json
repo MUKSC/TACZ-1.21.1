@@ -1,6 +1,25 @@
 {
   "ammo": "tacz:9mm",
   "rpm": 900,
+  "script": "tacz:xmag_reload_logic",
+  "script_param": {
+    "reload_feed": 1.2,
+    "reload_cooldown": 1.8,
+    "empty_feed": 1.53,
+    "empty_cooldown": 2.1,
+    "reload_xmag_1_feed": 1.38,
+    "reload_xmag_1_cooldown": 1.9,
+    "empty_xmag_1_feed": 1.55,
+    "empty_xmag_1_cooldown": 2.15,
+    "reload_xmag_2_feed": 1.45,
+    "reload_xmag_2_cooldown": 2.08,
+    "empty_xmag_2_feed": 1.6,
+    "empty_xmag_2_cooldown": 2.25,
+    "reload_xmag_3_feed": 1.63,
+    "reload_xmag_3_cooldown": 2.4,
+    "empty_xmag_3_feed": 1.7,
+    "empty_xmag_3_cooldown": 2.35
+  },
   "bullet": {
     "life": 0.6,
     "bullet_amount": 1,

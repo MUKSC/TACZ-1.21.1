@@ -1,6 +1,10 @@
 {
   "model": "tacz:ammo/40mm_grenade",
   "texture": "tacz:ammo/uv/40mm",
+  "shell": {
+    "model": "tacz:shell/40mm_shell",
+    "texture": "tacz:shell/40mm_shell"
+  },
   "slot": "tacz:ammo/slot/40mm",
   // 子弹实体
   "entity": {

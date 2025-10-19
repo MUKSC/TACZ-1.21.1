@@ -5308,7 +5308,7 @@
 					]
 				},
 				{
-					"name": "default_muzzle",
+					"name": "muzzle_default",
 					"parent": "base_gun",
 					"pivot": [0, 8, 0],
 					"cubes": [

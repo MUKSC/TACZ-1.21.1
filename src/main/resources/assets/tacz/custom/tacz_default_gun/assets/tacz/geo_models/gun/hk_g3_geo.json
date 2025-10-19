@@ -36,15 +36,15 @@
 					"pivot": [0, 8, 8],
 					"cubes": [
 						{
-							"origin": [-7, 8, 6],
-							"size": [3, 12, 4],
+							"origin": [-8, 8, 6],
+							"size": [4, 12, 4],
 							"uv": {
-								"north": {"uv": [0, 0], "uv_size": [4, 12]},
-								"east": {"uv": [4, 0], "uv_size": [4, 12]},
-								"south": {"uv": [8, 0], "uv_size": [4, 12]},
-								"west": {"uv": [0, 12], "uv_size": [4, 12]},
-								"up": {"uv": [12, 0], "uv_size": [4, 4]},
-								"down": {"uv": [4, 16], "uv_size": [4, -4]}
+								"north": {"uv": [15, 13], "uv_size": [4, 12]},
+								"east": {"uv": [17, 0], "uv_size": [4, 12]},
+								"south": {"uv": [20, 13], "uv_size": [4, 12]},
+								"west": {"uv": [22, 0], "uv_size": [4, 12]},
+								"up": {"uv": [76, 68], "uv_size": [4, 4]},
+								"down": {"uv": [12, 81], "uv_size": [4, -4]}
 							}
 						}
 					]
@@ -1851,14 +1851,14 @@
 					"cubes": [
 						{
 							"origin": [4, 8, 6],
-							"size": [3, 12, 4],
+							"size": [4, 12, 4],
 							"uv": {
-								"north": {"uv": [0, 0], "uv_size": [4, 12]},
-								"east": {"uv": [4, 0], "uv_size": [4, 12]},
-								"south": {"uv": [8, 0], "uv_size": [4, 12]},
-								"west": {"uv": [0, 12], "uv_size": [4, 12]},
-								"up": {"uv": [12, 0], "uv_size": [4, 4]},
-								"down": {"uv": [4, 16], "uv_size": [4, -4]}
+								"north": {"uv": [0, 12], "uv_size": [4, 12]},
+								"east": {"uv": [12, 0], "uv_size": [4, 12]},
+								"south": {"uv": [5, 12], "uv_size": [4, 12]},
+								"west": {"uv": [10, 13], "uv_size": [4, 12]},
+								"up": {"uv": [74, 23], "uv_size": [4, 4]},
+								"down": {"uv": [74, 38], "uv_size": [4, -4]}
 							}
 						}
 					]
@@ -4427,7 +4427,7 @@
 				{
 					"name": "selector",
 					"parent": "deco",
-					"pivot": [0, 8, 8.875],
+					"pivot": [0, 8, 14.42188],
 					"cubes": [
 						{
 							"origin": [0.5625, 7.63291, 14.27288],
@@ -9455,6 +9455,11 @@
 					"name": "shell",
 					"parent": "positioning2",
 					"pivot": [-0.2, 10.775, 9.55]
+				},
+				{
+					"name": "additional_magazine",
+					"parent": "root",
+					"pivot": [0, 6, 8.86]
 				},
 				{
 					"name": "camera",
