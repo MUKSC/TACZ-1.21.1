@@ -16,7 +16,7 @@ description = '''
 [[dependencies.tacz]]
 modId = "forge"
 mandatory = true
-versionRange = "[46,)"
+versionRange = "[47.3.19,)"
 ordering = "NONE"
 side = "BOTH"
 

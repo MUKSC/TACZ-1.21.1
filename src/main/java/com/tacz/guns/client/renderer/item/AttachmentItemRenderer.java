@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
+import com.tacz.guns.client.model.BedrockGunModel;
 import com.tacz.guns.client.model.SlotModel;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
 import com.tacz.guns.util.RenderDistance;
@@ -50,7 +51,9 @@ public class AttachmentItemRenderer extends BlockEntityWithoutLevelRenderer {
                 if (transformType == ItemDisplayContext.FIXED) {
                     poseStack.mulPose(Axis.YN.rotationDegrees(90f));
                 }
+                BedrockGunModel.ENABLE_ACCELERATED_RENDERING = false;
                 this.renderDefaultAttachment(transformType, poseStack, pBuffer, pPackedLight, pPackedOverlay, attachmentIndex);
+                BedrockGunModel.ENABLE_ACCELERATED_RENDERING = true;
             }, () -> {
                 // 没有这个 attachmentId，渲染黑紫材质以提醒
                 poseStack.translate(0.5, 1.5, 0.5);
