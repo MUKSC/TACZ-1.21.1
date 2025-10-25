@@ -1,0 +1,7 @@
+{
+  "slot": "tacz:ammo/slot/545x39",
+  "shell": {
+    "model": "tacz:shell/545x39_shell",
+    "texture": "tacz:shell/545x39_shell"
+  }
+}
