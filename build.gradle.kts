@@ -162,7 +162,7 @@ publishMods {
     displayName = "[TaCZ] ${project.property("mod_name")} ${project.version}"
     changelog = providers.fileContents(layout.projectDirectory.file("changelog.md")).asText
     file = tasks.jar.get().archiveFile
-    type = BETA
+    type = STABLE
     modLoaders.add("neoforge")
 
     modrinth {
