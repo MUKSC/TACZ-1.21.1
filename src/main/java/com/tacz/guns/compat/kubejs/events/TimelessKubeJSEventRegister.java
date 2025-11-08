@@ -59,12 +59,7 @@ public interface TimelessKubeJSEventRegister {
         EventHandler handler = registerEventJS(id, eventJSClass, hasResult);
         registerEventHandler(eventClass, (event) -> {
             GunKubeJSEvents.GunEventJS<E> eventJS = eventJSFactory.apply((E) event);
-            ScriptTypeHolder holder = eventJS.getTypeHolder();
-            if (holder != null) {
-                handler.post(holder, eventJS);
-            } else {
-                throw new IllegalArgumentException("You must specify which script type to post event to");
-            }
+            handler.post(eventJS.getTypeHolder(), eventJS);
         });
         return handler;
     }

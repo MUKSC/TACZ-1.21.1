@@ -14,10 +14,12 @@ import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.script.ScriptTypeHolder;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.util.HideFromJS;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,10 +51,7 @@ public class GunKubeJSEvents {
         }
 
         @HideFromJS
-        @Nullable
-        public ScriptTypeHolder getTypeHolder() {
-            return null;
-        }
+        public abstract @Nonnull ScriptTypeHolder getTypeHolder();
 
         @Override
         public Object cancel(Context cx, @Nullable Object value) throws EventExit {
@@ -75,6 +74,12 @@ public class GunKubeJSEvents {
         protected ItemStack getEventItemStack() {
             return event.getGunItem();
         }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) event.getShooter();
+        }
     }
 
     public static class EntityHurtByGunPreEventJS extends GunEventJS<EntityHurtByGunEvent.Pre> implements TimelessForgeEventWrappers.EntityHurtByGunPreWrapper {
@@ -89,7 +94,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getBullet();
         }
     }
@@ -106,7 +111,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getBullet();
         }
     }
@@ -123,7 +128,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getBullet();
         }
     }
@@ -141,7 +146,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getEntity();
         }
     }
@@ -157,8 +162,7 @@ public class GunKubeJSEvents {
         }
 
         @HideFromJS
-        @Nullable
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return event.getLogicalSide().isClient() ? ScriptType.CLIENT : ScriptType.SERVER;
         }
     }
@@ -176,7 +180,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getShooter();
         }
     }
@@ -194,7 +198,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getShooter();
         }
     }
@@ -212,7 +216,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getShooter();
         }
     }
@@ -230,7 +234,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getEntity();
         }
     }
@@ -248,7 +252,7 @@ public class GunKubeJSEvents {
 
         @HideFromJS
         @Override
-        public ScriptTypeHolder getTypeHolder() {
+        public @NotNull ScriptTypeHolder getTypeHolder() {
             return (ScriptTypeHolder) event.getShooter();
         }
     }
@@ -264,6 +268,12 @@ public class GunKubeJSEvents {
         public ResourceLocation getEventSubId() {
             return event.getAmmo().getGunId();
         }
+
+        @HideFromJS
+        @Override
+        public @Nonnull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) event.getAmmo();
+        }
     }
 
     //client事件
@@ -271,11 +281,23 @@ public class GunKubeJSEvents {
         public BeforeRenderHandEventJS(BeforeRenderHandEvent event) {
             super(event);
         }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) Minecraft.getInstance().level;
+        }
     }
 
     public static class RenderItemInHandBobHurtEventJS extends GunEventJS<RenderItemInHandBobEvent.BobHurt> {
         public RenderItemInHandBobHurtEventJS(RenderItemInHandBobEvent.BobHurt event) {
             super(event);
+        }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) Minecraft.getInstance().level;
         }
     }
 
@@ -283,11 +305,23 @@ public class GunKubeJSEvents {
         public RenderItemInHandBobViewEventJS(RenderItemInHandBobEvent.BobView event) {
             super(event);
         }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) Minecraft.getInstance().level;
+        }
     }
 
     public static class RenderLevelBobHurtEventJS extends GunEventJS<RenderLevelBobEvent.BobHurt> {
         public RenderLevelBobHurtEventJS(RenderLevelBobEvent.BobHurt event) {
             super(event);
+        }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) Minecraft.getInstance().level;
         }
     }
 
@@ -295,11 +329,23 @@ public class GunKubeJSEvents {
         public RenderLevelBobViewEventJS(RenderLevelBobEvent.BobView event) {
             super(event);
         }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) Minecraft.getInstance().level;
+        }
     }
 
     public static class SwapItemWithOffHandEventJS extends GunEventJS<SwapItemWithOffHand> {
         public SwapItemWithOffHandEventJS(SwapItemWithOffHand event) {
             super(event);
+        }
+
+        @HideFromJS
+        @Override
+        public @NotNull ScriptTypeHolder getTypeHolder() {
+            return (ScriptTypeHolder) Minecraft.getInstance().level;
         }
     }
 }

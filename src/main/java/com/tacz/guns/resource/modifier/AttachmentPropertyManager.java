@@ -59,10 +59,10 @@ public class AttachmentPropertyManager {
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(index -> {
             AttachmentCacheProperty cacheProperty = new AttachmentCacheProperty();
             // 发布事件
-            AttachmentPropertyEvent event = new AttachmentPropertyEvent(gunItem, cacheProperty);
+            AttachmentPropertyEvent event = new AttachmentPropertyEvent(shooter, gunItem, cacheProperty);
             ChangeGunPropertyEvent.internalOnAttachmentPropertyEvent(event);
             event.postEventToKubeJS(event);
-            NeoForge.EVENT_BUS.post(new AttachmentPropertyEvent(gunItem, cacheProperty));
+            NeoForge.EVENT_BUS.post(new AttachmentPropertyEvent(shooter, gunItem, cacheProperty));
             // 更新实体的缓存对象
             IGunOperator.fromLivingEntity(shooter).updateCacheProperty(cacheProperty);
         });
