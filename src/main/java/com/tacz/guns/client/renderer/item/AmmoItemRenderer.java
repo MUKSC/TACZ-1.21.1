@@ -27,6 +27,7 @@ import static net.minecraft.world.item.ItemDisplayContext.GUI;
 
 
 public class AmmoItemRenderer extends BlockEntityWithoutLevelRenderer {
+    public static AmmoItemRenderer INSTANCE;
     private static final SlotModel SLOT_AMMO_MODEL = new SlotModel();
 
     public AmmoItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {

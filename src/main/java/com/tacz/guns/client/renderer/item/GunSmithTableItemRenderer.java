@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class GunSmithTableItemRenderer extends BlockEntityWithoutLevelRenderer {
+    public static GunSmithTableItemRenderer INSTANCE;
     private static final SlotModel SLOT_BLOCK_MODEL = new SlotModel();
     public GunSmithTableItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
         super(dispatcher, modelSet);

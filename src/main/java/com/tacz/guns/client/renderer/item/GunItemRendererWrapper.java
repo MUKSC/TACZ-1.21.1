@@ -51,6 +51,7 @@ import static net.minecraft.world.item.ItemDisplayContext.*;
  * 负责主要的枪械动画模型渲染。额外的效果见 {@link com.tacz.guns.client.event.FirstPersonRenderGunEvent}
  */
 public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunModel, GunAnimationStateContext> {
+    public static GunItemRendererWrapper INSTANCE;
     private static final SlotModel SLOT_GUN_MODEL = new SlotModel();
     private static BedrockGunModel lastModel = null;
     public static final Vector3f muzzleRenderOffset = new Vector3f();

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 
 public class AttachmentItemRenderer extends BlockEntityWithoutLevelRenderer {
+    public static AttachmentItemRenderer INSTANCE;
     public static final SlotModel SLOT_ATTACHMENT_MODEL = new SlotModel();
 
     public AttachmentItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {

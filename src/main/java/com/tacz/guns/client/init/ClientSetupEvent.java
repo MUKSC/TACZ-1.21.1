@@ -3,6 +3,10 @@ package com.tacz.guns.client.init;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.ThirdPersonManager;
 import com.tacz.guns.client.input.*;
+import com.tacz.guns.client.renderer.item.AmmoItemRenderer;
+import com.tacz.guns.client.renderer.item.AttachmentItemRenderer;
+import com.tacz.guns.client.renderer.item.GunItemRendererWrapper;
+import com.tacz.guns.client.renderer.item.GunSmithTableItemRenderer;
 import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.tooltip.ClientAmmoBoxTooltip;
 import com.tacz.guns.client.tooltip.ClientAttachmentItemTooltip;
@@ -77,6 +81,12 @@ public class ClientSetupEvent {
 
         // 与 Controllable 的兼容
         event.enqueueWork(ControllableCompat::init);
+
+        Minecraft minecraft = Minecraft.getInstance();
+        GunItemRendererWrapper.INSTANCE = new GunItemRendererWrapper();
+        AmmoItemRenderer.INSTANCE = new AmmoItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+        AttachmentItemRenderer.INSTANCE = new AttachmentItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+        GunSmithTableItemRenderer.INSTANCE = new GunSmithTableItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
     }
 
     @SubscribeEvent
