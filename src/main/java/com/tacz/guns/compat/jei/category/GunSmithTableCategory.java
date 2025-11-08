@@ -67,7 +67,7 @@ public class GunSmithTableCategory implements IRecipeCategory<GunSmithTableRecip
         if (index < inputs.size()) {
             GunSmithTableIngredient ingredient = inputs.get(index);
             ItemStack[] items = ingredient.getIngredient().getItems();
-            Arrays.stream(items).forEach(stack -> stack.setCount(ingredient.getCount()));
+            Arrays.stream(items).forEach(stack -> stack.copyWithCount(ingredient.getCount()));
             return List.of(items);
         }
         return Collections.singletonList(ItemStack.EMPTY);
