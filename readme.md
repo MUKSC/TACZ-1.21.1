@@ -1,4 +1,4 @@
-## Unofficial TaCZ 1.21.1 Forge/NeoForge Port
+## Unofficial TaCZ 1.21.1 NeoForge Port
 [![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/tacz-1.21.1)
 [![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/tacz-1-21-1)
 [![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg)](https://github.com/MUKSC/TACZ-1.21.1)
@@ -11,23 +11,16 @@
 > Don't try to open any worlds from older versions with this mod  
 > All the item data are incompatible and will likely to break things
 
-If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > Unofficial TaCZ 1.21.1 Forge/NeoForge Port](https://discord.com/channels/1243278348399022252/1329058172148645909) channel
+If you have any questions, you can reach me on the [TaCZ Official Discord](https://discord.gg/uX6TdWUVpA) in the [#community-showcase > Unofficial TaCZ 1.21.1 NeoForge Port](https://discord.com/channels/1243278348399022252/1329058172148645909) channel
 
 Recipes in other gun packs are broken by default  
-You can upgrade packs to be 1.21.1 NeoForge compatible using the pack upgrader mod, which you can find the download link [here](https://discord.com/channels/1243278348399022252/1329058172148645909/1349704400540668006) (join the TaCZ Offical Discord)  
-The upgrader mod is not available for Forge
+You can upgrade packs to be 1.21.1 NeoForge compatible using the pack upgrader mod, which you can find the download link [here](https://discord.com/channels/1243278348399022252/1329058172148645909/1349704400540668006) (join the TaCZ Offical Discord)
 
 ### Known Issues
 The `FIXME` annotations in the source code indicate issues I couldn't fix
 
-On Both:
 - Built-in KubeJS recipe integration is disabled
   - I don't really know about KubeJS, and it got massive changes, so I'll just remove it for now
-
-On Forge:
-- Target minecart is disabled as I couldn't get it to compile on Forge
-
-On NeoForge:
 
 ## ===== Original README =====
 
