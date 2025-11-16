@@ -1,3 +1,1 @@
-- Renderers are now cached to fix some performance issues
-- Fixed JEI ingredient duplication issues with All The Leaks
-- Fixed crashes related to KubeJS
+- Fixed JEI not showing ingredient amounts
