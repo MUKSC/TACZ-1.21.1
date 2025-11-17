@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.config.client.KeyConfig;
+import com.tacz.guns.util.InputExtraCheck;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -62,12 +63,12 @@ public class AimKey {
      * 建议将按下切换瞄准也支持 键盘按键输入
      * */
     @SubscribeEvent
-    public static void onAimHoldingPreInput(ClientTickEvent event) {
+    public static void onAimHoldingPreInput(TickEvent.ClientTickEvent event) {
         if (!KeyConfig.HOLD_TO_AIM.get()) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
-        boolean press = AimKey.AIM_KEY.getKey().isDown();
+        boolean press = AimKey.AIM_KEY.isDown();
         if (InputExtraCheck.isInGame()) {
             LocalPlayer player = mc.player;
             if (player == null || player.isSpectator()) {
