@@ -1,13 +1,13 @@
 {
-  "weight": 0.7,
+  "weight": 0.5,
   "ads": {
-    "addend": 0.03
+    "addend": 0.02
   },
   "inaccuracy": {
     "multiplier": 0.9
   },
   "aim_inaccuracy": {
-    "multiplier": 0.8
+    "multiplier": 0.7
   },
   "recoil": {
     "pitch": {

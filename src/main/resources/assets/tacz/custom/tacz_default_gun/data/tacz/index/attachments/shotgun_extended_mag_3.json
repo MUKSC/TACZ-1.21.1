@@ -1,0 +1,7 @@
+{
+  "name": "tacz.attachment.shotgun_extended_mag_3.name",
+  "display": "tacz:shotgun_extended_mag_3_display",
+  "data": "tacz:shotgun_extended_mag_3_data",
+  "type": "extended_mag",
+  "sort": 10
+}

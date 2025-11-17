@@ -7081,7 +7081,7 @@
 				{
 					"name": "stock_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8.42188, 21.6875],
+					"pivot": [0, 8.45313, 21.45313],
 					"rotation": [-5, 0, 0]
 				},
 				{
