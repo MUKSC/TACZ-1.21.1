@@ -30,9 +30,9 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-//version = "1.1.6-hotfix"
+version = "1.1.6-hotfix"
 // 版本号，正式发布需要修改这一行
-version = FORMAT.format(new Date())
+//version = FORMAT.format(new Date())
 group = "com.tacz"
 archivesBaseName = "tacz-1.20.1"
 
@@ -41,7 +41,6 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 mixin {
     add sourceSets.main, "tacz.refmap.json"
     config "tacz.mixins.json"
-    config "tacz.compat.acceleratedrendering.mixins.json"
 }
 
 minecraft {
@@ -136,18 +135,6 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = "https://api.modrinth.com/maven"
-            }
-        }
-        forRepositories(fg.repository) // Only add this if you're using ForgeGradle, otherwise remove this line
-        filter {
-            includeGroup "maven.modrinth"
-        }
-    }
     maven { url "https://maven.shedaniel.me/" } // cloth config api
     maven { url "https://dvs1.progwml6.com/files/maven/" }
     maven { url "https://modmaven.dev" }
@@ -221,7 +208,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:selene-499980:5478857")
     runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:5319203")
     // 手柄按键支持
-    compileOnly fg.deobf("curse.maven:framework-549225:4718251")
+    implementation fg.deobf("curse.maven:framework-549225:4718251")
     compileOnly(fg.deobf("curse.maven:controllable-317269:4598985"))
 
     // 越肩视角，用来兼容第三人称准星
@@ -229,17 +216,14 @@ dependencies {
 
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
 
-    implementation fg.deobf("curse.maven:embeddium-908741:${embeddedt_id}")
+    compileOnly fg.deobf("curse.maven:embeddium-908741:${embeddedt_id}")
     // 同时兼容两个版本
     compileOnly fg.deobf('libs:oculus_legacy:mc1.20.1-1.6.13')
-    implementation fg.deobf('libs:oculus:mc1.20.1-1.7.0')
+    compileOnly fg.deobf('libs:oculus:mc1.20.1-1.7.0')
 
     runtimeOnly fg.deobf("curse.maven:carry-on-274259:${carry_on_id}")
 
     implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${player_animation_lib}")
-    compileOnly fg.deobf("maven.modrinth:acceleratedrendering:${acceleratedrendering_version}")
-
-    runtimeOnly fg.deobf("curse.maven:configured-457570:5180900")
 
     // kubejs开发环境引入
     compileOnly fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
@@ -261,8 +245,7 @@ jar {
     manifest {
         attributes([
                 "Implementation-Title"  : project.name,
-                "Implementation-Version": project.version,
-                "MixinConfigs": "tacz.mixins.json, tacz.compat.acceleratedrendering.mixins"
+                "Implementation-Version": project.version
         ])
     }
 }

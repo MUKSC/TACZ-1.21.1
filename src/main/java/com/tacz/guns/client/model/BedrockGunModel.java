@@ -241,8 +241,6 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         textShowList.forEach((name, textShow) -> this.setFunctionalRenderer(name, bedrockPart -> new TextShowRender(this, textShow, currentGunItem)));
     }
 
-    public static boolean ENABLE_ACCELERATED_RENDERING = true;
-
     public void render(PoseStack matrixStack, ItemStack gunItem, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun == null) {

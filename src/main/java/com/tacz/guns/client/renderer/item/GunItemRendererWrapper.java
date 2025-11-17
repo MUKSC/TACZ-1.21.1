@@ -214,9 +214,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             }
             // 调用枪械模型渲染
             RenderType renderType = RenderType.entityCutout(display.getModelTexture());
-            BedrockGunModel.ENABLE_ACCELERATED_RENDERING = false;
             gunModel.render(poseStack, stack, ctx, renderType, light, OverlayTexture.NO_OVERLAY);
-            BedrockGunModel.ENABLE_ACCELERATED_RENDERING = true;
             // 缓存枪口位置，为第一人称曳光弹渲染作准备
             cacheMuzzlePosition(poseStack, gunModel);
             // 恢复手臂渲染
