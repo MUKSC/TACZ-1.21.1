@@ -3,15 +3,19 @@ package com.tacz.guns.entity;
 import com.google.common.collect.Lists;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.DefaultAssets;
+import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.api.GunProperty;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ITargetEntity;
 import com.tacz.guns.api.entity.KnockBackModifier;
 import com.tacz.guns.api.event.common.EntityHurtByGunEvent;
 import com.tacz.guns.api.event.common.EntityKillByGunEvent;
 import com.tacz.guns.api.event.server.AmmoHitBlockEvent;
+import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.client.particle.AmmoParticleSpawner;
 import com.tacz.guns.config.common.AmmoConfig;
 import com.tacz.guns.config.sync.SyncConfig;
+import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.init.ModDamageTypes;
 import com.tacz.guns.network.NetworkHandler;
 import com.tacz.guns.network.message.event.ServerMessageGunHurt;
@@ -63,6 +67,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkHooks;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
@@ -70,6 +75,7 @@ import org.joml.Vector3f;
 
 import java.util.*;
 
+import static com.tacz.guns.api.GunProperties.RuntimeOnly.*;
 import static com.tacz.guns.api.event.common.GunDamageSourcePart.ARMOR_PIERCING;
 import static com.tacz.guns.api.event.common.GunDamageSourcePart.NON_ARMOR_PIERCING;
 
@@ -101,8 +107,11 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
      */
     public static final String TRACER_SIZE_OVERRIDER_KEY = GunMod.MOD_ID + ":tracer_size";
 
+    private static final ExplosionData DEFAULT_EXPLOSION_DATA = new ExplosionData(false, 0, 0, false, 30, false);
+
     private ResourceLocation ammoId = DefaultAssets.EMPTY_AMMO_ID;
     private int life = 200;
+    @Deprecated
     private float speed = 1;
     private float gravity = 0;
     private float friction = 0.01F;
@@ -159,39 +168,45 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
                                   boolean isTracerAmmo, GunData gunData, BulletData bulletData) {
         this(type, throwerIn.getX(), throwerIn.getEyeY() - (double) 0.1F, throwerIn.getZ(), worldIn);
         this.setOwner(throwerIn);
+        // gunId 提前赋值，以让 modifyProperty 可以在构造函数中运行
+        this.gunId = gunId;
         AttachmentCacheProperty cacheProperty = Objects.requireNonNull(IGunOperator.fromLivingEntity(throwerIn).getCacheProperty());
-        this.armorIgnore = Mth.clamp(cacheProperty.getCache(ArmorIgnoreModifier.ID), 0f, 1f);
-        this.headShot = Math.max(cacheProperty.getCache(HeadShotModifier.ID), 0f);
-        this.knockback = Math.max(cacheProperty.getCache(KnockbackModifier.ID), 0f);
+        float armorIgnore = modifyProperty(GunProperties.ARMOR_IGNORE, Float.class, cacheProperty.getCache(GunProperties.ARMOR_IGNORE));
+        float headshot = modifyProperty(GunProperties.HEADSHOT_MULTIPLIER, Float.class, cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER));
+        float knockback = modifyProperty(GunProperties.KNOCKBACK, Float.class, cacheProperty.getCache(GunProperties.KNOCKBACK));
+        this.armorIgnore = Mth.clamp(armorIgnore, 0f, 1f);
+        this.headShot = Math.max(headshot, 0f);
+        this.knockback = Math.max(knockback, 0f);
         this.ammoId = ammoId;
-        this.life = Mth.clamp((int) (bulletData.getLifeSecond() * 20), 1, Integer.MAX_VALUE);
-        // 限制最大弹速为 600 m / s，以减轻计算负担
-        this.speed = Mth.clamp(cacheProperty.<Float>getCache(AmmoSpeedModifier.ID) / 20f, 0f, 30f);
-        this.gravity = Mth.clamp(bulletData.getGravity(), 0f, Float.MAX_VALUE);
-        this.friction = Mth.clamp(bulletData.getFriction(), 0f, Float.MAX_VALUE);
+        float lifeSecond = modifyProperty(BULLET_LIFE, Float.class, bulletData.getLifeSecond());
+        this.life = Mth.clamp((int) (lifeSecond * 20), 1, Integer.MAX_VALUE);
+        // speed 字段是无效的，实际生效的速度是 shootOnce 里传给 doBulletSpread 的速度
+        this.gravity = Mth.clamp(modifyProperty(BULLET_GRAVITY, Float.class, bulletData.getGravity()), 0f, Float.MAX_VALUE);
+        this.friction = Mth.clamp(modifyProperty(BULLET_FRICTION, Float.class, bulletData.getFriction()), 0f, Float.MAX_VALUE);
+        // 点燃
         Ignite ignite = cacheProperty.getCache(IgniteModifier.ID);
-        this.igniteEntity = bulletData.getIgnite().isIgniteEntity() || ignite.isIgniteEntity();
-        this.igniteEntityTime = Math.max(bulletData.getIgniteEntityTime(), 0);
-        this.igniteBlock = bulletData.getIgnite().isIgniteBlock() || ignite.isIgniteBlock();
+        this.igniteEntity = modifyProperty(IGNITE_ENTITY, Boolean.class, bulletData.getIgnite().isIgniteEntity() || ignite.isIgniteEntity());
+        this.igniteEntityTime = Math.max(modifyProperty(IGNITE_ENTITY_TIME, Integer.class, bulletData.getIgniteEntityTime()), 0);
+        this.igniteBlock = modifyProperty(IGNITE_BLOCK, Boolean.class, bulletData.getIgnite().isIgniteBlock() || ignite.isIgniteBlock());
         this.damageAmount = cacheProperty.getCache(DamageModifier.ID);
-        this.distanceAmount = cacheProperty.getCache(EffectiveRangeModifier.ID);
-        // 霰弹情况，每个伤害要扣去
-        if (bulletData.getBulletAmount() > 1) {
-            this.damageModifier = 1f / bulletData.getBulletAmount();
-        }
-        this.pierce = Mth.clamp(cacheProperty.getCache(PierceModifier.ID), 1, Integer.MAX_VALUE);
-        ExplosionData explosionData = cacheProperty.getCache(ExplosionModifier.ID);
-        if (explosionData != null) {
-            this.explosion = explosionData.isExplode();
-            this.explosionDamage = (float) Mth.clamp(explosionData.getDamage() * SyncConfig.DAMAGE_BASE_MULTIPLIER.get(), 0, Float.MAX_VALUE);
-            this.explosionRadius = Mth.clamp(explosionData.getRadius(), 0, Float.MAX_VALUE);
-            this.explosionKnockback = explosionData.isKnockback();
+        this.distanceAmount = modifyProperty(GunProperties.EFFECTIVE_RANGE, Float.class, cacheProperty.getCache(GunProperties.EFFECTIVE_RANGE));
+        int pierce = modifyProperty(GunProperties.PIERCE, Integer.class, cacheProperty.getCache(GunProperties.PIERCE));
+        this.pierce = Mth.clamp(pierce, 1, Integer.MAX_VALUE);
+        ExplosionData explosionData = Objects.requireNonNullElse(cacheProperty.getCache(ExplosionModifier.ID), DEFAULT_EXPLOSION_DATA);
+        this.explosion = modifyProperty(EXPLODE_ENABLED, Boolean.class, explosionData.isExplode());
+        if (this.explosion) {
+            var explosionDamage = modifyProperty(EXPLOSION_DAMAGE, Float.class, explosionData.getDamage());
+            var explosionRadius = modifyProperty(EXPLOSION_RADIUS, Float.class, explosionData.getRadius());
+            this.explosionDamage = (float) Mth.clamp(explosionDamage * SyncConfig.DAMAGE_BASE_MULTIPLIER.get(), 0, Float.MAX_VALUE);
+            this.explosionRadius = Mth.clamp(explosionRadius, 0, Float.MAX_VALUE);
+            this.explosionKnockback = modifyProperty(EXPLOSION_KNOCKBACK, Boolean.class, explosionData.isKnockback());
             // 防止越界，提前判定
-            int delayTickCount = (int)(explosionData.getDelay() * 20);
+            int delayTickCount = (int) (modifyProperty(EXPLOSION_DELAY, Float.class, explosionData.getDelay()) * 20);
             if (delayTickCount < 0) {
                 delayTickCount = Integer.MAX_VALUE;
             }
-            this.explosionDestroyBlock = explosionData.isDestroyBlock() && AmmoConfig.EXPLOSIVE_AMMO_DESTROYS_BLOCK.get();
+            // 配置文件关闭爆炸后忽略脚本对爆炸是否破坏方块的修改
+            this.explosionDestroyBlock = AmmoConfig.EXPLOSIVE_AMMO_DESTROYS_BLOCK.get() && modifyProperty(EXPLOSION_DESTROYS_BLOCK, Boolean.class, explosionData.isDestroyBlock());
             this.explosionDelayCount = Math.max(delayTickCount, 1);
         }
         // 子弹初始位置重置
@@ -201,8 +216,15 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         this.setPos(posX, posY, posZ);
         this.startPos = this.position();
         this.isTracerAmmo = isTracerAmmo;
-        this.gunId = gunId;
         this.gunDisplayId = gunDisplayId;
+    }
+
+    @ApiStatus.Internal
+    public void applyShotgunDamageSpread(int bulletCount) {
+        // 霰弹情况，每个伤害要扣去
+        if (bulletCount > 1) {
+            this.damageModifier = 1f / bulletCount;
+        }
     }
 
     @Override
@@ -485,17 +507,41 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
 
     // 根据距离进行伤害衰减设计
     public float getDamage(Vec3 hitVec) {
+        // 如果忘记写最大值，那我就直接认为你伤害为 0
+        float base = 0;
         // 遍历进行判断
         double playerDistance = hitVec.distanceTo(this.startPos);
         for (DistanceDamagePair pair : this.damageAmount) {
             float effectiveDistance = this.damageAmount.get(0).getDistance() == pair.getDistance() ? this.distanceAmount : pair.getDistance();
             if (playerDistance < effectiveDistance) {
                 float damage = pair.getDamage();
-                return Math.max(damage * this.damageModifier, 0F);
+                base = Math.max(damage * this.damageModifier, 0F);
+                break;
             }
         }
-        // 如果忘记写最大值，那我就直接认为你伤害为 0
-        return 0;
+        // 让脚本修改枪械伤害
+        return modifyProperty(GunProperties.DAMAGE, Float.class, base);
+    }
+
+    /**
+     * @since 1.1.7
+     */
+    private <T> T modifyProperty(GunProperty<?> prop, Class<T> type, T original) {
+        return modifyProperty(prop.name(), type, original);
+    }
+
+    /**
+     * @since 1.1.7
+     */
+    private <T> T modifyProperty(String id, Class<T> type, T original) {
+        if (getOwner() instanceof LivingEntity shooter) {
+            ItemStack gun = shooter.getMainHandItem();
+            if (gun.getItem() instanceof AbstractGunItem gunInterface && Objects.equals(this.gunId, gunInterface.getGunId(gun))) {
+                ShooterDataHolder dataHolder = IGunOperator.fromLivingEntity(shooter).getDataHolder();
+                return gunInterface.modifyProperty(dataHolder, gun, shooter, id, type, original);
+            }
+        }
+        return original;
     }
 
     /**

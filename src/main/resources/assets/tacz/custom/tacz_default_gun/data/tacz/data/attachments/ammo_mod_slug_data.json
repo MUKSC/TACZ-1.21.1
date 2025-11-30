@@ -1,0 +1,25 @@
+{
+  "weight": 0.6,
+  "inaccuracy": {
+    "multiplier": 0.25
+  },
+  "sneak_inaccuracy": {
+    "multiplier": 0.25
+  },
+  "lie_inaccuracy": {
+    "multiplier": 0.25
+  },
+  "aim_inaccuracy": {
+    "multiplier": 0.25
+  },
+  "armor_ignore": {
+    "function": "if (x > 0.5) then y = x*1.5 else y = x*1.75 end"
+  },
+  "damage": {
+    "multiplier": 0.9
+  },
+  "ammo_speed": {
+    "multiplier": 1.1
+  },
+  "extended_mag_level": 3
+}

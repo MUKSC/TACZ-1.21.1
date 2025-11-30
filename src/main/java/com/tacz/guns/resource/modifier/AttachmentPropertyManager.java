@@ -2,11 +2,13 @@ package com.tacz.guns.resource.modifier;
 
 import com.google.common.collect.Maps;
 import com.tacz.guns.GunMod;
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.event.common.AttachmentPropertyEvent;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
+import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import com.tacz.guns.event.ChangeGunPropertyEvent;
 import com.tacz.guns.resource.modifier.custom.*;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
@@ -19,10 +21,7 @@ import org.luaj.vm2.script.LuaScriptEngineFactory;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class AttachmentPropertyManager {
     private static final ScriptEngine LUAJ_ENGINE = new LuaScriptEngineFactory().getScriptEngine();
@@ -63,8 +62,15 @@ public class AttachmentPropertyManager {
             ChangeGunPropertyEvent.internalOnAttachmentPropertyEvent(event);
             event.postEventToKubeJS(event);
             MinecraftForge.EVENT_BUS.post(event);
+            // 让脚本更新缓存
+            IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
+            ShooterDataHolder dataHolder = operator.getDataHolder();
+            GunProperties.allCacheModifiableByScript().forEach((id, property) -> {
+                // noinspection rawtypes,unchecked
+                iGun.modifyProperty(dataHolder, gunItem, shooter, "modify_cached_property", property.name(), (Class) property.type(), cacheProperty.getCache(property));
+            });
             // 更新实体的缓存对象
-            IGunOperator.fromLivingEntity(shooter).updateCacheProperty(cacheProperty);
+            operator.updateCacheProperty(cacheProperty);
         });
     }
 

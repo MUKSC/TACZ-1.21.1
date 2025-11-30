@@ -1,4 +1,5 @@
 {
+  "script": "tacz:db_short_gun_logic",
   "ammo": "tacz:12g",
   "rpm": 150,
   "bullet": {
@@ -52,7 +53,7 @@
   ],
   "burst_data": {
     "continuous_shoot": false,
-    "count": 2,
+    "count": 1,
     "bpm": 600,
     "min_interval": 0.5
   },

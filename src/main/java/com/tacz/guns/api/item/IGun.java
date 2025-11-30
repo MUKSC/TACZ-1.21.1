@@ -1,9 +1,11 @@
 package com.tacz.guns.api.item;
 
 import com.tacz.guns.api.DefaultAssets;
+import com.tacz.guns.api.GunProperty;
 import com.tacz.guns.api.item.attachment.AttachmentType;
 import com.tacz.guns.api.item.gun.AbstractGunItem;
 import com.tacz.guns.api.item.gun.FireMode;
+import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -223,6 +225,70 @@ public interface IGun {
      * 减少一个当前枪械弹药数
      */
     void reduceCurrentAmmoCount(ItemStack gun);
+
+    /**
+     * 动态修改枪械的属性。
+     * 注意：对于某些复杂属性来说，{@code GunProperty} 的类型可能会和值的类型不一样。
+     * 比如伤害和精准度这样的复杂属性，GunProperty 的类型是复杂的数据结构，传入和返回的值就只是简单的浮点数。
+     *
+     * @param dataHolder 状态数据
+     * @param gunItem 枪械物品
+     * @param shooter 射击者
+     * @param id 属性 id，请参阅 {@link com.tacz.guns.api.GunProperties}
+     * @param type 属性的数据类型
+     * @param original 属性原来的值
+     * @return 脚本或子类修改后的属性
+     * @param <T> 属性的数据类型
+     *
+     * @author ChloePrime
+     * @since 1.1.7
+     */
+    default <T> T modifyProperty(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter,
+                                 GunProperty<?> id, Class<T> type, T original) {
+        return modifyProperty(dataHolder, gunItem ,shooter, id.name(), type, original);
+    }
+
+    /**
+     * 动态修改枪械的属性
+     *
+     * @param dataHolder 状态数据
+     * @param gunItem 枪械物品
+     * @param shooter 射击者
+     * @param id 属性 id，请参阅 {@link com.tacz.guns.api.GunProperties}
+     * @param type 属性的数据类型
+     * @param original 属性原来的值
+     * @return 脚本或子类修改后的属性
+     * @param <T> 属性的数据类型
+     *
+     * @author ChloePrime
+     * @since 1.1.7
+     */
+    default <T> T modifyProperty(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter,
+                                 String id, Class<T> type, T original) {
+        return modifyProperty(dataHolder, gunItem ,shooter, "modify_property", id, type, original);
+    }
+
+    /**
+     * 动态修改枪械的属性，
+     * 允许指定修改用的 lua 函数的名称
+     *
+     * @param dataHolder 状态数据
+     * @param gunItem 枪械物品
+     * @param shooter 射击者
+     * @param luaMethodName 修改属性的 lua 函数的函数名
+     * @param id 属性 id，请参阅 {@link com.tacz.guns.api.GunProperties}
+     * @param type 属性的数据类型
+     * @param original 属性原来的值
+     * @return 脚本或子类修改后的属性
+     * @param <T> 属性的数据类型
+     *
+     * @author ChloePrime
+     * @since 1.1.7
+     */
+    default <T> T modifyProperty(ShooterDataHolder dataHolder, ItemStack gunItem, LivingEntity shooter,
+                                 String luaMethodName, String id, Class<T> type, T original) {
+        return original;
+    }
 
     /**
      * 取下枪内所有子弹。玩家的特殊方法，默认卸载弹药时使用

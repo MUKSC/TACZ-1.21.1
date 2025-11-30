@@ -3492,7 +3492,7 @@
 				{
 					"name": "muzzle_pos",
 					"parent": "positioning2",
-					"pivot": [0, 9.125, -23.25]
+					"pivot": [0, 9.125, -23.125]
 				},
 				{
 					"name": "camera",

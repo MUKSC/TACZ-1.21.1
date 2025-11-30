@@ -1,0 +1,9 @@
+{
+  "slot": "tacz:attachment/slot/stock_heavy_spas_12",
+  "model": "tacz:attachment/stock_heavy_spas_12_geo",
+  "texture": "tacz:attachment/uv/stock_heavy_spas_12",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_a",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

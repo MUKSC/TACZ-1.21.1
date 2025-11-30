@@ -6,6 +6,25 @@
     35,
     40
   ],
+  "script": "tacz:xmag_reload_logic",
+  "script_param": {
+    "reload_feed": 1.55,
+    "reload_cooldown": 2.05,
+    "empty_feed": 2.7,
+    "empty_cooldown": 3.15,
+    "reload_xmag_1_feed": 1.85,
+    "reload_xmag_1_cooldown": 2.7,
+    "empty_xmag_1_feed": 3.45,
+    "empty_xmag_1_cooldown": 4.1,
+    "reload_xmag_2_feed": 1.85,
+    "reload_xmag_2_cooldown": 2.7,
+    "empty_xmag_2_feed": 3.45,
+    "empty_xmag_2_cooldown": 4.1,
+    "reload_xmag_3_feed": 1.85,
+    "reload_xmag_3_cooldown": 2.7,
+    "empty_xmag_3_feed": 3.45,
+    "empty_xmag_3_cooldown": 4.1
+  },
   "bolt": "closed_bolt",
   "rpm": 350,
   "bullet": {

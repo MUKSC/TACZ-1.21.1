@@ -1,0 +1,9 @@
+{
+  "slot": "tacz:attachment/slot/muzzle_choke_sg",
+  "model": "tacz:attachment/muzzle_choke_sg_geo",
+  "texture": "tacz:attachment/uv/muzzle_choke_sg",
+  "sounds": {
+    "install": "tacz:attachments/attachment_general_a",
+    "uninstall": "tacz:attachments/attachment_general_uninstall"
+  }
+}

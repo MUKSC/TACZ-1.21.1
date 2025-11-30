@@ -20,7 +20,6 @@
   "tacz.type.misc.name": "杂项",
   "tacz.type.unknown.name": "未命名分类",
 
-
   "tacz.gun.ak47.name": "AKM 突击步枪",
   "tacz.gun.deagle.name": ".50 沙漠之鹰",
   "tacz.gun.deagle_golden.name": ".357 黄金沙漠之鹰",
@@ -43,10 +42,10 @@
   "tacz.gun.m16a1.name": "M16A1 制式步枪",
   "tacz.gun.m16a4.name": "M16A4 制式步枪",
   "tacz.gun.aa12.name": "AA12 霰弹枪",
-  "tacz.gun.ump45.name":"UMP45 冲锋枪",
-  "tacz.gun.scar_l.name":"SCAR-L 突击步枪",
+  "tacz.gun.ump45.name": "UMP45 冲锋枪",
+  "tacz.gun.scar_l.name": "SCAR-L 突击步枪",
   "tacz.gun.m320.name": "M320 榴弹发射器",
-  "tacz.gun.hk416d.name": "HK-416D 突击步枪",
+  "tacz.gun.hk416d.name": "HK-416A5 突击步枪",
   "tacz.gun.mk14.name": "MK14 EBR 精确射手步枪",
   "tacz.gun.p320.name": "P320 手枪",
   "tacz.gun.aug.name": "AUG 突击步枪",
@@ -57,14 +56,17 @@
   "tacz.gun.qbz_95.name": "95式 \"长弓\" 突击步枪",
   "tacz.gun.p90.name": "P90 冲锋枪",
   "tacz.gun.m870.name": "M870 霰弹枪",
-  "tacz.gun.b93r.name":"B93R 冲锋手枪",
-  "tacz.gun.minigun.name":"M134 转管机枪",
+  "tacz.gun.b93r.name": "B93R 冲锋手枪",
+  "tacz.gun.minigun.name": "M134 转管机枪",
   "tacz.gun.spr15hb.name": "SPR-15 HB “射手座” 反狙击步枪",
   "tacz.gun.springfield1873.name": "春田 1873 活门步枪",
   "tacz.gun.g36k.name": "G36K 突击步枪",
   "tacz.gun.timeless50.name": "§6永恒 .50 Z型",
-
-
+  "tacz.gun.fn_fal.name": "FN FAL 战斗步枪",
+  "tacz.gun.qbz_191.name": "191式 突击步枪",
+  "tacz.gun.fn_evolys.name": "FN EVOLYS 机枪",
+  "tacz.gun.spas_12.name": "SPAS-12 多功能霰弹枪",
+  "tacz.gun.m1014.name":"M1014 战斗霰弹枪",
 
   "tacz.gun.ak47.desc": "从雨林到海湾，永远不会错过它的身影",
   "tacz.gun.ai_awp.desc": "精确毋庸置疑",
@@ -102,13 +104,17 @@
   "tacz.gun.qbz_95.desc": "做最优质的战士！",
   "tacz.gun.p90.desc": "用它在防弹衣上画个笑脸",
   "tacz.gun.m870.desc": "你选错屋了，蠢货！",
-  "tacz.gun.b93r.desc":"又是官僚主义的谎言？也没那么差",
-  "tacz.gun.minigun.desc":"§6“在枪管熔毁之前，焚烧这个世界”",
+  "tacz.gun.b93r.desc": "又是官僚主义的谎言？也没那么差",
+  "tacz.gun.minigun.desc": "§6“在枪管熔毁之前，焚烧这个世界”",
   "tacz.gun.springfield1873.desc": "人穷枪不短",
-  "tacz.gun.spr15hb.desc":"精准所至，金石为开",
+  "tacz.gun.spr15hb.desc": "精准所至，金石为开",
   "tacz.gun.g36k.desc": "聚合物科技，小子！",
   "tacz.gun.timeless50.desc": "让一切从零开始，再一次 \n§eTaCZ 一周年纪念武器",
-
+  "tacz.gun.fn_fal.desc": "自由世界的右手",
+  "tacz.gun.qbz_191.desc": "下一款，还是下一代？",
+  "tacz.gun.fn_evolys.desc": "嘿，这玩意是一体机匣...你在干什么！？",
+  "tacz.gun.spas_12.desc": "我们不去莱温霍姆",
+  "tacz.gun.m1014.desc": "原则上不提供龙息弹",
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",
   "tacz.ammo.12g.name": "§912 号口径霰弹",
@@ -124,13 +130,14 @@
   "tacz.ammo.308.name": "§b.308 温彻斯特 步枪弹",
   "tacz.ammo.338.name": "§c.338 拉普马格南 狙击弹",
   "tacz.ammo.556x45.name": "§e5.56x45mm 步枪弹",
+  "tacz.ammo.545x39.name": "§e5.45x39mm 步枪弹",
   "tacz.ammo.762x25.name": "§a7.62x25mm 手枪弹",
   "tacz.ammo.762x39.name": "§e7.62×39mm 步枪弹",
   "tacz.ammo.762x54.name": "§b7.62x54mm 步枪弹",
   "tacz.ammo.magnum_r.name": "§c.357 马格南 手枪弹",
   "tacz.ammo.rpg_rocket.name": "§dRPG-7 火箭弹",
   "tacz.ammo.40mm.name": "§d40mm 榴弹",
-  "tacz.ammo.57x28.name":"§d5.7x28mm 穿甲弹",
+  "tacz.ammo.57x28.name": "§d5.7x28mm 穿甲弹",
 
 
   "tacz.attachment.sight_sro_dot.name": "SRO 微型红点瞄准镜",
@@ -146,6 +153,7 @@
   "tacz.attachment.scope_acog_ta31.name": "§9TA31 2x 先进战斗光学瞄具",
   "tacz.attachment.scope_elcan_4x.name": "§5埃尔坎 4x 光学瞄具",
   "tacz.attachment.scope_retro_2x.name": "§93x 光学瞄具\"复古\"",
+  "tacz.attachment.scope_aug_default.name": "AUG 内置瞄具",
   "tacz.attachment.sight_srs_02.name": "SRS-02 反射式瞄具",
   "tacz.attachment.sight_okp7.name": "OKP-7 反射式瞄具",
   "tacz.attachment.sight_acro_rifle.name": "ACRO P-1 增高 反射式瞄具",
@@ -159,41 +167,43 @@
   "tacz.attachment.scope_vudu.name": "§6巫毒 1-6x 组合式精确瞄准镜",
   "tacz.attachment.scope_hamr.name": "§5HAMR 3x 组合式光学瞄具",
   "tacz.attachment.scope_mk5hd.name": "§6Mark 5 HD 5-25x 组合式光学瞄具",
-  "tacz.attachment.scope_1873_6x.name":"§5老式 春田神射手瞄具",
-  "tacz.attachment.scope_contender.name":"§9竞技者 4x 光学瞄具",
+  "tacz.attachment.scope_1873_6x.name": "§5老式 春田神射手瞄具",
+  "tacz.attachment.scope_contender.name": "§9竞技者 4x 光学瞄具",
+  "tacz.attachment.scope_qmk152.name": "§5QMK-152 3x 白光瞄准镜",
 
   "tacz.attachment.laser_compact": "§a米利泰克 小型激光指示器",
-   "tacz.attachment.laser_lopro":"§5低姿战术激光指示器",
-   "tacz.attachment.laser_nightstick":"§a夜槌 便携式激光指示器",
-
+  "tacz.attachment.laser_lopro": "§5低姿战术激光指示器",
+  "tacz.attachment.laser_nightstick": "§a夜槌 便携式激光指示器",
 
   "tacz.attachment.extended_mag_1.name": "重型弹药扩容弹匣",
   "tacz.attachment.extended_mag_2.name": "§9重型弹药扩容弹匣",
   "tacz.attachment.extended_mag_3.name": "§d重型弹药扩容弹匣",
-  "tacz.attachment.light_extended_mag_1.name":"轻型弹药扩容弹匣",
-  "tacz.attachment.light_extended_mag_2.name":"§9轻型弹药扩容弹匣",
-  "tacz.attachment.light_extended_mag_3.name":"§d轻型弹药扩容弹匣",
-  "tacz.attachment.sniper_extended_mag_1.name":"狙击弹药扩容弹匣",
-  "tacz.attachment.sniper_extended_mag_2.name":"§9狙击弹药扩容弹匣",
+  "tacz.attachment.light_extended_mag_1.name": "轻型弹药扩容弹匣",
+  "tacz.attachment.light_extended_mag_2.name": "§9轻型弹药扩容弹匣",
+  "tacz.attachment.light_extended_mag_3.name": "§d轻型弹药扩容弹匣",
+  "tacz.attachment.sniper_extended_mag_1.name": "狙击弹药扩容弹匣",
+  "tacz.attachment.sniper_extended_mag_2.name": "§9狙击弹药扩容弹匣",
   "tacz.attachment.sniper_extended_mag_3.name": "§d狙击弹药扩容弹匣",
+  "tacz.attachment.shotgun_extended_mag_1.name": "霰弹弹药扩容弹匣",
+  "tacz.attachment.shotgun_extended_mag_2.name": "§9霰弹弹药扩容弹匣",
+  "tacz.attachment.shotgun_extended_mag_3.name": "§d霰弹弹药扩容弹匣",
 
-
-  "tacz.attachment.ammo_mod_fmj.name":"§e全金属被甲弹",
-  "tacz.attachment.ammo_mod_he.name":"§e高爆弹",
-  "tacz.attachment.ammo_mod_hp.name":"§e空尖弹",
+  "tacz.attachment.ammo_mod_fmj.name": "§e全金属被甲弹",
+  "tacz.attachment.ammo_mod_he.name": "§e高爆弹",
+  "tacz.attachment.ammo_mod_hp.name": "§e空尖弹",
   "tacz.attachment.ammo_mod_i.name": "§e燃烧弹",
-
+  "tacz.attachment.ammo_mod_slug.name": "§e独头弹",
 
   "tacz.attachment.ammo_mod_fmj.desc": "全金属外壳弹头 \n提高对护甲的穿透力，但降低子弹后效",
-  "tacz.attachment.ammo_mod_he.desc": "高爆填充弹头 \n降低直击伤害和穿甲能力，但爆炸威力巨大",
+  "tacz.attachment.ammo_mod_he.desc": "高爆填充弹头 \n降低直击伤害和穿甲能力，但爆炸威力巨大 \n也会将霰弹变为独头弹",
   "tacz.attachment.ammo_mod_hp.desc": "中空弹头 \n提高对无护甲目标的伤害，但降低护甲穿透能力和弹道性能",
   "tacz.attachment.ammo_mod_i.desc": "铝热填充弹头 \n点燃目标，但降低护甲穿透能力",
-
+  "tacz.attachment.ammo_mod_slug.desc": "装有单颗巨大弹丸的霰弹 \n将整个霰弹发射药的能量集中于一身 \n适合狩猎大型目标",
 
   "tacz.attachment.grip_magpul_afg_2.name": "塔伦 AFG2 阻手",
   "tacz.attachment.grip_vertical_talon.name": "塔伦 SG2 前握把",
-  "tacz.attachment.grip_vertical_military.name":"名驹 军用制式握把",
-  "tacz.attachment.grip_vertical_ranger.name":"科赫 游骑兵重型握把",
+  "tacz.attachment.grip_vertical_military.name": "名驹 军用制式握把",
+  "tacz.attachment.grip_vertical_ranger.name": "科赫 游骑兵重型握把",
   "tacz.attachment.grip_osovets_black.name": "P-2 战术垂直握把",
   "tacz.attachment.grip_rk0.name": "RK-0 垂直握把",
   "tacz.attachment.grip_rk6.name": "RK-6 轻型阻手",
@@ -203,7 +213,6 @@
   "tacz.attachment.grip_se_5": "SE-5 斜握把",
   "tacz.attachment.grip_cqr": "CQR 战术握把",
 
-
   "tacz.attachment.muzzle_brake_cyclone_d2.name": "气旋 D2 枪口制退器",
   "tacz.attachment.muzzle_compensator_trident.name": "风暴 三叉戟 枪口补偿器",
   "tacz.attachment.muzzle_silencer_mirage.name": "幻象 手枪消音器",
@@ -211,19 +220,19 @@
   "tacz.attachment.muzzle_silencer_ursus.name": "乌萨斯制式消音器",
   "tacz.attachment.muzzle_silencer_ptilopsis.name": "PO-2 \"白面鸮\" 手枪消音器",
   "tacz.attachment.muzzle_silencer_knight_qd.name": "骑士快拆消音器",
-  "tacz.attachment.muzzle_silencer_vulture.name" : "秃鹫.50口径消音器",
+  "tacz.attachment.muzzle_silencer_vulture.name": "秃鹫.50口径消音器",
   "tacz.attachment.muzzle_brake_pioneer.name": "先锋 A3 制退器",
   "tacz.attachment.muzzle_brake_cthulhu.name": "克苏鲁 K7 制退器",
   "tacz.attachment.muzzle_brake_trex.name": "霸王龙 重型制退器",
   "tacz.attachment.muzzle_brake_timeless50.name": "§6永恒 .50口径制退器",
-
-
   "tacz.attachment.deagle_golden_long_barrel.name": ".357 黄金沙漠之鹰加长枪管",
-
+  "tacz.attachment.muzzle_duckbill_sg.name":"鸭嘴枪口",
+  "tacz.attachment.muzzle_choke_sg.name":"扼流器",
+  "tacz.attachment.muzzle_brake_mastiff_sg.name":"獒犬 制退器",
+  "tacz.attachment.muzzle_silencer_sg.name":"12号口径消音器",
 
   "tacz.attachment.bayonet_6h3.name": "6H3 刺刀",
   "tacz.attachment.bayonet_m9.name": "M9 刺刀",
-
 
   "tacz.attachment.stock_carbon_bone_c5.name": "碳骨 C5 轻型枪托",
   "tacz.attachment.stock_tactical_ar.name": "CTR战术枪托",
@@ -237,6 +246,8 @@
   "tacz.attachment.stock_moe.name": "MOE 轻型枪托",
   "tacz.attachment.stock_ripstock.name": "RS 超轻型枪托",
   "tacz.attachment.stock_m4ss.name": "M4SS 战术枪托",
+  "tacz.attachment.stock_heavy_spas_12.name": "弗兰基 重型枪托",
+  "tacz.attachment.stock_tactical_spas_12.name": "弗兰基 战术枪托",
 
   "tacz.block.gun_smith_table.name": "TaCZ枪械工作台",
   "tacz.block.ammo_workbench.name": "TaCZ弹药装配台",
@@ -245,4 +256,5 @@
   "tacz.block.gun_smith_table.desc": "一切开始的地方",
   "tacz.block.ammo_workbench.desc": "子弹是笨蛋",
   "tacz.block.attachment_workbench.desc": "锦上添花"
+
 }
