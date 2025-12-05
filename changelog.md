@@ -1,1 +1,1 @@
-- Fixed JEI not showing ingredient amounts
+- Updated to TaCZ 1.1.7
