@@ -10,9 +10,11 @@ import com.tacz.guns.client.resource.index.ClientGunIndex;
 import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
@@ -20,16 +22,20 @@ import net.minecraft.world.item.ItemStack;
 
 import java.text.DecimalFormat;
 
-public class HeatBarOverlay {
+public class HeatBarOverlay implements LayeredDraw.Layer {
     private static final ResourceLocation HEATBASE = ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "textures/hud/heat_base.png");
     private static final DecimalFormat HEAT_FORMAT_PERCENT = new DecimalFormat("0.0%");
     private static float heatScale = 0.25f;
 
-    public static void render(GuiGraphics graphics, int guiTicks, float partialTick, int width, int height) {
+    @Override
+    public void render(GuiGraphics graphics, DeltaTracker delta) {
+        int width = graphics.guiWidth();
+        int height = graphics.guiHeight();
         if (!RenderConfig.GUN_HUD_ENABLE.get()) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
+        int guiTicks = mc.gui.getGuiTicks();
         LocalPlayer player = mc.player;
         if (!(player instanceof IClientPlayerGunOperator)) {
             return;
