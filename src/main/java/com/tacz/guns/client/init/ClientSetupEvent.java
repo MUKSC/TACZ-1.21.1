@@ -2,6 +2,10 @@ package com.tacz.guns.client.init;
 
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.ThirdPersonManager;
+import com.tacz.guns.client.gui.overlay.GunHudOverlay;
+import com.tacz.guns.client.gui.overlay.HeatBarOverlay;
+import com.tacz.guns.client.gui.overlay.InteractKeyTextOverlay;
+import com.tacz.guns.client.gui.overlay.KillAmountOverlay;
 import com.tacz.guns.client.input.*;
 import com.tacz.guns.client.renderer.item.AmmoItemRenderer;
 import com.tacz.guns.client.renderer.item.AttachmentItemRenderer;
@@ -23,13 +27,17 @@ import com.tacz.guns.inventory.tooltip.GunTooltip;
 import com.tacz.guns.item.AmmoBoxItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+
+import static net.neoforged.neoforge.client.gui.VanillaGuiLayers.CROSSHAIR;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT, modid = GunMod.MOD_ID)
 public class ClientSetupEvent {
@@ -87,6 +95,15 @@ public class ClientSetupEvent {
         AmmoItemRenderer.INSTANCE = new AmmoItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
         AttachmentItemRenderer.INSTANCE = new AttachmentItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
         GunSmithTableItemRenderer.INSTANCE = new GunSmithTableItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+        // 注册 HUD
+        event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "tac_gun_hud_overlay"), new GunHudOverlay());
+        event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID,  "tac_heat_bar"), new HeatBarOverlay());
+        event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID,  "tac_kill_amount_overlay"), new KillAmountOverlay());
+        event.registerAbove(CROSSHAIR, ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "tac_interact_key_overlay"), new InteractKeyTextOverlay());
     }
 
     @SubscribeEvent
