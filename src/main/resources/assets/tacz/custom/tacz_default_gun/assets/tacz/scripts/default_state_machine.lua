@@ -86,6 +86,7 @@ local base_track_state = {}
 function base_track_state.entry(this, context)
     -- 在 主轨道行 的 基础轨道 上循环播放 static_idle
     context:runAnimation("static_idle", context:getTrack(STATIC_TRACK_LINE, BASE_TRACK), false, LOOP, 0)
+    context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, BOLT_CAUGHT_TRACK))
 end
 
 -- 空挂部分,该部分到 153 行结束

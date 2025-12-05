@@ -1260,7 +1260,8 @@
 				{
 					"name": "thirdperson_hand",
 					"parent": "positioning",
-					"pivot": [-0.025, 0.55, -0.225]
+					"pivot": [-0.025, 0.55, -0.225],
+					"rotation": [90, 0, 0]
 				}
 			]
 		}

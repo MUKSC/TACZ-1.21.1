@@ -14,7 +14,11 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.*;
-import org.luaj.vm2.lib.jse.JsePlatform;
+import org.luaj.vm2.compiler.LuaC;
+import org.luaj.vm2.lib.Bit32Lib;
+import org.luaj.vm2.lib.PackageLib;
+import org.luaj.vm2.lib.TableLib;
+import org.luaj.vm2.lib.jse.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -85,7 +89,7 @@ public class ScriptManager extends SimplePreparableReloadListener< List<Map.Entr
     }
 
     private void initGlobals() {
-        globals = JsePlatform.standardGlobals();
+        globals = secureStandardGlobals();
         //LuaJC.install(globals);
         if (libraries != null) {
             libraries.forEach(library -> library.install(globals));
@@ -98,5 +102,22 @@ public class ScriptManager extends SimplePreparableReloadListener< List<Map.Entr
 
     public LuaTable getScript(ResourceLocation id) {
         return scriptMap.get(getModuleName(id));
+    }
+
+    private static Globals secureStandardGlobals() {
+        Globals globals = new Globals();
+        globals.load(new JseBaseLib());
+        globals.load(new PackageLib());
+        globals.load(new Bit32Lib());
+        globals.load(new TableLib());
+        globals.load(new JseStringLib());
+        // No CoroutineLib
+        globals.load(new JseMathLib());
+        // No JseIoLib
+        // No JseOsLib
+        // No LuajavaLib
+        LoadState.install(globals);
+        LuaC.install(globals);
+        return globals;
     }
 }

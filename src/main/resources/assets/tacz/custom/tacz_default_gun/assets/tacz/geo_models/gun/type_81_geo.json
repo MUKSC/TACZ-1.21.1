@@ -18,7 +18,7 @@
 				{
 					"name": "additional_magazine",
 					"parent": "root",
-					"pivot": [0, 7, 0]
+					"pivot": [0, 4, 1]
 				},
 				{
 					"name": "mag_and_lefthand",
@@ -28,7 +28,7 @@
 				{
 					"name": "mag_and_bullet",
 					"parent": "mag_and_lefthand",
-					"pivot": [0, 7, 0]
+					"pivot": [0, 4, 1]
 				},
 				{
 					"name": "bullet",
@@ -175,7 +175,7 @@
 				{
 					"name": "magazine",
 					"parent": "mag_and_bullet",
-					"pivot": [0, 7, 0]
+					"pivot": [0, 4, 1]
 				},
 				{
 					"name": "bullet_in_mag",
@@ -1344,11 +1344,6 @@
 					"name": "type81",
 					"parent": "gun_and_righthand",
 					"pivot": [6, 0, -8]
-				},
-				{
-					"name": "constraint",
-					"parent": "type81",
-					"pivot": [0, 10.9375, -10.1875]
 				},
 				{
 					"name": "gun_body",
@@ -6094,8 +6089,13 @@
 					]
 				},
 				{
+					"name": "constraint",
+					"parent": "root",
+					"pivot": [0, 10.9375, -15.6875]
+				},
+				{
 					"name": "camera",
-					"pivot": [2.14375, 11.675, 16.0875]
+					"pivot": [2.39375, 12.175, 15.2125]
 				},
 				{
 					"name": "positioning",
@@ -6124,12 +6124,7 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 10.92188, 13.5]
-				},
-				{
-					"name": "idle_view",
-					"parent": "view",
-					"pivot": [2.1437, 11.675, 16.0875]
+					"pivot": [0, 10.92188, 9.5]
 				},
 				{
 					"name": "refit_view",
@@ -6148,6 +6143,11 @@
 					"parent": "view",
 					"pivot": [12, 9, -26],
 					"rotation": [0, 120, 0]
+				},
+				{
+					"name": "idle_view",
+					"parent": "view",
+					"pivot": [2.39375, 12.175, 15.2125]
 				}
 			]
 		}

@@ -1,13 +1,13 @@
 {
-  "model": "tacz:gun/hk416d_geo",
-  "texture": "tacz:gun/uv/hk416d",
+  "model": "tacz:gun/hk416a5_geo",
+  "texture": "tacz:gun/uv/hk416a5",
   "lod": {
-    "model": "tacz:gun/lod/hk416d",
-    "texture": "tacz:gun/lod/hk416d"
+    "model": "tacz:gun/lod/hk416a5",
+    "texture": "tacz:gun/lod/hk416a5"
   },
-  "hud": "tacz:gun/hud/hk416d",
-  "slot": "tacz:gun/slot/hk416d",
-  "animation": "tacz:hk416d",
+  "hud": "tacz:gun/hud/hk416a5",
+  "slot": "tacz:gun/slot/hk416a5",
+  "animation": "tacz:hk416a5",
   "state_machine": "tacz:hk416d_state_machine",
   "use_default_animation": "rifle",
   "third_person_animation": "default",

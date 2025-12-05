@@ -36,8 +36,8 @@
       "tactical": 1.30
     },
     "cooldown": {
-      "empty": 2.90,
-      "tactical": 2.43
+      "empty": 2.63,
+      "tactical": 2.13
     }
   },
   "draw_time": 0.77,

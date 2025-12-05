@@ -17,6 +17,7 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.AttachmentData;
 import com.tacz.guns.resource.pojo.data.block.BlockData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.LuaTable;
@@ -149,6 +150,7 @@ public enum CommonNetworkCache implements ICommonResourceProvider {
         for (Map.Entry<DataType, Map<ResourceLocation, String>> entry : delayed.entrySet()) {
             fromNetwork(entry.getKey(), entry.getValue());
         }
+        AllowAttachmentTagMatcher.resetCache();
     }
 
     private <T> T parse(String json, Class<T> dataClass) {
