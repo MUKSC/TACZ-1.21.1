@@ -80,6 +80,7 @@ public class LocalPlayerReload {
             }
             // 锁上状态锁
             data.lockState(operator -> operator.getSynReloadState().getStateType().isReloading());
+            data.chargeProgress = 0f;
             // 触发换弹事件
             if (MinecraftForge.EVENT_BUS.post(new GunReloadEvent(player, player.getMainHandItem(), LogicalSide.CLIENT))) {
                 return;

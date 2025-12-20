@@ -55,21 +55,19 @@ public class ShootKey {
                     .map(index -> index.getGunData().getBurstData().isContinuousShoot())
                     .orElse(false);
             IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            player.sendSystemMessage(Component.literal("charging" + operator.getChargeShootProgress()));
-            if (SHOOT_KEY.isDown()) {
-                // 能开火时禁止冲刺
+            if (operator.chargeShoot(SHOOT_KEY.isDown())) {
                 LocalPlayerSprint.stopSprint = true;
-
                 if (fireMode != FireMode.AUTO && !isBurstAuto && lastTimeShootSuccess) {
                     // 非全自动情况，禁止连续开火
                     return;
                 }
-
-                if (operator.chargeShoot(true)) {
-                    lastTimeShootSuccess = operator.shoot() == ShootResult.SUCCESS;
+                if (operator.shoot() == ShootResult.SUCCESS) {
+                    lastTimeShootSuccess = true;
                 }
+            }
+            if (SHOOT_KEY.isDown()) {
+                LocalPlayerSprint.stopSprint = true;
             } else {
-                operator.chargeShoot(false);
                 lastTimeShootSuccess = false;
             }
         }

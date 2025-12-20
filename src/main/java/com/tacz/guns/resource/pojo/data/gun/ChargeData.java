@@ -12,8 +12,8 @@ public class ChargeData {
     @SerializedName("decrease_per_tick")
     private float decreasePerTick = 0.5f;
 
-    @SerializedName("reset_on_fire")
-    private boolean resetOnFire = true;
+    @SerializedName("decrease_on_fire")
+    private float decreaseOnFire = 0.0f;
 
     @SerializedName("max_charge")
     private float maxCharge = 1.0f;
@@ -33,8 +33,8 @@ public class ChargeData {
         return decreasePerTick;
     }
 
-    public boolean isResetOnFire() {
-        return resetOnFire;
+    public float getDecreaseOnFire() {
+        return decreaseOnFire;
     }
 
     public float getMaxCharge() {

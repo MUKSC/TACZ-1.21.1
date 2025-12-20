@@ -20,6 +20,7 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.ChargeData;
+import com.tacz.guns.resource.pojo.data.gun.ChargeType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.sound.SoundManager;
 import it.unimi.dsi.fastutil.Pair;
@@ -65,21 +66,47 @@ public class LocalPlayerShoot {
         ClientGunIndex gunIndex = gunIndexOptional.get();
         GunData gunData = gunIndex.getGunData();
         FireMode fireMode = iGun.getFireMode(mainHandItem);
+
         ChargeData chargeData = gunData.getChargeData(fireMode);
         if (chargeData == null) {
-            return true;
+            return isCharging;
         }
 
-        long coolDown = this.getCoolDown(iGun, mainHandItem, gunData);
-        boolean flag = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData) == null;
-        var chargeProgress = data.chargeProgress;
+        boolean canCharge = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData) == null;
+        float chargeProgress = data.chargeProgress;
+        ChargeType type = chargeData.getChargeType();
 
-        if (isCharging && flag) {
-            data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
-        } else {
-            data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+        if (type == ChargeType.AUTO) {
+            if (isCharging && canCharge) {
+                data.isCharging = true;
+                data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
+                return data.chargeProgress >= chargeData.getMaxCharge();
+            } else {
+                data.isCharging = false;
+                data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+            }
+        } else if (type == ChargeType.HOLD) {
+            if (isCharging && canCharge) {
+                data.isCharging = true;
+                data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
+            } else {
+                if (chargeProgress >= chargeData.getFireThreshold()) {
+                    return true;
+                }
+                data.isCharging = false;
+                data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+            }
+        } else if (type == ChargeType.DELAY) {
+            if ((isCharging || chargeProgress > 0) && canCharge) {
+                data.isCharging = true;
+                data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
+                return data.chargeProgress >= chargeData.getMaxCharge();
+            } else {
+                data.isCharging = false;
+                data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+            }
         }
-        return data.chargeProgress >= chargeData.getFireThreshold();
+        return false;
     }
 
     public ShootResult shoot() {
@@ -135,6 +162,17 @@ public class LocalPlayerShoot {
         data.isShootRecorded = false;
         // 调用开火逻辑
         this.doShoot(display, iGun, mainHandItem, gunData, coolDown);
+
+        FireMode fireMode = iGun.getFireMode(mainHandItem);
+        ChargeData chargeData = gunData.getChargeData(fireMode);
+        if (chargeData != null) {
+            if (chargeData.getChargeType() == ChargeType.DELAY) {
+                data.chargeProgress = 0f;
+            } else {
+                data.chargeProgress = Math.max(0f, data.chargeProgress - chargeData.getDecreaseOnFire());
+            }
+        }
+
         return ShootResult.SUCCESS;
     }
 

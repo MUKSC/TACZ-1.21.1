@@ -32,6 +32,7 @@ public class LocalPlayerDataHolder {
     public volatile long clientLastShootTimestamp = -1L;
     public volatile boolean isShootRecorded = true;
     public float chargeProgress = 0f;
+    public boolean isCharging = false;
     /**
      * 这个状态锁表示：任意时刻，正在进行的枪械操作只能为一个。
      * 主要用于防止客户端操作表现效果重复执行。
@@ -125,6 +126,7 @@ public class LocalPlayerDataHolder {
         isShootRecorded = true;
         clientShootTimestamp = -1;
         chargeProgress = 0f;
+        isCharging = false;
         // 重置客户端瞄准状态
         clientIsAiming = false;
         clientAimingProgress = 0;

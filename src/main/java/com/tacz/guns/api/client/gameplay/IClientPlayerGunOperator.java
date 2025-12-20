@@ -97,5 +97,7 @@ public interface IClientPlayerGunOperator {
 
     boolean chargeShoot(boolean isCharge);
 
-    float getChargeShootProgress();
+    float getChargeProgress();
+
+    boolean isCharging();
 }
