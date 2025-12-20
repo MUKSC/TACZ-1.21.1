@@ -112,6 +112,7 @@ public class LocalPlayerDraw {
         // 重置客户端的 shoot 时间戳
         data.isShootRecorded = true;
         data.clientShootTimestamp = -1;
+        data.chargeProgress = 0;
         // 重置客户端瞄准状态
         data.clientIsAiming = false;
         data.clientAimingProgress = 0;

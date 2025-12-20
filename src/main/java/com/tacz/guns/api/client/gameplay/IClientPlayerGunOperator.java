@@ -94,4 +94,8 @@ public interface IClientPlayerGunOperator {
     boolean isReadyToDraw();
 
     void resetDraw();
+
+    boolean chargeShoot(boolean isCharge);
+
+    float getChargeShootProgress();
 }

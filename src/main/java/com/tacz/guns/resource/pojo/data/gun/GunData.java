@@ -120,6 +120,16 @@ public class GunData {
     @SerializedName("script_param")
     private Map<String, Object> scriptParam = null;
 
+    @SerializedName("charging")
+    private EnumMap<FireMode, ChargeData> chargeData = null;
+
+    public ChargeData getChargeData(FireMode fireMode) {
+        if (chargeData != null) {
+            return chargeData.get(fireMode);
+        }
+        return null;
+    }
+
     public ResourceLocation getAmmoId() {
         return ammoId;
     }

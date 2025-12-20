@@ -70,6 +70,9 @@ public class LocalPlayerReload {
             if (data.clientStateLock) {
                 return;
             }
+            if (System.currentTimeMillis() - data.clientShootTimestamp < 100) {
+                return;
+            }
             // 弹药简单检查
             boolean canReload = gunItem.canReload(player, mainHandItem);
             if (IGunOperator.fromLivingEntity(player).needCheckAmmo() && !canReload) {
