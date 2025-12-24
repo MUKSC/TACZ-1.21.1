@@ -1,1 +1,5 @@
-- Updated to TaCZ 1.1.7
+- Gun packs no longer fails to load even if gun recipes with invalid outputs are found
+  - This will allow the game to load gun packs even if dependencies (e.g. LRTactical) are missing
+  - TL;DR: You can install gun packs like CIBR or CoD Warzone without modifying them and the game runs just fine
+- Fixed GUI turning red upon hitting entities while in ADS in some environments
+- Fixed gun recipes with pre-installed attachments were missing the attachments
