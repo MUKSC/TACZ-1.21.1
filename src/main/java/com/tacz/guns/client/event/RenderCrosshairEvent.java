@@ -90,6 +90,8 @@ public class RenderCrosshairEvent {
                 renderCrosshair(graphics, window);
             }
         });
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @SubscribeEvent
