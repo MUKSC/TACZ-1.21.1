@@ -15,7 +15,6 @@ import com.tacz.guns.client.gui.GunRefitScreen;
 import com.tacz.guns.client.renderer.crosshair.CrosshairType;
 import com.tacz.guns.compat.shouldersurfing.ShoulderSurfingCompat;
 import com.tacz.guns.config.client.RenderConfig;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,7 +27,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = GunMod.MOD_ID)
@@ -43,55 +43,59 @@ public class RenderCrosshairEvent {
     /**
      * 当玩家手上拿着枪时，播放特定动画、或瞄准时需要隐藏准心
      */
-    public static void onRenderCrosshair(GuiGraphics graphics, Window window, DeltaTracker delta, CallbackInfo ci) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
-        if (!IGun.mainHandHoldGun(player)) {
-            return;
-        }
-        // 全面替换成自己的
-        ci.cancel();
-        // 击中显示
-        renderHitMarker(graphics, window);
-        // 换弹进行时取消准心渲染
-        ReloadState reloadState = IGunOperator.fromLivingEntity(player).getSynReloadState();
-        if (reloadState.getStateType().isReloading()) {
-            return;
-        }
-        // 打开枪械改装界面的时候，取消准心渲染
-        if (isRefitScreen) {
-            return;
-        }
-        // 播放的动画需要隐藏准心时，取消准心渲染
-        ItemStack stack = player.getMainHandItem();
-        if (!(stack.getItem() instanceof IGun)) {
-            return;
-        }
+    @SubscribeEvent(receiveCanceled = true)
+    public static void onRenderCrosshair(RenderGuiLayerEvent.Pre event) {
+        if (event.getName().equals(VanillaGuiLayers.CROSSHAIR)) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player == null) {
+                return;
+            }
+            if (!IGun.mainHandHoldGun(player)) {
+                return;
+            }
+            // 全面替换成自己的
+            event.setCanceled(true);
+            // 击中显示
+            Window window = Minecraft.getInstance().getWindow();
+            renderHitMarker(event.getGuiGraphics(), window);
+            // 换弹进行时取消准心渲染
+            ReloadState reloadState = IGunOperator.fromLivingEntity(player).getSynReloadState();
+            if (reloadState.getStateType().isReloading()) {
+                return;
+            }
+            // 打开枪械改装界面的时候，取消准心渲染
+            if (isRefitScreen) {
+                return;
+            }
+            // 播放的动画需要隐藏准心时，取消准心渲染
+            ItemStack stack = player.getMainHandItem();
+            if (!(stack.getItem() instanceof IGun)) {
+                return;
+            }
 
-        IClientPlayerGunOperator playerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
-        TimelessAPI.getGunDisplay(stack).ifPresent(gunIndex -> {
-            // 瞄准快要完成时，取消准心渲染
-            if (playerGunOperator.getClientAimingProgress(delta.getGameTimeDeltaPartialTick(false)) > 0.9) {
-                // 枪包可以强制显示准星
-                boolean forceShow = gunIndex.isShowCrosshair();
-                // 越肩视角可以强制显示准星
-                boolean shoulderSurfingForceShow = ShoulderSurfingCompat.showCrosshair();
-                // 两个强制都没有时，那么才允许隐藏
-                if (!forceShow && !shoulderSurfingForceShow) {
-                    return;
+            IClientPlayerGunOperator playerGunOperator = IClientPlayerGunOperator.fromLocalPlayer(player);
+            TimelessAPI.getGunDisplay(stack).ifPresent(gunIndex -> {
+                // 瞄准快要完成时，取消准心渲染
+                if (playerGunOperator.getClientAimingProgress(event.getPartialTick().getGameTimeDeltaPartialTick(false)) > 0.9) {
+                    // 枪包可以强制显示准星
+                    boolean forceShow = gunIndex.isShowCrosshair();
+                    // 越肩视角可以强制显示准星
+                    boolean shoulderSurfingForceShow = ShoulderSurfingCompat.showCrosshair();
+                    // 两个强制都没有时，那么才允许隐藏
+                    if (!forceShow && !shoulderSurfingForceShow) {
+                        return;
+                    }
                 }
-            }
 
-            AnimationStateMachine<?> animationStateMachine = gunIndex.getAnimationStateMachine();
-            AnimationStateContext context = animationStateMachine.getContext();
-            if (context == null || !context.shouldHideCrossHair()) {
-                renderCrosshair(graphics, window);
-            }
-        });
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                AnimationStateMachine<?> animationStateMachine = gunIndex.getAnimationStateMachine();
+                AnimationStateContext context = animationStateMachine.getContext();
+                if (context == null || !context.shouldHideCrossHair()) {
+                    renderCrosshair(event.getGuiGraphics(), window);
+                }
+            });
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        }
     }
 
     @SubscribeEvent
