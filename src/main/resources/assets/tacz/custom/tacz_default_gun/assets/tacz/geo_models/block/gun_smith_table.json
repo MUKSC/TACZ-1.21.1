@@ -997,7 +997,7 @@
 					]
 				},
 				{
-					"name": "light_tube",
+					"name": "light_tube_illuminated",
 					"pivot": [-7, 29.75, 1.75],
 					"cubes": [
 						{
