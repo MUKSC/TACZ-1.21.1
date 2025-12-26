@@ -3,7 +3,6 @@ package com.tacz.guns.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.tacz.guns.api.client.event.BeforeRenderHandEvent;
 import com.tacz.guns.api.client.other.KeepingItemRenderer;
-import com.tacz.guns.api.item.IGun;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -39,25 +38,25 @@ public class ItemInHandRendererMixin implements KeepingItemRenderer {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void cancelEquippedProgress(CallbackInfo ci) {
-        if (Minecraft.getInstance().player == null) {
-            return;
-        }
-        if (tacz$KeepItem != null) {
-            long time = System.currentTimeMillis() - tacz$KeepTimestamp;
-            if (time < tacz$KeepTimeMs) {
-                mainHandHeight = 1.0f;
-                oMainHandHeight = 1.0f;
-                mainHandItem = tacz$KeepItem;
-                return;
-            }
-        }
-        ItemStack itemStack = Minecraft.getInstance().player.getMainHandItem();
-        IGun iGun = IGun.getIGunOrNull(itemStack);
-        if (iGun != null) {
-            mainHandHeight = 1.0f;
-            oMainHandHeight = 1.0f;
-            mainHandItem = itemStack;
-        }
+//        if (Minecraft.getInstance().player == null) {
+//            return;
+//        }
+//        if (tacz$KeepItem != null) {
+//            long time = System.currentTimeMillis() - tacz$KeepTimestamp;
+//            if (time < tacz$KeepTimeMs) {
+//                mainHandHeight = 1.0f;
+//                oMainHandHeight = 1.0f;
+//                mainHandItem = tacz$KeepItem;
+//                return;
+//            }
+//        }
+//        ItemStack itemStack = Minecraft.getInstance().player.getMainHandItem();
+//        IGun iGun = IGun.getIGunOrNull(itemStack);
+//        if (iGun != null) {
+//            mainHandHeight = 1.0f;
+//            oMainHandHeight = 1.0f;
+//            mainHandItem = itemStack;
+//        }
     }
 
     @Unique
