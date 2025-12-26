@@ -32,8 +32,8 @@
     "texture": "tacz:flash/common_muzzle_flash",
     "scale": 1.2
   },
-  "iron_zoom": 1.2,
-  "zoom_model_fov": 35,
+  "iron_zoom": 1.5,
+  "zoom_model_fov": 50,
   "shell": {
     "initial_velocity": [5, 2, 1],
     "random_velocity": [3, 3, 0.5],
