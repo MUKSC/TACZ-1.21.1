@@ -52,6 +52,8 @@
   "config.tacz.client.render.kill_amount_enable.desc": "是否显示连杀计数",
   "config.tacz.client.render.target_render_distance": "标靶显示距离",
   "config.tacz.client.render.target_render_distance.desc": "标靶最远显示距离，包括标靶车",
+  "config.tacz.client.render.enable_translucent": "启用方块实体半透明",
+  "config.tacz.client.render.enable_translucent.desc": "是否在渲染枪械工作台/雕像时启用半透明。！开启此项会导致额外的性能开销！",
   "config.tacz.client.zoom": "缩放",
   "config.tacz.client.zoom.screen_distance_coefficient": "荧幕距离系数",
   "config.tacz.client.zoom.screen_distance_coefficient.desc": "缩放时的荧幕距离系数，使用 MDV 标准，默认为 MDV133",

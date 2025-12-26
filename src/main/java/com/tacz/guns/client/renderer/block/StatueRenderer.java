@@ -51,7 +51,9 @@ public class StatueRenderer implements BlockEntityRenderer<StatueBlockEntity> {
                 poseStack.mulPose(Axis.YN.rotationDegrees((facing.get2DDataValue() + 2) % 4 * 90));
                 poseStack.mulPose(Axis.ZN.rotationDegrees(180));
 
-                RenderType renderType = RenderType.entityTranslucent(getTextureLocation());
+                RenderType renderType = RenderConfig.BLOCK_ENTITY_TRANSLUCENT.get() ?
+                        RenderType.entityTranslucent(getTextureLocation()) :
+                        RenderType.entityCutout(getTextureLocation());
                 model.render(poseStack, ItemDisplayContext.NONE, renderType, combinedLightIn, combinedOverlayIn);
 
                 poseStack.scale(0.5f, 0.5f, 0.5f);
