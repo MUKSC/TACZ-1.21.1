@@ -5,6 +5,7 @@ import com.tacz.guns.api.client.animation.statemachine.AnimationStateMachine;
 import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
+import com.tacz.guns.compat.oculus.OculusCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -58,6 +59,9 @@ public class FirstPersonRenderEvent {
             if (flag && renderer.needReInit(stack)) {
                 renderer.tryInit(stack, player, event.getPartialTick());
             }
+
+			// 防止内存泄漏
+			OculusCompat.endBatch(Minecraft.getInstance().renderBuffers().bufferSource());
 
             renderer.renderFirstPerson(player, stack, transformType, event.getPoseStack(), event.getMultiBufferSource(),
                     event.getPackedLight(), event.getPartialTick());

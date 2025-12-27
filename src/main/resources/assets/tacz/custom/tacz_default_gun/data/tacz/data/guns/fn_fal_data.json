@@ -28,7 +28,7 @@
   "can_crawl": true,
   "can_slide": true,
   "bolt": "closed_bolt",
-  "rpm": 300,
+  "rpm": 350,
   "bullet": {
     "life": 0.8,
     "bullet_amount": 1,
@@ -43,7 +43,7 @@
         {"distance": "infinite", "damage": 8}
       ]
     },
-    "speed": 290,
+    "speed": 330,
     "gravity": 0.15,
     "knockback": 0,
     "friction": 0.02,
@@ -87,8 +87,8 @@
   "fire_mode_adjust": {
     "auto": {
       // 加算，全自动模式的开火数值调整，如无调整可不写
-      "damage": -3,
-      "rpm": 350,
+      "damage": -2,
+      "rpm": 300,
       "speed": 0,
       "knockback": 0,
       "armor_ignore": -0.1,

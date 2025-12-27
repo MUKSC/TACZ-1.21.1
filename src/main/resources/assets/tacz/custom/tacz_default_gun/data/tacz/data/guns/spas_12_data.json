@@ -146,7 +146,7 @@
     "muzzle"
   ],
   "can_crawl": true,
-  "can_slide": true,
+  "can_slide": false,
   "fire_sound": {
     "fire_multiplier": 1,
     "silence_multiplier": 1

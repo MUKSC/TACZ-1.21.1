@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.tacz.guns.mixin.client.ar",
+  "plugin": "com.tacz.guns.mixin.client.ar.ARCompatMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "tacz.refmap.json",
+  "client": [
+    "BedrockPartMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
