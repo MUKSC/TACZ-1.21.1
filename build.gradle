@@ -30,9 +30,9 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-//version = "1.1.7"
+version = "1.1.7-hotfix-lrl-r2"
 // 版本号，正式发布需要修改这一行
-version = FORMAT.format(new Date())
+//version = FORMAT.format(new Date())
 group = "com.tacz"
 archivesBaseName = "tacz-1.20.1"
 
@@ -179,8 +179,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
 
-    jarJar(implementation(fg.deobf("com.github.mcmodderanchor:simplebedrockmodel:2.1.1-forge+mc1.20.1"))) {
-        jarJar.ranged(it, "[2.1.1,)")
+    jarJar(implementation(fg.deobf("com.github.mcmodderanchor:simplebedrockmodel:2.1.2-forge+mc1.20.1"))) {
+        jarJar.ranged(it, "[2.1.2,)")
     }
     compileOnly("com.maydaymemory:mae:1.1.0") {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
