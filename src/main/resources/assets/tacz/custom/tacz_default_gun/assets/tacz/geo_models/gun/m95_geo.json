@@ -1746,6 +1746,11 @@
 					"pivot": [0, 10, -39.1]
 				},
 				{
+					"name": "shell",
+					"parent": "positioning2",
+					"pivot": [-0.375, 10.5, 12.2125]
+				},
+				{
 					"name": "shell_ejection",
 					"parent": "m95",
 					"pivot": [0, 10.125, 6]

@@ -11,8 +11,17 @@ local function increment(obj)
     return obj.value - 1
 end
 
--- 主轨道行 和 其中的五条轨道
+-- 主轨道行 和 其中的轨道
 local STATIC_TRACK_LINE = increment(track_line_top)
+
+-- 五条低轨道，会被主轨道行中的其他高级轨道覆盖
+local PRE_PARALLEL_TRACK_1 = increment(static_track_top)
+local PRE_PARALLEL_TRACK_2 = increment(static_track_top)
+local PRE_PARALLEL_TRACK_3 = increment(static_track_top)
+local PRE_PARALLEL_TRACK_4 = increment(static_track_top)
+local PRE_PARALLEL_TRACK_5 = increment(static_track_top)
+
+-- 主轨道行上的高级轨道
 local BASE_TRACK = increment(static_track_top)
 local BOLT_CAUGHT_TRACK = increment(static_track_top)
 local SAFETY_TRACK = increment(static_track_top) -- 待实现
@@ -20,16 +29,31 @@ local ADS_TRACK = increment(static_track_top)
 local MAIN_TRACK = increment(static_track_top)
 local SPRINT_TRACK = increment(static_track_top)
 
+-- 五条顶级轨道，会覆盖主轨道行中的其他轨道
+local PARALLEL_TRACK_1 = increment(static_track_top)
+local PARALLEL_TRACK_2 = increment(static_track_top)
+local PARALLEL_TRACK_3 = increment(static_track_top)
+local PARALLEL_TRACK_4 = increment(static_track_top)
+local PARALLEL_TRACK_5 = increment(static_track_top)
+
 -- 开火的轨道行
 local GUN_KICK_TRACK_LINE = increment(track_line_top)
 
--- 混合轨道行 和 其中的两条轨道,用于叠加动画,如跑步走路跳跃, LOOP_TRACK 只有定义却尚未启用,因此作用尚不得知
+-- 混合轨道行 和 其中的轨道，用于叠加动画，如跑步走路跳跃过热
 local BLENDING_TRACK_LINE = increment(track_line_top)
+
 local MOVEMENT_TRACK = increment(blending_track_top)
 local SLIDE_TRACK = increment(blending_track_top)
 local OVER_HEAT_TRACK = increment(blending_track_top)
 local OVER_HEATING_TRACK = increment(blending_track_top)
 local LOOP_TRACK = increment(blending_track_top)
+
+-- 五条混合轨道，应叠加到其他轨道上
+local BLEND_TRACK_1 = increment(blending_track_top)
+local BLEND_TRACK_2 = increment(blending_track_top)
+local BLEND_TRACK_3 = increment(blending_track_top)
+local BLEND_TRACK_4 = increment(blending_track_top)
+local BLEND_TRACK_5 = increment(blending_track_top)
 
 -- 播放丢枪动画的方法
 local function runPutAwayAnimation(context)
@@ -643,6 +667,24 @@ local M = {
     OVER_HEAT_TRACK = OVER_HEAT_TRACK,
     OVER_HEATING_TRACK = OVER_HEATING_TRACK,
     LOOP_TRACK = LOOP_TRACK,
+    -- 低级并行轨道
+    PRE_PARALLEL_TRACK_1 = PRE_PARALLEL_TRACK_1,
+    PRE_PARALLEL_TRACK_2 = PRE_PARALLEL_TRACK_2,
+    PRE_PARALLEL_TRACK_3 = PRE_PARALLEL_TRACK_3,
+    PRE_PARALLEL_TRACK_4 = PRE_PARALLEL_TRACK_4,
+    PRE_PARALLEL_TRACK_5 = PRE_PARALLEL_TRACK_5,
+    -- 顶级并行轨道
+    PARALLEL_TRACK_1 = PARALLEL_TRACK_1,
+    PARALLEL_TRACK_2 = PARALLEL_TRACK_2,
+    PARALLEL_TRACK_3 = PARALLEL_TRACK_3,
+    PARALLEL_TRACK_4 = PARALLEL_TRACK_4,
+    PARALLEL_TRACK_5 = PARALLEL_TRACK_5,
+    -- 混合轨道
+    BLEND_TRACK_1 = BLEND_TRACK_1,
+    BLEND_TRACK_2 = BLEND_TRACK_2,
+    BLEND_TRACK_3 = BLEND_TRACK_3,
+    BLEND_TRACK_4 = BLEND_TRACK_4,
+    BLEND_TRACK_5 = BLEND_TRACK_5,
     -- 状态
     base_track_state = base_track_state,
     bolt_caught_states = bolt_caught_states,

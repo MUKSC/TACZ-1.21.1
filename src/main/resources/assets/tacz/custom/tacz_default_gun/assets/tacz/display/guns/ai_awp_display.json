@@ -8,6 +8,10 @@
   "hud": "tacz:gun/hud/ai_awp",
   "slot": "tacz:gun/slot/ai_awp",
   "animation": "tacz:ai_awp",
+  "state_machine": "tacz:manual_action_state_machine",
+  "state_machine_param": {
+    "bolt_shell_ejecting_time": 0.4
+  },
   "use_default_animation": "rifle",
   "transform": {
     "scale": {
@@ -24,6 +28,13 @@
   "iron_zoom": 1.5,
   // 机瞄模型缩放fov，默认70
   "zoom_model_fov": 60,
+  "shell": {
+    "initial_velocity": [8, 2, -3.5],
+    "random_velocity": [2, 1, 3],
+    "acceleration": [0.0, -20, 0.0],
+    "angular_velocity": [360, -1200, 90],
+    "living_time": 1.0
+  },
   "sounds": {
     "reload_empty": "tacz:ai_awp/awp_reload_empty",
     "reload_tactical": "tacz:ai_awp/awp_reload_tactical",
