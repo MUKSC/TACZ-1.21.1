@@ -480,7 +480,7 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
         IGun iGun1 = IGun.getIGunOrNull(i);
         IGun iGun2 = IGun.getIGunOrNull(j);
         if (iGun1 != null && iGun2 != null) {
-            return iGun1.getGunId(i).equals(iGun2.getGunId(j));
+            return iGun1.getGunId(i).equals(iGun2.getGunId(j)) && iGun1.getGunDisplayId(i).equals(iGun2.getGunDisplayId(j));
         }
         if (i.isEmpty() || j.isEmpty()) {
             return i.isEmpty() && j.isEmpty();
