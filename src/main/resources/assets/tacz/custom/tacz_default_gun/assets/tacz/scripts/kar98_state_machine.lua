@@ -83,7 +83,7 @@ function reload_state.entry(this, context, input)
 
     if (isNoAmmo(context)) then
         state.need_ammo = state.need_ammo + 1
-        context:runAnimation("reload_intro", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_HOLD, 0.2)
+        context:runAnimation("reload_intro_empty", context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK), false, PLAY_ONCE_HOLD, 0.2)
         idle_state.timestamp = context:getCurrentTimestamp()
         idle_state.ejection_time = get_ejection_time(context)
     else

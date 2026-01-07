@@ -6355,7 +6355,7 @@
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 9.225, -11.35]
+					"pivot": [0, 9.1, -11.35]
 				},
 				{
 					"name": "laser_pos",

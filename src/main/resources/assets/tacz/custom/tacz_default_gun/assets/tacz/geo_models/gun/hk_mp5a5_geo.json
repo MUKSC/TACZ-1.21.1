@@ -1800,7 +1800,7 @@
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 9.575, -5.3]
+					"pivot": [0, 9.43437, -5.3]
 				},
 				{
 					"name": "shell",

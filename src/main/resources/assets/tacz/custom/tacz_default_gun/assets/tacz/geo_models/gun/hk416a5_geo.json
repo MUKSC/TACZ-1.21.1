@@ -11577,7 +11577,7 @@
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8.2, -6.75]
+					"pivot": [0, 8.075, -6.75]
 				},
 				{
 					"name": "shell",

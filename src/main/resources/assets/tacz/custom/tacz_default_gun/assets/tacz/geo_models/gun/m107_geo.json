@@ -4502,7 +4502,7 @@
 				{
 					"name": "scope_pos",
 					"parent": "positioning2",
-					"pivot": [0, 12.0625, 12]
+					"pivot": [0, 12.125, 12]
 				},
 				{
 					"name": "shell",

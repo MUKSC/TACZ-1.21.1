@@ -3764,7 +3764,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "handguard_tactical",
-					"pivot": [0, 6.5, -5.0625],
+					"pivot": [0, 6.375, -5.0625],
 					"rotation": [0, 0, -180]
 				},
 				{
@@ -3857,7 +3857,7 @@
 				{
 					"name": "scope_pos",
 					"parent": "gun",
-					"pivot": [0, 9.07892, 3.97724]
+					"pivot": [0, 9.1258, 3.97724]
 				},
 				{
 					"name": "muzzle_flash",

@@ -4764,7 +4764,7 @@
 				{
 					"name": "scope_pos",
 					"parent": "positioning2",
-					"pivot": [0, 11.25, 1]
+					"pivot": [0, 11.375, 1]
 				},
 				{
 					"name": "stock_pos",

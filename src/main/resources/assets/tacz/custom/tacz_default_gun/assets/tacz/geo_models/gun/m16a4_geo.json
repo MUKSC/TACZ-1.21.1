@@ -11448,12 +11448,12 @@
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8.1875, -4.125]
+					"pivot": [0, 8.0625, -4.125]
 				},
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [1.46875, 9.5, -9],
+					"pivot": [1.5, 9.5, -9],
 					"rotation": [0, 0, 90]
 				},
 				{

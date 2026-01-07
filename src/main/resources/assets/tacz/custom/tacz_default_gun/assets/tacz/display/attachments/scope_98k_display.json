@@ -7,10 +7,10 @@
     "texture": "tacz:attachment/lod/scope_1873_6x"
   },
   "zoom": [
-    8
+    4.25
   ],
   "scope": true,
-  "fov": 7.0,
+  "fov": 35,
   "sounds": {
     "install": "tacz:attachments/scope_general_b",
     "uninstall": "tacz:attachments/scope_general_b"
