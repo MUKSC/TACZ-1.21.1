@@ -30,7 +30,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = "1.1.7-hotfix-lrl-r2"
+version = "1.1.7-hotfix-lrl-r3"
 // 版本号，正式发布需要修改这一行
 //version = FORMAT.format(new Date())
 group = "com.tacz"
@@ -241,7 +241,7 @@ dependencies {
     compileOnly fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
 
     //加速渲染相关
-    compileOnly fg.deobf("curse.maven:accelerated-rendering-1314021:7342975")
+    implementation fg.deobf("curse.maven:accelerated-rendering-1314021:7342975")
 
     // 引入 MixinExtras 以解决一些棘手的 Mixin 冲突问题（比如 @Redirect 不能嵌套）
     // 如果未来有迁移到 Fabric / NeoForge 的计划，请注意这两个框架都已自带 MixinExtras，无需自行打包。
