@@ -20,6 +20,7 @@ public class RenderConfig {
     public static ModConfigSpec.IntValue DAMAGE_COUNTER_RESET_TIME;
     public static ModConfigSpec.BooleanValue DISABLE_MOVEMENT_ATTRIBUTE_FOV;
     public static ModConfigSpec.BooleanValue ENABLE_TACZ_ID_IN_TOOLTIP;
+    public static ModConfigSpec.BooleanValue BLOCK_ENTITY_TRANSLUCENT;
 
     public static void init(ModConfigSpec.Builder builder) {
         builder.push("render");
@@ -71,6 +72,9 @@ public class RenderConfig {
 
         builder.comment("Enable the display of the TACZ ID in the tooltip when Advanced Tooltip is enabled");
         ENABLE_TACZ_ID_IN_TOOLTIP = builder.define("EnableTaczIdInTooltip", true);
+
+        builder.comment("Enable translucent while render block entity or not. Enable this option will result in ADDITIONAL PERFORMANCE OVERHEAD.");
+        BLOCK_ENTITY_TRANSLUCENT = builder.define("EnableBlockEntityTranslucent", false);
 
         builder.pop();
     }

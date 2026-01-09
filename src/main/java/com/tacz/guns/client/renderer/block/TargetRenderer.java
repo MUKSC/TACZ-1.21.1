@@ -60,7 +60,7 @@ public class TargetRenderer implements BlockEntityRenderer<TargetBlockEntity> {
                 Minecraft minecraft = Minecraft.getInstance();
                 var skin = minecraft.getSkinManager().getInsecureSkin(blockEntity.getOwner().gameProfile()).texture();
                 headModel.visible = true;
-                RenderType skullRenderType = RenderType.entityTranslucentCull(skin);
+                RenderType skullRenderType = RenderType.entityCutout(skin);
                 headModel.render(poseStack, ItemDisplayContext.NONE, bufferIn.getBuffer(skullRenderType), combinedLightIn, OverlayTexture.NO_OVERLAY);
             }
             poseStack.popPose();

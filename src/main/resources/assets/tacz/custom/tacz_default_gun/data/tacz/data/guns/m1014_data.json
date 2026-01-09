@@ -7,7 +7,7 @@
     12
   ],
   "bolt": "closed_bolt",
-  "rpm": 250,
+  "rpm": 200,
   "bullet": {
     "life": 0.6,
     "bullet_amount": 8,
@@ -18,8 +18,8 @@
       "head_shot_multiplier": 1.33,
       "damage_adjust": [
         {"distance": 14, "damage": 40},
-        {"distance": 28, "damage": 25},
-        {"distance": "infinite", "damage": 18}
+        {"distance": 28, "damage": 32},
+        {"distance": "infinite", "damage": 24}
       ]
     },
     "speed": 150,
@@ -90,11 +90,11 @@
     ]
   },
   "inaccuracy": {
-    "stand": 3.9,
-    "move": 4,
-    "sneak": 3.9,
-    "lie": 3.7,
-    "aim": 3.6
+    "stand": 4.25,
+    "move": 4.25,
+    "sneak": 4.1,
+    "lie": 4.1,
+    "aim": 4
   },
   "melee": {
     "distance": 1.25,
@@ -114,10 +114,10 @@
     "intro": 0.5,
     "loop": 0.67,
     "loop_2": 0.7,
-    "ending": 0.17,
-    "intro_empty_feed": 1.27,
-    "loop_feed": 0.38,
-    "loop_feed_2": 0.43
+    "ending": 0.36,
+    "intro_empty_feed": 1,
+    "loop_feed": 0.33,
+    "loop_feed_2": 0.4
   },
   "allow_attachment_types": [
     "muzzle",

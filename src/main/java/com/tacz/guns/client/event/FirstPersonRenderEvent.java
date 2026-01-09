@@ -6,6 +6,7 @@ import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.renderer.item.AnimateGeoItemRenderer;
 import com.tacz.guns.client.renderer.other.HandRenderer;
+import com.tacz.guns.compat.iris.IrisCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
@@ -61,6 +62,9 @@ public class FirstPersonRenderEvent {
             if (flag && renderer.needReInit(stack)) {
                 renderer.tryInit(stack, player, event.getPartialTick());
             }
+
+            // 防止内存泄漏
+			IrisCompat.endBatch(Minecraft.getInstance().renderBuffers().bufferSource());
 
             GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
             HandRenderer.INSTANCE.renderSolid((poseStack) -> {

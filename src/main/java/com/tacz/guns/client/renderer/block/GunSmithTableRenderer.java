@@ -9,6 +9,7 @@ import com.tacz.guns.block.AbstractGunSmithTableBlock;
 import com.tacz.guns.block.entity.GunSmithTableBlockEntity;
 import com.tacz.guns.client.model.bedrock.BedrockModel;
 import com.tacz.guns.client.resource.index.ClientBlockIndex;
+import com.tacz.guns.config.client.RenderConfig;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -62,7 +63,9 @@ public class GunSmithTableRenderer implements BlockEntityRenderer<GunSmithTableB
                 poseStack.translate(0.5, 1.5, 0.5);
                 poseStack.mulPose(Axis.ZN.rotationDegrees(180));
                 poseStack.mulPose(Axis.YN.rotationDegrees(block.parseRotation(facing)));
-                RenderType renderType = RenderType.entityTranslucent(texture);
+                RenderType renderType = RenderConfig.BLOCK_ENTITY_TRANSLUCENT.get() ?
+                        RenderType.entityTranslucent(texture) :
+                        RenderType.entityCutout(texture);
                 model.render(poseStack, ItemDisplayContext.NONE, renderType, combinedLightIn, combinedOverlayIn);
                 poseStack.popPose();
             }
