@@ -1,6 +1,5 @@
 package com.tacz.guns.client.model;
 
-import com.github.argon4w.acceleratedrendering.core.CoreFeature;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -338,7 +337,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
 				// 这里不用ifPresent是因为需要设置useStencil, lambda无法设置局部变量
 				if (attachmentIndex.isPresent()) {
 					// 如果有attachment, 则设置层前任务开启模板缓冲区设置对应的模板函数
-					CoreFeature.forceSetDefaultLayerBeforeFunction(() -> {
+					ARCompat.setRenderBeforeFunction(() -> {
 						// 获取实际的attachmentIndex
 						var index = attachmentIndex.get();
 
@@ -361,10 +360,10 @@ public class BedrockGunModel extends BedrockAnimatedModel {
 			}
 		}
 
-		CoreFeature.forceSetDefaultLayer(-943 + 3);
+		ARCompat.setRenderLayer(-943 + 3);
 
 		// 设置层后任务
-		CoreFeature.forceSetDefaultLayerAfterFunction(() -> {
+		ARCompat.setRenderAfterFunction(() -> {
 			// 关闭模板测试
 			RenderHelper.disableItemEntityStencilTest();
 			// 重置模板缓冲区
@@ -375,12 +374,12 @@ public class BedrockGunModel extends BedrockAnimatedModel {
 		super.render(matrixStack, transformType, renderType, light, overlay);
 
 		// 重置层和层后任务, 还原现场
-		CoreFeature.resetDefaultLayer();
-		CoreFeature.resetDefaultLayerAfterFunction();
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderAfterFunction();
 
 		// 如果使用了层前行为, 则进行重置, 还原现场
 		if (useStencil) {
-			CoreFeature.resetDefaultLayerBeforeFunction();
+			ARCompat.resetRenderBeforeFunction();
 		}
 	}
 
