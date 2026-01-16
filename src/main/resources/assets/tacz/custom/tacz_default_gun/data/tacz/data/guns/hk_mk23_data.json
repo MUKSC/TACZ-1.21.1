@@ -1,24 +1,24 @@
 {
-  "ammo": "tacz:50ae",
+  "ammo": "tacz:45acp",
   "rpm": 300,
   "script": "tacz:xmag_reload_logic",
   "script_param": {
-    "reload_feed": 1.2,
-    "reload_cooldown": 1.64,
-    "empty_feed": 1.5,
-    "empty_cooldown": 2,
-    "reload_xmag_1_feed": 1.28,
-    "reload_xmag_1_cooldown": 1.65,
-    "empty_xmag_1_feed": 2.03,
-    "empty_xmag_1_cooldown": 2.23,
-    "reload_xmag_2_feed": 1.45,
-    "reload_xmag_2_cooldown": 1.65,
-    "empty_xmag_2_feed": 2.03,
-    "empty_xmag_2_cooldown": 2.23,
-    "reload_xmag_3_feed": 1.53,
-    "reload_xmag_3_cooldown": 1.65,
-    "empty_xmag_3_feed": 2.03,
-    "empty_xmag_3_cooldown": 2.23
+    "reload_feed": 1.1,
+    "reload_cooldown": 1.77,
+    "empty_feed": 1.53,
+    "empty_cooldown": 2.07,
+    "reload_xmag_1_feed": 1.57,
+    "reload_xmag_1_cooldown": 2.22,
+    "empty_xmag_1_feed": 1.8,
+    "empty_xmag_1_cooldown": 2.3,
+    "reload_xmag_2_feed": 1.77,
+    "reload_xmag_2_cooldown": 2.43,
+    "empty_xmag_2_feed": 2,
+    "empty_xmag_2_cooldown": 2.53,
+    "reload_xmag_3_feed": 1.77,
+    "reload_xmag_3_cooldown": 2.43,
+    "empty_xmag_3_feed": 2,
+    "empty_xmag_3_cooldown": 2.53
   },
   "bullet": {
     "life": 1,
@@ -48,11 +48,11 @@
       "delay": 1
     }
   },
-  "ammo_amount": 8,
+  "ammo_amount": 12,
   "extended_mag_ammo_amount": [
-    9,
-    11,
-    13
+    16,
+    20,
+    24
   ],
   "bolt": "closed_bolt",
   "reload": {
@@ -70,7 +70,7 @@
   "put_away_time": 0.28,
   "aim_time": 0.16,
   "sprint_time": 0.05,
-  "weight": 1.65,
+  "weight": 1.4,
   "fire_mode": [
     "semi"
   ],
