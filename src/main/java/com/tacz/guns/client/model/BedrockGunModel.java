@@ -63,6 +63,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
     protected @Nullable List<BedrockPart> laserBeamPaths;
 
     private boolean renderHand = true;
+    private boolean renderMount;
     private ItemStack currentGunItem;
     private int currentExtendMagLevel = 0;
 
@@ -84,8 +85,8 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         this.setFunctionalRenderer(BULLET_IN_MAG, bedrockPart -> ammoHiddenRender(bedrockPart, iGun -> iGun.getCurrentAmmoCount(currentGunItem) > 0));
         // 机枪弹链
         this.setFunctionalRenderer(BULLET_CHAIN, bedrockPart -> ammoHiddenRender(bedrockPart, iGun -> iGun.getCurrentAmmoCount(currentGunItem) > 0));
-        // 有瞄具时显示，用于放瞄具的导轨（如 AKM 的导轨）
-        this.setFunctionalRenderer(MOUNT, bedrockPart -> scopeHiddenRender(bedrockPart, scopeItem -> scopeItem != null && !scopeItem.isEmpty()));
+        // 有通用瞄具时显示，用于放瞄具的导轨（如 AKM 的导轨）
+        this.setFunctionalRenderer(MOUNT, bedrockPart -> scopeHiddenRender(bedrockPart, scopeItem -> scopeItem != null && !scopeItem.isEmpty() && renderMount));
         // 无瞄具时可见，通常用于 M4 上
         this.setFunctionalRenderer(CARRY, bedrockPart -> scopeHiddenRender(bedrockPart, scopeItem -> scopeItem == null || scopeItem.isEmpty()));
         // 有瞄具时显示，折叠的机械瞄具
@@ -266,6 +267,10 @@ public class BedrockGunModel extends BedrockAnimatedModel {
                     // 读取扩容等级，为扩容弹匣渲染做准备
                     if (type == AttachmentType.EXTENDED_MAG) {
                         currentExtendMagLevel = index.getData().getExtendedMagLevel();
+                    }
+                    // 读取瞄具 Mount 的渲染需求
+                    if (type == AttachmentType.SCOPE) {
+                        renderMount = index.isShowMount();
                     }
                     // 添加需要渲染的转接口
                     if (index.getAdapterNodeName() != null) {

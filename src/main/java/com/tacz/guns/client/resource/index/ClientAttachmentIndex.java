@@ -38,6 +38,7 @@ public class ClientAttachmentIndex {
     private boolean isScope;
     private boolean isSight;
     private boolean showMuzzle;
+    private boolean showMount;
     private @Nullable String adapterNodeName;
     private @Nullable String tooltipKey;
     private Map<String, ResourceLocation> sounds;
@@ -103,6 +104,7 @@ public class ClientAttachmentIndex {
         index.isSight = display.isSight();
         index.adapterNodeName = display.getAdapterNodeName();
         index.showMuzzle = display.isShowMuzzle();
+        index.showMount = display.isShowMount();
         index.laserConfig = display.getLaserConfig();
         return display;
     }
@@ -279,6 +281,10 @@ public class ClientAttachmentIndex {
 
     public boolean isShowMuzzle() {
         return showMuzzle;
+    }
+
+    public boolean isShowMount() {
+        return showMount;
     }
 
     public Map<String, ResourceLocation> getSounds() {
