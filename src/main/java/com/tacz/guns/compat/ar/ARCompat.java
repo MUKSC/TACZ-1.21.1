@@ -15,7 +15,9 @@ public class ARCompat {
 	}
 
 	public static boolean shouldAccelerate() {
-		return LOADED && ARCompatImpl.shouldAccelerate();
+		// FIXME: AR compat
+		//return LOADED && ARCompatImpl.shouldAccelerate();
+		return false;
 	}
 
 	public static boolean isAccelerated(VertexConsumer vertexConsumer) {
