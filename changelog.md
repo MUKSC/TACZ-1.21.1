@@ -1,1 +1,1 @@
-- Disabled Accelerated Rendering compat for real this time
+- Reverted the DH incompat fix as it caused a different compatibility problem
