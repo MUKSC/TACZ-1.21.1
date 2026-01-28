@@ -1,6 +1,5 @@
 package com.tacz.guns.client.init;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.other.ThirdPersonManager;
 import com.tacz.guns.client.gui.overlay.GunHudOverlay;
@@ -96,7 +95,6 @@ public class ClientSetupEvent {
 		event.enqueueWork(ARCompat::init);
 
         Minecraft minecraft = Minecraft.getInstance();
-        RenderSystem.recordRenderCall(() -> minecraft.getMainRenderTarget().enableStencil());
         GunItemRendererWrapper.INSTANCE = new GunItemRendererWrapper();
         AmmoItemRenderer.INSTANCE = new AmmoItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
         AttachmentItemRenderer.INSTANCE = new AttachmentItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
