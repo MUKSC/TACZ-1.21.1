@@ -62,7 +62,11 @@ public class AimKey {
      * */
     @SubscribeEvent
     public static void onAimHoldingPreInput(ClientTickEvent.Post event) {
-        if (!KeyConfig.HOLD_TO_AIM.get()) {
+        try {
+            if (!KeyConfig.HOLD_TO_AIM.get()) {
+                return;
+            }
+        } catch (IllegalStateException ignored) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
