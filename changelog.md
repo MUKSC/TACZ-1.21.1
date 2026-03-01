@@ -1,1 +1,1 @@
-- Reverted the DH incompat fix as it caused a different compatibility problem
+- Improved JEI compat (thanks [@gisellevonbingen](https://github.com/gisellevonbingen))
