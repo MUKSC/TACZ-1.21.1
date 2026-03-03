@@ -6,9 +6,9 @@
 				"identifier": "geometry.mk23",
 				"texture_width": 256,
 				"texture_height": 256,
-				"visible_bounds_width": 3,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 4,
+				"visible_bounds_offset": [0, 1, 0]
 			},
 			"bones": [
 				{
@@ -5076,6 +5076,53 @@
 					"pivot": [0, 7.5, 9.0625]
 				},
 				{
+					"name": "bullet_in_shell",
+					"parent": "slide",
+					"pivot": [-0.00781, 6.8125, 4.5]
+				},
+				{
+					"name": "bullet3",
+					"parent": "bullet_in_shell",
+					"pivot": [-0.00781, 6.875, 5],
+					"rotation": [90, 0, 0],
+					"cubes": [
+						{
+							"origin": [-0.18281, 6.95, 4.825],
+							"size": [0.35, 0.075, 0.35],
+							"uv": {
+								"north": {"uv": [112, 120], "uv_size": [0.25, 0.25]},
+								"east": {"uv": [114, 120], "uv_size": [0.25, 0.25]},
+								"south": {"uv": [120, 114], "uv_size": [0.25, 0.25]},
+								"west": {"uv": [116, 120], "uv_size": [0.25, 0.25]}
+							}
+						},
+						{
+							"origin": [-0.25781, 6.875, 4.75],
+							"size": [0.5, 0.075, 0.5],
+							"uv": {
+								"north": {"uv": [110, 94], "uv_size": [0.5, 0.25]},
+								"east": {"uv": [110, 96], "uv_size": [0.5, 0.25]},
+								"south": {"uv": [110, 98], "uv_size": [0.5, 0.25]},
+								"west": {"uv": [99, 110], "uv_size": [0.5, 0.25]},
+								"up": {"uv": [8, 102], "uv_size": [0.5, 0.5]},
+								"down": {"uv": [10, 102.5], "uv_size": [0.5, -0.5]}
+							}
+						},
+						{
+							"origin": [-0.25781, 7.025, 4.75],
+							"size": [0.5, 0.925, 0.5],
+							"uv": {
+								"north": {"uv": [18, 92], "uv_size": [0.5, 1]},
+								"east": {"uv": [20, 92], "uv_size": [0.5, 1]},
+								"south": {"uv": [92, 21], "uv_size": [0.5, 1]},
+								"west": {"uv": [22, 92], "uv_size": [0.5, 1]},
+								"up": {"uv": [12, 102], "uv_size": [0.5, 0.5]},
+								"down": {"uv": [14, 102.5], "uv_size": [0.5, -0.5]}
+							}
+						}
+					]
+				},
+				{
 					"name": "additional_magazine",
 					"parent": "mk23",
 					"pivot": [0, 4, 7]
@@ -5104,7 +5151,7 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [0, 5.59376, 0.625],
+					"pivot": [0, 5.59376, 0.4375],
 					"rotation": [0, 0, -180]
 				},
 				{

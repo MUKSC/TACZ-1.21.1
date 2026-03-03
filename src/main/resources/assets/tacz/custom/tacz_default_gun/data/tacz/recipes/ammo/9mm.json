@@ -15,6 +15,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "pd_cartridges",
     "id": "tacz:9mm",
     "count": 50
   },

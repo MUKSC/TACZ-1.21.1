@@ -3,5 +3,6 @@
   "display": "tacz:b93r_display",
   "data": "tacz:b93r_data",
   "tooltip": "tacz.gun.b93r.desc",
-  "type": "pistol"
+  "type": "pistol",
+  "sort": 7
 }

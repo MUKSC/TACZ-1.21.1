@@ -4,6 +4,12 @@
 
 
   "tacz.type.ammo.name": "弹药",
+  "tacz.type.pd_cartridges.name": "个人防卫弹药",
+  "tacz.type.ifp_rifle_cartridges.name": "中/全威力步枪弹药",
+  "tacz.type.lc_specialized.name": "大口径专用弹药",
+  "tacz.type.explosives.name": "爆炸物与发射体",
+  "tacz.type.shotgun_shells.name": "霰弹弹药",
+  "tacz.type.alternative_proj.name":"非常规发射体",
   "tacz.type.pistol.name": "手枪",
   "tacz.type.rifle.name": "步枪",
   "tacz.type.rpg.name": "重型武器",
@@ -72,6 +78,7 @@
   "tacz.gun.taurus943.name": ".22 943型 左轮手枪",
   "tacz.gun.kar98.name": "毛瑟 KAR98K 制式步枪",
   "tacz.gun.hk_mk23.name": "MK23 进攻手枪",
+  "tacz.gun.taurus500.name": "陶鲁斯 左轮手枪",
 
   "tacz.gun.ak47.desc": "从雨林到海湾，永远不会错过它的身影",
   "tacz.gun.ai_awp.desc": "精确毋庸置疑",
@@ -125,13 +132,14 @@
   "tacz.gun.lonetrail.desc": "请输入文本",
   "tacz.gun.rhino357.desc": "请输入文本",
   "tacz.gun.hk_mk23.desc":"请输入文本",
+  "tacz.gun.taurus500.desc": "请输入文本",
 
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",
   "tacz.ammo.12g.name": "§912 号口径霰弹",
   "tacz.ammo.30_06.name": "§b.30-06 春田 步枪弹",
   "tacz.ammo.45acp.name": "§a.45 手枪弹",
-  "tacz.ammo.46x30.name": "§d4.6mm 穿甲弹",
+  "tacz.ammo.46x30.name": "§64.6mm 穿甲弹",
   "tacz.ammo.50ae.name": "§c.50 AE 手枪弹",
   "tacz.ammo.357mag.name": "§c.357 马格南 手枪弹",
   "tacz.ammo.50bmg.name": "§c.50 BMG 狙击弹",
@@ -148,7 +156,7 @@
   "tacz.ammo.magnum_r.name": "§c.357 马格南 手枪弹",
   "tacz.ammo.rpg_rocket.name": "§dRPG-7 火箭弹",
   "tacz.ammo.40mm.name": "§d40mm 榴弹",
-  "tacz.ammo.57x28.name": "§d5.7x28mm 穿甲弹",
+  "tacz.ammo.57x28.name": "§65.7x28mm 穿甲弹",
   "tacz.ammo.792x57.name": "§b8mm 毛瑟 步枪弹",
 
 

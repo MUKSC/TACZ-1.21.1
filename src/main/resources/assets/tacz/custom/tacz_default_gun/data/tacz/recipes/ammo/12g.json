@@ -21,6 +21,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "shotgun_shells",
     "id": "tacz:12g",
     "count": 18
   },

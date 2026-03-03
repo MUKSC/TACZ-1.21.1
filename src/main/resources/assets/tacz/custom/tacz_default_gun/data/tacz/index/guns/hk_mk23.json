@@ -3,5 +3,6 @@
   "display": "tacz:hk_mk23_display",
   "data": "tacz:hk_mk23_data",
   "tooltip": "tacz.gun.hk_mk23.desc",
-  "type": "pistol"
+  "type": "pistol",
+  "sort": 12
 }

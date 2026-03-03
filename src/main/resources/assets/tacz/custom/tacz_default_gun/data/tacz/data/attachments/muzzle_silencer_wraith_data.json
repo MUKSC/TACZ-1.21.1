@@ -4,6 +4,9 @@
     // 加数（多个配件的数值相加，作为第一个乘区）
     "addend": 0.02
   },
+  "head_shot": {
+    "addend": 0.5
+  },
   "aim_inaccuracy": {
     "multiplier": 0.75
   },

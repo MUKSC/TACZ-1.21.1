@@ -21,6 +21,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "explosives",
     "id": "tacz:rpg_rocket",
     "count": 3
   },

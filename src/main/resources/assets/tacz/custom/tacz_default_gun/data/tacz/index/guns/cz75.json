@@ -3,5 +3,6 @@
   "display": "tacz:cz75_display",
   "data": "tacz:cz75_data",
   "tooltip": "tacz.gun.cz75.desc",
-  "type": "pistol"
+  "type": "pistol",
+  "sort": 3
 }

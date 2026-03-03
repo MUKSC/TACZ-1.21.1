@@ -1,32 +1,39 @@
 {
   "ammo": "tacz:45acp",
-  "rpm": 300,
-  "script": "tacz:xmag_reload_logic",
+  "rpm": 180,
+  "script": "tacz:hk_mk23_logic",
   "script_param": {
-    "reload_feed": 1.1,
-    "reload_cooldown": 1.77,
+    "bolt_time": 0.8,
+    "bolt_feed_time": 0.63,
+
+    "tactical_feed": 1.1,
+    "tactical_cooldown": 1.77,
+    "tactical_xmag_1_feed": 1.57,
+    "tactical_xmag_1_cooldown": 2.22,
+    "tactical_xmag_2_feed": 1.77,
+    "tactical_xmag_2_cooldown": 2.43,
+
+    "empty_pump_feed": 1.8,
+    "empty_pump_cooldown": 2.2,
+    "empty_pump_xmag_1_feed": 2.07,
+    "empty_pump_xmag_1_cooldown": 2.5,
+    "empty_pump_xmag_2_feed": 2.27,
+    "empty_pump_xmag_2_cooldown": 2.7,
+
     "empty_feed": 1.53,
     "empty_cooldown": 2.07,
-    "reload_xmag_1_feed": 1.57,
-    "reload_xmag_1_cooldown": 2.22,
     "empty_xmag_1_feed": 1.8,
     "empty_xmag_1_cooldown": 2.3,
-    "reload_xmag_2_feed": 1.77,
-    "reload_xmag_2_cooldown": 2.43,
     "empty_xmag_2_feed": 2,
-    "empty_xmag_2_cooldown": 2.53,
-    "reload_xmag_3_feed": 1.77,
-    "reload_xmag_3_cooldown": 2.43,
-    "empty_xmag_3_feed": 2,
-    "empty_xmag_3_cooldown": 2.53
+    "empty_xmag_2_cooldown": 2.53
   },
   "bullet": {
     "life": 1,
     "bullet_amount": 1,
-    "damage": 15,
+    "damage": 16,
     "tracer_count_interval": 0,
     "extra_damage": {
-      "armor_ignore": 0.25,
+      "armor_ignore": 0.5,
       "head_shot_multiplier": 1.5,
       "damage_adjust": [
         {"distance": 20, "damage": 16},
@@ -34,7 +41,7 @@
         {"distance": "infinite", "damage": 9}
       ]
     },
-    "speed": 160,
+    "speed": 200,
     "gravity": 0.15,
     "knockback": 0,
     "friction": 0.035,
@@ -54,7 +61,7 @@
     20,
     24
   ],
-  "bolt": "closed_bolt",
+  "bolt": "manual_action",
   "reload": {
     "type": "magazine",
     "feed": {
@@ -71,8 +78,17 @@
   "aim_time": 0.16,
   "sprint_time": 0.05,
   "weight": 1.4,
+  "movement_speed": {
+    // 默认修正
+    "base": 0.0,
+    // 瞄准时
+    "aim": -0.1,
+    // 换弹时
+    "reload": 0.0
+  },
   "fire_mode": [
-    "semi"
+    "semi",
+    "burst"
   ],
   "allow_attachment_types": [
     "scope",
@@ -80,6 +96,26 @@
     "extended_mag",
     "laser"
   ],
+  "burst_data": {
+    "continuous_shoot": false,
+    "count": 1,
+    "bpm": 1800,
+    "min_interval": 0.1
+  },
+  "fire_mode_adjust": {
+    // 全自动状态的数值调整，如无调整可不写
+    "burst": {
+      // 加算，全自动模式的开火数值调整，如无调整可不写
+      "damage": -4,
+      "rpm": 0,
+      "speed": -30,
+      "knockback": 0,
+      "armor_ignore": -0.25,
+      "head_shot_multiplier": 0,
+      "aim_inaccuracy": 0.05,
+      "other_inaccuracy": 0.5
+    }
+  },
   "recoil": {
     "pitch": [
       {"time": 0, "value": [1.5, 1.5]},
@@ -95,10 +131,10 @@
     ]
   },
   "inaccuracy": {
-    "stand": 3,
-    "move": 4,
-    "sneak": 2,
-    "lie": 1.5,
-    "aim": 0.1
+    "stand": 2.25,
+    "move": 3.25,
+    "sneak": 1.25,
+    "lie": 0.75,
+    "aim": 0.05
   }
 }
