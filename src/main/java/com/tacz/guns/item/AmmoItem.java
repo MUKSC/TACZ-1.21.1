@@ -68,10 +68,14 @@ public class AmmoItem extends Item implements AmmoItemDataAccessor {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
+            AmmoItemRenderer renderer;
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft minecraft = Minecraft.getInstance();
-                return new AmmoItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                if (renderer == null) {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    renderer = new AmmoItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                }
+                return renderer;
             }
         });
     }

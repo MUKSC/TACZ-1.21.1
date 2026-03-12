@@ -33,10 +33,15 @@ public class GunSmithTableItem extends BlockItem implements BlockItemDataAccesso
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
+            GunSmithTableItemRenderer renderer;
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft minecraft = Minecraft.getInstance();
-                return new GunSmithTableItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                if (renderer == null) {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    renderer = new GunSmithTableItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                }
+
+                return renderer;
             }
         });
     }

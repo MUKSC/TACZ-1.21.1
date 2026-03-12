@@ -361,9 +361,14 @@ public abstract class AbstractGunItem extends Item implements IGun, IAnimationIt
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
+            GunItemRendererWrapper renderer;
+
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return new GunItemRendererWrapper();
+                if (renderer == null) {
+                    renderer = new GunItemRendererWrapper();
+                }
+                return renderer;
             }
         });
     }

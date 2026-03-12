@@ -69,10 +69,15 @@ public class AttachmentItem extends Item implements AttachmentItemDataAccessor {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
+            AttachmentItemRenderer renderer;
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft minecraft = Minecraft.getInstance();
-                return new AttachmentItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                if (renderer == null) {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    renderer = new AttachmentItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
+                }
+
+                return renderer;
             }
         });
     }
