@@ -95,6 +95,12 @@ public class GunDisplay implements IDisplay {
     @SerializedName("laser")
     private LaserConfig laserConfig;
 
+    /**
+     * @since 1.1.8
+     */
+    @SerializedName("enable_transparency")
+    private boolean enableTransparency;
+
     public String getModelType() {
         return modelType;
     }
@@ -227,6 +233,10 @@ public class GunDisplay implements IDisplay {
     @Nullable
     public LaserConfig getLaserConfig() {
         return laserConfig;
+    }
+
+    public boolean enablesTransparency() {
+        return enableTransparency;
     }
 
     public boolean is3rdFixedHand() {

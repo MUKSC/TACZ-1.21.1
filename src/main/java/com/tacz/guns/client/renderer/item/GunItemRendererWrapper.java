@@ -212,7 +212,9 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
                 gunModel.setRenderHand(false);
             }
             // 调用枪械模型渲染
-            RenderType renderType = RenderType.entityCutout(display.getModelTexture());
+            RenderType renderType = display.enablesTransparency()
+                    ? RenderType.entityTranslucent(display.getModelTexture())
+                    : RenderType.entityCutout(display.getModelTexture());
             gunModel.render(poseStack, stack, ctx, renderType, light, OverlayTexture.NO_OVERLAY);
             // 缓存枪口位置，为第一人称曳光弹渲染作准备
             cacheMuzzlePosition(poseStack, gunModel);

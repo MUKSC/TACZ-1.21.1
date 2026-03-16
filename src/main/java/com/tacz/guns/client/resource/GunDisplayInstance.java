@@ -74,6 +74,7 @@ public class GunDisplayInstance {
     private AmmoCountStyle ammoCountStyle = AmmoCountStyle.NORMAL;
     private DamageStyle damageStyle = DamageStyle.PER_PROJECTILE;
     private @Nullable LaserConfig laserConfig;
+    private boolean enableTransparency;
 
     GunDisplayInstance(GunDisplay display) {
         checkTextureAndModel(display);
@@ -95,6 +96,7 @@ public class GunDisplayInstance {
         ammoCountStyle = display.getAmmoCountStyle();
         damageStyle = display.getDamageStyle();
         laserConfig = display.getLaserConfig();
+        enableTransparency = display.enablesTransparency();
     }
 
     public static GunDisplayInstance create(GunDisplay display)  throws IllegalArgumentException {
@@ -459,5 +461,9 @@ public class GunDisplayInstance {
 
     public @Nullable LaserConfig getLaserConfig() {
         return laserConfig;
+    }
+
+    public boolean enablesTransparency() {
+        return enableTransparency;
     }
 }
