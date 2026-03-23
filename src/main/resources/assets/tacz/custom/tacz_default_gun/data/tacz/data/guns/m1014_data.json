@@ -90,11 +90,11 @@
     ]
   },
   "inaccuracy": {
-    "stand": 4.25,
-    "move": 4.25,
-    "sneak": 4.1,
-    "lie": 4.1,
-    "aim": 4
+    "stand": 4.1,
+    "move": 4.1,
+    "sneak": 4,
+    "lie": 3.95,
+    "aim": 3.9
   },
   "melee": {
     "distance": 1.25,

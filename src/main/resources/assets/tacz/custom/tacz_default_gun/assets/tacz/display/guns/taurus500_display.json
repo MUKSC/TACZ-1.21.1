@@ -30,12 +30,10 @@
     "scale": 0.7
   },
   "sounds": {
-    "draw": "tacz:rhino357/rhino_draw",
-    "put_away": "tacz:rhino357/rhino_put_away",
-    "shoot": "tacz:rhino357/rhino_shoot",
-    "shoot_3p": "tacz:deagle/deagle_shoot_3p",
-    "silence": "tacz:deagle/deagle_silence",
-    "silence_3p": "tacz:deagle/deagle_silence_3p"
+    "draw": "tacz:taurus500/taurus500_draw",
+    "put_away": "tacz:taurus500/taurus500_put_away",
+    "shoot": "tacz:taurus500/taurus500_shoot",
+    "shoot_3p": "tacz:taurus500/taurus500_shoot_3p"
   },
   "offhand_show": {
     "pos": [4, 13, -2],

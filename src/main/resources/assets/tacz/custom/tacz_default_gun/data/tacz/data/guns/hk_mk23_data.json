@@ -1,6 +1,6 @@
 {
   "ammo": "tacz:45acp",
-  "rpm": 180,
+  "rpm": 150,
   "script": "tacz:hk_mk23_logic",
   "script_param": {
     "bolt_time": 0.8,
@@ -30,18 +30,18 @@
   "bullet": {
     "life": 1,
     "bullet_amount": 1,
-    "damage": 16,
+    "damage": 12,
     "tracer_count_interval": 0,
     "extra_damage": {
-      "armor_ignore": 0.5,
-      "head_shot_multiplier": 1.5,
+      "armor_ignore": 0.2,
+      "head_shot_multiplier": 1.75,
       "damage_adjust": [
-        {"distance": 20, "damage": 16},
-        {"distance": 50, "damage": 14},
+        {"distance": 20, "damage": 12},
+        {"distance": 50, "damage": 11},
         {"distance": "infinite", "damage": 9}
       ]
     },
-    "speed": 200,
+    "speed": 190,
     "gravity": 0.15,
     "knockback": 0,
     "friction": 0.035,
@@ -75,7 +75,7 @@
   },
   "draw_time": 0.46,
   "put_away_time": 0.28,
-  "aim_time": 0.16,
+  "aim_time": 0.13,
   "sprint_time": 0.05,
   "weight": 1.4,
   "movement_speed": {
@@ -99,19 +99,19 @@
   "burst_data": {
     "continuous_shoot": false,
     "count": 1,
-    "bpm": 1800,
-    "min_interval": 0.1
+    "bpm": 1,
+    "min_interval": 0.05
   },
   "fire_mode_adjust": {
     // 全自动状态的数值调整，如无调整可不写
     "burst": {
       // 加算，全自动模式的开火数值调整，如无调整可不写
-      "damage": -4,
-      "rpm": 0,
-      "speed": -30,
+      "damage": 0,
+      "rpm": 50,
+      "speed": 0,
       "knockback": 0,
-      "armor_ignore": -0.25,
-      "head_shot_multiplier": 0,
+      "armor_ignore": 0,
+      "head_shot_multiplier": -0.25,
       "aim_inaccuracy": 0.05,
       "other_inaccuracy": 0.5
     }

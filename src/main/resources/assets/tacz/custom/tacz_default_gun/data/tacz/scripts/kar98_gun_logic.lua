@@ -80,8 +80,11 @@ function M.tick_reload(api)
         if (reload_time < clip_load_feed) then
             return EMPTY_RELOAD_FEEDING, clip_load_feed - reload_time
         elseif (reload_time >= clip_load_feed and reload_time < clip_load) then
-            api:setAmmoInBarrel(api:consumeAmmoFromPlayer(1))
-            api:putAmmoInMagazine(api:isReloadingNeedConsumeAmmo() and api:consumeAmmoFromPlayer(cache.needed_count + 1) or cache.needed_count + 1)
+            if (cache.reloaded_count == 0) then
+                api:setAmmoInBarrel(api:consumeAmmoFromPlayer(1))
+                api:putAmmoInMagazine(api:isReloadingNeedConsumeAmmo() and api:consumeAmmoFromPlayer(cache.needed_count) or cache.needed_count)
+                cache.reloaded_count = 5
+            end
             return EMPTY_RELOAD_FINISHING, clip_load - reload_time
         else
             return NOT_RELOADING, -1
