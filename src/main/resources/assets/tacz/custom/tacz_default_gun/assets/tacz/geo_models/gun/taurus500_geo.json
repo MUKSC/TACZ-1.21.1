@@ -7325,7 +7325,7 @@
 				{
 					"name": "iron_view",
 					"parent": "refit",
-					"pivot": [0, 12.22667, 13.51372]
+					"pivot": [0, 12.16417, 14.5]
 				},
 				{
 					"name": "idle_view",
@@ -7336,18 +7336,18 @@
 					"name": "refit_view",
 					"parent": "refit",
 					"pivot": [13, 8.75, -1],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_extended_mag_view",
 					"parent": "refit",
-					"pivot": [7, 10.25, -0.25],
+					"pivot": [11, 10.25, 0.75],
 					"rotation": [0, 112.5, 0]
 				},
 				{
 					"name": "refit_scope_view",
 					"parent": "refit",
-					"pivot": [5, 13.2, 1.5],
+					"pivot": [9, 13.2, 4.5],
 					"rotation": [0, 47.5, 0]
 				},
 				{
@@ -7359,12 +7359,12 @@
 				{
 					"name": "refit_laser_view",
 					"parent": "refit",
-					"pivot": [7, 8.75, -2.25],
+					"pivot": [12, 8.75, -2.25],
 					"rotation": [0, 70, 0]
 				},
 				{
 					"name": "camera",
-					"pivot": [2.87, 13.39, 17.12]
+					"pivot": [4, 12, 17]
 				}
 			]
 		}

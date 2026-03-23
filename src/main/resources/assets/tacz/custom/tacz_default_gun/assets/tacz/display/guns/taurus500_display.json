@@ -18,6 +18,8 @@
       "fixed": [1.2, 1.2, 1.2]
     }
   },
+  "iron_zoom": 2,
+  "zoom_model_fov": 45,
   "shell": {
     "initial_velocity": [8.0, 5.0, -0.5],
     "random_velocity": [2.5, 1.5, 0.25],
@@ -27,7 +29,7 @@
   },
   "muzzle_flash": {
     "texture": "tacz:flash/common_muzzle_flash",
-    "scale": 0.7
+    "scale": 1.5
   },
   "sounds": {
     "draw": "tacz:taurus500/taurus500_draw",
