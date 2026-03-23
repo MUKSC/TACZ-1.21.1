@@ -6,28 +6,28 @@
     5,
     5
   ],
-  "rpm": 200,
+  "rpm": 75,
   "bullet": {
     "life": 0.85,
     "bullet_amount": 1,
-    "damage": 25,
+    "damage": 35,
     "tracer_count_interval": 0,
     "extra_damage": {
       "armor_ignore": 0.50,
       "head_shot_multiplier": 2,
       "damage_adjust": [
-        {"distance": 30, "damage": 25},
-        {"distance": 40, "damage": 20},
-        {"distance": 50, "damage": 17.5},
-        {"distance": "infinite", "damage": 14}
+        {"distance": 40, "damage": 35},
+        {"distance": 55, "damage": 25},
+        {"distance": 75, "damage": 20},
+        {"distance": "infinite", "damage": 18}
       ]
     },
-    "speed": 190,
+    "speed": 250,
     "gravity": 0.15,
-    "knockback": 0.075,
+    "knockback": 0.5,
     "friction": 0.03,
     "ignite": false,
-    "pierce": 1,
+    "pierce": 3,
     "explosion": {
       "explode": false,
       "damage": 30,
@@ -64,9 +64,9 @@
       // 蓄力模式为delay时，此值无效（始终重置为0）
       "decrease_on_fire": 0.5,
       // 最大蓄力进度
-      "max_charge": 0.5,
+      "max_charge": 0.3,
       // 开火阈值，蓄力至少进度达到此值时允许开火(仅hold模式生效)
-      "fire_threshold": 0.5
+      "fire_threshold": 0.3
     }
   },
   "draw_time": 0.47,
@@ -88,6 +88,8 @@
     "laser",
     "extended_mag"
   ],
+  "can_crawl": true,
+  "can_slide": false,
   "recoil": {
     "pitch": [
       {"time": 0, "value": [3.65, 3.65]},
