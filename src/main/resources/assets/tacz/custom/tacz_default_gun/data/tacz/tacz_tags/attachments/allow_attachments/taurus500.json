@@ -1,7 +1,7 @@
 [
   "#tacz:scope_scope",
-  "#tacz:scope_sight",
+  "#tacz:scope_lowsight",
   "#tacz:pistol_laser",
-  "#tacz:mk23_laser",
+  "#tacz:deagle_sight",
   "#tacz:ammo_mod"
 ]

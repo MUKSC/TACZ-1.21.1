@@ -6,20 +6,20 @@
     5,
     5
   ],
-  "rpm": 75,
+  "rpm": 90,
   "bullet": {
     "life": 0.85,
     "bullet_amount": 1,
-    "damage": 35,
+    "damage": 40,
     "tracer_count_interval": 0,
     "extra_damage": {
       "armor_ignore": 0.50,
       "head_shot_multiplier": 2,
       "damage_adjust": [
-        {"distance": 40, "damage": 35},
-        {"distance": 55, "damage": 25},
+        {"distance": 40, "damage": 40},
+        {"distance": 55, "damage": 30},
         {"distance": 75, "damage": 20},
-        {"distance": "infinite", "damage": 18}
+        {"distance": "infinite", "damage": 15}
       ]
     },
     "speed": 250,
@@ -64,15 +64,15 @@
       // 蓄力模式为delay时，此值无效（始终重置为0）
       "decrease_on_fire": 0.5,
       // 最大蓄力进度
-      "max_charge": 0.3,
+      "max_charge": 0.5,
       // 开火阈值，蓄力至少进度达到此值时允许开火(仅hold模式生效)
-      "fire_threshold": 0.3
+      "fire_threshold": 0.5
     }
   },
   "draw_time": 0.47,
   "put_away_time": 0.4,
-  "aim_time": 0.2,
-  "sprint_time": 0.2,
+  "aim_time": 0.18,
+  "sprint_time": 0.15,
   "weight": 2.2,
   "movement_speed": {
     "base": 0.0,
@@ -92,9 +92,9 @@
   "can_slide": false,
   "recoil": {
     "pitch": [
-      {"time": 0, "value": [3.65, 3.65]},
-      {"time": 0.08, "value": [3.25, 3.25]},
-      {"time": 0.16, "value": [3.4, 3.4]},
+      {"time": 0, "value": [5.65, 5.65]},
+      {"time": 0.08, "value": [5.25, 5.25]},
+      {"time": 0.16, "value": [5.4, 5.4]},
       {"time": 0.35, "value": [-0.125, -0.125]},
       {"time": 0.48, "value": [0.225, 0.225]},
       {"time": 0.7, "value": [0, 0]},
@@ -104,7 +104,7 @@
       {"time": 0, "value": [-2.1, 0.1]},
       {"time": 0.08, "value": [-1.65, 0.25]},
       {"time": 0.16, "value": [-1.9, 0.05]},
-      {"time": 0.5, "value": [0, 0]}
+      {"time": 0.24, "value": [0, 0]}
     ]
   },
   "inaccuracy": {
