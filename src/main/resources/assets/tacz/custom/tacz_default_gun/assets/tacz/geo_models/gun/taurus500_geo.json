@@ -12,6 +12,10 @@
 			},
 			"bones": [
 				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0]
+				},
+				{
 					"name": "root",
 					"pivot": [0, 9, 4]
 				},
@@ -3029,7 +3033,7 @@
 					"pivot": [0, 8.5, 0]
 				},
 				{
-					"name": "sight",
+					"name": "ironsight",
 					"parent": "base_gun",
 					"pivot": [0, 11.85928, 5.22237],
 					"cubes": [
@@ -3135,7 +3139,7 @@
 				},
 				{
 					"name": "sight_illuminated",
-					"parent": "sight",
+					"parent": "ironsight",
 					"pivot": [-0.00453, 12.10153, -3.5223],
 					"cubes": [
 						{
@@ -7156,12 +7160,12 @@
 				{
 					"name": "scope_pos",
 					"parent": "positioning2",
-					"pivot": [0, 11.81453, -1.00103]
+					"pivot": [0, 11.81453, 0.24897]
 				},
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [-0.0032, 9.06058, -3.00938],
+					"pivot": [-0.0032, 9.06058, -1.88438],
 					"rotation": [0, 0, -180]
 				},
 				{
@@ -7325,7 +7329,7 @@
 				{
 					"name": "iron_view",
 					"parent": "refit",
-					"pivot": [0, 12.16417, 14.5]
+					"pivot": [0, 12.1875, 24]
 				},
 				{
 					"name": "idle_view",
@@ -7335,7 +7339,7 @@
 				{
 					"name": "refit_view",
 					"parent": "refit",
-					"pivot": [13, 8.75, -1],
+					"pivot": [16, 8.75, -1],
 					"rotation": [0, 89.9, 0]
 				},
 				{
@@ -7364,7 +7368,7 @@
 				},
 				{
 					"name": "camera",
-					"pivot": [4, 12, 17]
+					"pivot": [3.5, 12, 16]
 				}
 			]
 		}
