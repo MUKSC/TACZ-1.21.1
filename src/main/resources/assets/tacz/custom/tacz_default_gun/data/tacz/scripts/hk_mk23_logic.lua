@@ -1,37 +1,4 @@
 local M = {}
--- =========================================================== ↓ 拉栓 ↓ =============
-function M.start_bolt(api)
-    if (api:getFireMode() == BURST) then
-        if (not api:hasAmmoInBarrel()) then
-            if (api:removeAmmoFromMagazine(1) ~= 0) then
-                api:setAmmoInBarrel(true);
-            end
-        end
-        return false
-    else
-        return true
-    end
-end
-
-function M.tick_bolt(api)
-    local params = api:getScriptParams()
-    local total_bolt_time = params.bolt_time * 1000
-    local bolt_feed_time = params.bolt_feed_time * 1000
-    if (total_bolt_time == nil or bolt_feed_time == nil) then
-        return false
-    end
-    local bolt_time = api:getBoltTime()
-    if (bolt_time < bolt_feed_time) then
-        return true
-    else
-        if (not api:hasAmmoInBarrel()) then
-            if (api:removeAmmoFromMagazine(1) ~= 0) then
-                api:setAmmoInBarrel(true);
-            end
-        end
-        return bolt_time < total_bolt_time
-    end
-end
 -- =========================================================== ↓ 换弹 ↓ =============
 function M.start_reload(api)
     local cache = {
