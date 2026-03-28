@@ -7,11 +7,11 @@
     "texture": "tacz:attachment/lod/sight_fastfire_pistol"
   },
   "zoom": [
-    1.25
+    1.5
   ],
   "scope": false,
   "sight": true,
-  "fov": 70.0,
+  "fov": 45.0,
   "sounds": {
     "install": "tacz:attachments/scope_general_c",
     "uninstall": "tacz:attachments/scope_general_c"
