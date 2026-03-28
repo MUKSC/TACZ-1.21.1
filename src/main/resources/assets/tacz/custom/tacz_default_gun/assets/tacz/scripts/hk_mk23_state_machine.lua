@@ -330,7 +330,7 @@ function gun_kick_state.transition(this, context, input)
     if (input == INPUT_SHOOT) then
         local track = context:findIdleTrack(GUN_KICK_TRACK_LINE, false)
         -- 这里是混合动画，一般是可叠加的 gun kick
-        if (context:getAmmoCount() == 0) then
+        if ((context:getAmmoCount() == 0) and (context:getFireMode() == BURST)) then
             context:runAnimation("shoot_last", track, true, PLAY_ONCE_STOP, 0)
         else
             if (context:getFireMode() == SEMI) then
