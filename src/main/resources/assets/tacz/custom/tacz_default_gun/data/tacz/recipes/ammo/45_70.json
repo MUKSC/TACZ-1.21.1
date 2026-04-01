@@ -21,7 +21,7 @@
   ],
   "result": {
     "type": "ammo",
-    "group": "ifp_rifle_cartridges",
+    "group": "lc_specialized",
     "id": "tacz:45_70",
     "count": 36
   },

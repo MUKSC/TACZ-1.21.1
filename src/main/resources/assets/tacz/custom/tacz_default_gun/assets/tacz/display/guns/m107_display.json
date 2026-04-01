@@ -9,6 +9,7 @@
   "slot": "tacz:gun/slot/m107",
   "animation": "tacz:m107",
   "use_default_animation": "rifle",
+  "state_machine": "tacz:m107_state_machine",
   "transform": {
     "scale": {
       "thirdperson": [0.6, 0.6, 0.6],
