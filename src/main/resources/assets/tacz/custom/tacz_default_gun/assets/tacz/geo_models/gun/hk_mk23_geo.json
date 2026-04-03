@@ -5190,13 +5190,13 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 7.76563, 16.5]
+					"pivot": [0, 7.76563, 18.5]
 				},
 				{
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [16, 5, 3.5],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89, 0]
 				},
 				{
 					"name": "refit_scope_view",

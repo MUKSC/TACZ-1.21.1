@@ -1,5 +1,6 @@
 {
   "ammo": "tacz:45acp",
+  "can_slide": false,
   "rpm": 50,
   "script": "tacz:hk_mk23_logic",
   "script_param": {
@@ -34,14 +35,14 @@
     "tracer_count_interval": 0,
     "extra_damage": {
       "armor_ignore": 0.2,
-      "head_shot_multiplier": 1.75,
+      "head_shot_multiplier": 2.5,
       "damage_adjust": [
         {"distance": 20, "damage": 12},
-        {"distance": 50, "damage": 11},
-        {"distance": "infinite", "damage": 9}
+        {"distance": 50, "damage": 9},
+        {"distance": "infinite", "damage": 7}
       ]
     },
-    "speed": 190,
+    "speed": 210,
     "gravity": 0.15,
     "knockback": 0,
     "friction": 0.035,
@@ -87,8 +88,8 @@
     "reload": 0.0
   },
   "fire_mode": [
-    "semi",
-    "burst"
+    "burst",
+    "semi"
   ],
   "allow_attachment_types": [
     "scope",
@@ -99,8 +100,8 @@
   "burst_data": {
     "continuous_shoot": false,
     "count": 1,
-    "bpm": 1200,
-    "min_interval": 0.1
+    "bpm": 350,
+    "min_interval": 0.18
   },
   "fire_mode_adjust": {
     // 全自动状态的数值调整，如无调整可不写
@@ -108,12 +109,12 @@
       // 加算，全自动模式的开火数值调整，如无调整可不写
       "damage": 0,
       "rpm": 130,
-      "speed": 0,
+      "speed": -50,
       "knockback": 0,
-      "armor_ignore": 0,
-      "head_shot_multiplier": -0.25,
-      "aim_inaccuracy": 0.05,
-      "other_inaccuracy": 0.5
+      "armor_ignore": -0.1,
+      "head_shot_multiplier": -1.25,
+      "aim_inaccuracy": 0.1,
+      "other_inaccuracy": 1.5
     }
   },
   "recoil": {
@@ -131,10 +132,10 @@
     ]
   },
   "inaccuracy": {
-    "stand": 2.25,
-    "move": 3.25,
-    "sneak": 1.25,
-    "lie": 0.75,
-    "aim": 0.05
+    "stand": 0.5,
+    "move": 1.5,
+    "sneak": 0.25,
+    "lie": 0.1,
+    "aim": 0.025
   }
 }
