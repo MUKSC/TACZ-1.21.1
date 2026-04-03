@@ -99,7 +99,6 @@
   },
   "allow_attachment_types": [
 	"scope",
-    "muzzle",
     "extended_mag"
   ],
   // 近战相关

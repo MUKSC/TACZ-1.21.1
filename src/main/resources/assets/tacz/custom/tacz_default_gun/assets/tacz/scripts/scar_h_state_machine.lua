@@ -35,9 +35,9 @@ local function runReloadAnimation(context)
         if (ext == 0) then
             context:runAnimation("reload_empty", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
-            context:runAnimation("inspect_empty_xmag_12", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("reload_empty_xmag_1", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 2) then
-            context:runAnimation("inspect_empty_xmag_12", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("reload_empty_xmag_2", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 3) then
             context:runAnimation("reload_empty_xmag_3", track, false, PLAY_ONCE_STOP, 0.2)
         else
