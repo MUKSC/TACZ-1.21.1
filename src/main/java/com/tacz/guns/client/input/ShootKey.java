@@ -38,7 +38,7 @@ public class ShootKey {
 
     @SubscribeEvent
     public static void autoShoot(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END && !isInGame()) {
+        if (event.phase != TickEvent.Phase.END || !isInGame()) {
             return;
         }
         LocalPlayerSprint.stopSprint = false;
