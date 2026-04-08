@@ -62,11 +62,11 @@
       // 开火模式为全自动且蓄力模式为auto时，如果不重置的话第一发完成蓄力后可以按住扳机持续开火
       // 蓄力模式为hold时，如果开火后蓄力进度仍然大于阈值，即使松开扳机也会不受控制的持续开火（如果大于阈值的话不会触发decrease_per_tick）
       // 蓄力模式为delay时，此值无效（始终重置为0）
-      "decrease_on_fire": 0.2,
+      "decrease_on_fire": 0.3,
       // 最大蓄力进度
-      "max_charge": 0.2,
+      "max_charge": 0.3,
       // 开火阈值，蓄力至少进度达到此值时允许开火(仅hold模式生效)
-      "fire_threshold": 0.2
+      "fire_threshold": 0.3
     }
   },
   "draw_time": 0.43,

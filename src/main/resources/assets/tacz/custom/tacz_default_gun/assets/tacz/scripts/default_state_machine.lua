@@ -196,7 +196,9 @@ local main_track_states = {
         isfinal = -1
     },
     -- 刺刀攻击的计数器
-    bayonet_counter = 0
+    bayonet_counter = 0,
+    -- 延迟扳机
+    charge = {}
 }
 
 -- 转出 start (其实就是掏枪)
@@ -700,6 +702,8 @@ local M = {
     INPUT_OVER_HEAT = "over_heat",
     INPUT_COOLING_HEAT = "cooling_heat",
     INPUT_INSPECT_RETREAT = "inspect_retreat",
+    INPUT_CHARING = "input_charging",
+    INPUT_CHARING_EXIT = "input_charging_exit",
     INPUT_AIM = "aim",
     INPUT_AIM_RETREAT = "aim_retreat"
 }
@@ -709,6 +713,7 @@ function M:initialize(context)
     context:ensureTrackLineSize(track_line_top.value)
     context:ensureTracksAmount(STATIC_TRACK_LINE, static_track_top.value)
     context:ensureTracksAmount(BLENDING_TRACK_LINE, blending_track_top.value)
+    self.main_track_states.charge.can_charge = true
     self.movement_track_states.run.mode = -1
     self.movement_track_states.walk.mode = -1
 end
