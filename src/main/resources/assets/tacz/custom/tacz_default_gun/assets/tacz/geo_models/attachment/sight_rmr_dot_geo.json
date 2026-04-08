@@ -13,7 +13,7 @@
 			"bones": [
 				{
 					"name": "scope_view",
-					"pivot": [0, 0.75, 16]
+					"pivot": [0, 0.75, 14]
 				},
 				{
 					"name": "scope_body",
