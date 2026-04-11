@@ -3134,7 +3134,7 @@
 					"name": "refit_view",
 					"parent": "views",
 					"pivot": [25, 9, 0],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "idle_view",

@@ -6505,7 +6505,7 @@
 				{
 					"name": "fixed",
 					"parent": "positioning",
-					"pivot": [0.975, 8.0875, 1.95],
+					"pivot": [0.975, 8.0875, 0.7],
 					"rotation": [0, 90, 0]
 				},
 				{
@@ -6537,7 +6537,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [15, 10, -1],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

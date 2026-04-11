@@ -287,12 +287,20 @@ function main_track_states.inspect.update(this, context)
     if (context:isStopped(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))) then
         context:trigger(this.INPUT_INSPECT_RETREAT)
     end
+    if (context:isCharging()) then
+        context:trigger(this.INPUT_INSPECT_BREAK_OUT)
+    end
 end
 
 -- 转出检视态
 function main_track_states.inspect.transition(this, context, input)
     -- 当收到来自 update 的退出信号时返回到闲置态,此时不需要停止动画是因为在 update 里是动画已经停止了才发出的退出信号
     if (input == this.INPUT_INSPECT_RETREAT) then
+        return this.main_track_states.idle
+    end
+    -- 当收到来自 update 的打断信号时返回到闲置态并停止动画
+    if (input == this.INPUT_INSPECT_BREAK_OUT) then
+        context:stopAnimation(context:getTrack(STATIC_TRACK_LINE, MAIN_TRACK))
         return this.main_track_states.idle
     end
     -- 特殊地,射击与瞄准应当打断检视,当检测到射击输入或瞄准进度不为0时应该直接停止动画并返回闲置态
@@ -702,6 +710,7 @@ local M = {
     INPUT_OVER_HEAT = "over_heat",
     INPUT_COOLING_HEAT = "cooling_heat",
     INPUT_INSPECT_RETREAT = "inspect_retreat",
+    INPUT_INSPECT_BREAK_OUT = "inspect_break_out",
     INPUT_CHARING = "input_charging",
     INPUT_CHARING_EXIT = "input_charging_exit",
     INPUT_AIM = "aim",

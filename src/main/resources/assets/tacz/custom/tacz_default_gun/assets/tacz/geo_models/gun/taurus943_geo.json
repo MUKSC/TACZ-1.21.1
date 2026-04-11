@@ -1,5 +1,5 @@
 {
-	"format_version": "1.21.0",
+	"format_version": "1.12.0",
 	"minecraft:geometry": [
 		{
 			"description": {
@@ -5085,18 +5085,18 @@
 				{
 					"name": "thirdperson_hand",
 					"parent": "positioning",
-					"pivot": [0, 9.725, -4.35]
+					"pivot": [0, 4.225, 1.00938]
 				},
 				{
 					"name": "ground",
 					"parent": "positioning",
-					"pivot": [0, -1.9, -0.35]
+					"pivot": [0, -0.5875, -0.975]
 				},
 				{
 					"name": "fixed",
 					"parent": "positioning",
-					"pivot": [0.7, 3.6, -0.175],
-					"rotation": [0, -90, 0]
+					"pivot": [0.7, 5.475, -0.175],
+					"rotation": [0, 90, 0]
 				},
 				{
 					"name": "refit",
@@ -5106,7 +5106,7 @@
 					"name": "refit_view",
 					"parent": "refit",
 					"pivot": [12, 5.25, 0],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_extended_mag_view",

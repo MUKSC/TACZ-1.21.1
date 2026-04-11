@@ -3260,7 +3260,7 @@
 				{
 					"name": "refit_view",
 					"pivot": [25, 5, 2],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "positioning",

@@ -100,14 +100,14 @@
     "continuous_shoot": false,
     "count": 1,
     "bpm": 1200,
-    "min_interval": 0.1
+    "min_interval": 0.2
   },
   "fire_mode_adjust": {
     // 全自动状态的数值调整，如无调整可不写
     "burst": {
       // 加算，全自动模式的开火数值调整，如无调整可不写
       "damage": 0,
-      "rpm": 130,
+      "rpm": 250,
       "speed": 0,
       "knockback": 0,
       "armor_ignore": 0,

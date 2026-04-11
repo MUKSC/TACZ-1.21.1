@@ -3755,7 +3755,7 @@
 					"name": "refit_view",
 					"parent": "refit",
 					"pivot": [13, 5, 0],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_extended_mag_view",

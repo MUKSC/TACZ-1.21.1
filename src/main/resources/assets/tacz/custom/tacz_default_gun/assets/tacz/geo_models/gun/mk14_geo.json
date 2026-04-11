@@ -9740,7 +9740,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [23, 6.2, 3],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_grip_view",

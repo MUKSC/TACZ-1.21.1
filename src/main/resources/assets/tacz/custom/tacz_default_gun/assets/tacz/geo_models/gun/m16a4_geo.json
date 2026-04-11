@@ -13186,7 +13186,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [23, 9, 0],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_stock_view",

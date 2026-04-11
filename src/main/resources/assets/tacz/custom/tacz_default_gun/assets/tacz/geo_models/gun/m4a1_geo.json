@@ -12999,7 +12999,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [23, 10, -7],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

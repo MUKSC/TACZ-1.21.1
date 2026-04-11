@@ -79,6 +79,7 @@
   "tacz.gun.kar98.name": "毛瑟 KAR98K 制式步枪",
   "tacz.gun.hk_mk23.name": "MK23 进攻手枪",
   "tacz.gun.taurus500.name": "金牛座 \"狂暴猎手\" 手炮",
+  "tacz.gun.m9a4.name": "伯莱塔 M9A4 手枪",
 
   "tacz.gun.ak47.desc": "从雨林到海湾，永远不会错过它的身影",
   "tacz.gun.ai_awp.desc": "精确毋庸置疑",
@@ -133,6 +134,7 @@
   "tacz.gun.rhino357.desc": "或许你不想和这只犀牛打交道",
   "tacz.gun.hk_mk23.desc": "卡车下的老朋友，影子摩西的回音。",
   "tacz.gun.taurus500.desc": "开枪和挨枪子儿都一样遭罪",
+  "tacz.gun.m9a4.desc": "请输入文本",
 
 
   "tacz.ammo.9mm.name": "§a9mm 手枪弹",
