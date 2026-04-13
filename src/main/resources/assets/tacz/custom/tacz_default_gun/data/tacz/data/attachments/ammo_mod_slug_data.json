@@ -1,16 +1,10 @@
 {
   "weight": 0.6,
   "inaccuracy": {
-    "multiplier": 0.25
-  },
-  "sneak_inaccuracy": {
-    "multiplier": 0.25
-  },
-  "lie_inaccuracy": {
-    "multiplier": 0.25
+    "multiplier": 1
   },
   "aim_inaccuracy": {
-    "multiplier": 0.25
+    "multiplier": 0.04
   },
   "armor_ignore": {
     "function": "if (x > 0.5) then y = x*1.5 else y = x*1.75 end"
