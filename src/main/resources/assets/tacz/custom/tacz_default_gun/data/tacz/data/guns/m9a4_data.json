@@ -57,6 +57,7 @@
   ],
   "allow_attachment_types": [
     "muzzle",
+    "scope",
     "extended_mag"
   ],
   "recoil": {
