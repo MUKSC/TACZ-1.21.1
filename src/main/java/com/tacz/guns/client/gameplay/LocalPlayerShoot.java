@@ -72,7 +72,7 @@ public class LocalPlayerShoot {
             return isCharging;
         }
 
-        boolean canCharge = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData) == null;
+        boolean canCharge = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData, isCharging) == null;
         float chargeProgress = data.chargeProgress;
         ChargeType type = chargeData.getChargeType();
 
@@ -144,7 +144,7 @@ public class LocalPlayerShoot {
         }
 
         // 基础检查
-        ShootResult result = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData);
+        ShootResult result = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData, true);
         if (result != null) {
             return result;
         }
@@ -176,7 +176,8 @@ public class LocalPlayerShoot {
         return ShootResult.SUCCESS;
     }
 
-    private @Nullable ShootResult preCheck(IGun iGun, IGunOperator gunOperator, ClientGunIndex gunIndex, ItemStack mainHandItem, GunDisplayInstance display, GunData gunData) {
+    private @Nullable ShootResult preCheck(IGun iGun, IGunOperator gunOperator, ClientGunIndex gunIndex, ItemStack mainHandItem,
+                                           GunDisplayInstance display, GunData gunData, boolean playDrySound) {
         // 按钮冷却时间未到，防止点击按钮后误触开火
         // 默认设置为 50 ms
         if (System.currentTimeMillis() - LocalPlayerDataHolder.clientClickButtonTimestamp < 50) {
@@ -212,13 +213,17 @@ public class LocalPlayerShoot {
         boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
                 !useInventoryAmmo && ammoCount < 1;
         if (noAmmo) {
-            SoundPlayManager.playDryFireSound(player, display);
+            if (playDrySound) {
+                SoundPlayManager.playDryFireSound(player, display);
+            }
             return ShootResult.NO_AMMO;
         }
         //Handle Heat Data
         if(gunData.hasHeatData()) {
             if(iGun.isOverheatLocked(mainHandItem)) {
-                SoundPlayManager.playDryFireSound(player, display);
+                if (playDrySound) {
+                    SoundPlayManager.playDryFireSound(player, display);
+                }
                 return ShootResult.OVERHEATED;
             }
         }
