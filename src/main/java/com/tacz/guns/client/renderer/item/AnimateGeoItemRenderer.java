@@ -6,6 +6,7 @@ import com.maydaymemory.mae.basic.DummyPose;
 import com.maydaymemory.mae.basic.Pose;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.event.BeforeRenderHandEvent;
 import com.tacz.guns.api.item.IAnimationItem;
@@ -13,6 +14,7 @@ import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import com.tacz.guns.client.animation.statemachine.ItemAnimationStateContext;
 import com.tacz.guns.client.model.BedrockAnimatedModel;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
+import com.tacz.guns.client.sound.SoundPlayManager;
 import com.tacz.guns.util.math.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -125,6 +127,7 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
         });
         if (stateMachine.isInitialized()) {
             stateMachine.trigger(GunAnimationConstant.INPUT_PUT_AWAY);
+            
 //            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
             stateMachine.exit();
             // 需要设置的比动画稍长些，避免意外的重初始化（可能是丢精度了）
@@ -364,11 +367,21 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
                 if (drawn) return;
                 drawn = true;
                 tryInit(lastItem, Minecraft.getInstance().player, 0);
+                if (Minecraft.getInstance().player == null) return;
+                TimelessAPI.getGunDisplay(lastItem).ifPresent(display -> {
+                    SoundPlayManager.stopPlayGunSound();
+                    SoundPlayManager.playDrawSound(Minecraft.getInstance().player, display);
+                });
             }
 
             @Override
             public void triggerPutAway() {
                 tryExit(lastItem, getPutAwayTime(lastItem));
+                if (Minecraft.getInstance().player == null) return;
+                TimelessAPI.getGunDisplay(lastItem).ifPresent(display -> {
+                    SoundPlayManager.stopPlayGunSound();
+                    SoundPlayManager.playPutAwaySound(Minecraft.getInstance().player, display);
+                });
             }
         };
     }

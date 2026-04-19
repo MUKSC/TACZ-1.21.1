@@ -1,5 +1,6 @@
 package com.tacz.guns.client.resource;
 
+import com.github.mcmodderanchor.simplebedrockmodel.v1.client.handler.FirstPersonRenderHandler;
 import com.google.common.collect.Maps;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
@@ -51,6 +52,7 @@ public class ClientIndexManager {
 
             // 自动切一次枪，以便刷新状态机
             IClientPlayerGunOperator.fromLocalPlayer(player).draw(ItemStack.EMPTY);
+            FirstPersonRenderHandler.reset();
         }
     }
 
