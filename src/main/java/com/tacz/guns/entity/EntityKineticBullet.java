@@ -589,7 +589,7 @@ public class EntityKineticBullet extends Projectile implements IEntityWithComple
         buffer.writeDouble(getDeltaMovement().z);
         Entity entity = getOwner();
         buffer.writeInt(entity != null ? entity.getId() : 0);
-        buffer.writeResourceLocation(ammoId);
+        buffer.writeResourceLocation(ammoId != null ? ammoId : ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "invalid"));
         buffer.writeFloat(this.gravity);
         buffer.writeBoolean(this.explosion);
         buffer.writeBoolean(this.igniteEntity);
@@ -601,8 +601,8 @@ public class EntityKineticBullet extends Projectile implements IEntityWithComple
         buffer.writeFloat(this.friction);
         buffer.writeInt(this.pierce);
         buffer.writeBoolean(this.isTracerAmmo);
-        buffer.writeResourceLocation(this.gunId);
-        buffer.writeResourceLocation(this.gunDisplayId);
+        buffer.writeResourceLocation(this.gunId != null ? this.gunId : ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "invalid"));
+        buffer.writeResourceLocation(this.gunDisplayId != null ? this.gunDisplayId : ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "invalid"));
     }
 
     @Override
