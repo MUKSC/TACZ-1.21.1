@@ -1,1 +1,2 @@
-- Improved JEI compat (thanks [@gisellevonbingen](https://github.com/gisellevonbingen))
+- Hopefully fixed the incompatibility with Veil
+- Fixed the crash with the Flashback replays
