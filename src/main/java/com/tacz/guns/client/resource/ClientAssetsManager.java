@@ -2,6 +2,7 @@ package com.tacz.guns.client.resource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.animation.gltf.AnimationStructure;
 import com.tacz.guns.api.vmlib.LuaAnimationConstant;
 import com.tacz.guns.api.vmlib.LuaGunAnimationConstant;
@@ -93,12 +94,15 @@ public enum ClientAssetsManager {
     public void reloadAndRegister(Consumer<PreparableReloadListener> register) {
         if (listeners == null) {
             listeners = new ArrayList<>();
-            gunDisplay = register(new DisplayManager<>(GunDisplay.class, GSON, "display/guns", "GunDisplayLoader"));
+            gunDisplay = register(new DisplayManager<>(GunDisplay.class, GSON, "display/guns", "GunDisplayLoader",
+                    id -> GunMod.MOD_ID.equals(id.getNamespace())));
             ammoDisplay = register(new DisplayManager<>(AmmoDisplay.class, GSON, "display/ammo", "AmmoDisplayLoader"));
             attachmentDisplay = register(new DisplayManager<>(AttachmentDisplay.class, GSON, "display/attachments", "AttachmentDisplayLoader"));
             blockDisplay = register(new DisplayManager<>(BlockDisplay.class, GSON, "display/blocks", "BlockDisplayLoader"));
-            bedrockModel = register(new JsonDataManager<>(BedrockModelPOJO.class, GSON, "geo_models", "BedrockModelLoader"));
-            bedrockAnimation = register(new JsonDataManager<>(BedrockAnimationFile.class, GSON, new FileToIdConverter("animations", ".animation.json"), "BedrockAnimationLoader"));
+            bedrockModel = register(new JsonDataManager<>(BedrockModelPOJO.class, GSON, "geo_models", "BedrockModelLoader",
+                    id -> GunMod.MOD_ID.equals(id.getNamespace())));
+            bedrockAnimation = register(new JsonDataManager<>(BedrockAnimationFile.class, GSON, new FileToIdConverter("animations", ".animation.json"),
+                    "BedrockAnimationLoader", id -> GunMod.MOD_ID.equals(id.getNamespace())));
             gltfAnimation = register(new GltfManager());
             scriptManager = register(new ScriptManager(new FileToIdConverter("scripts", ".lua"), libList));
             soundAssetsManager = register(new SoundAssetsManager());
@@ -119,6 +123,10 @@ public enum ClientAssetsManager {
 
     public Set<Map.Entry<ResourceLocation, GunDisplay>> getGunDisplays() {
         return gunDisplay.getAllData().entrySet();
+    }
+
+    public Set<ResourceLocation> getGunDisplayIds() {
+        return gunDisplay.getAllIds();
     }
 
     @Nullable
@@ -159,6 +167,12 @@ public enum ClientAssetsManager {
     @Nullable
     public SoundAssetsManager.SoundData getSoundBuffers(ResourceLocation id) {
         return soundAssetsManager.getData(id);
+    }
+
+    public void preloadSoundBuffers(@Nullable ResourceLocation id) {
+        if (id != null) {
+            soundAssetsManager.preload(id);
+        }
     }
 
     @Nullable

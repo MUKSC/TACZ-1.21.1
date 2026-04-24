@@ -5,6 +5,7 @@ import com.tacz.guns.api.client.event.SwapItemWithOffHand;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
 import com.tacz.guns.api.item.IAnimationItem;
 import com.tacz.guns.api.item.IGun;
+import com.tacz.guns.client.resource.ClientIndexManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,6 +31,7 @@ public class InventoryEvent {
         Inventory inventory = player.getInventory();
         // 玩家切换选中框的情况
         if (oldHotbarSelected != inventory.selected) {
+            ClientIndexManager.warmUpItem(inventory.getItem(inventory.selected));
             if (oldHotbarSelected == -1) {
                 IClientPlayerGunOperator.fromLocalPlayer(player).draw(ItemStack.EMPTY);
             } else {
@@ -53,6 +55,9 @@ public class InventoryEvent {
 
         if (!ItemStack.matches(oldHotbarSelectItem, currentItem)) {
             oldHotbarSelectItem = currentItem.copy();
+        }
+        if (event.phase == TickEvent.Phase.END && (player.tickCount & 7) == 0) {
+            ClientIndexManager.warmUpInventoryModels();
         }
     }
 

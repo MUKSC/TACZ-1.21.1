@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class GunDisplay implements IDisplay {
@@ -69,6 +70,9 @@ public class GunDisplay implements IDisplay {
     @Nullable
     @SerializedName("sounds")
     private Map<String, ResourceLocation> sounds;
+    @Nullable
+    @SerializedName("preload_sounds")
+    private List<String> preloadSounds;
     @Nullable
     @SerializedName("transform")
     private GunTransform transform;
@@ -171,6 +175,11 @@ public class GunDisplay implements IDisplay {
     @Nullable
     public Map<String, ResourceLocation> getSounds() {
         return sounds;
+    }
+
+    @Nullable
+    public List<String> getPreloadSounds() {
+        return preloadSounds;
     }
 
     @Nullable

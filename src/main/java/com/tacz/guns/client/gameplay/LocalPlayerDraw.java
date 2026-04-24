@@ -63,6 +63,7 @@ public class LocalPlayerDraw {
 
     private void doDraw(ItemStack currentItem, long putAwayTime) {
         TimelessAPI.getGunDisplay(currentItem).ifPresent(display -> {
+            SoundPlayManager.preloadGunSounds(display);
             // 取消预定中的 draw 行为
             if (data.drawFuture != null) {
                 data.drawFuture.cancel(false);

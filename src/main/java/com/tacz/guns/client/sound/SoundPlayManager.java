@@ -2,6 +2,7 @@ package com.tacz.guns.client.sound;
 
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IAttachment;
+import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.resource.GunDisplayInstance;
 import com.tacz.guns.config.common.GunConfig;
 import com.tacz.guns.init.ModSounds;
@@ -43,6 +44,19 @@ public class SoundPlayManager {
 
     public static GunSoundInstance playClientSound(Entity entity, @Nullable ResourceLocation name, float volume, float pitch, int distance) {
         return playClientSound(entity, name, volume, pitch, distance, false);
+    }
+
+    public static void preloadSound(@Nullable ResourceLocation soundId) {
+        ClientAssetsManager.INSTANCE.preloadSoundBuffers(soundId);
+    }
+
+    public static void preloadGunSounds(@Nullable GunDisplayInstance display) {
+        if (display == null) {
+            return;
+        }
+        for (ResourceLocation soundId : display.getPreloadSounds()) {
+            preloadSound(soundId);
+        }
     }
 
     public static void stopPlayGunSound() {

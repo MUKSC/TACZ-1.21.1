@@ -5,6 +5,8 @@ import com.google.common.collect.Maps;
 import com.tacz.guns.GunMod;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
+import com.tacz.guns.api.item.IAmmo;
+import com.tacz.guns.api.item.IAttachment;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.resource.index.ClientAmmoIndex;
 import com.tacz.guns.client.resource.index.ClientAttachmentIndex;
@@ -45,6 +47,7 @@ public class ClientIndexManager {
         loadAmmoIndex();
         loadAttachmentIndex();
         loadBlockIndex();
+        warmUpInventoryModels();
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && IGun.mainHandHoldGun(player)) {
@@ -54,16 +57,6 @@ public class ClientIndexManager {
             IClientPlayerGunOperator.fromLocalPlayer(player).draw(ItemStack.EMPTY);
             FirstPersonRenderHandler.reset();
         }
-    }
-
-    public static void loadGunDisplay() {
-        ClientAssetsManager.INSTANCE.getGunDisplays().forEach(entry -> {
-            try {
-                GUN_DISPLAY.put(entry.getKey(), GunDisplayInstance.create(entry.getValue()));
-            } catch (IllegalArgumentException exception) {
-                GunMod.LOGGER.warn("{} display init read fail!", entry.getKey(), exception);
-            }
-        });
     }
 
     public static void loadGunIndex() {
@@ -76,6 +69,19 @@ public class ClientIndexManager {
                 GunMod.LOGGER.warn("{} index file read fail!", id, exception);
             }
         });
+    }
+
+    public static void loadGunDisplay() {
+        ClientAssetsManager.INSTANCE.getGunDisplayIds().forEach(displayId -> GUN_DISPLAY.put(displayId, GunDisplayInstance.create(displayId)));
+    }
+
+    public static GunDisplayInstance getOrCreateGunDisplay(ResourceLocation displayId) {
+        GunDisplayInstance instance = GUN_DISPLAY.get(displayId);
+        if (instance != null) {
+            return instance;
+        }
+        GunMod.LOGGER.warn("{} display instance is missing from cache", displayId);
+        return null;
     }
 
     public static void loadAmmoIndex() {
@@ -128,5 +134,57 @@ public class ClientIndexManager {
 
     public static Set<Map.Entry<ResourceLocation, ClientBlockIndex>> getAllBlocks() {
         return BLOCK_INDEX.entrySet();
+    }
+
+    public static void warmUpInventoryModels() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        warmUpItemForUse(player.getMainHandItem());
+        warmUpItemForUse(player.getOffhandItem());
+        player.getInventory().items.forEach(ClientIndexManager::warmUpItemModel);
+    }
+
+    public static void warmUpItem(ItemStack stack) {
+        warmUpItemForUse(stack);
+    }
+
+    public static void warmUpItemModel(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (stack.getItem() instanceof IGun) {
+            TimelessAPI.getGunDisplay(stack).ifPresent(display -> {
+                display.warmUpLod();
+                display.warmUpModel();
+                display.warmUpRuntime();
+            });
+            return;
+        }
+        IAttachment attachment = IAttachment.getIAttachmentOrNull(stack);
+        if (attachment != null) {
+            TimelessAPI.getClientAttachmentIndex(attachment.getAttachmentId(stack)).ifPresent(ClientAttachmentIndex::warmUp);
+            return;
+        }
+        IAmmo ammo = IAmmo.getIAmmoOrNull(stack);
+        if (ammo != null) {
+            TimelessAPI.getClientAmmoIndex(ammo.getAmmoId(stack)).ifPresent(ClientAmmoIndex::warmUp);
+        }
+    }
+
+    public static void warmUpItemForUse(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (stack.getItem() instanceof IGun) {
+            TimelessAPI.getGunDisplay(stack).ifPresent(display -> {
+                display.warmUpLod();
+                display.warmUpModel();
+                display.warmUpRuntime();
+            });
+            return;
+        }
+        warmUpItemModel(stack);
     }
 }
