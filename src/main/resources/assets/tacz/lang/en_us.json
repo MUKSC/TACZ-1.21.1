@@ -232,8 +232,6 @@
   "config.tacz.client.resource": "Resource",
   "config.tacz.client.resource.enable_lazy_client_asset_load": "Lazy Client Asset Load",
   "config.tacz.client.resource.enable_lazy_client_asset_load.desc": "Build heavy client assets such as models and animation state machines on demand. Inventory items are pre-warmed in the background when possible.",
-  "config.tacz.client.resource.enable_lazy_sound_load": "Lazy Sound Load",
-  "config.tacz.client.resource.enable_lazy_sound_load.desc": "Load TACZ sound buffers on demand instead of decoding all gun-pack sounds during resource reload.",
   "config.tacz.client.zoom": "Zoom",
   "config.tacz.client.zoom.screen_distance_coefficient": "Screen Distance Coefficient",
   "config.tacz.client.zoom.screen_distance_coefficient.desc": "Screen distance coefficient for zoom, using MDV standard, default is MDV133",

@@ -13,9 +13,5 @@ public class ResourceClothConfig {
         resource.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.client.resource.enable_lazy_client_asset_load"), ResourceConfig.ENABLE_LAZY_CLIENT_ASSET_LOAD.get())
                 .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.client.resource.enable_lazy_client_asset_load.desc"))
                 .setSaveConsumer(ResourceConfig.ENABLE_LAZY_CLIENT_ASSET_LOAD::set).build());
-
-        resource.addEntry(entryBuilder.startBooleanToggle(Component.translatable("config.tacz.client.resource.enable_lazy_sound_load"), ResourceConfig.ENABLE_LAZY_SOUND_LOAD.get())
-                .setDefaultValue(true).setTooltip(Component.translatable("config.tacz.client.resource.enable_lazy_sound_load.desc"))
-                .setSaveConsumer(ResourceConfig.ENABLE_LAZY_SOUND_LOAD::set).build());
     }
 }

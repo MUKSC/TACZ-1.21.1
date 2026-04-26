@@ -57,8 +57,6 @@
   "config.tacz.client.resource": "资源",
   "config.tacz.client.resource.enable_lazy_client_asset_load": "客户端资源懒加载",
   "config.tacz.client.resource.enable_lazy_client_asset_load.desc": "按需构建模型、动画状态机等较重的客户端资源。背包物品会尽量在后台预热。",
-  "config.tacz.client.resource.enable_lazy_sound_load": "音效懒加载",
-  "config.tacz.client.resource.enable_lazy_sound_load.desc": "按需加载 TACZ 音效缓冲，而不是在资源重载时解码所有枪包音效。",
   "config.tacz.client.zoom": "缩放",
   "config.tacz.client.zoom.screen_distance_coefficient": "荧幕距离系数",
   "config.tacz.client.zoom.screen_distance_coefficient.desc": "缩放时的荧幕距离系数，使用 MDV 标准，默认为 MDV133",
