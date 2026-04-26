@@ -2,7 +2,6 @@ package com.tacz.guns.client.sound;
 
 import com.mojang.blaze3d.audio.SoundBuffer;
 import com.tacz.guns.client.resource.ClientAssetsManager;
-import com.tacz.guns.client.resource.manager.SoundAssetsManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
@@ -12,9 +11,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nullable;
-import javax.sound.sampled.AudioFormat;
 
 public class GunSoundInstance extends EntityBoundSoundInstance {
+    @Nullable
     private final ResourceLocation registryName;
     private final boolean mono;
 
@@ -36,18 +35,10 @@ public class GunSoundInstance extends EntityBoundSoundInstance {
 
     @Nullable
     public SoundBuffer getSoundBuffer() {
-        SoundAssetsManager.SoundData soundData = ClientAssetsManager.INSTANCE.getSoundBuffers(this.registryName);
-        if (soundData == null) {
-            return null;
-        }
-        AudioFormat rawFormat = soundData.audioFormat();
-        if (this.mono && rawFormat.getChannels() > 1) {
-            AudioFormat monoFormat = new AudioFormat(rawFormat.getEncoding(), rawFormat.getSampleRate(), rawFormat.getSampleSizeInBits(), 1, rawFormat.getFrameSize(), rawFormat.getFrameRate(), rawFormat.isBigEndian(), rawFormat.properties());
-            return new SoundBuffer(soundData.byteBuffer(), monoFormat);
-        }
-        return new SoundBuffer(soundData.byteBuffer(), soundData.audioFormat());
+        return ClientAssetsManager.INSTANCE.getSoundBuffer(this.registryName, this.mono);
     }
 
+    @Nullable
     public ResourceLocation getRegistryName() {
         return registryName;
     }

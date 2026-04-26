@@ -29,6 +29,8 @@ import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientIndexManager {
+    private static final int HOTBAR_SLOT_COUNT = 9;
+
     public static final Map<ResourceLocation, GunDisplayInstance> GUN_DISPLAY = Maps.newHashMap();
     public static final Map<ResourceLocation, ClientGunIndex> GUN_INDEX = Maps.newHashMap();
     public static final Map<ResourceLocation, ClientAmmoIndex> AMMO_INDEX = Maps.newHashMap();
@@ -72,7 +74,14 @@ public class ClientIndexManager {
     }
 
     public static void loadGunDisplay() {
-        ClientAssetsManager.INSTANCE.getGunDisplayIds().forEach(displayId -> GUN_DISPLAY.put(displayId, GunDisplayInstance.create(displayId)));
+        ClientAssetsManager.INSTANCE.getGunDisplays().forEach(entry -> {
+            ResourceLocation displayId = entry.getKey();
+            try {
+                GUN_DISPLAY.put(displayId, GunDisplayInstance.create(displayId, entry.getValue()));
+            } catch (IllegalArgumentException exception) {
+                GunMod.LOGGER.warn("{} display file read fail!", displayId, exception);
+            }
+        });
     }
 
     public static GunDisplayInstance getOrCreateGunDisplay(ResourceLocation displayId) {
@@ -143,7 +152,41 @@ public class ClientIndexManager {
         }
         warmUpItemForUse(player.getMainHandItem());
         warmUpItemForUse(player.getOffhandItem());
-        player.getInventory().items.forEach(ClientIndexManager::warmUpItemModel);
+        warmUpHotbarModels(player);
+        warmUpBackpackModels(player);
+    }
+
+    public static void warmUpEquippedAndHotbarModels() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        warmUpItemForUse(player.getMainHandItem());
+        warmUpItemForUse(player.getOffhandItem());
+        warmUpHotbarModels(player);
+    }
+
+    public static void warmUpBackpackModels() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        warmUpBackpackModels(player);
+    }
+
+    private static void warmUpHotbarModels(LocalPlayer player) {
+        var items = player.getInventory().items;
+        int hotbarSize = Math.min(HOTBAR_SLOT_COUNT, items.size());
+        for (int i = 0; i < hotbarSize; i++) {
+            warmUpItemModel(items.get(i));
+        }
+    }
+
+    private static void warmUpBackpackModels(LocalPlayer player) {
+        var items = player.getInventory().items;
+        for (int i = Math.min(HOTBAR_SLOT_COUNT, items.size()); i < items.size(); i++) {
+            warmUpItemModel(items.get(i));
+        }
     }
 
     public static void warmUpItem(ItemStack stack) {

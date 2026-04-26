@@ -50,21 +50,20 @@ import java.util.function.BiFunction;
 @OnlyIn(Dist.CLIENT)
 public class GunDisplayInstance {
     private final ResourceLocation displayId;
+    private final GunDisplay display;
     private final Object loadLock = new Object();
 
     // 加载标志位
-    private volatile boolean baseLoaded = false;
     private volatile boolean modelLoaded = false;
     private volatile boolean lodLoaded = false;
     private volatile boolean animationLoaded = false;
+
     // 错误标志位
-    private volatile boolean baseLoadFailed = false;
     private volatile boolean modelLoadFailed = false;
     private volatile boolean lodLoadFailed = false;
     private volatile boolean animationLoadFailed = false;
 
     // 异步加载任务
-    private volatile GunDisplay display;
     private volatile CompletableFuture<Void> modelWarmUpTask = null;
     private volatile CompletableFuture<Void> lodWarmUpTask = null;
     private volatile CompletableFuture<Void> animationWarmUpTask = null;
@@ -102,15 +101,17 @@ public class GunDisplayInstance {
     private @Nullable LaserConfig laserConfig;
     private boolean enableTransparency;
 
-    GunDisplayInstance(ResourceLocation displayId) {
+    GunDisplayInstance(ResourceLocation displayId, GunDisplay display) {
         this.displayId = displayId;
+        this.display = Objects.requireNonNull(display, "display");
+        initBase(display);
         if (!ResourceConfig.ENABLE_LAZY_CLIENT_ASSET_LOAD.get()) {
             ensureAnimationLoaded();
         }
     }
 
-    public static GunDisplayInstance create(ResourceLocation displayId)  throws IllegalArgumentException {
-        return new GunDisplayInstance(displayId);
+    public static GunDisplayInstance create(ResourceLocation displayId, GunDisplay display)  throws IllegalArgumentException {
+        return new GunDisplayInstance(displayId, display);
     }
 
     // 后台预热
@@ -168,40 +169,6 @@ public class GunDisplayInstance {
     }
 
     // 确保所需资源完成，没完成阻塞一下
-    private void ensureBaseLoaded() {
-        if (baseLoaded || baseLoadFailed) {
-            return;
-        }
-        synchronized (loadLock) {
-            if (baseLoaded || baseLoadFailed) {
-                return;
-            }
-            try {
-                GunDisplay loadedDisplay = resolveDisplay();
-                if (loadedDisplay == null) {
-                    baseLoadFailed = true;
-                    return;
-                }
-                initBase(loadedDisplay);
-                baseLoaded = true;
-            } catch (Throwable throwable) {
-                handleBaseLoadFailure(throwable);
-            }
-        }
-    }
-
-    private @Nullable GunDisplay resolveDisplay() {
-        GunDisplay cached = display;
-        if (cached != null) {
-            return cached;
-        }
-        cached = ClientAssetsManager.INSTANCE.getGunDisplay(displayId);
-        if (cached != null) {
-            display = cached;
-        }
-        return cached;
-    }
-
     private void ensureModelLoaded() {
         if (modelLoaded || modelLoadFailed) {
             return;
@@ -276,10 +243,8 @@ public class GunDisplayInstance {
             if (modelLoaded) {
                 return;
             }
-            GunDisplay loadedDisplay = resolveDisplay();
-            Preconditions.checkArgument(loadedDisplay != null, "there is no corresponding display file");
-            checkTextureAndModel(loadedDisplay);
-            checkTextShow(loadedDisplay);
+            checkTextureAndModel(display);
+            checkTextShow(display);
             modelLoaded = true;
         }
     }
@@ -292,9 +257,7 @@ public class GunDisplayInstance {
             if (lodLoaded) {
                 return;
             }
-            GunDisplay loadedDisplay = resolveDisplay();
-            Preconditions.checkArgument(loadedDisplay != null, "there is no corresponding display file");
-            checkLod(loadedDisplay);
+            checkLod(display);
             lodLoaded = true;
         }
     }
@@ -342,9 +305,7 @@ public class GunDisplayInstance {
             if (!modelLoaded) {
                 throw new IllegalStateException("Gun animation requires model to be loaded first");
             }
-            GunDisplay loadedDisplay = resolveDisplay();
-            Preconditions.checkArgument(loadedDisplay != null, "there is no corresponding display file");
-            checkAnimation(loadedDisplay);
+            checkAnimation(display);
             animationLoaded = true;
         }
     }
@@ -388,19 +349,6 @@ public class GunDisplayInstance {
         }
         if (shouldLog) {
             GunMod.LOGGER.warn("Failed to load gun animation runtime {}", displayId, throwable);
-        }
-    }
-
-    private void handleBaseLoadFailure(Throwable throwable) {
-        boolean shouldLog = false;
-        synchronized (loadLock) {
-            if (!baseLoaded) {
-                shouldLog = !baseLoadFailed;
-                baseLoadFailed = true;
-            }
-        }
-        if (shouldLog) {
-            GunMod.LOGGER.warn("Failed to load gun display base {}", displayId, throwable);
         }
     }
 
@@ -715,33 +663,27 @@ public class GunDisplayInstance {
 
     @Nullable
     public ResourceLocation getSounds(String name) {
-        ensureBaseLoaded();
         return sounds.get(name);
     }
 
     public List<ResourceLocation> getPreloadSounds() {
-        ensureBaseLoaded();
         return preloadSounds;
     }
 
     public GunTransform getTransform() {
-        ensureBaseLoaded();
         return transform;
     }
 
     public ResourceLocation getSlotTexture() {
-        ensureBaseLoaded();
         return slotTexture;
     }
 
     public ResourceLocation getHUDTexture() {
-        ensureBaseLoaded();
         return hudTexture;
     }
 
     @Nullable
     public ResourceLocation getHudEmptyTexture() {
-        ensureBaseLoaded();
         return hudEmptyTexture;
     }
 
@@ -751,91 +693,74 @@ public class GunDisplayInstance {
     }
 
     public String getThirdPersonAnimation() {
-        ensureBaseLoaded();
         return thirdPersonAnimation;
     }
 
     @Nullable
     public ShellEjection getShellEjection() {
-        ensureBaseLoaded();
         return shellEjection;
     }
 
     public float @Nullable [] getTracerColor() {
-        ensureBaseLoaded();
         return tracerColor;
     }
 
     @Nullable
     public AmmoParticle getParticle() {
-        ensureBaseLoaded();
         return particle;
     }
 
     @Nullable
     public MuzzleFlash getMuzzleFlash() {
-        ensureBaseLoaded();
         return muzzleFlash;
     }
 
     public LayerGunShow getOffhandShow() {
-        ensureBaseLoaded();
         return offhandShow;
     }
 
     @Nullable
     public Int2ObjectArrayMap<LayerGunShow> getHotbarShow() {
-        ensureBaseLoaded();
         return hotbarShow;
     }
 
     public float getIronZoom() {
-        ensureBaseLoaded();
         return ironZoom;
     }
 
     public float getZoomModelFov() {
-        ensureBaseLoaded();
         return zoomModelFov;
     }
 
     public boolean isShowCrosshair() {
-        ensureBaseLoaded();
         return showCrosshair;
     }
 
     public @Nullable ResourceLocation getPlayerAnimator3rd() {
-        ensureBaseLoaded();
         return playerAnimator3rd;
     }
 
     public boolean is3rdFixedHand() {
-        ensureBaseLoaded();
         return is3rdFixedHand;
     }
 
     public EnumMap<FireMode, ControllableData> getControllableData() {
-        ensureBaseLoaded();
         return controllableData;
     }
 
     public AmmoCountStyle getAmmoCountStyle() {
-        ensureBaseLoaded();
         return ammoCountStyle;
     }
 
     public DamageStyle getDamageStyle() {
-        ensureBaseLoaded();
         return damageStyle;
     }
 
     public @Nullable LaserConfig getLaserConfig() {
-        ensureBaseLoaded();
         return laserConfig;
     }
 
     public boolean enablesTransparency() {
-        ensureBaseLoaded();
         return enableTransparency;
     }
 }

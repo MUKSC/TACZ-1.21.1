@@ -1,18 +1,15 @@
 package com.tacz.guns.resource.manager;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.tacz.guns.resource.network.DataType;
-import com.tacz.guns.util.ResourceScanner;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 服务端侧数据管理器<br>
@@ -28,40 +25,22 @@ public class CommonDataManager<T> extends JsonDataManager<T> implements INetwork
         this.type = type;
     }
 
-    @Override
-    @NotNull
-    protected PreparedResult<T> prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
-        Map<ResourceLocation, JsonElement> scannedResources = ResourceScanner.scanDirectory(pResourceManager, getFileToIdConverter(), getGson());
-        Map<ResourceLocation, PreparedEntry<T>> preparedEntries = Maps.newHashMapWithExpectedSize(scannedResources.size());
-        for (Map.Entry<ResourceLocation, JsonElement> entry : scannedResources.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            JsonElement sourceElement = entry.getValue();
-            if (sourceElement == null) {
-                preparedEntries.put(id, PreparedEntry.failure());
-                continue;
-            }
-            preparedEntries.put(id, PreparedEntry.eager(sourceElement));
-        }
-        return new PreparedResult<>(preparedEntries, Set.copyOf(scannedResources.keySet()));
+    public CommonDataManager(DataType type, Class<T> dataClass, Gson pGson, FileToIdConverter fileToIdConverter, String marker) {
+        super(dataClass, pGson, fileToIdConverter, marker);
+        this.type = type;
     }
 
     @Override
-    protected void apply(PreparedResult<T> pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
         super.apply(pObject, pResourceManager, pProfiler);
 
         ImmutableMap.Builder<ResourceLocation, String> builder = ImmutableMap.builder();
-        pObject.entries().forEach((id, preparedEntry) -> {
-            JsonElement sourceElement = preparedEntry.sourceElement();
-            if (sourceElement != null) {
-                builder.put(id, getGson().toJson(sourceElement));
-            }
-        });
+        pObject.forEach((id, element) -> builder.put(id, element.toString()));
         this.networkCache = builder.build();
     }
 
     public void clear() {
         this.dataMap.clear();
-        this.lazyLoaderMap.clear();
     }
 
     public Map<ResourceLocation, String> getNetworkCache() {
