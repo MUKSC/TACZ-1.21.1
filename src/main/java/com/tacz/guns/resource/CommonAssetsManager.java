@@ -210,6 +210,10 @@ public class CommonAssetsManager implements ICommonResourceProvider {
         return INSTANCE;
     }
 
+    public static void clearInstance() {
+        INSTANCE = null;
+    }
+
     /**
      * 根据当前环境选择合适的缓存<br/>
      * 当前环境为单人游戏或多人游戏的服务端时，返回CommonAssetsManger实例<br/>
@@ -250,7 +254,7 @@ public class CommonAssetsManager implements ICommonResourceProvider {
 
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) {
-        INSTANCE = null;
+        clearInstance();
     }
 
     @SubscribeEvent

@@ -37,12 +37,16 @@ public class ClientIndexManager {
     public static final Map<ResourceLocation, ClientAttachmentIndex> ATTACHMENT_INDEX = Maps.newHashMap();
     public static final Map<ResourceLocation, ClientBlockIndex> BLOCK_INDEX = Maps.newHashMap();
 
-    public static void reload() {
+    public static void clear() {
         GUN_DISPLAY.clear();
         GUN_INDEX.clear();
         AMMO_INDEX.clear();
         ATTACHMENT_INDEX.clear();
         BLOCK_INDEX.clear();
+    }
+
+    public static void reload() {
+        clear();
 
         loadGunDisplay();
         loadGunIndex();

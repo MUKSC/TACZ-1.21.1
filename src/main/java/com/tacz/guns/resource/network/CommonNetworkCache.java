@@ -122,7 +122,7 @@ public enum CommonNetworkCache implements ICommonResourceProvider {
         return allowAttachmentTags.get(registryName);
     }
 
-    public void fromNetwork(Map<DataType, Map<ResourceLocation, String>> cache) {
+    public void clear() {
         gunData.clear();
         attachmentData.clear();
         gunIndex.clear();
@@ -134,6 +134,11 @@ public enum CommonNetworkCache implements ICommonResourceProvider {
 
         attachmentTags.clear();
         allowAttachmentTags.clear();
+        AllowAttachmentTagMatcher.resetCache();
+    }
+
+    public void fromNetwork(Map<DataType, Map<ResourceLocation, String>> cache) {
+        clear();
         // 延后处理
         Map<DataType, Map<ResourceLocation, String>> delayed = new HashMap<>();
         for (Map.Entry<DataType, Map<ResourceLocation, String>> entry : cache.entrySet()) {
@@ -150,7 +155,6 @@ public enum CommonNetworkCache implements ICommonResourceProvider {
         for (Map.Entry<DataType, Map<ResourceLocation, String>> entry : delayed.entrySet()) {
             fromNetwork(entry.getKey(), entry.getValue());
         }
-        AllowAttachmentTagMatcher.resetCache();
     }
 
     private <T> T parse(String json, Class<T> dataClass) {
