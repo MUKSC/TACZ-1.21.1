@@ -108,6 +108,8 @@ public enum ClientAssetsManager {
             scriptManager = register(new ScriptManager(new FileToIdConverter("scripts", ".lua"), libList));
             soundAssetsManager = register(new SoundAssetsManager());
             packInfo = register(new PackInfoManager());
+            register((barrier, resourceManager, preparationProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
+                    barrier.wait(Void.TYPE).thenRunAsync(ClientIndexManager::reload, gameExecutor));
         }
         listeners.forEach(register);
     }
@@ -199,11 +201,7 @@ public enum ClientAssetsManager {
     public static void reloadAllPack() {
         try {
             Minecraft.getInstance().reloadResourcePacks().get();
-            // 如果连接到多人游戏
-            if (ServerLifecycleHooks.getCurrentServer() == null) {
-                // 重建索引
-                ClientIndexManager.reload();
-            } else {
+            if (ServerLifecycleHooks.getCurrentServer() != null) {
                 // 直接刷新data
                 CommonAssetsManager.reloadAllPack();
             }
@@ -211,4 +209,5 @@ public enum ClientAssetsManager {
             throw new RuntimeException(e);
         }
     }
+
 }
