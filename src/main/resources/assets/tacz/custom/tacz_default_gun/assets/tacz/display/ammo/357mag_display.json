@@ -1,4 +1,6 @@
 {
+  "model": "tacz:ammo/357mag",
+  "texture": "tacz:ammo/uv/357mag",
   "slot": "tacz:ammo/slot/357mag",
   "shell": {
     "model": "tacz:shell/357mag_shell",
