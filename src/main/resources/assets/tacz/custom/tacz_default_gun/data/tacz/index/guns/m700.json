@@ -3,5 +3,6 @@
   "display": "tacz:m700_display",
   "data": "tacz:m700_data",
   "tooltip": "tacz.gun.m700.desc",
-  "type": "sniper"
+  "type": "sniper",
+  "sort": 3
 }

@@ -3,5 +3,6 @@
   "display": "tacz:vector45_display",
   "data": "tacz:vector45_data",
   "tooltip": "tacz.gun.vector45.desc",
-  "type": "smg"
+  "type": "smg",
+  "sort": 3
 }

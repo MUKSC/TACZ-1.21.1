@@ -3,5 +3,6 @@
   "display": "tacz:uzi_display",
   "data": "tacz:uzi_data",
   "tooltip": "tacz.gun.uzi.desc",
-  "type": "smg"
+  "type": "smg",
+  "sort": 2
 }

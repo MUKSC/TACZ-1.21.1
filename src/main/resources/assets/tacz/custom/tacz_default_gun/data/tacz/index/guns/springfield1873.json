@@ -3,5 +3,6 @@
   "display": "tacz:springfield1873_display",
   "data": "tacz:springfield1873_data",
   "tooltip": "tacz.gun.springfield1873.desc",
-  "type": "sniper"
+  "type": "sniper",
+  "sort": 5
 }
