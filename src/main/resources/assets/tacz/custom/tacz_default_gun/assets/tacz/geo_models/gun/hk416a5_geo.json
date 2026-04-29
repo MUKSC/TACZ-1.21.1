@@ -2679,7 +2679,7 @@
 				{
 					"name": "constraint",
 					"parent": "hk416a5",
-					"pivot": [0, 12.525, -0.6]
+					"pivot": [0, 13.025, -6.6]
 				},
 				{
 					"name": "attachment_adapter",
