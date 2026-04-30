@@ -3611,7 +3611,7 @@
 				{
 					"name": "muzzle_flash",
 					"parent": "gun_body",
-					"pivot": [0.09283, 9.02589, -5.5625]
+					"pivot": [0, 9.02589, -5.5625]
 				},
 				{
 					"name": "grip",

@@ -2,8 +2,8 @@
   "model": "tacz:gun/kar98_geo",
   "texture": "tacz:gun/uv/kar98",
   "lod": {
-    "model": "tacz:gun/lod/springfield1873",
-    "texture": "tacz:gun/lod/springfield1873"
+    "model": "tacz:gun/lod/kar98",
+    "texture": "tacz:gun/lod/kar98"
   },
   "hud": "tacz:gun/hud/kar98",
   "state_machine": "tacz:kar98_state_machine",
