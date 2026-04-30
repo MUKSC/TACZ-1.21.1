@@ -972,6 +972,35 @@
 				"bullet": {
 					"scale": 0
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:m9a4/m9a4_inspect_start"
+				},
+				"1.9583": {
+					"effect": "tacz:m9a4/m9a4_inspect_rotate"
+				},
+				"3.7917": {
+					"effect": "tacz:m9a4/m9a4_reload_magout_fast"
+				},
+				"5.9583": {
+					"effect": "tacz:m9a4/m9a4_reload_maghit"
+				},
+				"6.0833": {
+					"effect": "tacz:m9a4/m9a4_reload_magin"
+				},
+				"6.5417": {
+					"effect": "tacz:m9a4/m9a4_inspect_checkchamber"
+				},
+				"6.7917": {
+					"effect": "tacz:m9a4/m9a4_inspect_slide"
+				},
+				"7.4583": {
+					"effect": "tacz:m9a4/m9a4_inspect_release"
+				},
+				"8.0": {
+					"effect": "tacz:m9a4/m9a4_inspect_end"
+				}
 			}
 		},
 		"inspect_empty": {
@@ -1457,6 +1486,29 @@
 				"bullet": {
 					"scale": 0
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "tacz:m9a4/m9a4_inspect_start"
+				},
+				"1.9583": {
+					"effect": "tacz:m9a4/m9a4_inspect_rotate"
+				},
+				"3.7917": {
+					"effect": "tacz:m9a4/m9a4_reload_magout_fast"
+				},
+				"5.9583": {
+					"effect": "tacz:m9a4/m9a4_reload_maghit"
+				},
+				"6.0833": {
+					"effect": "tacz:m9a4/m9a4_reload_magin"
+				},
+				"6.5417": {
+					"effect": "tacz:m9a4/m9a4_inspect_checkchamber"
+				},
+				"7.875": {
+					"effect": "tacz:m9a4/m9a4_inspect_end"
+				}
 			}
 		},
 		"reload_empty": {
@@ -1894,6 +1946,26 @@
 						"0.5417": [-14.1, -68.5, -7.4],
 						"0.5833": {"pre": [-14.1, -68.5, -7.4], "post": [0, 0, 0]}
 					}
+				}
+			},
+			"sound_effects": {
+				"0.1667": {
+					"effect": "tacz:m9a4/m9a4_reload_magout_fast"
+				},
+				"0.5833": {
+					"effect": "tacz:m9a4/m9a4_reload_magdrop"
+				},
+				"0.875": {
+					"effect": "tacz:m9a4/m9a4_reload_maghit"
+				},
+				"1.0": {
+					"effect": "tacz:m9a4/m9a4_reload_magin"
+				},
+				"1.5417": {
+					"effect": "tacz:m9a4/m9a4_reload_charge"
+				},
+				"1.8333": {
+					"effect": "tacz:m9a4/m9a4_reload_end"
 				}
 			}
 		},
@@ -2428,6 +2500,20 @@
 						"0.3667": {"pre": [0, 0, 0], "post": [1, 1, 1]},
 						"2.1333": [1, 1, 1]
 					}
+				}
+			},
+			"sound_effects": {
+				"0.3": {
+					"effect": "tacz:m9a4/m9a4_reload_magdown"
+				},
+				"0.6333": {
+					"effect": "tacz:m9a4/m9a4_reload_magout"
+				},
+				"1.0333": {
+					"effect": "tacz:m9a4/m9a4_reload_magin"
+				},
+				"1.5333": {
+					"effect": "tacz:m9a4/m9a4_reload_end"
 				}
 			}
 		},

@@ -30,12 +30,12 @@
     "scale": 0.4
   },
   "sounds": {
-    "draw": "tacz:b93r/b93r_draw",
-    "put_away": "tacz:b93r/b93r_put_away",
-    "shoot": "tacz:b93r/b93r_shoot",
-    "shoot_3p": "tacz:b93r/b93r_shoot_3p",
-    "silence": "tacz:b93r/b93r_silence",
-    "silence_3p": "tacz:b93r/b93r_silence_3p"
+    "draw": "tacz:m9a4/m9a4_draw",
+    "put_away": "tacz:m9a4/m9a4_put_away",
+    "shoot": "tacz:m9a4/m9a4_shoot",
+    "shoot_3p": "tacz:m9a4/m9a4_shoot_3p",
+    "silence": "tacz:m9a4/m9a4_silence",
+    "silence_3p": "tacz:m9a4/m9a4_silence_3p"
   },
   "offhand_show": {
     "pos": [4, 13, -1],
