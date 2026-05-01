@@ -72,7 +72,8 @@ public class LocalPlayerShoot {
             return isCharging;
         }
 
-        boolean canCharge = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData, isCharging) == null;
+        boolean canChargeDuringCooldown = chargeData.isChargeDuringCooldown() || getCoolDown(iGun, mainHandItem, gunData) < 50;
+        boolean canCharge = canChargeDuringCooldown && preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData, isCharging) == null;
         float chargeProgress = data.chargeProgress;
         ChargeType type = chargeData.getChargeType();
 
@@ -90,7 +91,7 @@ public class LocalPlayerShoot {
                 data.isCharging = true;
                 data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
             } else {
-                if (chargeProgress >= chargeData.getFireThreshold()) {
+                if (canChargeDuringCooldown && chargeProgress >= chargeData.getFireThreshold()) {
                     return true;
                 }
                 data.isCharging = false;
@@ -161,7 +162,8 @@ public class LocalPlayerShoot {
         data.lockState(SHOOT_LOCKED_CONDITION);
         data.isShootRecorded = false;
         // 调用开火逻辑
-        this.doShoot(display, iGun, mainHandItem, gunData, coolDown);
+        float finalChargeProgress = data.chargeProgress;
+        this.doShoot(display, iGun, mainHandItem, gunData, coolDown, finalChargeProgress);
 
         FireMode fireMode = iGun.getFireMode(mainHandItem);
         ChargeData chargeData = gunData.getChargeData(fireMode);
@@ -235,7 +237,7 @@ public class LocalPlayerShoot {
         return null;
     }
 
-    private void doShoot(GunDisplayInstance display, IGun iGun, ItemStack mainHandItem, GunData gunData, long delay) {
+    private void doShoot(GunDisplayInstance display, IGun iGun, ItemStack mainHandItem, GunData gunData, long delay, float chargeProgress) {
         FireMode fireMode = iGun.getFireMode(mainHandItem);
         Bolt boltType = gunData.getBolt();
         // 获取余弹数
@@ -280,7 +282,7 @@ public class LocalPlayerShoot {
                 data.clientLastShootTimestamp = data.clientShootTimestamp;
                 data.clientShootTimestamp = System.currentTimeMillis();
                 // 发送开火的数据包，通知服务器
-                NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp));
+                NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp, chargeProgress));
             }
 
             // todo 需要检查

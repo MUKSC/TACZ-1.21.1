@@ -21,6 +21,9 @@ public class ChargeData {
     @SerializedName("fire_threshold")
     private float fireThreshold = 0.6f;
 
+    @SerializedName("charge_during_cooldown")
+    private boolean chargeDuringCooldown = true;
+
     public ChargeType getChargeType() {
         return chargeType;
     }
@@ -43,5 +46,9 @@ public class ChargeData {
 
     public float getFireThreshold() {
         return fireThreshold;
+    }
+
+    public boolean isChargeDuringCooldown() {
+        return chargeDuringCooldown;
     }
 }

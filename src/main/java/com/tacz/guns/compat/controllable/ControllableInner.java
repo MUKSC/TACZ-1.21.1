@@ -55,8 +55,10 @@ public class ControllableInner {
         if (AIM.getButton() == newButton.get() && AimKey.onAimControllerPress(isPress)) {
             return true;
         }
-        if (SHOOT.getButton() == newButton.get() && ShootKey.semiShootController(isPress)) {
-            doRumble(controller);
+        if (SHOOT.getButton() == newButton.get()) {
+            if (!isPress && ShootKey.releaseShootController()) {
+                doRumble(controller);
+            }
             return true;
         }
         if (RELOAD.getButton() == newButton.get() && ReloadKey.onReloadControllerPress(isPress)) {

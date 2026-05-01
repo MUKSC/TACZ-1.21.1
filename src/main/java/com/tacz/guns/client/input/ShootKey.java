@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.event.TickEvent;
@@ -83,6 +82,22 @@ public class ShootKey {
         if (player == null || player.isSpectator()) {
             return false;
         }
+        return shootController(player, true);
+    }
+
+    public static boolean releaseShootController() {
+        if (!isInGame()) {
+            return false;
+        }
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null) {
+            return false;
+        }
+        return shootController(player, false);
+    }
+
+    private static boolean shootController(LocalPlayer player, boolean isShootDown) {
         ItemStack mainHandItem = player.getMainHandItem();
         if (mainHandItem.getItem() instanceof IGun iGun) {
             FireMode fireMode = iGun.getFireMode(mainHandItem);
@@ -90,68 +105,25 @@ public class ShootKey {
                     .map(index -> index.getGunData().getBurstData().isContinuousShoot())
                     .orElse(false);
             IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
-            if (fireMode == FireMode.AUTO || isBurstAuto) {
-                return operator.shoot() == ShootResult.SUCCESS;
-            }
-        }
-        return false;
-    }
-
-    @SubscribeEvent
-    public static void semiShoot(InputEvent.MouseButton.Post event) {
-//        if (isInGame() && SHOOT_KEY.matchesMouse(event.getButton())) {
-//            // 松开鼠标，重置 DryFire 状态
-//            if (event.getAction() == GLFW.GLFW_RELEASE) {
-//                SoundPlayManager.resetDryFireSound();
-//                return;
-//            }
-//            Minecraft mc = Minecraft.getInstance();
-//            LocalPlayer player = mc.player;
-//            if (player == null || player.isSpectator()) {
-//                return;
-//            }
-//            ItemStack mainHandItem = player.getMainHandItem();
-//            if (mainHandItem.getItem() instanceof IGun iGun) {
-//                FireMode fireMode = iGun.getFireMode(mainHandItem);
-//                boolean isBurstSemi = fireMode == FireMode.BURST && TimelessAPI.getCommonGunIndex(iGun.getGunId(mainHandItem))
-//                        .map(index -> !index.getGunData().getBurstData().isContinuousShoot())
-//                        .orElse(false);
-//                if (fireMode == FireMode.UNKNOWN) {
-//                    player.sendSystemMessage(Component.translatable("message.tacz.fire_select.fail"));
-//                }
-//                if (fireMode == FireMode.SEMI || isBurstSemi) {
-//                    lastTimeShootSuccess = IClientPlayerGunOperator.fromLocalPlayer(player).shoot() == ShootResult.SUCCESS;
-//                }
-//            }
-//        }
-    }
-
-    public static boolean semiShootController(boolean isPress) {
-        if (!isInGame()) {
-            return false;
-        }
-        // 松开鼠标，重置 DryFire 状态
-        if (!isPress) {
-            SoundPlayManager.resetDryFireSound();
-            return false;
-        }
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player == null || player.isSpectator()) {
-            return false;
-        }
-        ItemStack mainHandItem = player.getMainHandItem();
-        if (mainHandItem.getItem() instanceof IGun iGun) {
-            FireMode fireMode = iGun.getFireMode(mainHandItem);
-            boolean isBurstSemi = fireMode == FireMode.BURST && TimelessAPI.getCommonGunIndex(iGun.getGunId(mainHandItem))
-                    .map(index -> !index.getGunData().getBurstData().isContinuousShoot())
-                    .orElse(false);
             if (fireMode == FireMode.UNKNOWN) {
                 player.sendSystemMessage(Component.translatable("message.tacz.fire_select.fail"));
                 return false;
             }
-            if (fireMode == FireMode.SEMI || isBurstSemi) {
-                return IClientPlayerGunOperator.fromLocalPlayer(player).shoot() == ShootResult.SUCCESS;
+            if (operator.chargeShoot(isShootDown)) {
+                LocalPlayerSprint.stopSprint = true;
+                if (fireMode != FireMode.AUTO && !isBurstAuto && lastTimeShootSuccess) {
+                    return false;
+                }
+                if (operator.shoot() == ShootResult.SUCCESS) {
+                    lastTimeShootSuccess = true;
+                    return true;
+                }
+            }
+            if (isShootDown) {
+                LocalPlayerSprint.stopSprint = true;
+            } else {
+                lastTimeShootSuccess = false;
+                SoundPlayManager.resetDryFireSound();
             }
         }
         return false;
