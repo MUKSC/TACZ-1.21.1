@@ -67,7 +67,9 @@
       // 最大蓄力进度
       "max_charge": 0.3,
       // 开火阈值，蓄力至少进度达到此值时允许开火(仅hold模式生效)
-      "fire_threshold": 0.3
+      "fire_threshold": 0.3,
+      // 在射击冷却期间，是否可以进行蓄力
+      "charge_during_cooldown": false
     }
   },
   "draw_time": 0.33,

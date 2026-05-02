@@ -427,10 +427,10 @@ public class ModernKineticGunScriptAPI {
     }
 
     /**
-     * 设置本次射击的额外伤害倍率。此方法仅在射击流程期间可用，非射击调用时没有任何意义
+     * 设置本次射击的额外伤害倍率（0-256）。此方法仅在射击流程期间可用，非射击调用时没有任何意义
      */
     public void setShotDamageMultiplier(float multiplier) {
-        this.shotDamageMultiplier = clampMultiper(multiplier);
+        this.shotDamageMultiplier = clampMultiplier(multiplier);
     }
 
     /**
@@ -441,10 +441,10 @@ public class ModernKineticGunScriptAPI {
     }
 
     /**
-     * 设置本次射击的额外弹速倍率。此方法仅在射击流程期间可用，非射击调用时没有任何意义
+     * 设置本次射击的额外弹速倍率（0-256）。此方法仅在射击流程期间可用，非射击调用时没有任何意义
      */
     public void setProjectileSpeedMultiplier(float multiplier) {
-        this.projectileSpeedMultiplier = clampMultiper(multiplier);
+        this.projectileSpeedMultiplier = clampMultiplier(multiplier);
     }
 
     /**
@@ -454,8 +454,8 @@ public class ModernKineticGunScriptAPI {
         return projectileSpeedMultiplier;
     }
 
-    private float clampMultiper(float multiplier) {
-        return Mth.clamp(multiplier, 0f, 1f);
+    private float clampMultiplier(float multiplier) {
+        return Mth.clamp(multiplier, 0f, 256f);
     }
 
     /**
