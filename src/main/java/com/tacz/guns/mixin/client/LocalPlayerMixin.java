@@ -142,4 +142,19 @@ public abstract class LocalPlayerMixin implements IClientPlayerGunOperator {
     public boolean isReadyToDraw() {
         return tac$draw.readyToDraw;
     }
+
+    @Override
+    public boolean chargeShoot(boolean isCharge) {
+        return tac$shoot.chargeShoot(isCharge);
+    }
+
+    @Override
+    public float getChargeProgress() {
+        return tac$data.chargeProgress;
+    }
+
+    @Override
+    public boolean isCharging() {
+        return tac$data.isCharging;
+    }
 }

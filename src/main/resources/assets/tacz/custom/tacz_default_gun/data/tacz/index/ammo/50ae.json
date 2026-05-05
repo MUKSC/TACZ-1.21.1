@@ -1,5 +1,6 @@
 {
   "name": "tacz.ammo.50ae.name",
   "display": "tacz:50ae_display",
-  "stack_size": 48
+  "stack_size": 48,
+  "sort": 16
 }

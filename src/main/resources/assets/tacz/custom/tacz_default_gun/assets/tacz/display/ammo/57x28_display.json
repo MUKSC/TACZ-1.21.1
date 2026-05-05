@@ -1,4 +1,6 @@
 {
+  "model": "tacz:ammo/57x28",
+  "texture": "tacz:ammo/uv/57x28",
   "slot": "tacz:ammo/slot/57x28",
   "tracer_color": "#a4fff7",
   "shell": {

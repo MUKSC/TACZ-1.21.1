@@ -1,0 +1,9 @@
+{
+  "slot": "tacz:ammo/slot/500mag",
+  "shell": {
+    "model": "tacz:shell/500mag_shell",
+    "texture": "tacz:shell/500mag_shell"
+  },
+  "tracer_color": "#FF9999"
+}
+    

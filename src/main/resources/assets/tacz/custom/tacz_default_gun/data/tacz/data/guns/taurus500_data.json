@@ -1,0 +1,119 @@
+{
+  "ammo": "tacz:500mag",
+  "ammo_amount": 5,
+  "extended_mag_ammo_amount": [
+    5,
+    5,
+    5
+  ],
+  "rpm": 120,
+  "bullet": {
+    "life": 0.85,
+    "bullet_amount": 1,
+    "damage": 40,
+    "tracer_count_interval": 0,
+    "extra_damage": {
+      "armor_ignore": 0.50,
+      "head_shot_multiplier": 2,
+      "damage_adjust": [
+        {"distance": 40, "damage": 40},
+        {"distance": 55, "damage": 30},
+        {"distance": 75, "damage": 20},
+        {"distance": "infinite", "damage": 15}
+      ]
+    },
+    "speed": 250,
+    "gravity": 0.15,
+    "knockback": 0.5,
+    "friction": 0.03,
+    "ignite": false,
+    "pierce": 3,
+    "explosion": {
+      "explode": false,
+      "damage": 30,
+      "radius": 0.75,
+      "knockback": true,
+      "delay": 1
+    }
+  },
+  "bolt": "open_bolt",
+  "reload": {
+    "type": "magazine",
+    "feed": {
+      "empty": 2.28,
+      "tactical": 2.28
+    },
+    "cooldown": {
+      "empty": 2.72,
+      "tactical": 2.72
+    }
+  },
+  "charging": {
+    "semi": {
+      // 蓄力模式
+      // auto - 按住扳机蓄力，蓄满后自动发射
+      // hold - 按住扳机蓄力，直到松开扳机才发射（如果满足阈值）
+      // delay - 按下扳机后自动进行蓄力，蓄满后自动发射，无法取消
+      "type": "auto",
+      // 按下/松开扳机时每tick蓄力和减少的进度（非负）
+      "increase_per_tick": 0.1,
+      "decrease_per_tick": 0.1,
+      // 开火后削减的蓄力进度
+      // 开火模式为全自动且蓄力模式为auto时，如果不重置的话第一发完成蓄力后可以按住扳机持续开火
+      // 蓄力模式为hold时，如果开火后蓄力进度仍然大于阈值，即使松开扳机也会不受控制的持续开火（如果大于阈值的话不会触发decrease_per_tick）
+      // 蓄力模式为delay时，此值无效（始终重置为0）
+      "decrease_on_fire": 0.5,
+      // 最大蓄力进度
+      "max_charge": 0.5,
+      // 开火阈值，蓄力至少进度达到此值时允许开火(仅hold模式生效)
+      "fire_threshold": 0.5,
+      // 在射击冷却期间，是否可以进行蓄力
+      "charge_during_cooldown": false
+    }
+  },
+  "draw_time": 0.47,
+  "put_away_time": 0.4,
+  "aim_time": 0.18,
+  "sprint_time": 0.15,
+  "weight": 2.2,
+  "movement_speed": {
+    "base": 0.0,
+    "aim": -0.2,
+    "reload": 0
+  },
+  "crawl_recoil_multiplier": 0.75,
+  "fire_mode": [
+    "semi"
+  ],
+  "allow_attachment_types": [
+    "scope",
+    "laser",
+    "extended_mag"
+  ],
+  "can_crawl": true,
+  "can_slide": false,
+  "recoil": {
+    "pitch": [
+      {"time": 0, "value": [5.65, 5.65]},
+      {"time": 0.08, "value": [5.25, 5.25]},
+      {"time": 0.16, "value": [5.4, 5.4]},
+      {"time": 0.35, "value": [-0.125, -0.125]},
+      {"time": 0.48, "value": [0.225, 0.225]},
+      {"time": 0.7, "value": [0, 0]},
+      {"time": 1.0, "value": [0, 0]}
+    ],
+    "yaw": [
+      {"time": 0, "value": [-2.1, 0.1]},
+      {"time": 0.08, "value": [-1.65, 0.25]},
+      {"time": 0.16, "value": [-1.9, 0.05]},
+      {"time": 0.24, "value": [0, 0]}
+    ]
+  },
+  "inaccuracy": {
+    "stand": 3.5,
+    "move": 5.5,
+    "sneak": 2.25,
+    "lie": 1.5,
+    "aim": 0.1
+  }
+}

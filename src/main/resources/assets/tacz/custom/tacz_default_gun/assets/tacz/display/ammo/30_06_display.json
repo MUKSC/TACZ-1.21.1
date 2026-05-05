@@ -1,8 +1,32 @@
 {
+  "model": "tacz:ammo/30_06",
+  "texture": "tacz:ammo/uv/30_06",
   "slot": "tacz:ammo/slot/30_06",
   "shell": {
     "model": "tacz:shell/30_06_shell",
     "texture": "tacz:shell/30_06_shell"
+  },
+  "transform": {
+    "scale": {
+      // 第三人称手部
+      "thirdperson": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      // 地面实体
+      "ground": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      // 展示框
+      "fixed": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    }
   }
 }
     

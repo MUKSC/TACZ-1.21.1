@@ -55,8 +55,7 @@ public class ControllableInner {
         if (AIM.getButton() == newButton.get() && AimKey.onAimControllerPress(isPress)) {
             return true;
         }
-        if (SHOOT.getButton() == newButton.get() && ShootKey.semiShootController(isPress)) {
-            doRumble(controller);
+        if (SHOOT.getButton() == newButton.get()) {
             return true;
         }
         if (RELOAD.getButton() == newButton.get() && ReloadKey.onReloadControllerPress(isPress)) {
@@ -88,23 +87,19 @@ public class ControllableInner {
         if (controller == null) {
             return;
         }
-        if (controller.isButtonPressed(SHOOT.getButton()) && ShootKey.autoShootController()) {
-            doRumble(controller);
-        }
+        ShootKey.shootControllerTick(controller.isButtonPressed(SHOOT.getButton()));
     }
 
-    private static void doRumble(Controller controller) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
+    public static void rumbleShoot(ItemStack mainHandItem, FireMode fireMode) {
+        Controller controller = Controllable.getController();
+        if (controller == null) {
             return;
         }
-        ItemStack mainHandItem = player.getMainHandItem();
         IGun iGun = IGun.getIGunOrNull(mainHandItem);
         if (iGun == null) {
             return;
         }
 
-        FireMode fireMode = iGun.getFireMode(mainHandItem);
         TimelessAPI.getGunDisplay(mainHandItem).ifPresent(index -> {
             EnumMap<FireMode, ControllableData> data = index.getControllableData();
             if (data.containsKey(fireMode)) {

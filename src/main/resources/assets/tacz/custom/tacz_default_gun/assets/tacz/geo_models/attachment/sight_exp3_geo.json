@@ -6,9 +6,9 @@
 				"identifier": "geometry.sight_coyote - Converted",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 15,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_width": 22,
+				"visible_bounds_height": 7,
+				"visible_bounds_offset": [0, -1.5, 0]
 			},
 			"bones": [
 				{
@@ -1272,8 +1272,10 @@
 					"pivot": [0, 2.12625, -103.3],
 					"cubes": [
 						{
-							"origin": [-1.5, 0.62625, -106],
-							"size": [3, 3, 0.3],
+							"origin": [-0.75, 1.08238, -45],
+							"size": [1.5, 2.12132, 0.30822],
+							"pivot": [0, 2.12625, -44.85],
+							"rotation": [45, 0, 0],
 							"uv": {
 								"south": {"uv": [57.125, 60], "uv_size": [64, 64]}
 							}
@@ -1295,7 +1297,7 @@
 				},
 				{
 					"name": "scope_view",
-					"pivot": [0, 2.1375, 16]
+					"pivot": [0, 2.1375, 15]
 				}
 			]
 		}

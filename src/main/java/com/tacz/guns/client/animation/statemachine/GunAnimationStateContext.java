@@ -402,6 +402,44 @@ public class GunAnimationStateContext extends ItemAnimationStateContext {
     }
 
     /**
+     * 获取当前的蓄力进度
+     * @return 当前的蓄力进度
+     */
+    public float getChargeProgress() {
+        return processGunOperator(IClientPlayerGunOperator::getChargeProgress).orElse(0f);
+    }
+
+    /**
+     * 获取当前枪械的最大蓄力值
+     * @return 当前枪械的最大蓄力值
+     */
+    public float getMaxCharge() {
+        return processGunData((iGun, gunIndex) -> {
+            var chargeData = gunData.getChargeData(iGun.getFireMode(currentGunItem));
+            return chargeData != null ? chargeData.getMaxCharge() : 0f;
+        }).orElse(0f);
+    }
+
+    /**
+     * 获取当前枪械的蓄力触发阈值(仅hold模式有效)
+     * @return 当前枪械的蓄力触发阈值
+     */
+    public float getChargeThreshold() {
+        return processGunData((iGun, gunIndex) -> {
+            var chargeData = gunData.getChargeData(iGun.getFireMode(currentGunItem));
+            return chargeData != null ? chargeData.getFireThreshold() : 0f;
+        }).orElse(0f);
+    }
+
+    /**
+     * 获取当前是否正在蓄力
+     * @return 当前是否正在蓄力
+     */
+    public boolean isCharging() {
+        return processGunOperator(IClientPlayerGunOperator::isCharging).orElse(false);
+    }
+
+    /**
      * 状态机脚本请不要调用此方法。此方法用于状态机更新时设置当前的物品对象。
      */
     public void setCurrentGunItem(ItemStack currentGunItem) {

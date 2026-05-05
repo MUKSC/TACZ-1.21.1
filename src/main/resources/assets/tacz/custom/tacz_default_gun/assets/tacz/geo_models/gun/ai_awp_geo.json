@@ -75,6 +75,11 @@
 					"pivot": [0, 7.75, -32.875]
 				},
 				{
+					"name": "shell",
+					"parent": "gun_pos",
+					"pivot": [-0.1875, 7.9375, 1.9375]
+				},
+				{
 					"name": "barrel_default",
 					"parent": "AWP_body",
 					"pivot": [0, 5.875, -10.8125]
@@ -5397,7 +5402,7 @@
 				{
 					"name": "constraint",
 					"parent": "AWP_body",
-					"pivot": [0, 9.3, -30.475]
+					"pivot": [0, 9.3, -5.475]
 				},
 				{
 					"name": "mag_and_lefthand",
@@ -6456,7 +6461,7 @@
 				{
 					"name": "iron_view",
 					"parent": "views",
-					"pivot": [0, 9.3, 11.5]
+					"pivot": [0, 9.3, 14.5]
 				},
 				{
 					"name": "idle_view",
@@ -6467,7 +6472,7 @@
 					"name": "refit_view",
 					"parent": "views",
 					"pivot": [30.4, 5.175, -11],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

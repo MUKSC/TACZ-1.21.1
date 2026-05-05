@@ -3,5 +3,6 @@
   "display": "tacz:m1911_display",
   "data": "tacz:m1911_data",
   "tooltip": "tacz.gun.m1911.desc",
-  "type": "pistol"
+  "type": "pistol",
+  "sort": 6
 }

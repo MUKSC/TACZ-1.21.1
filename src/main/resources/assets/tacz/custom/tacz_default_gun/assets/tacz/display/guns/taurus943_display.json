@@ -1,0 +1,59 @@
+{
+  "model": "tacz:gun/taurus943_geo",
+  "texture": "tacz:gun/uv/taurus943",
+  "lod": {
+    "model": "tacz:gun/lod/taurus943",
+    "texture": "tacz:gun/lod/taurus943"
+  },
+  "hud": "tacz:gun/hud/taurus943",
+  "slot": "tacz:gun/slot/taurus943",
+  "animation": "tacz:taurus943",
+  "use_default_animation": "pistol",
+  "state_machine": "tacz:taurus500_state_machine",
+  "player_animator_3rd": "tacz:pistol_default.player_animation",
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "shell": {
+    "initial_velocity": [8.0, 5.0, -0.5],
+    "random_velocity": [2.5, 1.5, 0.25],
+    "acceleration": [0.0, -20, 0.0],
+    "angular_velocity": [720, -1280, 90],
+    "living_time": 1.0
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 0.4
+  },
+  "sounds": {
+    "draw": "tacz:rhino357/rhino_draw",
+    "put_away": "tacz:rhino357/rhino_put_away",
+    "shoot": "tacz:taurus943/taurus943_shoot",
+    "shoot_3p": "tacz:taurus943/taurus943_shoot_3p",
+    "silence": "tacz:deagle/deagle_silence",
+    "silence_3p": "tacz:deagle/deagle_silence_3p"
+  },
+  "offhand_show": {
+    "pos": [4, 13, -2],
+    "rotate": [-90, -35, 90],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [-5, 13, -2],
+      "rotate": [-90, -35, 90],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  },
+  "controllable": {
+    "semi": {
+      "low_frequency": 1,
+      "high_frequency": 1,
+      "time": 200
+    }
+  }
+}

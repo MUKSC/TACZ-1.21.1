@@ -71,6 +71,10 @@ public class ModernKineticGunScriptAPI {
 
     private LuaEntityAccessor entityAccessor;
 
+    private float shotDamageMultiplier = 1f;
+
+    private float projectileSpeedMultiplier = 1f;
+
     /**
      * 获取玩家的属性缓存中缓存的值。
      * 请勿获取拥有复杂数据结构的属性值，该行为是未定义的。
@@ -102,6 +106,8 @@ public class ModernKineticGunScriptAPI {
         GunData gunData = gunIndex.getGunData();
         BulletData bulletData = gunIndex.getBulletData();
         IGunOperator gunOperator = IGunOperator.fromLivingEntity(shooter);
+        final float shotDamageMultiplier = this.shotDamageMultiplier;
+        final float projectileSpeedMultiplier = this.projectileSpeedMultiplier;
 
         // 获取配件数据缓存
         AttachmentCacheProperty cacheProperty = gunOperator.getCacheProperty();
@@ -132,7 +138,7 @@ public class ModernKineticGunScriptAPI {
         // 子弹飞行速度
         float speed = modifyProperty(GunProperties.AMMO_SPEED, Float.class, cacheProperty.getCache(GunProperties.AMMO_SPEED));
         speed *= AmmoConfig.GLOBAL_BULLET_SPEED_MODIFIER.get();
-        float processedSpeed = Mth.clamp(speed / 20, 0, Float.MAX_VALUE);
+        float processedSpeed = Mth.clamp((speed / 20) * projectileSpeedMultiplier, 0, Float.MAX_VALUE);
         // 弹丸数量
         int bulletAmount = modifyProperty(GunProperties.RuntimeOnly.BULLET_AMOUNT, Integer.class, Math.max(bulletData.getBulletAmount(), 1));
 
@@ -181,6 +187,7 @@ public class ModernKineticGunScriptAPI {
                     EntityKineticBullet bullet = new EntityKineticBullet(world, shooter, itemStack, ammoId, gunId,
                             gunDisplayId, isTracer, gunData, bulletData);
                     bullet.applyShotgunDamageSpread(bulletAmount);
+                    bullet.setShotDamageMultiplier(shotDamageMultiplier);
                     abstractGunItem.doBulletSpread(dataHolder, itemStack, shooter, bullet, i, processedSpeed,
                             inaccuracy, pitch, yaw);
                     world.addFreshEntity(bullet);
@@ -373,6 +380,82 @@ public class ModernKineticGunScriptAPI {
      */
     public float getAimingProgress() {
         return dataHolder.aimingProgress;
+    }
+
+    // 蓄力相关方法
+    /**
+     * 本次射击的蓄力进度。此上下文仅在射击流程期间可用，非射击期间调用时返回的值没有意义
+     * @return 蓄力进度
+     */
+    public float getChargeProgress() {
+        return dataHolder.chargeProgress;
+    }
+
+    /**
+     * 当前开火模式下，枪械是否有蓄力配置
+     * @return 蓄力进度
+     */
+    public boolean hasChargeData() {
+        return getChargeData() != null;
+    }
+
+    /**
+     * 当前开火模式下，蓄力的最大进度
+     */
+    public float getMaxCharge() {
+        ChargeData chargeData = getChargeData();
+        return chargeData == null ? 0f : chargeData.getMaxCharge();
+    }
+
+    /**
+     * 当前开火模式下，蓄力的开火阈值
+     */
+    public float getFireThreshold() {
+        ChargeData chargeData = getChargeData();
+        return chargeData == null ? 0f : chargeData.getFireThreshold();
+    }
+
+    /**
+     * 计算本次射击的蓄力进度。此上下文仅在射击流程期间可用，非射击期间调用时返回的值没有意义
+     */
+    public float getChargeRatio() {
+        float maxCharge = getMaxCharge();
+        if (maxCharge <= 0f) {
+            return 0f;
+        }
+        return Math.max(0f, Math.min(getChargeProgress() / maxCharge, 1f));
+    }
+
+    /**
+     * 设置本次射击的额外伤害倍率（0-256）。此方法仅在射击流程期间可用，非射击调用时没有任何意义
+     */
+    public void setShotDamageMultiplier(float multiplier) {
+        this.shotDamageMultiplier = clampMultiplier(multiplier);
+    }
+
+    /**
+     * 获取本次射击的额外伤害倍率。此方法仅在射击流程期间可用，非射击调用时没有任何意义
+     */
+    public float getShotDamageMultiplier() {
+        return shotDamageMultiplier;
+    }
+
+    /**
+     * 设置本次射击的额外弹速倍率（0-256）。此方法仅在射击流程期间可用，非射击调用时没有任何意义
+     */
+    public void setProjectileSpeedMultiplier(float multiplier) {
+        this.projectileSpeedMultiplier = clampMultiplier(multiplier);
+    }
+
+    /**
+     * 获取本次射击的额外弹速倍率。此方法仅在射击流程期间可用，非射击调用时没有任何意义
+     */
+    public float getProjectileSpeedMultiplier() {
+        return projectileSpeedMultiplier;
+    }
+
+    private float clampMultiplier(float multiplier) {
+        return Mth.clamp(multiplier, 0f, 256f);
     }
 
     /**
@@ -768,6 +851,11 @@ public class ModernKineticGunScriptAPI {
 
     public Bolt getBolt() {
         return gunIndex.getGunData().getBolt();
+    }
+
+    private ChargeData getChargeData() {
+        FireMode fireMode = abstractGunItem.getFireMode(itemStack);
+        return gunIndex.getGunData().getChargeData(fireMode);
     }
 
     public void setDataHolder(ShooterDataHolder dataHolder) {

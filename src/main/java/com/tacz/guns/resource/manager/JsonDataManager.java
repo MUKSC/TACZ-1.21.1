@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 /**
+ * 该类会在资源重新加载时一次性加载所有数据，可能会导致性能问题，在加载重资产时建议使用{@link LazyJsonDataManager}替代<br>
  * 通用数据管理器<br>
  * 从资源包/数据包中读取json文件并解析为数据
  * @param <T> 数据类型

@@ -1600,7 +1600,7 @@
 				},
 				{
 					"name": "scope_view",
-					"pivot": [0, 1.6875, 5]
+					"pivot": [0, 1.6875, 16]
 				},
 				{
 					"name": "division",

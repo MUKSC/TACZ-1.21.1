@@ -1746,6 +1746,11 @@
 					"pivot": [0, 10, -39.1]
 				},
 				{
+					"name": "shell",
+					"parent": "positioning2",
+					"pivot": [-0.375, 10.5, 12.2125]
+				},
+				{
 					"name": "shell_ejection",
 					"parent": "m95",
 					"pivot": [0, 10.125, 6]
@@ -8210,7 +8215,7 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 14, 10.2]
+					"pivot": [0, 14, 14.2]
 				},
 				{
 					"name": "idle_view",
@@ -8227,7 +8232,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [36.6, 9.275, -5.125],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

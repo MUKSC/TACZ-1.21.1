@@ -1,6 +1,5 @@
 package com.tacz.guns.client.model;
 
-import com.github.argon4w.acceleratedrendering.core.CoreFeature;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -64,6 +63,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
     protected @Nullable List<BedrockPart> laserBeamPaths;
 
     private boolean renderHand = true;
+    private boolean renderMount;
     private ItemStack currentGunItem;
     private int currentExtendMagLevel = 0;
 
@@ -85,8 +85,8 @@ public class BedrockGunModel extends BedrockAnimatedModel {
         this.setFunctionalRenderer(BULLET_IN_MAG, bedrockPart -> ammoHiddenRender(bedrockPart, iGun -> iGun.getCurrentAmmoCount(currentGunItem) > 0));
         // 机枪弹链
         this.setFunctionalRenderer(BULLET_CHAIN, bedrockPart -> ammoHiddenRender(bedrockPart, iGun -> iGun.getCurrentAmmoCount(currentGunItem) > 0));
-        // 有瞄具时显示，用于放瞄具的导轨（如 AKM 的导轨）
-        this.setFunctionalRenderer(MOUNT, bedrockPart -> scopeHiddenRender(bedrockPart, scopeItem -> scopeItem != null && !scopeItem.isEmpty()));
+        // 有通用瞄具时显示，用于放瞄具的导轨（如 AKM 的导轨）
+        this.setFunctionalRenderer(MOUNT, bedrockPart -> scopeHiddenRender(bedrockPart, scopeItem -> scopeItem != null && !scopeItem.isEmpty() && renderMount));
         // 无瞄具时可见，通常用于 M4 上
         this.setFunctionalRenderer(CARRY, bedrockPart -> scopeHiddenRender(bedrockPart, scopeItem -> scopeItem == null || scopeItem.isEmpty()));
         // 有瞄具时显示，折叠的机械瞄具
@@ -268,6 +268,10 @@ public class BedrockGunModel extends BedrockAnimatedModel {
                     if (type == AttachmentType.EXTENDED_MAG) {
                         currentExtendMagLevel = index.getData().getExtendedMagLevel();
                     }
+                    // 读取瞄具 Mount 的渲染需求
+                    if (type == AttachmentType.SCOPE) {
+                        renderMount = index.isShowMount();
+                    }
                     // 添加需要渲染的转接口
                     if (index.getAdapterNodeName() != null) {
                         adapterToRender.add(index.getAdapterNodeName());
@@ -338,7 +342,7 @@ public class BedrockGunModel extends BedrockAnimatedModel {
 				// 这里不用ifPresent是因为需要设置useStencil, lambda无法设置局部变量
 				if (attachmentIndex.isPresent()) {
 					// 如果有attachment, 则设置层前任务开启模板缓冲区设置对应的模板函数
-					CoreFeature.forceSetDefaultLayerBeforeFunction(() -> {
+					ARCompat.setRenderBeforeFunction(() -> {
 						// 获取实际的attachmentIndex
 						var index = attachmentIndex.get();
 
@@ -361,10 +365,10 @@ public class BedrockGunModel extends BedrockAnimatedModel {
 			}
 		}
 
-		CoreFeature.forceSetDefaultLayer(-943 + 3);
+		ARCompat.setRenderLayer(-943 + 3);
 
 		// 设置层后任务
-		CoreFeature.forceSetDefaultLayerAfterFunction(() -> {
+		ARCompat.setRenderAfterFunction(() -> {
 			// 关闭模板测试
 			RenderHelper.disableItemEntityStencilTest();
 			// 重置模板缓冲区
@@ -375,12 +379,12 @@ public class BedrockGunModel extends BedrockAnimatedModel {
 		super.render(matrixStack, transformType, renderType, light, overlay);
 
 		// 重置层和层后任务, 还原现场
-		CoreFeature.resetDefaultLayer();
-		CoreFeature.resetDefaultLayerAfterFunction();
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderAfterFunction();
 
 		// 如果使用了层前行为, 则进行重置, 还原现场
 		if (useStencil) {
-			CoreFeature.resetDefaultLayerBeforeFunction();
+			ARCompat.resetRenderBeforeFunction();
 		}
 	}
 

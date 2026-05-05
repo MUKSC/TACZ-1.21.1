@@ -1,0 +1,113 @@
+{
+  "ammo": "tacz:22wmr",
+  "ammo_amount": 8,
+  "rpm": 180,
+  "bullet": {
+    "life": 0.85,
+    "bullet_amount": 1,
+    "damage": 6,
+    "tracer_count_interval": 0,
+    "extra_damage": {
+      "armor_ignore": 0.25,
+      "head_shot_multiplier": 1.5,
+      "damage_adjust": [
+        {"distance": 15, "damage": 6},
+        {"distance": 25, "damage": 4.5},
+        {"distance": 30, "damage": 3},
+        {"distance": "infinite", "damage": 3}
+      ]
+    },
+    "speed": 135,
+    "gravity": 0.125,
+    "knockback": 0.005,
+    "friction": 0.03,
+    "ignite": false,
+    "pierce": 1,
+    "explosion": {
+      "explode": false,
+      "damage": 30,
+      "radius": 0.75,
+      "knockback": true,
+      "delay": 1
+    }
+  },
+  "extended_mag_ammo_amount": [
+    8,
+    8,
+    8
+  ],
+  "bolt": "open_bolt",
+  "reload": {
+    "type": "magazine",
+    "feed": {
+      "empty": 6.8,
+      "tactical": 6.8
+    },
+    "cooldown": {
+      "empty": 7.25,
+      "tactical": 7.25
+    }
+  },
+  // 蓄力和延迟扳机
+  "charging": {
+    "semi": {
+      // 蓄力模式
+      // auto - 按住扳机蓄力，蓄满后自动发射
+      // hold - 按住扳机蓄力，直到松开扳机才发射（如果满足阈值）
+      // delay - 按下扳机后自动进行蓄力，蓄满后自动发射，无法取消
+      "type": "auto",
+      // 按下/松开扳机时每tick蓄力和减少的进度（非负）
+      "increase_per_tick": 0.1,
+      "decrease_per_tick": 0.1,
+      // 开火后削减的蓄力进度
+      // 开火模式为全自动且蓄力模式为auto时，如果不重置的话第一发完成蓄力后可以按住扳机持续开火
+      // 蓄力模式为hold时，如果开火后蓄力进度仍然大于阈值，即使松开扳机也会不受控制的持续开火（如果大于阈值的话不会触发decrease_per_tick）
+      // 蓄力模式为delay时，此值无效（始终重置为0）
+      "decrease_on_fire": 0.3,
+      // 最大蓄力进度
+      "max_charge": 0.3,
+      // 开火阈值，蓄力至少进度达到此值时允许开火(仅hold模式生效)
+      "fire_threshold": 0.3,
+      // 在射击冷却期间，是否可以进行蓄力
+      "charge_during_cooldown": false
+    }
+  },
+  "draw_time": 0.33,
+  "put_away_time": 0.23,
+  "aim_time": 0.15,
+  "sprint_time": 0.1,
+  "weight": 0.85,
+  "movement_speed": {
+    "base": 0.0,
+    "aim": -0.1,
+    "reload": 0
+  },
+  "crawl_recoil_multiplier": 0.75,
+  "fire_mode": [
+    "semi"
+  ],
+  "allow_attachment_types": [
+  ],
+  "recoil": {
+    "pitch": [
+      {"time": 0, "value": [0.6, 0.6]},
+      {"time": 0.05, "value": [0.8, 0.8]},
+      {"time": 0.1, "value": [0.65, 0.65]},
+      {"time": 0.25, "value": [-0.115, -0.115]},
+      {"time": 0.5, "value": [0.1, 0.1]},
+      {"time": 0.7, "value": [0, 0]},
+      {"time": 1.0, "value": [0, 0]}
+    ],
+    "yaw": [
+      {"time": 0, "value": [-0.15, 0.15]},
+      {"time": 0.5, "value": [0, 0]}
+    ]
+  },
+  "inaccuracy": {
+    "stand": 3,
+    "move": 3.5,
+    "sneak": 1.25,
+    "lie": 1.5,
+    "aim": 0.1
+  }
+}

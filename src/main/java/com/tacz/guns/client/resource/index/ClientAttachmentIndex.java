@@ -2,7 +2,9 @@ package com.tacz.guns.client.resource.index;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.client.model.BedrockAttachmentModel;
+import com.tacz.guns.client.resource.ClientAssetLoadDispatcher;
 import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.resource.pojo.display.LaserConfig;
 import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentDisplay;
@@ -10,6 +12,7 @@ import com.tacz.guns.client.resource.pojo.display.attachment.AttachmentLod;
 import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
+import com.tacz.guns.config.client.ResourceConfig;
 import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.pojo.AttachmentIndexPOJO;
 import com.tacz.guns.resource.pojo.data.attachment.AttachmentData;
@@ -23,10 +26,14 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class ClientAttachmentIndex {
+    private final Object modelLoadLock = new Object();
     private final Map<ResourceLocation, ClientAttachmentSkinIndex> skinIndexMap = Maps.newHashMap();
     private String name;
+    private AttachmentDisplay display;
     private @Nullable BedrockAttachmentModel attachmentModel;
     private @Nullable ResourceLocation modelTexture;
     private @Nullable Pair<BedrockAttachmentModel, ResourceLocation> lodModel;
@@ -38,10 +45,14 @@ public class ClientAttachmentIndex {
     private boolean isScope;
     private boolean isSight;
     private boolean showMuzzle;
+    private boolean showMount;
     private @Nullable String adapterNodeName;
     private @Nullable String tooltipKey;
     private Map<String, ResourceLocation> sounds;
     private @Nullable LaserConfig laserConfig;
+    private volatile boolean modelsLoaded = false;
+    private volatile boolean modelsLoadFailed = false;
+    private volatile CompletableFuture<Void> warmUpTask = null;
 
     private ClientAttachmentIndex() {
     }
@@ -53,11 +64,11 @@ public class ClientAttachmentIndex {
         checkData(indexPOJO, index);
         checkName(indexPOJO, index);
         checkSlotTexture(display, index);
-        checkTextureAndModel(display, index);
-        checkTextShow(display, index.attachmentModel);
-        checkLod(display, index);
 //        checkSkins(registryName, index);
         checkSounds(display, index);
+        if (!ResourceConfig.ENABLE_LAZY_CLIENT_ASSET_LOAD.get()) {
+            index.ensureModelsLoaded();
+        }
         return index;
     }
 
@@ -72,6 +83,7 @@ public class ClientAttachmentIndex {
         Preconditions.checkArgument(pojoDisplay != null, "index object missing display field");
         AttachmentDisplay display = ClientAssetsManager.INSTANCE.getAttachmentDisplay(pojoDisplay);
         Preconditions.checkArgument(display != null, "there is no corresponding display file");
+        index.display = display;
         index.viewsFov = display.getViewsFov();
         if (index.viewsFov == null) {
             Preconditions.checkArgument(display.getFov() > 0, "fov must > 0");
@@ -103,6 +115,7 @@ public class ClientAttachmentIndex {
         index.isSight = display.isSight();
         index.adapterNodeName = display.getAdapterNodeName();
         index.showMuzzle = display.isShowMuzzle();
+        index.showMount = display.isShowMount();
         index.laserConfig = display.getLaserConfig();
         return display;
     }
@@ -149,6 +162,76 @@ public class ClientAttachmentIndex {
             index.attachmentModel.setIsSight(display.isSight());
         }
         index.modelTexture = display.getTexture();
+    }
+
+    public void warmUp() {
+        if (!ResourceConfig.ENABLE_LAZY_CLIENT_ASSET_LOAD.get()) {
+            ensureModelsLoaded();
+            return;
+        }
+        if (modelsLoaded || modelsLoadFailed || warmUpTask != null) {
+            return;
+        }
+        synchronized (modelLoadLock) {
+            if (modelsLoaded || modelsLoadFailed || warmUpTask != null) {
+                return;
+            }
+            warmUpTask = CompletableFuture.runAsync(this::loadModelsIfNecessary, ClientAssetLoadDispatcher.executor());
+            warmUpTask.whenComplete((unused, throwable) -> {
+                if (throwable != null) {
+                    handleModelsLoadFailure(throwable);
+                }
+            });
+        }
+    }
+
+    private void ensureModelsLoaded() {
+        if (modelsLoaded || modelsLoadFailed) {
+            return;
+        }
+        CompletableFuture<Void> task = warmUpTask;
+        if (task == null) {
+            try {
+                loadModelsIfNecessary();
+            } catch (Throwable throwable) {
+                handleModelsLoadFailure(throwable);
+            }
+            return;
+        }
+        try {
+            task.join();
+        } catch (CompletionException exception) {
+            handleModelsLoadFailure(exception.getCause() == null ? exception : exception.getCause());
+        }
+    }
+
+    private void loadModelsIfNecessary() {
+        if (modelsLoaded) {
+            return;
+        }
+        synchronized (modelLoadLock) {
+            if (modelsLoaded) {
+                return;
+            }
+            checkTextureAndModel(display, this);
+            checkTextShow(display, attachmentModel);
+            checkLod(display, this);
+            modelsLoaded = true;
+        }
+    }
+
+    private void handleModelsLoadFailure(Throwable throwable) {
+        boolean shouldLog = false;
+        synchronized (modelLoadLock) {
+            if (!modelsLoaded) {
+                shouldLog = !modelsLoadFailed;
+                warmUpTask = null;
+                modelsLoadFailed = true;
+            }
+        }
+        if (shouldLog) {
+            GunMod.LOGGER.warn("Failed to load attachment models {}", display.getModel(), throwable);
+        }
     }
 
     @Nullable
@@ -225,16 +308,19 @@ public class ClientAttachmentIndex {
 
     @Nullable
     public BedrockAttachmentModel getAttachmentModel() {
+        ensureModelsLoaded();
         return attachmentModel;
     }
 
     @Nullable
     public ResourceLocation getModelTexture() {
+        ensureModelsLoaded();
         return modelTexture;
     }
 
     @Nullable
     public Pair<BedrockAttachmentModel, ResourceLocation> getLodModel() {
+        ensureModelsLoaded();
         return lodModel;
     }
 
@@ -279,6 +365,10 @@ public class ClientAttachmentIndex {
 
     public boolean isShowMuzzle() {
         return showMuzzle;
+    }
+
+    public boolean isShowMount() {
+        return showMount;
     }
 
     public Map<String, ResourceLocation> getSounds() {

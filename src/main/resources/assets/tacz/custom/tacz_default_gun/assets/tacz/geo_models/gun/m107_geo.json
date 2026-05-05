@@ -4502,7 +4502,7 @@
 				{
 					"name": "scope_pos",
 					"parent": "positioning2",
-					"pivot": [0, 12.0625, 12]
+					"pivot": [0, 12.125, 12]
 				},
 				{
 					"name": "shell",
@@ -10377,13 +10377,13 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 14, 20]
+					"pivot": [0, 14, 24]
 				},
 				{
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [40, 6, -4],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

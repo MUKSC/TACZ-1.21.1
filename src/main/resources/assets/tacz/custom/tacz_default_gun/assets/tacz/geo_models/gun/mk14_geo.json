@@ -9655,13 +9655,13 @@
 				{
 					"name": "laser_pos",
 					"parent": "positioning2",
-					"pivot": [1.25, 6.61875, -9.75],
+					"pivot": [1.3125, 6.61875, -9.75],
 					"rotation": [0, 0, 90]
 				},
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 5.125, -2.5]
+					"pivot": [0, 5, -2.5]
 				},
 				{
 					"name": "muzzle_pos",
@@ -9740,7 +9740,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [23, 6.2, 3],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_grip_view",

@@ -15,8 +15,6 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.LogicalSide;
 
-import java.util.concurrent.TimeUnit;
-
 public class LocalPlayerDraw {
     private final LocalPlayerDataHolder data;
     private final LocalPlayer player;
@@ -50,10 +48,10 @@ public class LocalPlayerDraw {
         NetworkHandler.CHANNEL.sendToServer(new ClientMessagePlayerDrawGun());
         MinecraftForge.EVENT_BUS.post(new GunDrawEvent(player, lastItem, currentItem, LogicalSide.CLIENT));
 
-        // 不处于收枪状态时才能收枪
-        if (drawTime >= 0) {
-            doPutAway(lastItem, putAwayTime);
-        }
+//        // 不处于收枪状态时才能收枪
+//        if (drawTime >= 0) {
+//            doPutAway(lastItem, putAwayTime);
+//        }
 
         // 异步放映抬枪动画
         if (currentGun != null) {
@@ -70,26 +68,23 @@ public class LocalPlayerDraw {
                 data.drawFuture.cancel(false);
             }
             // 根据 put away time 预定 draw 行为（仅播放音效，状态机的初始化为了保证一致性已经移动）
-            data.drawFuture = LocalPlayerDataHolder.SCHEDULED_EXECUTOR_SERVICE.schedule(() -> {
-                Minecraft.getInstance().submitAsync(() -> {
-                    SoundPlayManager.stopPlayGunSound();
-                    SoundPlayManager.playDrawSound(player, display);
-                });
-            }, putAwayTime, TimeUnit.MILLISECONDS);
+//            data.drawFuture = LocalPlayerDataHolder.SCHEDULED_EXECUTOR_SERVICE.schedule(() -> {
+//                Minecraft.getInstance().submitAsync(() -> {
+//                    SoundPlayManager.stopPlayGunSound();
+//                    SoundPlayManager.playDrawSound(player, display);
+//                });
+//            }, putAwayTime, TimeUnit.MILLISECONDS);
         });
     }
 
     private void doPutAway(ItemStack lastItem, long putAwayTime) {
         if (IClientItemExtensions.of(lastItem.getItem()).getCustomRenderer() instanceof AnimateGeoItemRenderer<?, ?> renderer) {
             renderer.tryExit(lastItem, putAwayTime);
-        }
-        TimelessAPI.getGunDisplay(lastItem).ifPresent(display -> {
-            Minecraft.getInstance().submitAsync(() -> {
-                // 播放收枪音效
+            TimelessAPI.getGunDisplay(lastItem).ifPresent(display -> {
                 SoundPlayManager.stopPlayGunSound();
                 SoundPlayManager.playPutAwaySound(player, display);
             });
-        });
+        }
     }
 
     private long getDrawTime(ItemStack lastItem, IGun lastGun, long drawTime) {
@@ -112,6 +107,7 @@ public class LocalPlayerDraw {
         // 重置客户端的 shoot 时间戳
         data.isShootRecorded = true;
         data.clientShootTimestamp = -1;
+        data.chargeProgress = 0;
         // 重置客户端瞄准状态
         data.clientIsAiming = false;
         data.clientAimingProgress = 0;

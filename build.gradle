@@ -30,9 +30,9 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = "1.1.7-hotfix2"
+version = "1.1.8"
 // 版本号，正式发布需要修改这一行
-//version = FORMAT.format(new Date())
+version = FORMAT.format(new Date())
 group = "com.tacz"
 archivesBaseName = "tacz-1.20.1"
 
@@ -55,6 +55,7 @@ minecraft {
             // 使用 JetBrainsRuntime 时需要的参数，否则无法热重载
             // 如果你使用别的 JDK，那么可以删除这一行
             jvmArgs "-XX:+AllowEnhancedClassRedefinition"
+            jvmArgs "-Xmx4096M", "-Xms4096M"
             // 每个启动单独区分文件夹
             workingDirectory project.file('run/client_a')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -179,6 +180,15 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
 
+    jarJar(implementation(fg.deobf("com.github.mcmodderanchor:simplebedrockmodel:2.2.2-forge+mc1.20.1"))) {
+        jarJar.ranged(it, "[2.2.2,)")
+    }
+    compileOnly("com.maydaymemory:mae:1.1.2") {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        exclude group: 'it.unimi.dsi', module: 'fastutil'
+        exclude group: 'org.joml', module: 'joml'
+    }
+
     // Apache Commons Math 库，用于进行一些插值运算
     minecraftLibrary(jarJar('org.apache.commons:commons-math3:3.6.1')) {
         jarJar.ranged(it, "[3.6.1,)")
@@ -202,15 +212,15 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-1.20.1-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}"))
     // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-1.20.1-forge:15.20.0.104"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-1.20.1-forge:15.20.0.112"))
     // 性能分析工具模组
     runtimeOnly fg.deobf("curse.maven:spark-361579:4738952")
     // 假人，测试近战伤害
     runtimeOnly fg.deobf("curse.maven:selene-499980:5478857")
     runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:5319203")
     // 手柄按键支持
-    implementation fg.deobf("curse.maven:framework-549225:4718251")
-    compileOnly(fg.deobf("curse.maven:controllable-317269:4598985"))
+    implementation fg.deobf("curse.maven:framework-549225:7573740")
+    compileOnly fg.deobf("curse.maven:controllable-317269:7943200")
 
     // 越肩视角，用来兼容第三人称准星
     implementation fg.deobf("curse.maven:shoulder-surfing-reloaded-243190:5455954")

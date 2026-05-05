@@ -70,6 +70,9 @@ public class LocalPlayerReload {
             if (data.clientStateLock) {
                 return;
             }
+            if (System.currentTimeMillis() - data.clientShootTimestamp < 100) {
+                return;
+            }
             // 弹药简单检查
             boolean canReload = gunItem.canReload(player, mainHandItem);
             if (IGunOperator.fromLivingEntity(player).needCheckAmmo() && !canReload) {
@@ -77,6 +80,7 @@ public class LocalPlayerReload {
             }
             // 锁上状态锁
             data.lockState(operator -> operator.getSynReloadState().getStateType().isReloading());
+            data.chargeProgress = 0f;
             // 触发换弹事件
             if (MinecraftForge.EVENT_BUS.post(new GunReloadEvent(player, player.getMainHandItem(), LogicalSide.CLIENT))) {
                 return;

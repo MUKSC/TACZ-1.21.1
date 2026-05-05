@@ -7,7 +7,6 @@ import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.event.BeforeRenderHandEvent;
 import com.tacz.guns.api.client.gameplay.IClientPlayerGunOperator;
-import com.tacz.guns.api.client.other.KeepingItemRenderer;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.client.animation.screen.RefitTransform;
 import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
@@ -89,7 +88,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
         });
         if(stateMachine.isInitialized()) {
             stateMachine.trigger(GunAnimationConstant.INPUT_PUT_AWAY);
-            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
+//            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
             stateMachine.exit();
             stateMachine.setExitingTime(putAwayTime + 50);
         }
@@ -175,10 +174,12 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             }
 
             // 在渲染之前，先更新动画，让动画数据写入模型
-            animationStateMachine.processContextIfExist(context -> {
-                updateContext(context, stack, player, partialTick);
-            });
-            animationStateMachine.update();
+            if (animationStateMachine != null) {
+                animationStateMachine.processContextIfExist(context -> {
+                    updateContext(context, stack, player, partialTick);
+                });
+                animationStateMachine.update();
+            }
 
             poseStack.pushPose();
             // 逆转原版施加在手上的延滞效果，改为写入模型动画数据中
@@ -213,7 +214,9 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
                 gunModel.setRenderHand(false);
             }
             // 调用枪械模型渲染
-            RenderType renderType = RenderType.entityCutout(display.getModelTexture());
+            RenderType renderType = display.enablesTransparency()
+                    ? RenderType.entityTranslucent(display.getModelTexture())
+                    : RenderType.entityCutout(display.getModelTexture());
             gunModel.render(poseStack, stack, ctx, renderType, light, OverlayTexture.NO_OVERLAY);
             // 缓存枪口位置，为第一人称曳光弹渲染作准备
             cacheMuzzlePosition(poseStack, gunModel);
@@ -267,10 +270,7 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             }
             // GUI 特殊渲染
             if (transformType == GUI) {
-                poseStack.translate(0.5, 1.5, 0.5);
-                poseStack.mulPose(Axis.ZN.rotationDegrees(180));
-                VertexConsumer buffer = pBuffer.getBuffer(RenderType.entityTranslucent(gunIndex.getSlotTexture()));
-                SLOT_GUN_MODEL.renderToBuffer(poseStack, buffer, pPackedLight, pPackedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+                renderSlotTexture(poseStack, pBuffer, pPackedLight, pPackedOverlay, gunIndex.getSlotTexture());
                 return;
             }
             // 剩下的渲染
@@ -283,6 +283,10 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             } else {
                 gunModel = lodModel.getLeft();
                 gunTexture = lodModel.getRight();
+            }
+            if (gunModel == null) {
+                renderSlotTexture(poseStack, pBuffer, pPackedLight, pPackedOverlay, gunIndex.getSlotTexture());
+                return;
             }
             // 移动到模型原点
             poseStack.translate(0.5, 2, 0.5);
@@ -297,12 +301,16 @@ public class GunItemRendererWrapper extends AnimateGeoItemRenderer<BedrockGunMod
             gunModel.render(poseStack, stack, transformType, renderType, pPackedLight, pPackedOverlay);
         }, () -> {
             // 没有这个 gunID，渲染个错误材质提醒别人
-            poseStack.translate(0.5, 1.5, 0.5);
-            poseStack.mulPose(Axis.ZN.rotationDegrees(180));
-            VertexConsumer buffer = pBuffer.getBuffer(RenderType.entityTranslucent(MissingTextureAtlasSprite.getLocation()));
-            SLOT_GUN_MODEL.renderToBuffer(poseStack, buffer, pPackedLight, pPackedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            renderSlotTexture(poseStack, pBuffer, pPackedLight, pPackedOverlay, MissingTextureAtlasSprite.getLocation());
         });
         poseStack.popPose();
+    }
+
+    private static void renderSlotTexture(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, ResourceLocation texture) {
+        poseStack.translate(0.5, 1.5, 0.5);
+        poseStack.mulPose(Axis.ZN.rotationDegrees(180));
+        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityTranslucent(texture));
+        SLOT_GUN_MODEL.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     private static void applyPositioningTransform(ItemDisplayContext transformType, TransformScale scale, BedrockGunModel model,

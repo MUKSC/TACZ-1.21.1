@@ -118,6 +118,10 @@ public interface IGunOperator {
      */
     ShootResult shoot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp);
 
+    default ShootResult shoot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp, float chargeProgress) {
+        return shoot(pitch, yaw, timestamp);
+    }
+
     /**
      * 服务端，该操作者是否受弹药数影响
      *

@@ -68,9 +68,11 @@ local function runInspectAnimation(context)
         if (ext == 0) then
             context:runAnimation("inspect_empty", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
-            context:runAnimation("inspect_empty_xmag", track, false, PLAY_ONCE_STOP, 0.2)
-        elseif (ext == 2 or ext == 3) then
-            context:runAnimation("inspect_empty_xmag", track, false, PLAY_ONCE_STOP, 0.2)
+            context:runAnimation("inspect_empty_xmag_12", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 2) then
+            context:runAnimation("inspect_empty_xmag_12", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 3) then
+            context:runAnimation("inspect_empty_xmag_3", track, false, PLAY_ONCE_STOP, 0.2)
         else
             context:runAnimation("inspect_empty", track, false, PLAY_ONCE_STOP, 0.2)
         end
@@ -79,7 +81,9 @@ local function runInspectAnimation(context)
             context:runAnimation("inspect", track, false, PLAY_ONCE_STOP, 0.2)
         elseif (ext == 1) then
             context:runAnimation("inspect_xmag", track, false, PLAY_ONCE_STOP, 0.2)
-        elseif (ext == 2 or ext == 3) then
+        elseif (ext == 2) then
+            context:runAnimation("inspect_xmag", track, false, PLAY_ONCE_STOP, 0.2)
+        elseif (ext == 3) then
             context:runAnimation("inspect_xmag", track, false, PLAY_ONCE_STOP, 0.2)
         else
             context:runAnimation("inspect", track, false, PLAY_ONCE_STOP, 0.2)

@@ -22,7 +22,9 @@ import com.tacz.guns.network.message.event.ServerMessageGunHurt;
 import com.tacz.guns.network.message.event.ServerMessageGunKill;
 import com.tacz.guns.particles.BulletHoleOption;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.modifier.custom.*;
+import com.tacz.guns.resource.modifier.custom.DamageModifier;
+import com.tacz.guns.resource.modifier.custom.ExplosionModifier;
+import com.tacz.guns.resource.modifier.custom.IgniteModifier;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
@@ -144,6 +146,7 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
     private ResourceLocation gunDisplayId;
     private float armorIgnore;
     private float headShot;
+    private float shotDamageMultiplier = 1f;
 
     public EntityKineticBullet(EntityType<? extends Projectile> type, Level worldIn) {
         super(type, worldIn);
@@ -225,6 +228,11 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
         if (bulletCount > 1) {
             this.damageModifier = 1f / bulletCount;
         }
+    }
+
+    @ApiStatus.Internal
+    public void setShotDamageMultiplier(float multiplier) {
+        this.shotDamageMultiplier = Math.max(multiplier, 0f);
     }
 
     @Override
@@ -520,7 +528,8 @@ public class EntityKineticBullet extends Projectile implements IEntityAdditional
             }
         }
         // 让脚本修改枪械伤害
-        return modifyProperty(GunProperties.DAMAGE, Float.class, base);
+        float modifiedDamage = modifyProperty(GunProperties.DAMAGE, Float.class, base);
+        return Math.max(modifiedDamage * this.shotDamageMultiplier, 0F);
     }
 
     /**

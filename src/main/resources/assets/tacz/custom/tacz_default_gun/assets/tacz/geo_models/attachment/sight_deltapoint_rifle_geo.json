@@ -4,8 +4,8 @@
 		{
 			"description": {
 				"identifier": "geometry.unknown",
-				"texture_width": 16,
-				"texture_height": 16,
+				"texture_width": 24,
+				"texture_height": 24,
 				"visible_bounds_width": 4,
 				"visible_bounds_height": 1.5,
 				"visible_bounds_offset": [0, 0.25, 0]
@@ -668,50 +668,27 @@
 				},
 				{
 					"name": "division",
-					"pivot": [0, 2.10165, -31.75154]
+					"pivot": [0.00001, 1.72666, -22]
 				},
 				{
 					"name": "division_illuminated",
 					"parent": "division",
-					"pivot": [0.00001, 1.72666, -32],
+					"pivot": [0.00001, 1.72666, -22],
 					"cubes": [
 						{
-							"origin": [-0.51562, 1.67978, -32],
-							"size": [0.375, 0.09375, 0],
+							"origin": [-0.25, 1.38047, -22.49985],
+							"size": [0.5, 0.70711, -0.001],
+							"pivot": [0, 1.73402, -22.50035],
+							"rotation": [45, 0, 0],
 							"uv": {
-								"south": {"uv": [4, 13], "uv_size": [0.5, 0.5]}
-							}
-						},
-						{
-							"origin": [0.14063, 1.67978, -32],
-							"size": [0.375, 0.09375, 0],
-							"uv": {
-								"south": {"uv": [4, 13], "uv_size": [0.5, 0.5]}
-							}
-						},
-						{
-							"origin": [-0.4375, 1.60165, -32],
-							"size": [0.375, 0.09375, 0],
-							"pivot": [0, 1.64853, -31.93904],
-							"rotation": [0, 0, -90],
-							"uv": {
-								"south": {"uv": [4, 13], "uv_size": [0.5, 0.5]}
-							}
-						},
-						{
-							"origin": [0.0625, 1.7579, -32],
-							"size": [0.375, 0.09375, 0],
-							"pivot": [0, 1.80478, -31.93904],
-							"rotation": [0, 0, -90],
-							"uv": {
-								"south": {"uv": [4, 13], "uv_size": [0.5, 0.5]}
+								"south": {"uv": [18.5, 18.5], "uv_size": [5.5, 5.5]}
 							}
 						}
 					]
 				},
 				{
 					"name": "scope_view",
-					"pivot": [0, 1.72665, 8]
+					"pivot": [0, 1.72665, 11]
 				}
 			]
 		}

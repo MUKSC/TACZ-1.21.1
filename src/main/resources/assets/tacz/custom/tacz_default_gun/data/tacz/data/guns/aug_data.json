@@ -112,7 +112,8 @@
   "allow_attachment_types": [
     "muzzle",
     "extended_mag",
-    "laser"
+    "laser",
+    "scope"
   ],
   "builtin_attachments": {
     "scope": "tacz:scope_aug_default"

@@ -87,6 +87,10 @@ public class RenderCrosshairEvent {
                 }
 
                 AnimationStateMachine<?> animationStateMachine = gunIndex.getAnimationStateMachine();
+                if (animationStateMachine == null) {
+                    renderCrosshair(event.getGuiGraphics(), event.getWindow());
+                    return;
+                }
                 AnimationStateContext context = animationStateMachine.getContext();
                 if (context == null || !context.shouldHideCrossHair()) {
                     renderCrosshair(event.getGuiGraphics(), event.getWindow());

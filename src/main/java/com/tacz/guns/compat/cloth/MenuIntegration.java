@@ -1,8 +1,6 @@
 package com.tacz.guns.compat.cloth;
 
-import com.tacz.guns.compat.cloth.client.KeyClothConfig;
-import com.tacz.guns.compat.cloth.client.RenderClothConfig;
-import com.tacz.guns.compat.cloth.client.ZoomClothConfig;
+import com.tacz.guns.compat.cloth.client.*;
 import com.tacz.guns.compat.cloth.common.AmmoClothConfig;
 import com.tacz.guns.compat.cloth.common.GunClothConfig;
 import com.tacz.guns.compat.cloth.common.OtherClothConfig;
@@ -24,6 +22,8 @@ public class MenuIntegration {
 
         KeyClothConfig.init(root, entryBuilder);
         RenderClothConfig.init(root, entryBuilder);
+        ResourceClothConfig.init(root, entryBuilder);
+        SoundClothConfig.init(root, entryBuilder);
         ZoomClothConfig.init(root, entryBuilder);
 
         GunClothConfig.init(root, entryBuilder);

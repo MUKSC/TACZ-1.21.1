@@ -13,6 +13,8 @@ import com.tacz.guns.network.message.ServerMessageSyncBaseTimestamp;
 import com.tacz.guns.network.message.event.ServerMessageGunShoot;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.ChargeData;
+import com.tacz.guns.resource.pojo.data.gun.ChargeType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +41,14 @@ public class LivingEntityShoot {
     }
 
     public ShootResult shoot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp) {
+        return shoot(pitch, yaw, timestamp, 0f, false);
+    }
+
+    public ShootResult shoot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp, float chargeProgress) {
+        return shoot(pitch, yaw, timestamp, chargeProgress, true);
+    }
+
+    private ShootResult shoot(Supplier<Float> pitch, Supplier<Float> yaw, long timestamp, float chargeProgress, boolean hasChargeContext) {
         if (data.currentGunItem == null) {
             return ShootResult.NOT_DRAW;
         }
@@ -91,6 +101,10 @@ public class LivingEntityShoot {
         if (data.sprintTimeS > 0) {
             return ShootResult.IS_SPRINTING;
         }
+        ChargeData chargeData = gunIndex.getGunData().getChargeData(iGun.getFireMode(currentGunItem));
+        if (hasChargeContext && !isChargeProgressReasonable(chargeData, chargeProgress)) {
+            return ShootResult.UNKNOWN_FAIL;
+        }
         IGunOperator gunOperator = IGunOperator.fromLivingEntity(shooter);
         // 判断子弹数
         Bolt boltType = gunIndex.getGunData().getBolt();
@@ -136,11 +150,75 @@ public class LivingEntityShoot {
         data.lastShootTimestamp = data.shootTimestamp;
         data.heatTimestamp = System.currentTimeMillis();
         data.shootTimestamp = timestamp;
+        data.chargeProgress = validateChargeProgress(chargeData, chargeProgress, hasChargeContext);
         // 执行枪械射击逻辑
         if (iGun instanceof AbstractGunItem logicGun) {
             logicGun.shoot(data, currentGunItem, pitch, yaw, shooter);
         }
         return ShootResult.SUCCESS;
+    }
+
+    // 简单校验，服务端不追踪扳机按住状态，所以只拒绝超过“客户端一直按住蓄力”时理论可达到的最大进度。
+    private boolean isChargeProgressReasonable(ChargeData chargeData, float chargeProgress) {
+        final float tolerance = 0.001f;
+        if (!Float.isFinite(chargeProgress)) {
+            return false;
+        }
+        if (chargeData == null) {
+            return Math.abs(chargeProgress) <= tolerance;
+        }
+        if (chargeProgress < -tolerance) {
+            return false;
+        }
+        float minimumProgress = Math.min(chargeData.getFireThreshold(), chargeData.getMaxCharge());
+        if (chargeProgress + tolerance < minimumProgress) {
+            return false;
+        }
+        if (chargeProgress > getMaxReasonableChargeProgress(chargeData) + tolerance) {
+            return false;
+        }
+        return true;
+    }
+
+    private float getMaxReasonableChargeProgress(ChargeData chargeData) {
+        // 预留少量 tick 余量，用于容忍网络抖动和客户端/服务端调度偏差。
+        final float extraTicks = 4f;
+        float startProgress = getChargeProgressAfterLastFire(chargeData);
+        float elapsedTicks = Math.max(getChargeElapsedMillis() / 50f, 0f) + extraTicks;
+        float maxProgress = startProgress + elapsedTicks * Math.max(chargeData.getIncreasePerTick(), 0f);
+        return Math.min(maxProgress, chargeData.getMaxCharge());
+    }
+
+    private float getChargeProgressAfterLastFire(ChargeData chargeData) {
+        if (data.shootTimestamp < 0) {
+            return 0f;
+        }
+        // delay 蓄力模式在客户端开火后总是重置。
+        if (chargeData.getChargeType() == ChargeType.DELAY) {
+            return 0f;
+        }
+        return Math.max(0f, data.chargeProgress - chargeData.getDecreaseOnFire());
+    }
+
+    private long getChargeElapsedMillis() {
+        if (data.shootTimestamp >= 0) {
+            long startTimestamp = data.baseTimestamp + data.shootTimestamp;
+            return System.currentTimeMillis() - startTimestamp;
+        }
+        if (data.drawTimestamp >= 0) {
+            return System.currentTimeMillis() - data.drawTimestamp;
+        }
+        return 0L;
+    }
+
+    private float validateChargeProgress(ChargeData chargeData, float chargeProgress, boolean hasChargeContext) {
+        if (!hasChargeContext || !Float.isFinite(chargeProgress)) {
+            return 0f;
+        }
+        if (chargeData == null) {
+            return 0f;
+        }
+        return Math.max(0f, Math.min(chargeProgress, chargeData.getMaxCharge()));
     }
 
     /**

@@ -1,0 +1,8 @@
+{
+  "name": "tacz.gun.m9a4.name",
+  "display": "tacz:m9a4_display",
+  "data": "tacz:m9a4_data",
+  "tooltip": "tacz.gun.m9a4.desc",
+  "type": "pistol",
+  "sort": 14
+}

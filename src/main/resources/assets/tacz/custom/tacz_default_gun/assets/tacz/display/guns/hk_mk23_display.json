@@ -1,0 +1,53 @@
+{
+  "model": "tacz:gun/hk_mk23_geo",
+  "texture": "tacz:gun/uv/hk_mk23",
+  "lod": {
+    "model": "tacz:gun/lod/hk_mk23",
+    "texture": "tacz:gun/lod/hk_mk23"
+  },
+  "hud": "tacz:gun/hud/hk_mk23",
+  "slot": "tacz:gun/slot/hk_mk23",
+  "animation": "tacz:hk_mk23",
+  "use_default_animation": "pistol",
+  "state_machine": "tacz:hk_mk23_state_machine",
+  "player_animator_3rd": "tacz:pistol_default.player_animation",
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "shell": {
+    "initial_velocity": [3.5, 4.0, -6],
+    "random_velocity": [1, 2, 4],
+    "acceleration": [0.0, -20, 0.0],
+    "angular_velocity": [360, -1200, 360],
+    "living_time": 1.0
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 0.65
+  },
+  "sounds": {
+    "draw": "tacz:mk23/mk23_draw",
+    "put_away":"tacz:mk23/mk23_put_away",
+    "shoot": "tacz:mk23/mk23_shoot",
+    "shoot_3p": "tacz:mk23/mk23_shoot_3p",
+    "silence": "tacz:mk23/mk23_silence",
+    "silence_3p": "tacz:mk23/mk23_silence_3p",
+    "fire_select": ""
+  },
+  "offhand_show": {
+    "pos": [4, 13, -1],
+    "rotate": [-90, -35, 90],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [-5, 13, -1],
+      "rotate": [-90, -35, 90],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}
