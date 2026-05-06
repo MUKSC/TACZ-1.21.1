@@ -13,7 +13,7 @@ public class OtherConfig {
     public static void init(ModConfigSpec.Builder builder) {
         builder.push("other");
 
-        builder.comment("Deprecated: now move to .minecraft/tacz/tacz-pre.toml or <your version>/tacz/tacz-pre.toml");
+        builder.comment("Deprecated: now move to .minecraft/config/tacz-pre.toml or <your version>/config/tacz-pre.toml");
         builder.comment("When enabled, the reload command will not overwrite the default model file under config");
         DEFAULT_PACK_DEBUG = builder.define("DefaultPackDebug", false);
 
