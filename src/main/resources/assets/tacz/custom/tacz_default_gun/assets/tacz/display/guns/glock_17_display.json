@@ -10,7 +10,6 @@
   "animation": "tacz:glock_17",
   "use_default_animation": "pistol",
   "player_animator_3rd": "tacz:pistol_default.player_animation",
-  "state_machine": "tacz:glock_17_state_machine",
   "transform": {
     "scale": {
       "thirdperson": [0.6, 0.6, 0.6],
