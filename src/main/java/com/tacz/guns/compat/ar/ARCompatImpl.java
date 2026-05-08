@@ -22,6 +22,14 @@ public class ARCompatImpl {
 		return VertexConsumerExtension.getAccelerated(vertexConsumer).isAccelerated();
 	}
 
+	public static void setRenderingLevel() {
+		CoreFeature.setRenderingLevel();
+	}
+
+	public static void resetRenderingLevel() {
+		CoreFeature.resetRenderingLevel();
+	}
+
 	public static void setRenderLayer(int layer) {
 		CoreFeature.forceSetDefaultLayer(layer);
 	}

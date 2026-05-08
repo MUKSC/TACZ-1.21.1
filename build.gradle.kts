@@ -112,6 +112,10 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.com.github.mcmodderanchor.simplebedrockmodel)
+    jarJar(libs.com.github.mcmodderanchor.simplebedrockmodel)
+    compileOnly(libs.com.maydaymemory.mae)
+
     implementation(libs.org.apache.commons.math3)
     jarJar(libs.org.apache.commons.math3)
     implementation(libs.com.github.figuraMC.luaj.core)
@@ -139,6 +143,7 @@ dependencies {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
 }
 
 tasks.withType<JavaCompile> {
@@ -163,6 +168,7 @@ publishMods {
     displayName = "[TaCZ] ${project.property("mod_name")} ${project.version}"
     changelog = providers.fileContents(layout.projectDirectory.file("changelog.md")).asText
     file = tasks.jar.get().archiveFile
+    additionalFiles.from(tasks.named<Jar>("sourcesJar").get().archiveFile)
     type = STABLE
     modLoaders.add("neoforge")
 

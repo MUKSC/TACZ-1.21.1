@@ -50,6 +50,19 @@ public class ResourceScanner {
         return output;
     }
 
+    public static Map<ResourceLocation, ResourceLocation> scanDirectoryResources(ResourceManager pResourceManager, FileToIdConverter filetoidconverter) {
+        Map<ResourceLocation, ResourceLocation> output = Maps.newHashMap();
+        for (Map.Entry<ResourceLocation, Resource> entry : filetoidconverter.listMatchingResources(pResourceManager).entrySet()) {
+            ResourceLocation rawLocation = entry.getKey();
+            ResourceLocation id = filetoidconverter.fileToId(rawLocation);
+            ResourceLocation old = output.put(id, rawLocation);
+            if (old != null) {
+                throw new IllegalStateException("Duplicate data file ignored with ID " + id);
+            }
+        }
+        return output;
+    }
+
     /**
      * 扫描指定目录下的所有json文件<br/>
      * 与{@link #scanDirectory(ResourceManager, String, Gson)}不同的是，该方法会读取所有json文件作为列表返回

@@ -89,6 +89,7 @@ public class ShooterDataHolder {
      * 记录射击数，用以判定曳光弹
      */
     public int shootCount = 0;
+    public float chargeProgress = 0f;
     /**
      * 是否处于趴下状态
      */
@@ -120,6 +121,7 @@ public class ShooterDataHolder {
         boltTimestamp = -1;
         isBolting = false;
         shootCount = 0;
+        chargeProgress = 0f;
         scriptData = null;
         heatTimestamp = -1;
     }

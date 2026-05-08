@@ -1,5 +1,6 @@
 {
   "name": "tacz.ammo.rpg_rocket.name",
   "display": "tacz:rpg_rocket_display",
-  "stack_size": 6
+  "stack_size": 6,
+  "sort": 23
 }

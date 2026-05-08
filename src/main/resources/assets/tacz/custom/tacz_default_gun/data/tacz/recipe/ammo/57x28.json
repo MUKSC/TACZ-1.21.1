@@ -21,6 +21,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "pd_cartridges",
     "id": "tacz:57x28",
     "count": 48
   },

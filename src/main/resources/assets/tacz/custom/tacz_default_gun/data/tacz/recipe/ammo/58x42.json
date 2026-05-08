@@ -15,6 +15,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "ifp_rifle_cartridges",
     "id": "tacz:58x42",
     "count": 40
   },

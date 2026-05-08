@@ -3,5 +3,6 @@
   "display": "tacz:ump45_display",
   "data": "tacz:ump45_data",
   "tooltip": "tacz.gun.ump45.desc",
-  "type": "smg"
+  "type": "smg",
+  "sort": 4
 }

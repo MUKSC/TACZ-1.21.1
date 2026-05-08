@@ -1,0 +1,8 @@
+{
+  "name": "tacz.gun.taurus500.name",
+  "display": "tacz:taurus500_display",
+  "data": "tacz:taurus500_data",
+  "tooltip": "tacz.gun.taurus500.desc",
+  "type": "pistol",
+  "sort": 13
+}

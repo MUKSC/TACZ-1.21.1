@@ -15,6 +15,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "ifp_rifle_cartridges",
     "id": "tacz:762x39",
     "count": 35
   },

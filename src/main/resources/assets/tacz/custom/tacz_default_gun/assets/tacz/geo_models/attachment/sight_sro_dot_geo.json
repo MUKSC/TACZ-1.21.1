@@ -4,11 +4,11 @@
 		{
 			"description": {
 				"identifier": "geometry.sight_sro_dot - Converted",
-				"texture_width": 64,
+				"texture_width": 32,
 				"texture_height": 32,
-				"visible_bounds_width": 7,
-				"visible_bounds_height": 1.5,
-				"visible_bounds_offset": [0, 0.25, 0]
+				"visible_bounds_width": 10,
+				"visible_bounds_height": 4,
+				"visible_bounds_offset": [0, -1, 0]
 			},
 			"bones": [
 				{
@@ -574,18 +574,30 @@
 				},
 				{
 					"name": "division",
-					"pivot": [0, 1, -62]
+					"pivot": [0, 1, -18]
 				},
 				{
 					"name": "division_illuminated",
 					"parent": "division",
-					"pivot": [0, 1, -62],
+					"pivot": [0, 1, -18],
 					"cubes": [
 						{
-							"origin": [-0.2, 0.75, -62.45],
-							"size": [0.4, 0.4, 0.2],
+							"origin": [-0.0625, 0.91161, -18],
+							"size": [0.125, 0.17678, 0],
+							"pivot": [0, 1, -18],
+							"rotation": [45, 0, 0],
 							"uv": {
-								"south": {"uv": [32, 0], "uv_size": [32, 32]}
+								"south": {"uv": [24, 30], "uv_size": [1, 1]}
+							}
+						},
+						{
+							"origin": [-0.03075, 0.95631, -17.9995],
+							"size": [0.0615, 0.08739, 0],
+							"inflate": 0.001,
+							"pivot": [0, 1, -18],
+							"rotation": [45, 0, 0],
+							"uv": {
+								"south": {"uv": [26, 30], "uv_size": [1, 1]}
 							}
 						}
 					]
@@ -644,7 +656,7 @@
 				},
 				{
 					"name": "scope_view",
-					"pivot": [0, 1, 10]
+					"pivot": [0, 1, 15]
 				}
 			]
 		}

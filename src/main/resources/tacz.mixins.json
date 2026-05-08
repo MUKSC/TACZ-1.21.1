@@ -20,7 +20,8 @@
     "client.LanguageMixin",
     "client.LocalPlayerMixin",
     "client.MouseHandlerMixin",
-    "client.PlayerModelMixin"
+    "client.PlayerModelMixin",
+    "client.SoundManagerPreparationsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

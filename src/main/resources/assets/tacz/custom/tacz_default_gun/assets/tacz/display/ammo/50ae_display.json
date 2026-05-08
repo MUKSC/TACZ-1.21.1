@@ -1,9 +1,33 @@
 {
+  "model": "tacz:ammo/50ae",
+  "texture": "tacz:ammo/uv/50ae",
   "slot": "tacz:ammo/slot/50ae",
   "shell": {
     "model": "tacz:shell/50ae_shell",
     "texture": "tacz:shell/50ae_shell"
   },
-  "tracer_color": "#FF9999"
+  "tracer_color": "#FF9999",
+  "transform": {
+    "scale": {
+      // 第三人称手部
+      "thirdperson": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      // 地面实体
+      "ground": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      // 展示框
+      "fixed": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    }
+  }
 }
     

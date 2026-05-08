@@ -18,6 +18,8 @@ import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.custom.SilenceModifier;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.ChargeData;
+import com.tacz.guns.resource.pojo.data.gun.ChargeType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.sound.SoundManager;
 import it.unimi.dsi.fastutil.Pair;
@@ -28,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
@@ -45,24 +48,73 @@ public class LocalPlayerShoot {
         this.player = player;
     }
 
-    public ShootResult shoot() {
-        // 按钮冷却时间未到，防止点击按钮后误触开火
-        // 默认设置为 50 ms
-        if (System.currentTimeMillis() - LocalPlayerDataHolder.clientClickButtonTimestamp < 50) {
-            return ShootResult.COOL_DOWN;
-        }
-        // 如果上一次异步开火的效果还未执行，则直接返回，等待异步开火效果执行
-        if (!data.isShootRecorded) {
-            return ShootResult.COOL_DOWN;
-        }
-        // 如果状态锁正在准备锁定，且不是开火的状态锁，则不允许开火(主要用于防止切枪后开火动作覆盖切枪动作)
-        if (data.clientStateLock && data.lockedCondition != SHOOT_LOCKED_CONDITION && data.lockedCondition != null) {
-            data.isShootRecorded = true;
-            // 因为这块主要目的是防止切枪后开火动作覆盖切枪动作，返回 IS_DRAWING
-            return ShootResult.IS_DRAWING;
-        }
-        // 暂定为只有主手能开枪
+    public boolean chargeShoot(boolean isCharging) {
+        // 因为开火冷却检测用了特别定制的方法，所以不检查状态锁，而是手动检查是否换弹、切枪
+        IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
         ItemStack mainHandItem = player.getMainHandItem();
+        // 暂定为只有主手能开枪
+        if (!(mainHandItem.getItem() instanceof IGun iGun)) {
+            data.chargeProgress = 0f;
+            return false;
+        }
+        ResourceLocation gunId = iGun.getGunId(mainHandItem);
+        Optional<ClientGunIndex> gunIndexOptional = TimelessAPI.getClientGunIndex(gunId);
+        GunDisplayInstance display = TimelessAPI.getGunDisplay(mainHandItem).orElse(null);
+        if (gunIndexOptional.isEmpty() || display == null) {
+            return false;
+        }
+        ClientGunIndex gunIndex = gunIndexOptional.get();
+        GunData gunData = gunIndex.getGunData();
+        FireMode fireMode = iGun.getFireMode(mainHandItem);
+
+        ChargeData chargeData = gunData.getChargeData(fireMode);
+        if (chargeData == null) {
+            return isCharging;
+        }
+
+        boolean canChargeDuringCooldown = chargeData.isChargeDuringCooldown() || getCoolDown(iGun, mainHandItem, gunData) < 50;
+        boolean canCharge = canChargeDuringCooldown && preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData, isCharging) == null;
+        float chargeProgress = data.chargeProgress;
+        ChargeType type = chargeData.getChargeType();
+
+        if (type == ChargeType.AUTO) {
+            if (isCharging && canCharge) {
+                data.isCharging = true;
+                data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
+                return data.chargeProgress >= chargeData.getMaxCharge();
+            } else {
+                data.isCharging = false;
+                data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+            }
+        } else if (type == ChargeType.HOLD) {
+            if (isCharging && canCharge) {
+                data.isCharging = true;
+                data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
+            } else {
+                if (canChargeDuringCooldown && chargeProgress >= chargeData.getFireThreshold()) {
+                    return true;
+                }
+                data.isCharging = false;
+                data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+            }
+        } else if (type == ChargeType.DELAY) {
+            if ((isCharging || chargeProgress > 0) && canCharge) {
+                data.isCharging = true;
+                data.chargeProgress = Math.min(chargeProgress + chargeData.getIncreasePerTick(), chargeData.getMaxCharge());
+                return data.chargeProgress >= chargeData.getMaxCharge();
+            } else {
+                data.isCharging = false;
+                data.chargeProgress = Math.max(chargeProgress - chargeData.getDecreasePerTick(), 0f);
+            }
+        }
+        return false;
+    }
+
+    public ShootResult shoot() {
+        // 因为开火冷却检测用了特别定制的方法，所以不检查状态锁，而是手动检查是否换弹、切枪
+        IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
+        ItemStack mainHandItem = player.getMainHandItem();
+        // 暂定为只有主手能开枪
         if (!(mainHandItem.getItem() instanceof IGun iGun)) {
             return ShootResult.NOT_GUN;
         }
@@ -75,15 +127,67 @@ public class LocalPlayerShoot {
         ClientGunIndex gunIndex = gunIndexOptional.get();
         GunData gunData = gunIndex.getGunData();
         long coolDown = this.getCoolDown(iGun, mainHandItem, gunData);
+
+        // 如果上一次异步开火的效果还未执行，则直接返回，等待异步开火效果执行
+        if (!data.isShootRecorded) {
+            return ShootResult.COOL_DOWN;
+        }
+        // 如果状态锁正在准备锁定，且不是开火的状态锁，则不允许开火(主要用于防止切枪后开火动作覆盖切枪动作)
+        if (data.clientStateLock && data.lockedCondition != SHOOT_LOCKED_CONDITION && data.lockedCondition != null) {
+            data.isShootRecorded = true;
+            // 因为这块主要目的是防止切枪后开火动作覆盖切枪动作，返回 IS_DRAWING
+            return ShootResult.IS_DRAWING;
+        }
+
         // 如果射击冷却大于等于 1 tick (即 50 ms)，则不允许开火
         if (coolDown >= 50) {
             return ShootResult.COOL_DOWN;
         }
-        // 因为开火冷却检测用了特别定制的方法，所以不检查状态锁，而是手动检查是否换弹、切枪
-        IGunOperator gunOperator = IGunOperator.fromLivingEntity(player);
+
+        // 基础检查
+        ShootResult result = preCheck(iGun, gunOperator, gunIndex, mainHandItem, display, gunData, true);
+        if (result != null) {
+            return result;
+        }
+
+        // 检查是否正在奔跑
+        if (gunOperator.getSynSprintTime() > 0) {
+            return ShootResult.IS_SPRINTING;
+        }
+        // 触发开火事件
+        if (NeoForge.EVENT_BUS.post(new GunShootEvent(player, mainHandItem, LogicalSide.CLIENT)).isCanceled()) {
+            return ShootResult.FORGE_EVENT_CANCEL;
+        }
+        // 切换状态锁，不允许换弹、检视等行为进行。
+        data.lockState(SHOOT_LOCKED_CONDITION);
+        data.isShootRecorded = false;
+        // 调用开火逻辑
+        float finalChargeProgress = data.chargeProgress;
+        this.doShoot(display, iGun, mainHandItem, gunData, coolDown, finalChargeProgress);
+
+        FireMode fireMode = iGun.getFireMode(mainHandItem);
+        ChargeData chargeData = gunData.getChargeData(fireMode);
+        if (chargeData != null) {
+            if (chargeData.getChargeType() == ChargeType.DELAY) {
+                data.chargeProgress = 0f;
+            } else {
+                data.chargeProgress = Math.max(0f, data.chargeProgress - chargeData.getDecreaseOnFire());
+            }
+        }
+
+        return ShootResult.SUCCESS;
+    }
+
+    private @Nullable ShootResult preCheck(IGun iGun, IGunOperator gunOperator, ClientGunIndex gunIndex, ItemStack mainHandItem,
+                                           GunDisplayInstance display, GunData gunData, boolean playDrySound) {
+        // 按钮冷却时间未到，防止点击按钮后误触开火
+        // 默认设置为 50 ms
+        if (System.currentTimeMillis() - LocalPlayerDataHolder.clientClickButtonTimestamp < 50) {
+            return ShootResult.COOL_DOWN;
+        }
+
         // 检查是否正在换弹
         if (gunOperator.getSynReloadState().getStateType().isReloading()) {
-
             return ShootResult.IS_RELOADING;
         }
         // 检查是否正在切枪
@@ -111,13 +215,17 @@ public class LocalPlayerShoot {
         boolean noAmmo = useInventoryAmmo && !hasInventoryAmmo ||
                 !useInventoryAmmo && ammoCount < 1;
         if (noAmmo) {
-            SoundPlayManager.playDryFireSound(player, display);
+            if (playDrySound) {
+                SoundPlayManager.playDryFireSound(player, display);
+            }
             return ShootResult.NO_AMMO;
         }
         //Handle Heat Data
         if(gunData.hasHeatData()) {
             if(iGun.isOverheatLocked(mainHandItem)) {
-                SoundPlayManager.playDryFireSound(player, display);
+                if (playDrySound) {
+                    SoundPlayManager.playDryFireSound(player, display);
+                }
                 return ShootResult.OVERHEATED;
             }
         }
@@ -126,23 +234,10 @@ public class LocalPlayerShoot {
             IClientPlayerGunOperator.fromLocalPlayer(player).bolt();
             return ShootResult.NEED_BOLT;
         }
-        // 检查是否正在奔跑
-        if (gunOperator.getSynSprintTime() > 0) {
-            return ShootResult.IS_SPRINTING;
-        }
-        // 触发开火事件
-        if (NeoForge.EVENT_BUS.post(new GunShootEvent(player, mainHandItem, LogicalSide.CLIENT)).isCanceled()) {
-            return ShootResult.FORGE_EVENT_CANCEL;
-        }
-        // 切换状态锁，不允许换弹、检视等行为进行。
-        data.lockState(SHOOT_LOCKED_CONDITION);
-        data.isShootRecorded = false;
-        // 调用开火逻辑
-        this.doShoot(display, iGun, mainHandItem, gunData, coolDown);
-        return ShootResult.SUCCESS;
+        return null;
     }
 
-    private void doShoot(GunDisplayInstance display, IGun iGun, ItemStack mainHandItem, GunData gunData, long delay) {
+    private void doShoot(GunDisplayInstance display, IGun iGun, ItemStack mainHandItem, GunData gunData, long delay, float chargeProgress) {
         FireMode fireMode = iGun.getFireMode(mainHandItem);
         Bolt boltType = gunData.getBolt();
         // 获取余弹数

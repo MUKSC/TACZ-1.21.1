@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class GunDisplay implements IDisplay {
@@ -70,6 +71,9 @@ public class GunDisplay implements IDisplay {
     @SerializedName("sounds")
     private Map<String, ResourceLocation> sounds;
     @Nullable
+    @SerializedName("preload_sounds")
+    private List<String> preloadSounds;
+    @Nullable
     @SerializedName("transform")
     private GunTransform transform;
     @Nullable
@@ -94,6 +98,12 @@ public class GunDisplay implements IDisplay {
     private EnumMap<FireMode, ControllableData> controllableData = Maps.newEnumMap(FireMode.class);
     @SerializedName("laser")
     private LaserConfig laserConfig;
+
+    /**
+     * @since 1.1.8
+     */
+    @SerializedName("enable_transparency")
+    private boolean enableTransparency;
 
     public String getModelType() {
         return modelType;
@@ -168,6 +178,11 @@ public class GunDisplay implements IDisplay {
     }
 
     @Nullable
+    public List<String> getPreloadSounds() {
+        return preloadSounds;
+    }
+
+    @Nullable
     public GunTransform getTransform() {
         return transform;
     }
@@ -227,6 +242,10 @@ public class GunDisplay implements IDisplay {
     @Nullable
     public LaserConfig getLaserConfig() {
         return laserConfig;
+    }
+
+    public boolean enablesTransparency() {
+        return enableTransparency;
     }
 
     public boolean is3rdFixedHand() {

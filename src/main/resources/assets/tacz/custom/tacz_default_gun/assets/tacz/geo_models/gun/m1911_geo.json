@@ -953,7 +953,7 @@
 				{
 					"name": "constraint",
 					"parent": "m1911",
-					"pivot": [0, 6.275, -5.825]
+					"pivot": [0, 6.275, 1.175]
 				},
 				{
 					"name": "slide",
@@ -3259,14 +3259,14 @@
 				{
 					"name": "iron_view",
 					"parent": "view",
-					"pivot": [0, 6.175, 13],
+					"pivot": [0, 6.175, 14.5],
 					"rotation": [0, 0, -6]
 				},
 				{
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [14.1, 2.725, -1],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89, 0]
 				},
 				{
 					"name": "refit_muzzle_view",

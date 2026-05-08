@@ -43,7 +43,7 @@ public class ObjectAnimationSoundChannel {
         }
         for (int i = from + 1; i <= to; i++) {
             ResourceLocation name = content.keyframeSoundName[i];
-            SoundPlayManager.playClientSound(entity, name, mixVolume, pitch, distance);
+            SoundPlayManager.playAnimationSound(entity, name, mixVolume, pitch, distance);
         }
     }
 

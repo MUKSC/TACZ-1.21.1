@@ -1,27 +1,37 @@
 package com.tacz.guns.client.renderer.item;
 
+import com.github.mcmodderanchor.simplebedrockmodel.v1.client.animation.IFPAnimationInstance;
+import com.github.mcmodderanchor.simplebedrockmodel.v1.client.renderer.IFPGeoItemRenderer;
+import com.maydaymemory.mae.basic.DummyPose;
+import com.maydaymemory.mae.basic.Pose;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.client.animation.statemachine.LuaAnimationStateMachine;
 import com.tacz.guns.api.client.event.BeforeRenderHandEvent;
-import com.tacz.guns.api.client.other.KeepingItemRenderer;
+import com.tacz.guns.api.item.IAnimationItem;
 import com.tacz.guns.client.animation.statemachine.GunAnimationConstant;
 import com.tacz.guns.client.animation.statemachine.ItemAnimationStateContext;
 import com.tacz.guns.client.model.BedrockAnimatedModel;
 import com.tacz.guns.client.model.bedrock.BedrockPart;
+import com.tacz.guns.client.renderer.other.HandRenderer;
+import com.tacz.guns.client.sound.SoundPlayManager;
 import com.tacz.guns.util.math.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.ViewportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
@@ -36,7 +46,7 @@ import java.util.List;
  * @param <CTX> 动画状态机上下文
  */
 public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX extends ItemAnimationStateContext>
-        extends BlockEntityWithoutLevelRenderer {
+        extends BlockEntityWithoutLevelRenderer implements IFPGeoItemRenderer {
     @Nullable
     protected LuaAnimationStateMachine<CTX> stateMachine;
     protected M model;
@@ -79,7 +89,9 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
 
     public abstract void updateContext(CTX context, ItemStack stack, Player player, float partialTick);
 
-    /** 计算并返回切出动画的时长，单位ms
+    /**
+     * 计算并返回切出动画的时长，单位ms
+     *
      * @return 保持时间
      */
     public long getPutAwayTime(ItemStack stack) {
@@ -115,9 +127,10 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
         stateMachine.processContextIfExist(context -> {
             context.setPutAwayTime(putAwayTime / 1000F);
         });
-        if(stateMachine.isInitialized()) {
+        if (stateMachine.isInitialized()) {
             stateMachine.trigger(GunAnimationConstant.INPUT_PUT_AWAY);
-            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
+
+//            KeepingItemRenderer.getRenderer().keep(stack, putAwayTime);
             stateMachine.exit();
             // 需要设置的比动画稍长些，避免意外的重初始化（可能是丢精度了）
             // 延后一tick应该基本没有感知）
@@ -127,6 +140,7 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
 
     /**
      * 尝试触发状态机转移
+     *
      * @param input 输入信号
      */
     public void triggerAnimation(ItemStack stack, String input) {
@@ -201,6 +215,16 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
      */
     public void renderFirstPerson(LocalPlayer player, ItemStack stack, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource bufferSource,
                                   int light, float partialTick) {
+        // FIXME: I feel like there's a proper way to fix this but idk
+        Minecraft minecraft = Minecraft.getInstance();
+        GameRenderer gameRenderer = minecraft.gameRenderer;
+        HandRenderer.INSTANCE.renderSolid((poseStack2) -> {
+            renderFirstPersonInner(player, stack, ctx, poseStack2 == null ? poseStack : poseStack2, bufferSource, light, partialTick);
+        }, minecraft.getTimer().getGameTimeDeltaPartialTick(false), gameRenderer.getMainCamera(), gameRenderer);
+    }
+
+    protected void renderFirstPersonInner(LocalPlayer player, ItemStack stack, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource bufferSource,
+                                          int light, float partialTick) {
         M model = getModel(stack);
         if (model != null) {
             poseStack.pushPose();
@@ -301,5 +325,89 @@ public abstract class AnimateGeoItemRenderer<M extends BedrockAnimatedModel, CTX
         poseStack.translate(0, 1.5f, 0);
         poseStack.mulPose(transformMatrix);
         poseStack.translate(0, -1.5f, 0);
+    }
+
+    @Override
+    public long getPutAwayDuration(ItemStack stack) {
+        return this.getPutAwayTime(stack);
+    }
+
+    @Nullable
+    @Override
+    public IFPAnimationInstance createAnimationInstance(ItemStack stack, Entity entity) {
+        return new IFPAnimationInstance() {
+            private boolean drawn = false;
+            private ItemStack lastItem = stack;
+
+            @Override
+            public ItemStack currentItem() {
+                return lastItem;
+            }
+
+            @Override
+            public Pose getPose() {
+                return DummyPose.INSTANCE;
+            }
+
+            @Override
+            public void tick(float v) {
+
+            }
+
+            @Override
+            public @NotNull Quaternionf getCameraRotation() {
+                return new Quaternionf();
+            }
+
+            @Override
+            public void setCameraRotation(@NotNull Quaternionf quaternionf) {
+
+            }
+
+            @Override
+            public Pose getCachedPose() {
+                return DummyPose.INSTANCE;
+            }
+
+            @Override
+            public void updateItem(ItemStack itemStack) {
+                lastItem = itemStack;
+            }
+
+            @Override
+            public void triggerDraw() {
+                if (drawn) return;
+                drawn = true;
+                tryInit(lastItem, Minecraft.getInstance().player, 0);
+                if (Minecraft.getInstance().player == null) return;
+                TimelessAPI.getGunDisplay(lastItem).ifPresent(display -> {
+                    SoundPlayManager.stopPlayGunSound();
+                    SoundPlayManager.playDrawSound(Minecraft.getInstance().player, display);
+                });
+            }
+
+            @Override
+            public void triggerPutAway() {
+                tryExit(lastItem, getPutAwayTime(lastItem));
+                if (Minecraft.getInstance().player == null) return;
+                TimelessAPI.getGunDisplay(lastItem).ifPresent(display -> {
+                    SoundPlayManager.stopPlayGunSound();
+                    SoundPlayManager.playPutAwaySound(Minecraft.getInstance().player, display);
+                });
+            }
+        };
+    }
+
+    @Override
+    public boolean isSameItem(ItemStack oldStack, ItemStack newStack) {
+        if (oldStack.getItem() instanceof IAnimationItem item) {
+            return item.isSame(oldStack, newStack);
+        }
+        return ItemStack.matches(oldStack, newStack);
+    }
+
+    @Override
+    public boolean blockOffhandRender() {
+        return true;
     }
 }

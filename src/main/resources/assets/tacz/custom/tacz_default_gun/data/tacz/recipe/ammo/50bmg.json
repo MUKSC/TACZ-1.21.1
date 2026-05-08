@@ -26,6 +26,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "lc_specialized",
     "id": "tacz:50bmg",
     "count": 24
   },

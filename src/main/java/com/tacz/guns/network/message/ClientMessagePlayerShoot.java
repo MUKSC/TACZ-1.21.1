@@ -17,6 +17,7 @@ public class ClientMessagePlayerShoot implements CustomPacketPayload {
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientMessagePlayerShoot> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_LONG, message -> message.timestamp,
+        ByteBufCodecs.FLOAT, message -> message.chargeProgress,
         ClientMessagePlayerShoot::new
     );
 
@@ -29,15 +30,21 @@ public class ClientMessagePlayerShoot implements CustomPacketPayload {
      * 这里的 timestamp 应该是基于 base timestamp 的相对值
      */
     private final long timestamp;
+    private final float chargeProgress;
 
     public ClientMessagePlayerShoot(long timestamp) {
+        this(timestamp, 0f);
+    }
+
+    public ClientMessagePlayerShoot(long timestamp, float chargeProgress) {
         this.timestamp = timestamp;
+        this.chargeProgress = chargeProgress;
     }
 
     public static void handle(ClientMessagePlayerShoot message, IPayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer entity = (ServerPlayer) context.player();
-            IGunOperator.fromLivingEntity(entity).shoot(entity::getXRot, entity::getYRot, message.timestamp);
+            IGunOperator.fromLivingEntity(entity).shoot(entity::getXRot, entity::getYRot, message.timestamp, message.chargeProgress);
         });
     }
 }

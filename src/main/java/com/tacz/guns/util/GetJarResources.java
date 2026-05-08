@@ -2,6 +2,8 @@ package com.tacz.guns.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tacz.guns.GunMod;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
@@ -10,16 +12,17 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.net.*;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -34,6 +37,9 @@ public final class GetJarResources {
     private static final Path BACKUP_PATH = Paths.get("config", GunMod.MOD_ID, "backup");
     private static final SimpleDateFormat BACKUP_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd-HHmmss");
     private static final int MAX_BACKUP_COUNT = 10;
+    private static final String EXPORT_STATE_FILE_NAME = ".export-state.json";
+    private static final int EXPORT_STATE_VERSION = 1;
+    private static final Gson EXPORT_STATE_GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private GetJarResources() {
     }
@@ -67,12 +73,10 @@ public final class GetJarResources {
         URL url = resourceClass.getResource(srcPath);
         try {
             if (url != null) {
-                copyFolder(url.toURI(), root.resolve(path));
+                exportFolderIfChanged(resourceClass, srcPath, url, root, path);
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -100,33 +104,181 @@ public final class GetJarResources {
         return null;
     }
 
-    private static void copyFolder(URI sourceURI, Path targetPath) throws IOException {
-        // FIXME: I'm not sure if this is correct
-        URI fileSourceURI = URI.create(sourceURI.getRawSchemeSpecificPart());
+    private static void exportFolderIfChanged(Class<?> resourceClass, String srcPath, URL sourceUrl, Path root, String path) throws IOException {
+        String stateKey = getExportStateKey(resourceClass, srcPath, path);
+        String sourceFingerprint = calculateSourceFingerprint(sourceUrl);
+        ExportStateFile stateFile = readExportState(root);
+        Path targetPath = root.resolve(path);
+        String previousFingerprint = stateFile.entries.get(stateKey);
+        if (Files.isDirectory(targetPath) && sourceFingerprint.equals(previousFingerprint)) {
+            GunMod.LOGGER.debug("Skipping unchanged exported resource {}", targetPath);
+            return;
+        }
+
+        GunMod.LOGGER.info("Exporting resource pack {} to {}", srcPath, targetPath);
+        copyFolder(sourceUrl, targetPath);
+        stateFile.version = EXPORT_STATE_VERSION;
+        stateFile.entries.put(stateKey, sourceFingerprint);
+        writeExportState(root, stateFile);
+    }
+
+    private static String getExportStateKey(Class<?> resourceClass, String srcPath, String path) {
+        return resourceClass.getName() + "|" + srcPath + "|" + path;
+    }
+
+    private static ExportStateFile readExportState(Path root) {
+        Path statePath = root.resolve(EXPORT_STATE_FILE_NAME);
+        if (!Files.isRegularFile(statePath)) {
+            return new ExportStateFile();
+        }
+        try (Reader reader = Files.newBufferedReader(statePath, StandardCharsets.UTF_8)) {
+            ExportStateFile state = EXPORT_STATE_GSON.fromJson(reader, ExportStateFile.class);
+            if (state == null || state.version != EXPORT_STATE_VERSION || state.entries == null) {
+                return new ExportStateFile();
+            }
+            return state;
+        } catch (Exception exception) {
+            GunMod.LOGGER.warn("Failed to read export state from {}, forcing full export", statePath, exception);
+            return new ExportStateFile();
+        }
+    }
+
+    private static void writeExportState(Path root, ExportStateFile stateFile) throws IOException {
+        Files.createDirectories(root);
+        Path statePath = root.resolve(EXPORT_STATE_FILE_NAME);
+        try (Writer writer = Files.newBufferedWriter(statePath, StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
+            EXPORT_STATE_GSON.toJson(stateFile, writer);
+        }
+    }
+
+    private static String calculateSourceFingerprint(URL sourceUrl) throws IOException {
+        List<String> lines = "jar".equals(sourceUrl.getProtocol())
+                ? collectJarFingerprintLines(sourceUrl)
+                : collectPathFingerprintLines(resolveSourcePath(sourceUrl));
+        Collections.sort(lines);
+        return Md5Utils.md5Hex(String.join("\n", lines).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static List<String> collectPathFingerprintLines(Path sourceRoot) throws IOException {
+        List<String> lines = new ArrayList<>();
+        try (Stream<Path> stream = Files.walk(sourceRoot, Integer.MAX_VALUE)) {
+            stream.filter(Files::isRegularFile).forEach(path -> {
+                try {
+                    BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+                    String relativePath = sourceRoot.relativize(path).toString().replace('\\', '/');
+                    lines.add(relativePath + "|" + attributes.size() + "|" + attributes.lastModifiedTime().toMillis());
+                } catch (IOException exception) {
+                    throw new UncheckedIOException(exception);
+                }
+            });
+        } catch (UncheckedIOException exception) {
+            throw exception.getCause();
+        }
+        return lines;
+    }
+
+    private static List<String> collectJarFingerprintLines(URL sourceUrl) throws IOException {
+        JarURLConnection connection = (JarURLConnection) sourceUrl.openConnection();
+        connection.setUseCaches(false);
+        String rootEntry = normalizeDirectoryEntryName(connection.getEntryName());
+        List<String> lines = new ArrayList<>();
+        try (JarFile jarFile = connection.getJarFile()) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if (entry.isDirectory() || !entry.getName().startsWith(rootEntry)) {
+                    continue;
+                }
+                String relativePath = entry.getName().substring(rootEntry.length());
+                if (relativePath.isEmpty()) {
+                    continue;
+                }
+                lines.add(relativePath + "|" + entry.getSize() + "|" + entry.getTime() + "|" + entry.getCrc());
+            }
+        }
+        return lines;
+    }
+
+    private static void copyFolder(URL sourceUrl, Path targetPath) throws IOException {
         if (Files.isDirectory(targetPath)) {
             // 备份原文件夹
             backupFiles(targetPath);
             // 删掉原文件夹，达到强行覆盖的效果
             deleteFiles(targetPath);
+        } else if (Files.exists(targetPath)) {
+            Files.delete(targetPath);
         }
-        // 使用 Files.walk() 遍历文件夹中的所有内容
-        try (Stream<Path> stream = Files.walk(Paths.get(sourceURI), Integer.MAX_VALUE)) {
+
+        if ("jar".equals(sourceUrl.getProtocol())) {
+            copyJarProtocolFolder(sourceUrl, targetPath);
+        } else {
+            copyPathBackedFolder(resolveSourcePath(sourceUrl), targetPath);
+        }
+    }
+
+    private static void copyPathBackedFolder(Path sourceRoot, Path targetPath) throws IOException {
+        Files.createDirectories(targetPath);
+        try (Stream<Path> stream = Files.walk(sourceRoot, Integer.MAX_VALUE)) {
             stream.forEach(source -> {
-                // 生成目标路径
-                URI fileSource = URI.create(source.toUri().getRawSchemeSpecificPart());
-                Path target = targetPath.resolve(fileSourceURI.relativize(fileSource).toString());
+                Path target = targetPath.resolve(sourceRoot.relativize(source).toString());
                 try {
-                    // 复制文件或文件夹
                     if (Files.isDirectory(source)) {
                         Files.createDirectories(target);
                     } else {
+                        Files.createDirectories(target.getParent());
                         Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
                     }
-                } catch (IOException e) {
-                    // 处理异常，例如权限问题等
-                    e.printStackTrace();
+                } catch (IOException exception) {
+                    throw new UncheckedIOException(exception);
                 }
             });
+        } catch (UncheckedIOException exception) {
+            throw exception.getCause();
+        }
+    }
+
+    private static void copyJarProtocolFolder(URL sourceUrl, Path targetPath) throws IOException {
+        JarURLConnection connection = (JarURLConnection) sourceUrl.openConnection();
+        connection.setUseCaches(false);
+        String rootEntry = normalizeDirectoryEntryName(connection.getEntryName());
+        Files.createDirectories(targetPath);
+        try (JarFile jarFile = connection.getJarFile()) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if (!entry.getName().startsWith(rootEntry)) {
+                    continue;
+                }
+                String relativePath = entry.getName().substring(rootEntry.length());
+                if (relativePath.isEmpty()) {
+                    continue;
+                }
+                Path target = targetPath.resolve(relativePath);
+                if (entry.isDirectory()) {
+                    Files.createDirectories(target);
+                    continue;
+                }
+                Files.createDirectories(target.getParent());
+                try (InputStream inputStream = jarFile.getInputStream(entry)) {
+                    Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        }
+    }
+
+    private static String normalizeDirectoryEntryName(String entryName) {
+        if (entryName == null || entryName.isEmpty()) {
+            return "";
+        }
+        return entryName.endsWith("/") ? entryName : entryName + "/";
+    }
+
+    private static Path resolveSourcePath(URL sourceUrl) throws IOException {
+        try {
+            return Paths.get(sourceUrl.toURI());
+        } catch (Exception exception) {
+            throw new IOException("Failed to resolve source path " + sourceUrl, exception);
         }
     }
 
@@ -226,5 +378,10 @@ public final class GetJarResources {
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    private static final class ExportStateFile {
+        private int version = EXPORT_STATE_VERSION;
+        private Map<String, String> entries = new HashMap<>();
     }
 }

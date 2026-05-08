@@ -14,8 +14,6 @@ import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.client.input.*;
 import com.tacz.guns.client.resource.pojo.display.gun.ControllableData;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,8 +27,8 @@ public class ControllableInner {
         context -> AimKey.onAimControllerPress(false))
     );
     public static final ButtonBinding SHOOT = new ButtonBinding(Buttons.RIGHT_TRIGGER, "key.tacz.shoot.desc", "key.category.tacz", GUN_KEY_CONFLICT, OnPressAndReleaseHandler.create(
-        context -> Optional.of(() -> ShootKey.semiShootController(true)),
-        context -> ShootKey.semiShootController(false))
+        context -> Optional.of(() -> { }),
+        context -> true)
     );
     public static final ButtonBinding RELOAD = new ButtonBinding(Buttons.B, "key.tacz.reload.desc", "key.category.tacz", GUN_KEY_CONFLICT, OnPressAndReleaseHandler.create(
         context -> Optional.of(() -> ReloadKey.onReloadControllerPress(true)),
@@ -83,23 +81,19 @@ public class ControllableInner {
         if (controller == null) {
             return;
         }
-        if (controller.isButtonPressed(SHOOT.getButton()) && ShootKey.autoShootController()) {
-            doRumble(controller);
-        }
+        ShootKey.shootControllerTick(controller.isButtonPressed(SHOOT.getButton()));
     }
 
-    private static void doRumble(Controller controller) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
+    public static void rumbleShoot(ItemStack mainHandItem, FireMode fireMode) {
+        Controller controller = Controllable.getController();
+        if (controller == null) {
             return;
         }
-        ItemStack mainHandItem = player.getMainHandItem();
         IGun iGun = IGun.getIGunOrNull(mainHandItem);
         if (iGun == null) {
             return;
         }
 
-        FireMode fireMode = iGun.getFireMode(mainHandItem);
         TimelessAPI.getGunDisplay(mainHandItem).ifPresent(index -> {
             EnumMap<FireMode, ControllableData> data = index.getControllableData();
             if (data.containsKey(fireMode)) {

@@ -46,6 +46,10 @@ public class ClientMessageUnloadAttachment implements CustomPacketPayload {
             ItemStack gunItem = inventory.getItem(message.gunSlotIndex);
             IGun iGun = IGun.getIGunOrNull(gunItem);
             if (iGun != null) {
+                // 服务端校验配件锁
+                if (iGun.hasAttachmentLock(gunItem)) {
+                    return;
+                }
                 ItemStack attachmentItem = iGun.getAttachment(player.registryAccess(), gunItem, message.attachmentType);
                 if (!attachmentItem.isEmpty() && inventory.add(attachmentItem)) {
                     iGun.unloadAttachment(player.registryAccess(), gunItem, message.attachmentType);

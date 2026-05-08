@@ -7,6 +7,7 @@
   },
   "hud": "tacz:gun/hud/m16a4",
   "slot": "tacz:gun/slot/m16a4",
+  "state_machine": "tacz:m16a4_state_machine",
   "animation": "tacz:m16a4",
   "use_default_animation": "rifle",
   "third_person_animation": "default",

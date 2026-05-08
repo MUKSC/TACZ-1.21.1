@@ -34,6 +34,9 @@ public class AttachmentDisplay implements IDisplay {
     @SerializedName("show_muzzle")
     private boolean showMuzzle = false;
 
+    @SerializedName("show_mount")
+    private boolean showMount = true;
+
     @SerializedName("text_show")
     private Map<String, TextShow> textShows = Maps.newHashMap();
 
@@ -85,6 +88,10 @@ public class AttachmentDisplay implements IDisplay {
 
     public boolean isShowMuzzle() {
         return showMuzzle;
+    }
+
+    public boolean isShowMount() {
+        return showMount;
     }
 
     public Map<String, TextShow> getTextShows() {

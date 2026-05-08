@@ -1,0 +1,108 @@
+{
+  "ammo": "tacz:9mm",
+  "rpm": 400,
+  "bullet": {
+    "life": 0.6,
+    "bullet_amount": 1,
+    "damage": 6,
+    "tracer_count_interval": 0,
+    "extra_damage": {
+      "armor_ignore": 0,
+      "head_shot_multiplier": 1.5,
+      "damage_adjust": [
+        {"distance": 18, "damage": 7},
+        {"distance": 45, "damage": 5},
+        {"distance": "infinite", "damage": 4}
+      ]
+    },
+    "speed": 150,
+    "gravity": 0.15,
+    "knockback": 0,
+    "friction": 0.025,
+    "ignite": false,
+    "pierce": 0
+  },
+  "ammo_amount": 17,
+  "extended_mag_ammo_amount": [
+    20,
+    25,
+    30
+  ],
+  "bolt": "closed_bolt",
+  "reload": {
+    "type": "magazine",
+    "feed": {
+      "empty": 1.58,
+      "tactical": 1.13
+    },
+    "cooldown": {
+      "empty": 2,
+      "tactical": 1.73
+    }
+  },
+  "draw_time": 0.33,
+  "put_away_time": 0.42,
+  "aim_time": 0.13,
+  "sprint_time": 0.05,
+  "weight": 1,
+  "movement_speed": {
+    "base": 0.0,
+    "aim": 0,
+    "reload": 0.1
+  },
+  "crawl_recoil_multiplier": 0.75,
+  "fire_mode": [
+    "semi"
+  ],
+  "allow_attachment_types": [
+    "muzzle",
+    "scope",
+    "extended_mag",
+    "laser"
+  ],
+  "recoil": {
+    "pitch": [
+      {"time": 0, "value": [0.85, 0.85]},
+      {"time": 0.08, "value": [0.95, 0.95]},
+      {"time": 0.28, "value": [-0.15, -0.05]},
+      {"time": 0.4, "value": [0.15, 0.2]},
+      {"time": 0.5, "value": [0, 0]}
+    ],
+    "yaw": [
+      {"time": 0, "value": [-0.5, 0.25]},
+      {"time": 0.2, "value": [0, 0]}
+    ]
+  },
+  "inaccuracy": {
+    "stand": 2,
+    "move": 2.5,
+    "sneak": 1.5,
+    "lie": 0.75,
+    "aim": 0.2
+  },
+  "melee": {
+    // 枪械距离参数，用来延升近战攻击范围
+    // 会与刺刀等配件的距离做加和
+    "distance": 1,
+    // 使用时的冷却时间
+    // 会与刺刀等配件的冷却时间做加和
+    "cooldown": 0.7,
+    // 默认近战数据，会被配件的数据替换掉
+    "default": {
+      // 动画类型：没有枪托的为 melee_push，有枪托的为 melee_stock
+      "animation_type": "melee_push",
+      // 刺刀距离参数，枪械里还有个刺刀攻击距离参数，两者做加和
+      "distance": 1,
+      // 刺刀范围角度
+      "range_angle": 40,
+      // 刺刀冷却时间，枪械里还有个刺刀冷却时间参数，两者做加和
+      "cooldown": 0,
+      // 伤害值
+      "damage": 1,
+      // 击退效果
+      "knockback": 0.5,
+      // 前摇时长，单位：秒
+      "prep": 0.2
+    }
+  }
+}

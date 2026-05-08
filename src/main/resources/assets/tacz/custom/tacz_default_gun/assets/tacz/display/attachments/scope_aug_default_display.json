@@ -9,6 +9,7 @@
   "zoom": [
     4.25
   ],
+  "show_mount": false,
   "scope": true,
   "fov": 35.0,
   "sounds": {

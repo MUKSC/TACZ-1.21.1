@@ -15,6 +15,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "lc_specialized",
     "id": "tacz:357mag",
     "count": 48
   },

@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class NetworkHandler {
-    private static final String VERSION = "1.0.4";
+    private static final String VERSION = "1.0.5";
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {

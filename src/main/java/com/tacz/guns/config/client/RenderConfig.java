@@ -17,6 +17,7 @@ public class RenderConfig {
     public static ModConfigSpec.IntValue TARGET_RENDER_DISTANCE;
     public static ModConfigSpec.BooleanValue FIRST_PERSON_BULLET_TRACER_ENABLE;
     public static ModConfigSpec.BooleanValue DISABLE_INTERACT_HUD_TEXT;
+    public static ModConfigSpec.BooleanValue AUTO_SELECT_GUN_SMITH_TABLE_FILTER;
     public static ModConfigSpec.IntValue DAMAGE_COUNTER_RESET_TIME;
     public static ModConfigSpec.BooleanValue DISABLE_MOVEMENT_ATTRIBUTE_FOV;
     public static ModConfigSpec.BooleanValue ENABLE_TACZ_ID_IN_TOOLTIP;
@@ -63,6 +64,9 @@ public class RenderConfig {
 
         builder.comment("Disable the interact hud text in center of the screen");
         DISABLE_INTERACT_HUD_TEXT = builder.define("DisableInteractHudText", false);
+
+        builder.comment("Whether or not to automatically select the gun smith table's held item filter when opening it with a gun, attachment or ammo in main hand");
+        AUTO_SELECT_GUN_SMITH_TABLE_FILTER = builder.define("AutoSelectGunSmithTableFilter", true);
 
         builder.comment("Max time the damage counter will reset");
         DAMAGE_COUNTER_RESET_TIME = builder.defineInRange("DamageCounterResetTime", 2000, 10, Integer.MAX_VALUE);

@@ -54,7 +54,7 @@ public final class TimelessAPI {
             return getClientGunIndex(fallbackGunId).map(ClientGunIndex::getDefaultDisplay);
         }
 
-        GunDisplayInstance instance = ClientIndexManager.GUN_DISPLAY.get(displayId);
+        GunDisplayInstance instance = ClientIndexManager.getOrCreateGunDisplay(displayId);
         if (instance == null) {
             return getClientGunIndex(fallbackGunId).map(ClientGunIndex::getDefaultDisplay);
         }

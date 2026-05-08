@@ -2,6 +2,7 @@ package com.tacz.guns.client.resource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.tacz.guns.GunMod;
 import com.tacz.guns.api.client.animation.gltf.AnimationStructure;
 import com.tacz.guns.api.vmlib.LuaAnimationConstant;
 import com.tacz.guns.api.vmlib.LuaGunAnimationConstant;
@@ -9,7 +10,6 @@ import com.tacz.guns.api.vmlib.LuaLibrary;
 import com.tacz.guns.client.resource.manager.DisplayManager;
 import com.tacz.guns.client.resource.manager.GltfManager;
 import com.tacz.guns.client.resource.manager.PackInfoManager;
-import com.tacz.guns.client.resource.manager.SoundAssetsManager;
 import com.tacz.guns.client.resource.pojo.CommonTransformObject;
 import com.tacz.guns.client.resource.pojo.PackInfo;
 import com.tacz.guns.client.resource.pojo.animation.bedrock.AnimationKeyframes;
@@ -26,7 +26,7 @@ import com.tacz.guns.client.resource.serialize.ItemStackSerializer;
 import com.tacz.guns.client.resource.serialize.SoundEffectKeyframesSerializer;
 import com.tacz.guns.client.resource.serialize.Vector3fSerializer;
 import com.tacz.guns.resource.CommonAssetsManager;
-import com.tacz.guns.resource.manager.JsonDataManager;
+import com.tacz.guns.resource.manager.LazyJsonDataManager;
 import com.tacz.guns.resource.manager.ScriptManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemTransform;
@@ -67,24 +67,23 @@ public enum ClientAssetsManager {
             .create();
 
     // 枪械展示数据
-    private JsonDataManager<GunDisplay> gunDisplay;
+    private DisplayManager<GunDisplay> gunDisplay;
     // 弹药展示数据
-    private JsonDataManager<AmmoDisplay> ammoDisplay;
+    private DisplayManager<AmmoDisplay> ammoDisplay;
     // 配件展示数据
-    private JsonDataManager<AttachmentDisplay> attachmentDisplay;
+    private DisplayManager<AttachmentDisplay> attachmentDisplay;
     // 方块展示数据
-    private JsonDataManager<BlockDisplay> blockDisplay;
+    private DisplayManager<BlockDisplay> blockDisplay;
     // 原始基岩版模型
-    private JsonDataManager<BedrockModelPOJO> bedrockModel;
+    private LazyJsonDataManager<BedrockModelPOJO> bedrockModel;
     // 基岩版模型动画
-    private JsonDataManager<BedrockAnimationFile> bedrockAnimation;
+    private LazyJsonDataManager<BedrockAnimationFile> bedrockAnimation;
     // gltf 动画
     private GltfManager gltfAnimation;
     // 客户端脚本
     private final List<LuaLibrary> libList = List.of(new LuaAnimationConstant(), new LuaGunAnimationConstant());
     private ScriptManager scriptManager;
     // 音效
-    private SoundAssetsManager soundAssetsManager;
     // 枪包元数据
     private PackInfoManager packInfo;
 
@@ -97,12 +96,16 @@ public enum ClientAssetsManager {
             ammoDisplay = register(new DisplayManager<>(AmmoDisplay.class, GSON, "display/ammo", "AmmoDisplayLoader"));
             attachmentDisplay = register(new DisplayManager<>(AttachmentDisplay.class, GSON, "display/attachments", "AttachmentDisplayLoader"));
             blockDisplay = register(new DisplayManager<>(BlockDisplay.class, GSON, "display/blocks", "BlockDisplayLoader"));
-            bedrockModel = register(new JsonDataManager<>(BedrockModelPOJO.class, GSON, "geo_models", "BedrockModelLoader"));
-            bedrockAnimation = register(new JsonDataManager<>(BedrockAnimationFile.class, GSON, new FileToIdConverter("animations", ".animation.json"), "BedrockAnimationLoader"));
+
+            bedrockModel = register(new LazyJsonDataManager<>(BedrockModelPOJO.class, GSON, "geo_models", "BedrockModelLoader",
+                    id -> GunMod.MOD_ID.equals(id.getNamespace())));
+            bedrockAnimation = register(new LazyJsonDataManager<>(BedrockAnimationFile.class, GSON, new FileToIdConverter("animations", ".animation.json"),
+                    "BedrockAnimationLoader", id -> GunMod.MOD_ID.equals(id.getNamespace())));
             gltfAnimation = register(new GltfManager());
             scriptManager = register(new ScriptManager(new FileToIdConverter("scripts", ".lua"), libList));
-            soundAssetsManager = register(new SoundAssetsManager());
             packInfo = register(new PackInfoManager());
+            register((barrier, resourceManager, preparationProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
+                    barrier.wait(Void.TYPE).thenRunAsync(ClientIndexManager::reload, gameExecutor));
         }
         listeners.forEach(register);
     }
@@ -119,6 +122,10 @@ public enum ClientAssetsManager {
 
     public Set<Map.Entry<ResourceLocation, GunDisplay>> getGunDisplays() {
         return gunDisplay.getAllData().entrySet();
+    }
+
+    public Set<ResourceLocation> getGunDisplayIds() {
+        return gunDisplay.getAllData().keySet();
     }
 
     @Nullable
@@ -157,11 +164,6 @@ public enum ClientAssetsManager {
     }
 
     @Nullable
-    public SoundAssetsManager.SoundData getSoundBuffers(ResourceLocation id) {
-        return soundAssetsManager.getData(id);
-    }
-
-    @Nullable
     public PackInfo getPackInfo(String namespace) {
         return packInfo.getData(namespace);
     }
@@ -178,11 +180,7 @@ public enum ClientAssetsManager {
     public static void reloadAllPack() {
         try {
             Minecraft.getInstance().reloadResourcePacks().get();
-            // 如果连接到多人游戏
-            if (ServerLifecycleHooks.getCurrentServer() == null) {
-                // 重建索引
-                ClientIndexManager.reload();
-            } else {
+            if (ServerLifecycleHooks.getCurrentServer() != null) {
                 // 直接刷新data
                 CommonAssetsManager.reloadAllPack();
             }
@@ -190,4 +188,5 @@ public enum ClientAssetsManager {
             throw new RuntimeException(e);
         }
     }
+
 }

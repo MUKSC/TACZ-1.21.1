@@ -1,0 +1,48 @@
+{
+  "loot_tables": [
+    "minecraft:chests/spawn_bonus_chest"
+  ],
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tacz:modern_kinetic_gun",
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:custom_data": "{GunId:\"tacz:taurus943\",GunFireMode:\"SEMI\"}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tacz:ammo",
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "minecraft:custom_data": "{AmmoId:\"tacz:22wmr\"}"
+              }
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 38,
+                "max": 45
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

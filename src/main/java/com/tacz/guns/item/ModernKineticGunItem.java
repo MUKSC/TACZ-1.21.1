@@ -419,7 +419,7 @@ public class ModernKineticGunItem extends AbstractGunItem implements GunItemData
         int needAmmoCount = api.getNeededAmmoAmount();
         boolean needConsumeAmmo = api.isReloadingNeedConsumeAmmo();
         boolean infinite = data.getReloadData().isInfinite();
-        needConsumeAmmo = needConsumeAmmo || infinite;
+        needConsumeAmmo = needConsumeAmmo && !infinite;
         switch (data.getReloadData().getType()) {
             case MAGAZINE -> {
                 if (needConsumeAmmo) {

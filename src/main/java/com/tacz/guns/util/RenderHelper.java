@@ -3,6 +3,7 @@ package com.tacz.guns.util;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.tacz.guns.compat.ar.ARCompat;
 import com.tacz.guns.compat.optifine.OptifineCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -73,14 +74,23 @@ public final class RenderHelper {
         EntityRenderDispatcher renderManager = mc.getEntityRenderDispatcher();
         PlayerRenderer renderer = (PlayerRenderer) renderManager.getRenderer(player);
         MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        int oldId = RenderSystem.getShaderTexture(0);
-        RenderSystem.setShaderTexture(0, player.getSkin().texture());
+        // int oldId = RenderSystem.getShaderTexture(0);
+        // RenderSystem.setShaderTexture(0, player.getSkin().texture());
+
+		if (ARCompat.shouldAccelerate()) {
+			ARCompat.setRenderingLevel();
+		}
 
         if (hand == HumanoidArm.RIGHT) {
             renderer.renderRightHand(matrixStack, buffer, combinedLight, player);
         } else {
             renderer.renderLeftHand(matrixStack, buffer, combinedLight, player);
         }
-        RenderSystem.setShaderTexture(0, oldId);
+
+		if (ARCompat.shouldAccelerate()) {
+			ARCompat.resetRenderingLevel();
+		}
+
+        // RenderSystem.setShaderTexture(0, oldId);
     }
 }

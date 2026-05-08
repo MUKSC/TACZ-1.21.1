@@ -2,6 +2,7 @@ package com.tacz.guns.network.message;
 
 import com.tacz.guns.GunMod;
 import com.tacz.guns.client.resource.ClientIndexManager;
+import com.tacz.guns.resource.CommonAssetsManager;
 import com.tacz.guns.resource.network.CommonNetworkCache;
 import com.tacz.guns.resource.network.DataType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,7 +41,10 @@ public class ServerMessageSyncGunPack implements CustomPacketPayload {
     }
 
     public static void handle(ServerMessageSyncGunPack message, IPayloadContext context) {
-        context.enqueueWork(() -> doSync(message));
+        context.enqueueWork(() -> {
+            boolean remoteConnection = !context.connection().isMemoryConnection();
+            doSync(message, remoteConnection);
+        });
     }
 
 
@@ -49,7 +53,10 @@ public class ServerMessageSyncGunPack implements CustomPacketPayload {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void doSync(ServerMessageSyncGunPack message) {
+    private static void doSync(ServerMessageSyncGunPack message, boolean remoteConnection) {
+        if (remoteConnection) {
+            CommonAssetsManager.clearInstance();
+        }
         CommonNetworkCache.INSTANCE.fromNetwork(message.cache);
         // 通知客户端重新构建ClientIndex
         ClientIndexManager.reload();

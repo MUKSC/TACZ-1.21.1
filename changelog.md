@@ -1,2 +1,1 @@
-- Hopefully fixed the incompatibility with Veil
-- Fixed the crash with the Flashback replays
+- TaCZ 1.1.8

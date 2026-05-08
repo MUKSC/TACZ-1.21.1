@@ -1,0 +1,52 @@
+{
+  "model": "tacz:gun/m9a4_geo",
+  "texture": "tacz:gun/uv/m9a4",
+  "lod": {
+    "model": "tacz:gun/lod/m9a4",
+    "texture": "tacz:gun/lod/m9a4"
+  },
+  "hud": "tacz:gun/hud/m9a4",
+  "slot": "tacz:gun/slot/m9a4",
+  "animation": "tacz:m9a4",
+  "use_default_animation": "pistol",
+  "state_machine": "tacz:default_state_machine",
+  "player_animator_3rd": "tacz:pistol_default.player_animation",
+  "transform": {
+    "scale": {
+      "thirdperson": [0.6, 0.6, 0.6],
+      "ground": [0.6, 0.6, 0.6],
+      "fixed": [1.2, 1.2, 1.2]
+    }
+  },
+  "shell": {
+    "initial_velocity": [3.5, 4.0, -6],
+    "random_velocity": [1, 2, 4],
+    "acceleration": [0.0, -20, 0.0],
+    "angular_velocity": [360, -1200, 360],
+    "living_time": 1.0
+  },
+  "muzzle_flash": {
+    "texture": "tacz:flash/common_muzzle_flash",
+    "scale": 0.4
+  },
+  "sounds": {
+    "draw": "tacz:m9a4/m9a4_draw",
+    "put_away": "tacz:m9a4/m9a4_put_away",
+    "shoot": "tacz:m9a4/m9a4_shoot",
+    "shoot_3p": "tacz:m9a4/m9a4_shoot_3p",
+    "silence": "tacz:m9a4/m9a4_silence",
+    "silence_3p": "tacz:m9a4/m9a4_silence_3p"
+  },
+  "offhand_show": {
+    "pos": [4, 13, -1],
+    "rotate": [-90, -35, 90],
+    "scale": [0.5, 0.5, 0.5]
+  },
+  "hotbar_show": {
+    "0": {
+      "pos": [-5, 13, -1],
+      "rotate": [-90, -35, 90],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

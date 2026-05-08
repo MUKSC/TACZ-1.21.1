@@ -8,7 +8,10 @@ import com.tacz.guns.resource.pojo.data.gun.*;
 import it.unimi.dsi.fastutil.Pair;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -26,7 +29,7 @@ public class GunProperties {
     /**
      * @since 1.1.7
      */
-    static final Supplier<Map<String ,GunProperty<?>>> ALL_CACHE_MODIFIABLE_BY_SCRIPT = Suppliers.memoize(() -> Set.of(
+    static final Supplier<Map<String ,GunProperty<?>>> ALL_CACHE_MODIFIABLE_BY_SCRIPT = Suppliers.memoize(() -> List.<GunProperty<?>>of(
             GunProperties.AMMO_SPEED,
             GunProperties.ARMOR_IGNORE,
             GunProperties.EFFECTIVE_RANGE,

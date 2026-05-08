@@ -19,6 +19,9 @@ public class AmmoIndexPOJO {
     @Nullable
     private String tooltip;
 
+    @SerializedName("sort")
+    private int sort;
+
     public String getName() {
         return name;
     }
@@ -34,5 +37,9 @@ public class AmmoIndexPOJO {
     @Nullable
     public String getTooltip() {
         return tooltip;
+    }
+
+    public int getSort() {
+        return sort;
     }
 }

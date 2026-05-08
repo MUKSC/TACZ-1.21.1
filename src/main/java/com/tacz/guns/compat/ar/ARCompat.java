@@ -24,6 +24,14 @@ public class ARCompat {
 		return LOADED && ARCompatImpl.isAccelerated(vertexConsumer);
 	}
 
+	public static void setRenderingLevel() {
+		if (LOADED) ARCompatImpl.setRenderingLevel();
+	}
+
+	public static void resetRenderingLevel() {
+		if (LOADED) ARCompatImpl.resetRenderingLevel();
+	}
+
 	public static void setRenderLayer(int layer) {
 		if (LOADED) ARCompatImpl.setRenderLayer(layer);
 	}

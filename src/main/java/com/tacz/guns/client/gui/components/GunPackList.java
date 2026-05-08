@@ -97,6 +97,10 @@ public class GunPackList extends ContainerObjectSelectionList<GunPackList.Entry>
         return byHandCheckbox.selected;
     }
 
+    public void setByHandSelected(boolean selected) {
+        byHandCheckbox.selected = selected;
+    }
+
     public Set<String> namespaceList() {
         return selectedNamespaces;
     }

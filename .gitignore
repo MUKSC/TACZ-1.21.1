@@ -27,3 +27,24 @@ logs
 # Files from Forge MDK
 forge*changelog.txt
 /temp/
+/tools/HprofResourceAnalyzer$ByteBufferInfo.class
+/tools/HprofResourceAnalyzer$ByteCursor.class
+/tools/HprofResourceAnalyzer$CategoryDef.class
+/tools/HprofResourceAnalyzer$ClassInfo.class
+/tools/HprofResourceAnalyzer$FastInput.class
+/tools/HprofResourceAnalyzer$FieldInfo.class
+/tools/HprofResourceAnalyzer$FieldValues.class
+/tools/HprofResourceAnalyzer$HashMapInfo.class
+/tools/HprofResourceAnalyzer$HeapSubRecordConsumer.class
+/tools/HprofResourceAnalyzer$MapEntryRef.class
+/tools/HprofResourceAnalyzer$NativeImageInfo.class
+/tools/HprofResourceAnalyzer$NodeInfo.class
+/tools/HprofResourceAnalyzer$OwnedRootBuffer.class
+/tools/HprofResourceAnalyzer$RecordConsumer.class
+/tools/HprofResourceAnalyzer$ResourceLocationInfo.class
+/tools/HprofResourceAnalyzer$SoundDataInfo.class
+/tools/HprofResourceAnalyzer$SoundEntry.class
+/tools/HprofResourceAnalyzer$Stat.class
+/tools/HprofResourceAnalyzer$StringObjectInfo.class
+/tools/HprofResourceAnalyzer.class
+/tools/HprofResourceAnalyzer.java

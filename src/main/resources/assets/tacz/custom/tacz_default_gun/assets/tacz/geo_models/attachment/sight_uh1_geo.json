@@ -6,9 +6,9 @@
 				"identifier": "geometry.AMG UH-1 gen II - Converted",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 12,
-				"visible_bounds_height": 1.5,
-				"visible_bounds_offset": [0, 0.25, 0]
+				"visible_bounds_width": 17,
+				"visible_bounds_height": 5,
+				"visible_bounds_offset": [0, -1.5, 0]
 			},
 			"bones": [
 				{
@@ -1977,25 +1977,23 @@
 				},
 				{
 					"name": "division",
-					"pivot": [0.05, 0.825, -104]
+					"pivot": [0, 2.18768, -32.10607]
 				},
 				{
 					"name": "division_illuminated",
 					"parent": "division",
-					"pivot": [-0.03125, 2.2825, -75.7375],
+					"pivot": [0, 2.18768, -32.10607],
 					"cubes": [
 						{
-							"origin": [-0.875, 1.4075, -99],
-							"size": [1.75, 1.75, 0.3],
+							"origin": [-0.375, 1.65735, -32.25607],
+							"size": [0.75, 1.06066, 0.3],
+							"pivot": [0, 2.18768, -32.10607],
+							"rotation": [45, 0, 0],
 							"uv": {
 								"south": {"uv": [61.5, 0], "uv_size": [64, 64]}
 							}
 						}
 					]
-				},
-				{
-					"name": "scope_view",
-					"pivot": [0, 2.29375, 18]
 				},
 				{
 					"name": "ocular",
@@ -2009,6 +2007,10 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "scope_view",
+					"pivot": [0, 2.29375, 14]
 				}
 			]
 		}

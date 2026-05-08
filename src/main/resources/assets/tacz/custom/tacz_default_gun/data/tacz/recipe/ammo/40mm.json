@@ -21,6 +21,7 @@
   ],
   "result": {
     "type": "ammo",
+    "group": "explosives",
     "id": "tacz:40mm",
     "count": 6
   },

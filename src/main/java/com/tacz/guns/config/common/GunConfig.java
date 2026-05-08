@@ -1,6 +1,5 @@
 package com.tacz.guns.config.common;
 
-
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class GunConfig {

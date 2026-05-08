@@ -21,6 +21,7 @@ import com.tacz.guns.client.gui.components.smith.ResultButton;
 import com.tacz.guns.client.gui.components.smith.TypeButton;
 import com.tacz.guns.client.resource.ClientAssetsManager;
 import com.tacz.guns.client.resource.pojo.PackInfo;
+import com.tacz.guns.config.client.RenderConfig;
 import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.crafting.GunSmithTableIngredient;
 import com.tacz.guns.crafting.GunSmithTableRecipe;
@@ -83,6 +84,7 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
     private int scale = 70;
     private boolean filterEnabled = false;
     private GunPackList filterList;
+    private boolean autoByHandFilterApplied = false;
 
     public GunSmithTableScreen(GunSmithTableMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -170,9 +172,10 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
             }
         }
 
-        if (!recipeKeys.containsKey(selectedType)) {
+        if (!this.recipeKeys.containsKey(selectedType)) {
             selectedType = null;
             selectedRecipeList = null;
+            indexPage = 0;
         }
 
         if (!this.recipeKeys.keySet().isEmpty()) {
@@ -226,6 +229,26 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         return true;
     }
 
+    private boolean shouldFilterByMainHand() {
+        Minecraft minecraft = Minecraft.getInstance();
+        ItemStack stack = minecraft.player != null ? minecraft.player.getMainHandItem() : ItemStack.EMPTY;
+        Item item = stack.getItem();
+        return item instanceof IGun || item instanceof IAttachment || item instanceof IAmmo;
+    }
+
+    private void updateSelectedRecipeAfterFiltering() {
+        if (selectedRecipeList == null || selectedRecipeList.isEmpty()) {
+            this.selectedRecipe = null;
+            this.playerIngredientCount = null;
+            return;
+        }
+        boolean selectedRecipeExists = this.selectedRecipe != null && selectedRecipeList.contains(this.selectedRecipe.id());
+        if (!selectedRecipeExists) {
+            this.selectedRecipe = this.getSelectedRecipe(selectedRecipeList.get(0));
+        }
+        this.getPlayerIngredientCount(this.selectedRecipe);
+    }
+
     public void setIndexPage(int indexPage) {
         this.indexPage = indexPage;
     }
@@ -277,10 +300,15 @@ public class GunSmithTableScreen extends AbstractContainerScreen<GunSmithTableMe
         if (this.filterList == null) {
             this.filterList = new GunPackList(this.minecraft, 134, this.imageHeight, topPos, topPos+imageHeight+1, 15, recipes, this);
         }
+        if (!this.autoByHandFilterApplied && RenderConfig.AUTO_SELECT_GUN_SMITH_TABLE_FILTER.get()) {
+            this.filterList.setByHandSelected(this.shouldFilterByMainHand());
+            this.autoByHandFilterApplied = true;
+        }
         this.filterList.setSize(134, this.imageHeight);
         this.filterList.setPosition(leftPos, topPos);
 
         this.classifyRecipes();
+        this.updateSelectedRecipeAfterFiltering();
         this.clearWidgets();
 
         this.addTypePageButtons();

@@ -2679,7 +2679,7 @@
 				{
 					"name": "constraint",
 					"parent": "hk416a5",
-					"pivot": [0, 12.525, -0.6]
+					"pivot": [0, 13.025, -6.6]
 				},
 				{
 					"name": "attachment_adapter",
@@ -11577,7 +11577,7 @@
 				{
 					"name": "grip_pos",
 					"parent": "positioning2",
-					"pivot": [0, 8.2, -6.75]
+					"pivot": [0, 8.075, -6.75]
 				},
 				{
 					"name": "shell",
@@ -11730,7 +11730,7 @@
 					"name": "refit_view",
 					"parent": "view",
 					"pivot": [23, 10, 3],
-					"rotation": [0, 90, 0]
+					"rotation": [0, 89.9, 0]
 				},
 				{
 					"name": "refit_muzzle_view",
