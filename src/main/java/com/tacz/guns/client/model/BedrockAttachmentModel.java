@@ -10,6 +10,7 @@ import com.tacz.guns.client.model.functional.TextShowRender;
 import com.tacz.guns.client.resource.pojo.display.gun.TextShow;
 import com.tacz.guns.client.resource.pojo.model.BedrockModelPOJO;
 import com.tacz.guns.client.resource.pojo.model.BedrockVersion;
+import com.tacz.guns.compat.ar.ARCompat;
 import com.tacz.guns.compat.iris.IrisCompat;
 import com.tacz.guns.util.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -293,6 +295,12 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     }
 
     private void renderBoth(PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+		// 当加速渲染加载则使用加速渲染提供的方法进行加速
+		if (ARCompat.shouldAccelerate()) {
+			renderBothAccelerated(matrixStack, transformType, renderType, light, overlay);
+			return;
+		}
+
         RenderHelper.enableItemEntityStencilTest();
         // 清空模板缓冲区、准备绘制模板缓冲
         RenderSystem.clearStencil(0);
@@ -322,6 +330,11 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     }
 
     private void renderSight(PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+		if (ARCompat.shouldAccelerate()) {
+			renderSightAccelerated(matrixStack, transformType, renderType, light, overlay);
+			return;
+		}
+
         RenderHelper.enableItemEntityStencilTest();
         // 清空模板缓冲区、准备绘制模板缓冲
         RenderSystem.clearStencil(0);
@@ -341,6 +354,11 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
     }
 
     private void renderScope(PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+		if (ARCompat.shouldAccelerate()) {
+			renderScopeAccelerated(matrixStack, transformType, renderType, light, overlay);
+			return;
+		}
+
         RenderHelper.enableItemEntityStencilTest();
         // 清空模板缓冲区、准备绘制模板缓冲
         RenderSystem.clearStencil(0);
@@ -366,6 +384,271 @@ public class BedrockAttachmentModel extends BedrockAnimatedModel {
         // 渲染其他部分
         super.render(matrixStack, transformType, renderType, light, overlay);
     }
+
+	public void renderBothAccelerated(
+			PoseStack matrixStack,
+			ItemDisplayContext transformType,
+			RenderType renderType,
+			int light,
+			int overlay
+	) {
+		// 缓存PoseStack防止之后坐标变换出现问题
+		var poseStack = new PoseStack();
+		poseStack.last().pose().set(matrixStack.last().pose());
+		poseStack.last().normal().set(matrixStack.last().normal());
+
+		// 设置外环的渲染层和渲染前后任务
+		// 清空模板缓冲区、准备绘制模板缓冲
+		ARCompat.setRenderLayer(-943);
+		ARCompat.setRenderBeforeFunction(() -> {
+			// 清除上模板残留, 这里其实可以按原始渲染方法移出去, 但为了统一先放入第一层渲染
+			RenderHelper.enableItemEntityStencilTest();
+			RenderSystem.clearStencil(0);
+			RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
+
+			// 渲染目镜外环所需的模板函数
+			RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+			RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+		});
+
+		// 画完目镜外环后, 临时关闭模板缓冲区防止渲染异常
+		ARCompat.setRenderAfterFunction(RenderHelper::disableItemEntityStencilTest);
+
+		if (ocularRingPath != null) {
+			// 渲染目镜外环
+			renderTempPart(matrixStack, transformType, renderType, light, overlay, ocularRingPath);
+		}
+
+		// 重置外环层, 还原现场, 进行下一步绘制
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderBeforeFunction();
+		ARCompat.resetRenderAfterFunction();
+
+		// 设置镜身的渲染层和渲染前后任务
+		ARCompat.setRenderLayer(-943 + 1);
+		ARCompat.setRenderBeforeFunction(() -> {
+			// 重新启用上一层关闭的模板缓冲区
+			RenderHelper.enableItemEntityStencilTest();
+
+			// 我们在层中进行渲染, 需要关闭加速, 否则这里的渲染会被导向到加速管线中, 造成被延后和内存泄漏
+			ARCompat.disableAcceleration();
+
+			// 在层间操作已经绑定了VAO, Minecraft的标准绘制方法会改变全局VAO状态, 因此需要缓存VAO
+			int vao = GL11.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING);
+			// 并且需要Invalidate一下原版缓存的VAO绑定, 防止他直接认为缓存还有效导致绑定错误的VAO
+			BufferUploader.invalidate();
+
+			// 渲染目镜以写入模板桓冲值 (暂时只渲染 ocular_scope)
+			renderOcularStencil(poseStack, transformType, renderType, light, overlay, true);
+
+			// 重新绑回VAO
+			GL30.glBindVertexArray(vao);
+
+			// 画完了, 重新开启加速
+			ARCompat.resetAcceleration();
+
+			// 设置镜身需要的模板函数
+			RenderSystem.stencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+		});
+
+		// 画完镜身后, 渲染其他目镜及遮罩并关闭模板缓冲
+		ARCompat.setRenderAfterFunction(() -> {
+			// 我们在层中进行渲染, 需要关闭加速, 否则这里的渲染会被导向到加速管线中, 造成被延后和内存泄漏
+			ARCompat.disableAcceleration();
+
+			// 在层间操作已经绑定了VAO, Minecraft的标准绘制方法会改变全局VAO状态, 因此需要缓存VAO
+			int vao = GL11.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING);
+			// 并且需要Invalidate一下原版缓存的VAO绑定, 防止他直接认为缓存还有效导致绑定错误的VAO
+			BufferUploader.invalidate();
+
+			// 渲染目镜以写入模板桓冲值 (渲染其他的目镜)
+			renderOcularStencil(poseStack, transformType, renderType, light, overlay, false);
+			// 渲染目镜遮罩和划分
+			renderOcularAndDivision(poseStack, transformType, renderType, light, overlay, true);
+
+			// 重新绑回VAO
+			GL30.glBindVertexArray(vao);
+
+			// 画完了, 重新开启加速
+			ARCompat.resetAcceleration();
+
+			// 关闭模板缓冲
+			RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+			RenderHelper.disableItemEntityStencilTest();
+		});
+
+		if (scopeBodyPath != null) {
+			// 渲染镜身
+			renderTempPart(matrixStack, transformType, renderType, light, overlay, scopeBodyPath);
+		}
+
+		// 重置镜身层, 还原现场, 进行最后一步其他部分绘制
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderBeforeFunction();
+		ARCompat.resetRenderAfterFunction();
+
+		// 设置其他的渲染层, 保证其在最后一部分渲染
+		ARCompat.setRenderLayer(-943 + 2);
+
+		// 渲染其他部分
+		super.render(matrixStack, transformType, renderType, light, overlay);
+
+		// 重置层, 还原现场, 完成配件渲染
+		ARCompat.resetRenderLayer();
+	}
+
+	private void renderSightAccelerated(PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+		// 缓存PoseStack防止之后坐标变换出现问题
+		var poseStack = new PoseStack();
+		poseStack.last().pose().set(matrixStack.last().pose());
+		poseStack.last().normal().set(matrixStack.last().normal());
+
+		// 设置层前任务, 清除模板缓冲并绘制目镜和划分
+		ARCompat.setRenderLayer(-943);
+		ARCompat.setRenderBeforeFunction(() -> {
+			// 清除上模板残留, 这里其实可以按原始渲染方法移出去, 但为了统一先放入第一层渲染
+			RenderHelper.enableItemEntityStencilTest();
+			RenderSystem.clearStencil(0);
+			RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
+
+			// 我们在层中进行渲染, 需要关闭加速, 否则这里的渲染会被导向到加速管线中, 造成被延后和内存泄漏
+			ARCompat.disableAcceleration();
+
+			// 在层间操作已经绑定了VAO, Minecraft的标准绘制方法会改变全局VAO状态, 因此需要缓存VAO
+			int vao = GL11.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING);
+			// 并且需要Invalidate一下原版缓存的VAO绑定, 防止他直接认为缓存还有效导致绑定错误的VAO
+			BufferUploader.invalidate();
+
+			// 渲染目镜以写入模板桓冲值
+			renderOcularStencil(poseStack, transformType, renderType, light, overlay, false);
+			// 渲染划分
+			renderDivisionOnly(poseStack, transformType, renderType, light, overlay);
+
+			// 重新绑回VAO
+			GL30.glBindVertexArray(vao);
+
+			// 画完了, 重新开启加速
+			ARCompat.resetAcceleration();
+
+			// 关闭模板缓冲
+			RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+			RenderHelper.disableItemEntityStencilTest();
+		});
+
+		// 渲染其他部分
+		if (scopeBodyPath != null) {
+			renderTempPart(matrixStack, transformType, renderType, light, overlay, scopeBodyPath);
+		}
+		super.render(matrixStack, transformType, renderType, light, overlay);
+
+		// 重置层, 还原现场, 完成渲染
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderBeforeFunction();
+	}
+
+	private void renderScopeAccelerated(PoseStack matrixStack, ItemDisplayContext transformType, RenderType renderType, int light, int overlay) {
+		// 缓存PoseStack防止之后坐标变换出现问题
+		var poseStack = new PoseStack();
+		poseStack.last().pose().set(matrixStack.last().pose());
+		poseStack.last().normal().set(matrixStack.last().normal());
+
+		// 设置外环的渲染层和渲染前后任务
+		// 清空模板缓冲区、准备绘制模板缓冲
+		ARCompat.setRenderLayer(-943);
+		ARCompat.setRenderBeforeFunction(() -> {
+			// 清除上模板残留, 这里其实可以按原始渲染方法移出去, 但为了统一先放入第一层渲染
+			RenderHelper.enableItemEntityStencilTest();
+			RenderSystem.clearStencil(0);
+			RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
+
+			// 渲染目镜外环所需的模板函数
+			RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+			RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+		});
+
+		// 画完目镜外环后, 临时关闭模板缓冲区防止渲染异常
+		ARCompat.setRenderAfterFunction(RenderHelper::disableItemEntityStencilTest);
+
+		// 渲染目镜外环
+		if (ocularRingPath != null) {
+			renderTempPart(matrixStack, transformType, renderType, light, overlay, ocularRingPath);
+		}
+
+		// 重置外环层, 还原现场, 进行下一步绘制
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderBeforeFunction();
+		ARCompat.resetRenderAfterFunction();
+
+		// 设置镜身的渲染层和渲染前后任务
+		ARCompat.setRenderLayer(-943 + 1);
+		ARCompat.setRenderBeforeFunction(() -> {
+			// 重新启用上一层关闭的模板缓冲区
+			RenderHelper.enableItemEntityStencilTest();
+
+			// 我们在层中进行渲染, 需要关闭加速, 否则这里的渲染会被导向到加速管线中, 造成被延后和内存泄漏
+			ARCompat.disableAcceleration();
+
+			// 在层间操作已经绑定了VAO, Minecraft的标准绘制方法会改变全局VAO状态, 因此需要缓存VAO
+			int vao = GL11.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING);
+			// 并且需要Invalidate一下原版缓存的VAO绑定, 防止他直接认为缓存还有效导致绑定错误的VAO
+			BufferUploader.invalidate();
+
+			// 渲染目镜以写入模板桓冲值
+			renderOcularStencil(poseStack, transformType, renderType, light, overlay, false);
+
+			// 重新绑回VAO
+			GL30.glBindVertexArray(vao);
+
+			// 画完了, 重新开启加速
+			ARCompat.resetAcceleration();
+
+			// 设置镜身需要的模板函数
+			RenderSystem.stencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+		});
+
+		// 画完镜身后, 渲染其他目镜及遮罩并关闭模板缓冲
+		ARCompat.setRenderAfterFunction(() -> {
+			// 我们在层中进行渲染, 需要关闭加速, 否则这里的渲染会被导向到加速管线中, 造成被延后和内存泄漏
+			ARCompat.disableAcceleration();
+
+			// 在层间操作已经绑定了VAO, Minecraft的标准绘制方法会改变全局VAO状态, 因此需要缓存VAO
+			int vao = GL11.glGetInteger(GL30.GL_VERTEX_ARRAY_BINDING);
+			// 并且需要Invalidate一下原版缓存的VAO绑定, 防止他直接认为缓存还有效导致绑定错误的VAO
+			BufferUploader.invalidate();
+
+			// 渲染目镜遮罩和划分
+			renderOcularAndDivision(poseStack, transformType, renderType, light, overlay, false);
+
+			// 重新绑回VAO
+			GL30.glBindVertexArray(vao);
+
+			// 画完了, 重新开启加速
+			ARCompat.resetAcceleration();
+
+			// 关闭模板缓冲
+			RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+			RenderHelper.disableItemEntityStencilTest();
+		});
+
+		// 渲染镜身
+		if (scopeBodyPath != null) {
+			renderTempPart(matrixStack, transformType, renderType, light, overlay, scopeBodyPath);
+		}
+
+		// 重置镜身层, 还原现场, 进行最后一步其他部分绘制
+		ARCompat.resetRenderLayer();
+		ARCompat.resetRenderBeforeFunction();
+		ARCompat.resetRenderAfterFunction();
+
+		// 设置其他的渲染层, 保证其在最后一部分渲染
+		ARCompat.setRenderLayer(-943 + 2);
+
+		// 渲染其他部分
+		super.render(matrixStack, transformType, renderType, light, overlay);
+
+		// 重置层, 还原现场, 完成配件渲染
+		ARCompat.resetRenderLayer();
+	}
 
     private static class OcularWrapper{
         public ModelRendererWrapper renderer;

@@ -14,6 +14,9 @@ description = '''
 [[mixins]]
 config = "tacz.mixins.json"
 
+[[mixins]]
+config = "tacz.compat.acceleratedrendering.mixins.json"
+
 [[dependencies."{id}"]]
 modId = "neoforge"
 type = "REQUIRED"

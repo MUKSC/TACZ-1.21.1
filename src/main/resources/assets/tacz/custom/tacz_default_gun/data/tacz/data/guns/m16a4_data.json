@@ -22,7 +22,7 @@
         {"distance": "infinite", "damage": 6}
       ]
     },
-    "speed": 305,
+    "speed": 310,
     "gravity": 0.15,
     "knockback": 0,
     "friction": 0.015,
@@ -58,7 +58,7 @@
   "burst_data": {
     "continuous_shoot": false,
     "count": 3,
-    "bpm": 900,
+    "bpm": 937,
     "min_interval": 0.4
   },
   "recoil": {
