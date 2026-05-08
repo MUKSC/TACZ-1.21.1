@@ -7,13 +7,27 @@
     "multiplier": 0.5
   },
   "head_shot":{
-    "multiplier": 0
+    "function": "y = 1"
   },
   "pierce": {
-    "multiplier": 0
+    "function": "y = 1"
   },
   "rpm": {
     "multiplier":0.85
   },
-  "extended_mag_level": 1
+  "extended_mag_level": 1,
+  // 精度是加给霰弹枪的，
+  // 都玩高爆了，这点精度对普通武器来说用处已经不是很大了
+  "inaccuracy": {
+    "multiplier": 0.5
+  },
+  "sneak_inaccuracy": {
+    "multiplier": 0.5
+  },
+  "lie_inaccuracy": {
+    "multiplier": 0.5
+  },
+  "aim_inaccuracy": {
+    "multiplier": 0.5
+  }
 }

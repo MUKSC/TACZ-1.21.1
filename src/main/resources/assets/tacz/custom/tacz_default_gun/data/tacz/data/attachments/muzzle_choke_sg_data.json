@@ -1,0 +1,25 @@
+{
+  "ads": {
+    "addend": 0.05
+  },
+  "inaccuracy": {
+    "multiplier": 0.65
+  },
+  "aim_inaccuracy": {
+    "multiplier": 0.65
+  },
+  "sneak_inaccuracy": {
+    "multiplier": 0.65
+  },
+  "lie_inaccuracy": {
+    "multiplier": 0.65
+  },
+  "recoil": {
+    "pitch": {
+      "multiplier": 1.45
+    },
+    "yaw": {
+        "multiplier": 1.45
+      }
+  }
+}

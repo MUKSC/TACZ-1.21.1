@@ -1,0 +1,23 @@
+{
+  "slot": "tacz:attachment/slot/scope_qmk152",
+  "model": "tacz:attachment/scope_qmk152_geo",
+  "texture": "tacz:attachment/uv/scope_qmk152",
+  "lod": {
+    "model": "tacz:attachment/lod/scope_qmk152",
+    "texture": "tacz:attachment/lod/scope_qmk152"
+  },
+  "zoom": [
+    3
+  ],
+  "views": [
+    2
+  ],
+   "views_fov": [
+    50
+  ],
+  "scope": true,
+  "sounds": {
+    "install": "tacz:attachments/scope_general_b",
+    "uninstall": "tacz:attachments/scope_general_b"
+  }
+}

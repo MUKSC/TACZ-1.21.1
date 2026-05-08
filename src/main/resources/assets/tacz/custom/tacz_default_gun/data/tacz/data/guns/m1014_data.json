@@ -1,0 +1,127 @@
+{
+  "ammo": "tacz:12g",
+  "ammo_amount": 6,
+  "extended_mag_ammo_amount": [
+    8,
+    10,
+    12
+  ],
+  "bolt": "closed_bolt",
+  "rpm": 250,
+  "bullet": {
+    "life": 0.6,
+    "bullet_amount": 8,
+    "damage": 40,
+    "tracer_count_interval": 0,
+    "extra_damage": {
+      "armor_ignore": 0.25,
+      "head_shot_multiplier": 1.33,
+      "damage_adjust": [
+        {"distance": 14, "damage": 40},
+        {"distance": 28, "damage": 25},
+        {"distance": "infinite", "damage": 18}
+      ]
+    },
+    "speed": 150,
+    "gravity": 0.15,
+    "knockback": 0.15,
+    "friction": 0.05,
+    "ignite": false,
+    "pierce": 1,
+    "explosion": {
+      "explode": false,
+      "damage": 42,
+      "radius": 2.5,
+      "knockback": false,
+      "delay": 5
+    }
+  },
+  "reload": {
+    "type": "magazine",
+    // 在 m870 的脚本逻辑中：
+    // feed.empty 表示 reload_intro_empty 的时长
+    // feed.tactical 表示 reload_intro 的时长
+    // cooldown.empty 表示 reload_loop 的时长
+    // cooldown.tactical 表示 reload_end 的时长
+    // M870读取的是Script中的内容，reload弃用
+    "feed": {
+      "empty": 2.13,
+      "tactical": 0.67
+    },
+    "cooldown": {
+      "empty": 0.67,
+      "tactical": 0.23
+    }
+  },
+  "draw_time": 0.4,
+  "put_away_time": 0.77,
+  "aim_time": 0.18,
+  "sprint_time": 0.08,
+  "weight": 3.8,
+  "movement_speed": {
+    "base": 0.0,
+    "aim": -0.2,
+    "reload": 0
+  },
+  "fire_mode": [
+    "semi"
+  ],
+ "recoil": {
+    "pitch": [
+      {"time": 0, "value": [4.5, 4.5]},
+      {"time": 0.04, "value": [2.5, 2.5]},
+      {"time": 0.08, "value": [4.6, 4.6]},
+      {"time": 0.1, "value": [4.8, 4.8]},
+      {"time": 0.13, "value": [4.5, 4.5]},
+      {"time": 0.6, "value": [-0.5, -0.5]},
+      {"time": 0.73, "value": [0.25, 0.25]},
+      {"time": 0.85, "value": [0, 0]},
+      {"time": 0.9, "value": [0, 0]}
+    ],
+    "yaw": [
+      {"time": 0, "value": [1.3, 1.3]},
+      {"time": 0.04, "value": [-0.3, -0.3]},
+      {"time": 0.08, "value": [1.2, 1.2]},
+      {"time": 0.12, "value": [0.8, 0.8]},
+      {"time": 0.30, "value": [0.55, 0.55]},
+      {"time": 0.45, "value": [0.2, 0.2]},
+      {"time": 0.6, "value": [0, 0]},
+      {"time": 0.75, "value": [0, 0]}
+    ]
+  },
+  "inaccuracy": {
+    "stand": 3.9,
+    "move": 4,
+    "sneak": 3.9,
+    "lie": 3.7,
+    "aim": 3.6
+  },
+  "melee": {
+    "distance": 1.25,
+    "cooldown": 0.7,
+    "default": {
+      "animation_type": "melee_stock",
+      "distance": 1,
+      "range_angle": 30,
+      "damage": 2,
+      "knockback": 0.6,
+      "prep": 0.1
+    }
+  },
+  "script": "tacz:m1014_gun_logic",
+  "script_param": {
+    "intro_empty": 1.8,
+    "intro": 0.5,
+    "loop": 0.67,
+    "loop_2": 0.7,
+    "ending": 0.17,
+    "intro_empty_feed": 1.27,
+    "loop_feed": 0.38,
+    "loop_feed_2": 0.43
+  },
+  "allow_attachment_types": [
+    "muzzle",
+    "scope",
+    "extended_mag"
+  ]
+}

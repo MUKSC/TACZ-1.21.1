@@ -3735,7 +3735,7 @@
 					"name": "fixed",
 					"parent": "positioning",
 					"pivot": [0.7, 3.6, -0.175],
-					"rotation": [0, -90, 0]
+					"rotation": [0, 90, 0]
 				},
 				{
 					"name": "refit",

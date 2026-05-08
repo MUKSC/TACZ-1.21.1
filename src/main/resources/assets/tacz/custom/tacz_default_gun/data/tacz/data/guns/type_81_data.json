@@ -32,12 +32,12 @@
   "reload": {
     "type": "magazine",
     "feed": {
-      "empty": 1.67,
-      "tactical": 1.13
+      "empty": 2.25,
+      "tactical": 1.4
     },
     "cooldown": {
-      "empty": 2.33,
-      "tactical": 1.83
+      "empty": 2.6,
+      "tactical": 2
     }
   },
   "draw_time": 0.71,

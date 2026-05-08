@@ -1,0 +1,30 @@
+{
+  "weight": 0.4,
+  "ads": {
+    // 加数（多个配件的数值相加，作为第一个乘区）
+    "addend": 0.1
+  },
+  "inaccuracy": {
+    "multiplier": 0.95
+  },
+  "aim_inaccuracy": {
+    "multiplier": 0.9
+  },
+  "effective_range": {
+    "multiplier": 1.5
+  },
+  "rpm": {
+    "multiplier":0.95
+  },
+  "recoil": {
+    "pitch": {
+      "multiplier": 0.9
+    }
+  },
+  "silence": {
+    // 声音传播的范围，如果默认是 50 格，这里填入 -10，那么消音后传播距离为 40 格
+    "distance_addend": -20,
+    // 是否使用专门的消音后的音源
+    "use_silence_sound": true
+  }
+}

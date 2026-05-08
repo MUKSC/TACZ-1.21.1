@@ -1,0 +1,8 @@
+{
+  "name": "tacz.attachment.ammo_mod_slug.name",
+  "display": "tacz:ammo_mod_slug_display",
+  "data": "tacz:ammo_mod_slug_data",
+  "tooltip": "tacz.attachment.ammo_mod_slug.desc",
+  "type": "extended_mag",
+  "sort": 1000
+}

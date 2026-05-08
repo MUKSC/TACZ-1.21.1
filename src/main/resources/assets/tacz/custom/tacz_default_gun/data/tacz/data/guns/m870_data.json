@@ -27,7 +27,14 @@
     "knockback": 0.15,
     "friction": 0.05,
     "ignite": false,
-    "pierce": 1
+    "pierce": 1,
+    "explosion": {
+      "explode": false,
+      "damage": 50,
+      "radius": 3,
+      "knockback": false,
+      "delay": 5
+    }
   },
   "reload": {
     "type": "magazine",
@@ -110,6 +117,7 @@
     "loop_feed": 0.25
   },
   "allow_attachment_types": [
-    "extended_mag"
+    "extended_mag",
+    "muzzle"
   ]
 }
