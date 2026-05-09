@@ -282,7 +282,7 @@ public class LocalPlayerShoot {
                 data.clientLastShootTimestamp = data.clientShootTimestamp;
                 data.clientShootTimestamp = System.currentTimeMillis();
                 // 发送开火的数据包，通知服务器
-                PacketDistributor.sendToServer(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp));
+                PacketDistributor.sendToServer(new ClientMessagePlayerShoot(data.clientShootTimestamp - data.clientBaseTimestamp, chargeProgress));
             }
 
             // todo 需要检查
