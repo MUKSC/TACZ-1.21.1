@@ -1,1 +1,1 @@
-- TaCZ 1.1.8
+- Fixed charging weapons not working
