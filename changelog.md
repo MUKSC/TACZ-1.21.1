@@ -1,1 +1,1 @@
-- Fixed charging weapons not working
+- Fixed an incompatibility with Json Things
