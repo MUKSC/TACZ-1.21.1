@@ -1,1 +1,1 @@
-- Fixed an incompatibility with Json Things
+- TaCZ 1.1.8-hotfix

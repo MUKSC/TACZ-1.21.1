@@ -55,10 +55,12 @@ public class ShootKey {
                     .orElse(false);
             IClientPlayerGunOperator operator = IClientPlayerGunOperator.fromLocalPlayer(player);
             boolean isShootDown = SHOOT_KEY.isDown() || controllerShootDown;
-            if (operator.chargeShoot(isShootDown)) {
+            boolean canContinuouslyShoot = fireMode == FireMode.AUTO || isBurstAuto;
+            boolean shouldCharge = isShootDown && (canContinuouslyShoot || !lastTimeShootSuccess);
+            if (operator.chargeShoot(shouldCharge)) {
                 LocalPlayerSprint.stopSprint = true;
-                if (fireMode != FireMode.AUTO && !isBurstAuto && lastTimeShootSuccess) {
-                    // 非全自动情况，禁止连续开火
+                if (!canContinuouslyShoot && lastTimeShootSuccess) {
+                    // 非全自动情况，禁止连续开火，也不应在按住上一枪扳机时继续蓄力
                     return;
                 }
                 if (operator.shoot() == ShootResult.SUCCESS) {
