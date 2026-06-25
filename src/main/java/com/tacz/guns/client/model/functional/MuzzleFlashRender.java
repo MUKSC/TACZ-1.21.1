@@ -1,5 +1,6 @@
 package com.tacz.guns.client.model.functional;
 
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -70,7 +71,7 @@ public class MuzzleFlashRender implements IFunctionalRenderer {
             float scaleTime = TIME_RANGE / 2.0f;
             scale = time < scaleTime ? (scale * (time / scaleTime)) : scale;
             muzzleFlashStartMark = false;
-            MultiBufferSource multiBufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+            MultiBufferSource.BufferSource multiBufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
 
             // 推送到指定位置
             PoseStack poseStack2 = new PoseStack();
@@ -98,6 +99,7 @@ public class MuzzleFlashRender implements IFunctionalRenderer {
                 MUZZLE_FLASH_MODEL.renderToBuffer(poseStack2, multiBufferSource.getBuffer(renderTypeLight), light, overlay);
             }
             poseStack2.popPose();
+            multiBufferSource.endBatch();
         }
     }
 
