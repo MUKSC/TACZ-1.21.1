@@ -1,1 +1,1 @@
-- TaCZ 1.1.8-hotfix
+- Implemented a workaround to the muzzle flash rendering issue
