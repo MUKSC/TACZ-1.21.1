@@ -38,7 +38,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -140,9 +139,9 @@ public class EntityKineticBullet extends Projectile implements IEntityWithComple
     private float cameraYRot;
     private Vector3f firstPersonRenderOffset;
     // 发射的枪械 ID
-    private ResourceLocation gunId;
+    private ResourceLocation gunId = DefaultAssets.EMPTY_GUN_ID;
     // 枪械display ID
-    private ResourceLocation gunDisplayId;
+    private ResourceLocation gunDisplayId = DefaultAssets.DEFAULT_GUN_DISPLAY_ID;
     private float armorIgnore;
     private float headShot;
     private float shotDamageMultiplier = 1f;
@@ -598,7 +597,7 @@ public class EntityKineticBullet extends Projectile implements IEntityWithComple
         buffer.writeDouble(getDeltaMovement().z);
         Entity entity = getOwner();
         buffer.writeInt(entity != null ? entity.getId() : 0);
-        buffer.writeResourceLocation(ammoId != null ? ammoId : ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "invalid"));
+        buffer.writeResourceLocation(ammoId);
         buffer.writeFloat(this.gravity);
         buffer.writeBoolean(this.explosion);
         buffer.writeBoolean(this.igniteEntity);
@@ -610,8 +609,8 @@ public class EntityKineticBullet extends Projectile implements IEntityWithComple
         buffer.writeFloat(this.friction);
         buffer.writeInt(this.pierce);
         buffer.writeBoolean(this.isTracerAmmo);
-        buffer.writeResourceLocation(this.gunId != null ? this.gunId : ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "invalid"));
-        buffer.writeResourceLocation(this.gunDisplayId != null ? this.gunDisplayId : ResourceLocation.fromNamespaceAndPath(GunMod.MOD_ID, "invalid"));
+        buffer.writeResourceLocation(this.gunId);
+        buffer.writeResourceLocation(this.gunDisplayId);
     }
 
     @Override
