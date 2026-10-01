@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 
+@SuppressWarnings("deprecation")
 public interface AmmoBoxItemDataAccessor extends IAmmoBox {
     String AMMO_ID_TAG = "AmmoId";
     String AMMO_COUNT_TAG = "AmmoCount";
@@ -20,7 +21,7 @@ public interface AmmoBoxItemDataAccessor extends IAmmoBox {
 
     @Override
     default ResourceLocation getAmmoId(ItemStack ammoBox) {
-        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (tag.contains(AMMO_ID_TAG, Tag.TAG_STRING)) {
             return ResourceLocation.parse(tag.getString(AMMO_ID_TAG));
         }
@@ -36,7 +37,7 @@ public interface AmmoBoxItemDataAccessor extends IAmmoBox {
 
     @Override
     default int getAmmoCount(ItemStack ammoBox) {
-        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (isAllTypeCreative(ammoBox) || isCreative(ammoBox)) {
             return Integer.MAX_VALUE;
         }
@@ -83,7 +84,7 @@ public interface AmmoBoxItemDataAccessor extends IAmmoBox {
 
     @Override
     default int getAmmoLevel(ItemStack ammoBox) {
-        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (tag.contains(LEVEL_TAG, Tag.TAG_INT)) {
             return tag.getInt(LEVEL_TAG);
         }
@@ -92,7 +93,7 @@ public interface AmmoBoxItemDataAccessor extends IAmmoBox {
 
     @Override
     default boolean isCreative(ItemStack ammoBox) {
-        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (tag.contains(CREATIVE_TAG, Tag.TAG_BYTE)) {
             return tag.getBoolean(CREATIVE_TAG);
         }
@@ -101,7 +102,7 @@ public interface AmmoBoxItemDataAccessor extends IAmmoBox {
 
     @Override
     default boolean isAllTypeCreative(ItemStack ammoBox) {
-        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag = ammoBox.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (tag.contains(ALL_TYPE_CREATIVE_TAG, Tag.TAG_BYTE)) {
             return tag.getBoolean(ALL_TYPE_CREATIVE_TAG);
         }

@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public interface AttachmentItemDataAccessor extends IAttachment {
     String ATTACHMENT_ID_TAG = "AttachmentId";
     String SKIN_ID_TAG = "Skin";
@@ -57,7 +58,7 @@ public interface AttachmentItemDataAccessor extends IAttachment {
     @Override
     @Nonnull
     default ResourceLocation getAttachmentId(ItemStack attachmentStack) {
-        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         return getAttachmentIdFromTag(nbt);
     }
 
@@ -73,7 +74,7 @@ public interface AttachmentItemDataAccessor extends IAttachment {
     @Override
     @Nullable
     default ResourceLocation getSkinId(ItemStack attachmentStack) {
-        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (nbt.contains(SKIN_ID_TAG, Tag.TAG_STRING)) {
             return ResourceLocation.tryParse(nbt.getString(SKIN_ID_TAG));
         }
@@ -93,7 +94,7 @@ public interface AttachmentItemDataAccessor extends IAttachment {
 
     @Override
     default int getZoomNumber(ItemStack attachmentStack) {
-        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         return getZoomNumberFromTag(nbt);
     }
 
@@ -106,13 +107,13 @@ public interface AttachmentItemDataAccessor extends IAttachment {
 
     @Override
     default boolean hasCustomLaserColor(ItemStack attachmentStack) {
-        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         return nbt.contains(LASER_COLOR_TAG, Tag.TAG_INT);
     }
 
     @Override
     default int getLaserColor(ItemStack attachmentStack) {
-        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = attachmentStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (!hasCustomLaserColor(attachmentStack)) {
             return 0xFF0000;
         }

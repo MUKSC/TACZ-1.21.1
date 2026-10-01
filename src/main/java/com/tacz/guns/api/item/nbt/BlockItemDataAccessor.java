@@ -16,10 +16,11 @@ import java.util.Objects;
 public interface BlockItemDataAccessor extends IBlock {
     String BLOCK_ID = "BlockId";
 
+    @SuppressWarnings("deprecation")
     @Override
     @Nonnull
     default ResourceLocation getBlockId(ItemStack block) {
-        CompoundTag nbt = block.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = block.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (nbt.contains(BLOCK_ID, Tag.TAG_STRING)) {
             ResourceLocation gunId = ResourceLocation.tryParse(nbt.getString(BLOCK_ID));
             return Objects.requireNonNullElse(gunId, DefaultAssets.EMPTY_BLOCK_ID);

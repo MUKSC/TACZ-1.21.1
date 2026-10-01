@@ -17,13 +17,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public interface AmmoItemDataAccessor extends IAmmo {
     String AMMO_ID_TAG = "AmmoId";
 
     @Override
     @Nonnull
     default ResourceLocation getAmmoId(ItemStack ammo) {
-        CompoundTag nbt = ammo.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag nbt = ammo.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (nbt.contains(AMMO_ID_TAG, Tag.TAG_STRING)) {
             ResourceLocation gunId = ResourceLocation.tryParse(nbt.getString(AMMO_ID_TAG));
             return Objects.requireNonNullElse(gunId, DefaultAssets.EMPTY_AMMO_ID);
