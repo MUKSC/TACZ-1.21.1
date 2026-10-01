@@ -1,1 +1,5 @@
-- More fixes for the rendering issues introduced in 1.1.8-hotfix-r4
+- Slightly optimized code for better performance
+- Backported a vulnerability fix from upstream
+- Fixed a crash related to the bullet entity
+- Fixed an issue where some blocks had incorrect rendering bounding boxes
+- Maybe fixed some CME crashes
