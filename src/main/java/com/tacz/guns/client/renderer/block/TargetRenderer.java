@@ -1,6 +1,5 @@
 package com.tacz.guns.client.renderer.block;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.tacz.guns.block.TargetBlock;
@@ -15,13 +14,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.Direction;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -75,5 +74,11 @@ public class TargetRenderer implements BlockEntityRenderer<TargetBlockEntity> {
     @Override
     public boolean shouldRenderOffScreen(TargetBlockEntity blockEntity) {
         return true;
+    }
+
+    @Override
+    public @NotNull AABB getRenderBoundingBox(TargetBlockEntity blockEntity) {
+        Vec3 pos = Vec3.atBottomCenterOf(blockEntity.getBlockPos());
+        return new AABB(pos.add(-2, 0, -2), pos.add(2, 2, 2));
     }
 }
