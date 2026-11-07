@@ -1,3 +1,9 @@
+# TaCZ added official support for 1.21.1!
+This project is now archived and will only receive critical fixes  
+Downloads are still available in case you need older versions for any reason
+
+---
+
 ## Unofficial TaCZ 1.21.1 NeoForge Port
 [![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/tacz-1.21.1)
 [![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/tacz-1-21-1)
